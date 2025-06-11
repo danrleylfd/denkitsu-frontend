@@ -119,12 +119,13 @@ const AI = () => {
         {error && <MessageError>{error}</MessageError>}
       </div>
       <div className="flex items-center justify-between gap-2 p-2 bg-light-background dark:bg-dark-background">
+        <div className="w-0 h-0 p-0 m-0"/>
         <select
           id="model-select"
           value={model}
           onChange={(e) => setModel(e.target.value)}
           disabled={loading}
-          className="bg-light-cardBg dark:bg-dark-cardBg text-light-color dark:text-dark-color text-sm min-h-[48px] max-w-[10rem] p-2 rounded-md">
+          className="bg-light-cardBg dark:bg-dark-cardBg text-light-color dark:text-dark-color text-sm min-h-[48px] max-w-[6.5rem] rounded-md">
           <option disabled>Selecionar Modelo</option>
           {models.map((model) => (
             <option key={model.id} value={model.id}>
@@ -141,7 +142,7 @@ const AI = () => {
           placeholder={!loading ? "Escreva seu prompt" : "Pensando..."}
           disabled={loading}
           rows={1}
-          className="flex-1 resize-y min-h-[44px] max-h-[120px] max-w-full overflow-y-hidden py-4 px-2 rounded-md font-mono text-sm shadow bg-light-cardBg dark:bg-dark-cardBg text-light-color dark:text-dark-color"
+          className="flex-1 resize-y min-h-[44px] max-h-[120px] max-w-full overflow-y-hidden py-4 rounded-md font-mono text-sm shadow bg-light-cardBg dark:bg-dark-cardBg text-light-color dark:text-dark-color"
         />
         <Button size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || !inputText.trim()}>
           {!loading && <MdSend size={16} />}
