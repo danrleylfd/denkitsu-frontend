@@ -17,7 +17,6 @@ import {
 } from "../../services/video"
 
 import SideMenu from "../../components/SideMenu"
-import MainContainer from "../../components/MainContainer"
 import Player from "../../components/Player"
 import Button from "../../components/Button"
 import CommentForm from "../../components/CommentForm"
@@ -27,7 +26,7 @@ import { MessageSuccess, MessageError } from "../../components/Notifications"
 const SideContentContainer = (props) => (
   <div
     {...props}
-    className="flex h-screen flex-1 flex-col items-center justify-start gap-2 p-2 max-w-[89%] ml-[3.5rem] md:mx-auto md:max-w-[67%]"
+    className="flex h-screen flex-1 flex-col items-center justify-start gap-2 p-2 max-w-[89%] ml-[3.5rem] md:max-w-[67%]"
   />
 )
 
@@ -183,7 +182,7 @@ const VideoDetail = () => {
       {loading && <Button variant="outline" style={{ marginTop: ".5rem" }} $rounded loading={loading} disabled />}
       {error && <MessageError>{error}</MessageError>}
       {!error && video && (
-        <MainContainer>
+        <div className="flex flex-col p-2 gap-2 max-w-[1000px]">
           <Player src={video.fileUrl} poster={video.thumbnail}/>
           <h5>{video.content}</h5>
           {video.user && (
@@ -232,7 +231,7 @@ const VideoDetail = () => {
               ))}
             </div>
           </div>
-        </MainContainer>
+        </div>
       )}
     </SideMenu>
   )
