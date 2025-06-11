@@ -142,7 +142,7 @@ const AI = () => {
           placeholder={!loading ? "Escreva seu prompt" : "Pensando..."}
           disabled={loading}
           rows={1}
-          className="flex-1 resize-y min-h-[44px] max-h-[120px] max-w-full overflow-y-hidden py-4 rounded-md font-mono text-sm shadow bg-light-cardBg dark:bg-dark-cardBg text-light-color dark:text-dark-color"
+          className="flex-1 resize-y min-h-[44px] max-h-[120px] max-w-full overflow-y-hidden px-2 py-4 rounded-md font-mono text-sm shadow bg-light-cardBg dark:bg-dark-cardBg text-light-color dark:text-dark-color"
         />
         <Button size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || !inputText.trim()}>
           {!loading && <MdSend size={16} />}
