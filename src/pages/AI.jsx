@@ -82,7 +82,7 @@ const AI = () => {
           <div
             key={idx}
             className={`flex items-end gap-2 px-2 ${msg.role === "assistant" ? "justify-start" : "justify-end"} ${msg.role === "system" ? "hidden" : ""}`}>
-            <img src={msg.role === "assistant" ? "/avatar-rounded.png" : user.avatarUrl} alt={msg.role} className="w-8 h-8 rounded-full object-cover" />
+            <img src={msg.role === "assistant" ? "/denkitsu.png" : user.avatarUrl} alt={msg.role} className="w-8 h-8 rounded-full object-cover" />
             <div className="max-w-[90%] md:max-w-[67%] break-words rounded-md px-4 py-2 shadow-md text-light-color dark:text-dark-color bg-light-cardBg dark:bg-dark-cardBg">
               <ReactMarkdown
                 children={msg.content}

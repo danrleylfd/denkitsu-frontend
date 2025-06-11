@@ -80,7 +80,7 @@ const AI = () => {
       <ChatBody>
         {messages.map((msg, idx) => (
           <MessageRow key={idx} $msgOwner={msg.role}>
-            <Imagem src={msg.role === "assistant"? "/avatar-rounded.png" : user.avatarUrl} alt={msg.role} />
+            <Imagem src={msg.role === "assistant"? "/denkitsu.png" : user.avatarUrl} alt={msg.role} />
             <MessageBubble $msgOwner={msg.role}>
               <ReactMarkdown
                 children={msg.content}
