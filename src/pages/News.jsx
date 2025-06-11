@@ -89,7 +89,9 @@ const News = () => {
               h4: ({ node, ...props }) => <strong {...props} />,
               h5: ({ node, ...props }) => <strong {...props} />,
               h6: ({ node, ...props }) => <strong {...props} />,
-              p: ({ node, ...props }) => <p {...props}/>
+              p: ({ node, ...props }) => <p {...props}/>,
+              code: ({ node, ...props }) => <p {...props}/>,
+              pre: ({ node, ...props }) => <p {...props}/>,
             }}
           >
             {article.content}
