@@ -71,7 +71,7 @@ const News = () => {
   return (
     <SideMenu style={{ position: "fixed" }}
       ContentView={({ children }) => (
-        <div className="flex-1 flex flex-col items-center p-2 gap-2 h-auto absolute right-0 md:static md:mx-auto bg-repeat-y bg-cover bg-[url('/background.jpg')] bg-brand-purple">
+        <div className="flex-1 flex flex-col items-center p-2 gap-2 h-auto absolute right-0 md:static md:mx-auto bg-repeat-y bg-contain bg-[url('/background.jpg')] bg-brand-purple">
           {children}
         </div>
       )}
@@ -90,8 +90,8 @@ const News = () => {
               h5: ({ node, ...props }) => <strong {...props} />,
               h6: ({ node, ...props }) => <strong {...props} />,
               p: ({ node, ...props }) => <p {...props}/>,
-              code: ({ node, ...props }) => <p {...props}/>,
               pre: ({ node, ...props }) => <p {...props}/>,
+              code: ({ node, ...props }) => <p {...props}/>,
             }}
           >
             {article.content}
