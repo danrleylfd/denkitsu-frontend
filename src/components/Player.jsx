@@ -83,7 +83,7 @@ const CustomVideoPlayer = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4",
     if (videoRef.current.requestFullscreen) videoRef.current.requestFullscreen()
   }
   return (
-    <div className="relative mx-auto w-full md:max-w-2xl overflow-hidden rounded-2xl shadow-lg">
+    <div className="relative w-full sm:max-w-lg md:max-w-xl overflow-hidden rounded-2xl shadow-lg">
       <video
         ref={videoRef}
         src={src}
