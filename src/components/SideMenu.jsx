@@ -26,7 +26,7 @@ const MainContent = ({ children }) => (
   <main className="flex flex-col items-center p-2 gap-2 mx-auto w-full xs:max-w-[100%] sm:max-w-[90%] ml-[3.5rem] md:ml-auto md:max-w-[75%] lg:max-w-[67%]">{children}</main>
 )
 
-const SideMenu = ({ children, className = "", fixed, ContentView = MainContent }) => {
+const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => {
   const { theme, toggleTheme } = useTheme()
   const { signed } = useAuth()
 
@@ -71,7 +71,7 @@ const SideMenu = ({ children, className = "", fixed, ContentView = MainContent }
   ].filter(Boolean).join(" ")
 
   return (
-    <div className={`flex ${className}`}>
+    <div className={`flex ${className && className}`}>
       <aside
         className={`h-screen transition-all duration-300 ease-in-out z-40 shadow-md border-r ${
           isOpen ? "w-48" : "w-14"
