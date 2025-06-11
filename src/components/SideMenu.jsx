@@ -71,7 +71,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
   ].filter(Boolean).join(" ")
 
   return (
-    <div className={`flex ${className && className}`}>
+    <div className={`flex ${className || ""}`}>
       <aside
         className={`h-screen transition-all duration-300 ease-in-out z-40 shadow-md border-r ${
           isOpen ? "w-48" : "w-14"
