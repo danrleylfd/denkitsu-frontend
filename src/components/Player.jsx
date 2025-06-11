@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from "react"
 import { LuPlay, LuPause, LuVolume2, LuVolumeX, LuExpand, LuRefreshCw } from "react-icons/lu"
 
-const CustomVideoPlayer = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poster = "https://peach.blender.org/wp-content/uploads/title_anouncement.jpg?x11217" }) => {
+const Player = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poster = "https://peach.blender.org/wp-content/uploads/title_anouncement.jpg?x11217" }) => {
   const videoRef = useRef(null)
   const [playing, setPlaying] = useState(false)
   const [repeat, setRepeat] = useState(false)
@@ -83,12 +83,12 @@ const CustomVideoPlayer = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4",
     if (videoRef.current.requestFullscreen) videoRef.current.requestFullscreen()
   }
   return (
-    <div className="relative w-full sm:max-w-lg md:max-w-xl overflow-hidden rounded-2xl shadow-lg">
+    <div className="relative w-full overflow-hidden rounded-lg shadow-lg">
       <video
         ref={videoRef}
         src={src}
         poster={poster}
-        className="h-auto min-w-[45rem] w-full max-w-[45rem] cursor-pointer"
+        className="h-auto sm:min-w-[45rem] w-full cursor-pointer"
         onClick={togglePlay}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
@@ -141,4 +141,4 @@ const CustomVideoPlayer = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4",
   )
 }
 
-export default CustomVideoPlayer
+export default Player

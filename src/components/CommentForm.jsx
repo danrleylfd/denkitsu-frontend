@@ -4,7 +4,7 @@ import { MdComment } from "react-icons/md"
 import Input from "./Input"
 import Button from "./Button"
 
-const CommentForm = ({ onSubmit, placeholder = "Digite seu comentário", actionLabel = "Comentar", disabled }) => {
+const CommentForm = ({ onSubmit, placeholder = "Digite seu comentário", actionLabel = "Comentar", disabled, className }) => {
   const [content, setContent] = useState("")
   const [loading, setLoading] = useState(false)
 
@@ -25,7 +25,7 @@ const CommentForm = ({ onSubmit, placeholder = "Digite seu comentário", actionL
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-light-cardBg dark:bg-dark-cardBg flex items-center p-4 rounded-md gap-2"
+      className={`bg-light-cardBg dark:bg-dark-cardBg flex items-center gap-2 p-4 rounded-md ${className || ""}`}
     >
       <Input
         placeholder={placeholder}

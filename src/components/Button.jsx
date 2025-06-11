@@ -1,5 +1,3 @@
-import { useState, useEffect } from "react"
-
 const Spinner = () => (
   <div className="h-4 w-4 animate-spin-fast rounded-full border-2 border-solid border-transparent border-t-current" />
 )
@@ -13,7 +11,7 @@ const Button = ({
   loading = false,
   disabled = false,
   children,
-  ...rest
+  ...props
 }) => {
   const baseClasses = "relative flex select-none items-center justify-center font-bold uppercase transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-50"
   const variantClasses = {
@@ -38,6 +36,7 @@ const Button = ({
   return (
     <div className="flex justify-center">
       <button
+        {...props}
         type={type}
         className={`
           ${baseClasses}
@@ -47,7 +46,6 @@ const Button = ({
           ${loading ? "pointer-events-none opacity-70" : ""}
         `}
         disabled={loading || disabled}
-        {...rest}
       >
         {loading && <Spinner />} {children}
       </button>

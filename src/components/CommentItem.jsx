@@ -51,26 +51,21 @@ const CommentItem = ({ comment, videoId, onCommentDeleted, onReplyAdded, disable
   }
 
   return (
-    <div
-      className="bg-light-cardBg dark:bg-dark-cardBg flex flex-col p-2 md:p-4 rounded-md gap-2"
-      style={comment.parent ? { marginLeft: "30px" } : {}}
-    >
+    <div className="bg-light-cardBg dark:bg-dark-cardBg flex flex-col gap-2 p-4 rounded-md">
       <div className="flex items-center gap-2">
         <img
           src={comment.user.avatarUrl}
           alt={comment.user.name}
-          className="w-6 h-6 rounded-full"
+          className="w-8 h-8 rounded-full"
         />
-        <Link to={`/profile/${comment.user._id}`} className="text-sm font-medium">
-          {comment.user.name}
-        </Link>
+        <div className="flex gap-1 align-middle justify-center">
+          <Link to={`/profile/${comment.user._id}`} className="text-sm font-medium">
+            {comment.user.name}
+          </Link>
+          <small className="text-sm font-medium text-light-textMuted dark:text-dark-textMuted">{new Date(comment.createdAt).toLocaleString()}</small>
+        </div>
       </div>
-
-      <p className="text-sm">{comment.content}</p>
-      <small className="text-xs text-light-textMuted dark:text-dark-textMuted">
-        {new Date(comment.createdAt).toLocaleString()}
-      </small>
-
+      <p className="text-md break-words">{comment.content}</p>
       <div className="flex gap-2">
         {signed && !comment.parent && (
           <Button
@@ -110,10 +105,9 @@ const CommentItem = ({ comment, videoId, onCommentDeleted, onReplyAdded, disable
           </>
         )}
       </div>
-
       {showReplyForm && (
         <>
-          <CommentForm onSubmit={handleReplySubmit} />
+          <CommentForm onSubmit={handleReplySubmit} className="px-0 py-0" />
           {replies.map((reply) => (
             <CommentItem
               key={reply._id}

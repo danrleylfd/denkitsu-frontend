@@ -23,12 +23,7 @@ import CommentForm from "../../components/CommentForm"
 import CommentItem from "../../components/CommentItem"
 import { MessageSuccess, MessageError } from "../../components/Notifications"
 
-const SideContentContainer = (props) => (
-  <div
-    {...props}
-    className="flex h-screen flex-1 flex-col items-center justify-start gap-2 p-2 max-w-[89%] ml-[3.5rem] md:max-w-[67%]"
-  />
-)
+const ContentView = (props) => <div {...props} className="flex flex-1 flex-col items-center gap-2 p-2 w-full h-screen ml-[3.5rem]" />
 
 const VideoDetail = () => {
   const { videoId } = useParams()
@@ -178,45 +173,51 @@ const VideoDetail = () => {
   }
 
   return (
-    <SideMenu fixed ContentView={SideContentContainer}>
+    <SideMenu fixed ContentView={ContentView}>
       {loading && <Button variant="outline" style={{ marginTop: ".5rem" }} $rounded loading={loading} disabled />}
       {error && <MessageError>{error}</MessageError>}
       {!error && video && (
-        <div className="flex flex-col p-2 gap-2 max-w-[1000px]">
-          <Player src={video.fileUrl} poster={video.thumbnail}/>
-          <h5>{video.content}</h5>
-          {video.user && (
-            <div className="flex flex-row items-center gap-2 py-2">
-              <img className="w-6 h-6 rounded-full" src={video.user.avatarUrl} alt={video.user.name} />
-              <Link to={`/profile/${video.user._id}`}>{video.user.name}</Link>
-              <small>Publicou em {new Date(video.createdAt).toLocaleString()}</small>
-            </div>
-          )}
-          <div className="flex flex-row items-center gap-2 py-2">
-            <Button type="button" variant={isLiked ? "danger" : "primary"} size="icon" $rounded title={isLiked ? "Descurtir" : "Curtir"} onClick={handleLikeToggle} disabled={loading}>
-              {isLiked?  <MdThumbDown size={16}/> : <MdThumbUp size={16}/>}
-            </Button>
-            <Button type="button" size="icon" $rounded title="Compartilhar" onClick={handleShare} disabled={loading}>
-              <MdShare size={16}/>
-            </Button>
-            <Button variant="secondary" $rounded disabled>{likeCount} <MdThumbUp /> / {commentCount} <MdComment /> / {shareCount} <MdShare /></Button>
-            {video.user._id === user?._id && (
-              <>
-                <Button type="button" variant="warning" size="icon" $rounded title="Editar" disabled={true}>
-                  <MdEdit size={16}/>
-                </Button>
-                <Button type="button" variant="danger" size="icon" $rounded title="Deletar" onClick={handleDeleteVideo}>
-                  <MdDelete size={16}/>
-                </Button>
-              </>
+        <div className="flex flex-col py-2 gap-2 w-full sm:max-w-lg md:max-w-2xl">
+            <Player src={video.fileUrl} poster={video.thumbnail} />
+            <h5>{video.content}</h5>
+            {video.user && (
+              <div className="flex flex-row items-center gap-2">
+                <img className="w-8 h-8 rounded-full" src={video.user.avatarUrl} alt={video.user.name} />
+                <Link to={`/profile/${video.user._id}`}>{video.user.name}</Link>
+                <small>Publicou em {new Date(video.createdAt).toLocaleString()}</small>
+              </div>
             )}
-          </div>
-          <div className="flex flex-col gap-2 py-2">
-          <MdComment size={22}/>
-            <div style={{ padding: "0 1rem" }}>
-              <CommentForm onSubmit={handleAddComment} />
+            <div className="flex flex-row items-center gap-2">
+              <Button
+                type="button"
+                variant={isLiked ? "danger" : "primary"}
+                size="icon"
+                $rounded
+                title={isLiked ? "Descurtir" : "Curtir"}
+                onClick={handleLikeToggle}
+                disabled={loading}>
+                {isLiked ? <MdThumbDown size={16} /> : <MdThumbUp size={16} />}
+              </Button>
+              <Button type="button" size="icon" $rounded title="Compartilhar" onClick={handleShare} disabled={loading}>
+                <MdShare size={16} />
+              </Button>
+              <Button variant="secondary" $rounded disabled>
+                {likeCount} <MdThumbUp /> / {commentCount} <MdComment /> / {shareCount} <MdShare />
+              </Button>
+              {video.user._id === user?._id && (
+                <>
+                  <Button type="button" variant="warning" size="icon" $rounded title="Editar" disabled={true}>
+                    <MdEdit size={16} />
+                  </Button>
+                  <Button type="button" variant="danger" size="icon" $rounded title="Deletar" onClick={handleDeleteVideo}>
+                    <MdDelete size={16} />
+                  </Button>
+                </>
+              )}
             </div>
-            <div className="flex flex-col gap-2 py-2">
+            <MdComment size={16} />
+            <CommentForm onSubmit={handleAddComment} />
+            <div className="flex flex-col gap-2">
               {loading && comments.length === 0 && <Button variant="outline" $rounded loading={loading} disabled />}
               {!loading && comments.length === 0 && <MessageSuccess>Nenhum comentário ainda. Seja o primeiro!</MessageSuccess>}
               {comments.map((comment) => (
@@ -230,7 +231,7 @@ const VideoDetail = () => {
                 />
               ))}
             </div>
-          </div>
+
         </div>
       )}
     </SideMenu>

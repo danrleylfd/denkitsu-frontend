@@ -5,8 +5,7 @@ import Input from "./Input"
 import Button from "./Button"
 
 const Card = ({ video }) => {
-  if (!video) return null
-
+  if (!video) return
   return (
     <div className="h-fit w-full md:max-w-xs overflow-hidden rounded-lg border border-solid border-light-border dark:border-dark-border">
       <div className="flex h-40 w-full">
