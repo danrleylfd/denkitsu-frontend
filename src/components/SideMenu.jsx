@@ -1,0 +1,105 @@
+import { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
+import {
+  LuMenu,
+  LuX,
+  LuCloud,
+  LuNewspaper,
+  LuBotMessageSquare,
+  LuLogIn,
+  LuLogOut,
+  LuLock,
+  LuClock,
+  LuList,
+  LuPlay,
+  LuUpload,
+  LuLink,
+  LuPersonStanding,
+  LuSun,
+  LuMoon
+} from "react-icons/lu"
+import { MdHomeFilled } from "react-icons/md"
+import { useTheme } from "../contexts/ThemeContext"
+import { useAuth } from "../contexts/AuthContext"
+
+const MainContent = ({ children }) => (
+  <main className="flex flex-col justify-center items-center p-2 gap-2 mx-auto h-screen max-w-[67%] md:max-w-[75%]">{children}</main>
+)
+
+const SideMenu = ({ children, className, style, ContentView = MainContent }) => {
+  const { theme, toggleTheme } = useTheme()
+  const { signed } = useAuth()
+
+  const getInitialMenuState = () => localStorage.getItem("@Denkitsu:menuState") === "opened"
+  const [isOpen, setOpen] = useState(getInitialMenuState)
+  const toggleMenu = () => setOpen((prev) => !prev)
+
+  useEffect(() => {
+    localStorage.setItem("@Denkitsu:menuState", isOpen ? "opened" : "closed")
+  }, [isOpen])
+
+  const menuItems = [
+    { icon: MdHomeFilled, label: "Início", to: "/" },
+    { icon: LuNewspaper, label: "Notícias", to: "/news" },
+    { icon: LuCloud, label: "Clima", to: "/clima" },
+    { icon: LuClock, label: "Pomodoro", to: "/pomodoro" },
+    { icon: LuList, label: "Missões", to: "/todo"},
+  ]
+  signed && menuItems.push(
+    { icon: LuBotMessageSquare, label: "AI", to: "/chat" },
+    { icon: LuLink, label: "Atalho", to: "/atalho" },
+    { icon: LuPlay, label: "Meus Vídeos", to: "/my-videos" },
+    { icon: LuUpload, label: "Upload", to: "/upload" },
+    { icon: LuPlay, label: "Vídeos Populares", to: "/popular" },
+    { icon: LuPlay, label: "Vídeos Recentes", to: "/recents" },
+    { icon: LuPersonStanding, label: "Perfil", to: "/profile" },
+    { icon: LuLogOut, label: "Sair", to: "/auth/signout" },
+  )
+  !signed && menuItems.push(
+    { icon: LuLogIn, label: "Entrar", to: "/signin" },
+    { icon: LuLogIn, label: "Cadastrar", to: "/signup"},
+    { icon: LuLock, label: "Esqueceu a senha?", to: "/forgot_password" },
+    { icon: LuLock, label: "Redefinir senha", to: "/reset_password" },
+  )
+
+  const menuItemClass = [
+    "flex items-center px-4 py-1 mx-1 rounded-xl",
+    "bg-transparent hover:bg-light-background dark:hover:bg-dark-background",
+    "text-light-textPrimary dark:text-dark-textPrimary hover:text-primary-light dark:hover:text-primary-light active:text-primary-dark dark:active:text-primary-dark",
+    "cursor-pointer",
+    !isOpen && "justify-center"
+  ].filter(Boolean).join(" ")
+
+  return (
+    <div className={`flex ${className}`}>
+      <aside
+        className={`h-screen transition-all duration-300 ease-in-out z-40 shadow-md border-r ${
+          isOpen ? "w-48" : "w-14"
+        } bg-light-cardBg dark:bg-dark-cardBg border-border`}
+        style={style}>
+        <nav className="flex flex-col gap-1">
+          <div className="w-0 h-0 p-0 m-0"></div>
+          <button onClick={toggleMenu} className={menuItemClass}>
+            <div className="w-6 h-6 flex items-center justify-center">{isOpen ? <LuX size={16} /> : <LuMenu size={16} />}</div>
+            {isOpen && <span className="ml-3 select-none">Menu</span>}
+          </button>
+          <button onClick={toggleTheme} className={menuItemClass}>
+            <div className="w-6 h-6 flex items-center justify-center">{theme === "dark" ? <LuSun size={16} /> : <LuMoon size={16} />}</div>
+            {isOpen && <span className="ml-3 select-none">Tema</span>}
+          </button>
+          {menuItems.map(({ icon: Icon, label, to }, index) => (
+            <Link key={index} to={to} className={menuItemClass}>
+              <div className="w-6 h-6 flex items-center justify-center">
+                <Icon size={16} />
+              </div>
+              {isOpen && <span className="ml-3 select-none">{label}</span>}
+            </Link>
+          ))}
+        </nav>
+      </aside>
+      <ContentView>{children}</ContentView>
+    </div>
+  )
+}
+
+export default SideMenu
