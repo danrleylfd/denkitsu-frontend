@@ -1,9 +1,6 @@
-const MainContainer = ({ children, style = {} }) => {
+const MainContainer = ({ children, className, ...props }) => {
   return (
-    <div
-      className="flex flex-col p-2 gap-2 mx-auto max-w-[1000px]"
-      style={style}
-    >
+    <div {...props} className={`flex flex-col p-2 gap-2 max-w-[1000px] ${className}`}>
       {children}
     </div>
   )
