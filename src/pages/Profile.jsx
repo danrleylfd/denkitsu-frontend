@@ -96,8 +96,8 @@ const Profile = () => {
   }
 
   return (
-    <SideMenu ContentView={({ children }) => (
-      <div className="flex flex-1 flex-col justify-center items-center p-2 gap-2 mx-auto h-screen bg-cover bg-[url('/background.jpg')] bg-brand-purple">
+    <SideMenu fixed ContentView={({ children }) => (
+      <div className="flex flex-col justify-center items-center p-2 gap-2 mx-auto w-full h-screen ml-[3.5rem] md:ml-auto bg-cover bg-[url('/background.jpg')] bg-brand-purple">
         {children}
       </div>
     )}>

@@ -8,7 +8,7 @@ const Card = ({ video }) => {
   if (!video) return null
 
   return (
-    <div className="h-fit w-full max-w-xs overflow-hidden rounded-lg border border-solid border-light-border dark:border-dark-border">
+    <div className="h-fit w-full md:max-w-xs overflow-hidden rounded-lg border border-solid border-light-border dark:border-dark-border">
       <div className="flex h-40 w-full">
         <img
           src={video.thumbnail}

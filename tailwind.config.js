@@ -9,6 +9,9 @@ export default {
       animation: {
         "spin-fast": "spin .3s linear infinite"
       },
+      screens: {
+        xs: "480px"
+      },
       colors: {
         "brand-purple": "#7159C1",
         primary: {

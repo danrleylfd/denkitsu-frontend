@@ -11,12 +11,12 @@ import Button from "../components/Button"
 
 const initialTasks = {
   Tarefas: [],
-  Fazendo: [],
+  Progresso: [],
   Feito: []
 }
 
 const SideContentContainer = ({ children }) => (
-  <div className="mx-auto flex h-screen flex-1 flex-col items-center justify-start gap-2 p-2 bg-cover bg-[url('/background.jpg')] bg-brand-purple">
+  <div className="mx-auto flex flex-1 flex-col items-center justify-start gap-2 p-2 bg-cover bg-repeat-y bg-[url('/background.jpg')] bg-brand-purple">
     {children}
   </div>
 )
@@ -39,7 +39,7 @@ const Column = ({ id, tasks }) => {
   const { setNodeRef, isOver } = useDroppable({ id })
   return (
     <SortableContext items={tasks.map((task) => task.id)} id={id}>
-      <div ref={setNodeRef} className={`flex gap-2 h-min w-full max-w-[30%] min-w-[30%] flex-col rounded-lg bg-light-cardBg p-4 shadow-md dark:bg-dark-cardBg opacity-75 dark:opacity-90`}>
+      <div ref={setNodeRef} className={`flex gap-2 h-min w-full md:max-w-[30%] md:min-w-[30%] flex-col rounded-lg bg-light-cardBg p-4 shadow-md dark:bg-dark-cardBg opacity-75 dark:opacity-90`}>
         <h2 className="mb-4 border-b border-light-border pb-2 font-bold text-light-textPrimary dark:border-dark-border dark:text-dark-textPrimary">
           {id.charAt(0).toUpperCase() + id.slice(1)}
         </h2>
@@ -54,7 +54,7 @@ const Column = ({ id, tasks }) => {
 
 const DeleteZone = () => {
   const { setNodeRef, isOver } = useDroppable({ id: "delete-zone" })
-  const baseClasses = "mt-5 flex h-[50px] w-[10%] items-center justify-center rounded-lg font-bold transition-all"
+  const baseClasses = "flex w-full md:min-w-[10%] md:max-w-[10%] p-[2.5rem] max-h-[104px] items-center justify-center rounded-lg font-bold transition-all"
   const inactiveClasses = "border-2 border-dashed border-light-textMuted text-light-textMuted"
   const activeClasses = "border-2 border-dashed border-danger-base bg-danger-base/10 text-danger-base"
   return (
@@ -141,18 +141,24 @@ const Todo = () => {
     setNewTaskContent("")
   }, [newTaskContent])
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault()
+      handleAddTask()
+    }
+  }
   const activeTask = activeId ? findTask(activeId) : null
   return (
     <SideMenu ContentView={SideContentContainer}>
       <DndContext sensors={sensors} collisionDetection={closestCorners} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragCancel={onDragCancel}>
         <Paper>
-          <Input placeholder="Nova tarefa..." value={newTaskContent} onChange={(e) => setNewTaskContent(e.target.value)}>
+          <Input placeholder="Nova tarefa..." value={newTaskContent} onChange={(e) => setNewTaskContent(e.target.value)} onKeyDown={handleKeyDown}>
             <Button variant="outline" size="icon" $rounded title="Adicionar tarefa" onClick={handleAddTask}>
               <MdAdd size={16} />
             </Button>
           </Input>
         </Paper>
-        <div className="mx-auto flex w-full justify-center gap-2 p-2">
+        <div className="mx-auto flex flex-col md:flex-row w-full justify-center gap-2 p-2">
           {Object.entries(tasks).map(([columnId, columnTasks]) => (
             <Column key={columnId} id={columnId} tasks={columnTasks} />
           ))}

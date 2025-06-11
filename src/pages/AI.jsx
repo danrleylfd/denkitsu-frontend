@@ -13,7 +13,7 @@ import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
 import { MessageError } from "../components/Notifications"
 
-const MainContent = ({ children }) => <div className="flex flex-col flex-1 h-screen mx-auto p-0 gap-2">{children}</div>
+const ContentView = ({ children }) => <div className="flex flex-col flex-1 h-screen mx-auto p-0 gap-2">{children}</div>
 
 const AI = () => {
   const { user } = useAuth()
@@ -76,7 +76,7 @@ const AI = () => {
     }
   }
   return (
-    <SideMenu ContentView={MainContent}>
+    <SideMenu ContentView={ContentView}>
       <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-2 bg-cover bg-[url('/background.jpg')] bg-brand-purple">
         {messages.map((msg, idx) => (
           <div

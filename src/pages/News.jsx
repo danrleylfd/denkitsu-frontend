@@ -69,16 +69,10 @@ const News = () => {
   }, [handleScroll])
 
   return (
-    <SideMenu style={{ position: "fixed" }}
-      ContentView={({ children }) => (
-        <div className="flex-1 flex flex-col items-center p-2 gap-2 h-auto absolute right-0 md:static md:mx-auto bg-repeat-y bg-contain bg-[url('/background.jpg')] bg-brand-purple">
-          {children}
-        </div>
-      )}
-    >
+    <SideMenu fixed className="bg-no-repeat bg-contain bg-[url('/background.jpg')] bg-brand-purple">
       {error && <Paper>{error}</Paper>}
       {news.map((article) => (
-        <Paper key={article._id} className="max-w-[90%] md:max-w-[67%]">
+        <Paper key={article._id} className="w-full opacity-75 dark:opacity-90">
           <ReactMarkdown
             components={{
               img: ({ node, ...props }) => <img className="w-full rounded" {...props} />,

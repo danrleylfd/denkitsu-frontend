@@ -27,7 +27,7 @@ import { MessageSuccess, MessageError } from "../../components/Notifications"
 const SideContentContainer = (props) => (
   <div
     {...props}
-    className="flex h-screen flex-1 flex-col items-center justify-start gap-2 p-2 max-w-[89%] absolute right-0 md:relative md:mx-auto md:max-w-[67%]"
+    className="flex h-screen flex-1 flex-col items-center justify-start gap-2 p-2 max-w-[89%] ml-[3.5rem] md:mx-auto md:max-w-[67%]"
   />
 )
 
@@ -179,7 +179,7 @@ const VideoDetail = () => {
   }
 
   return (
-    <SideMenu style={{ position: "fixed" }} ContentView={SideContentContainer}>
+    <SideMenu fixed ContentView={SideContentContainer}>
       {loading && <Button variant="outline" style={{ marginTop: ".5rem" }} $rounded loading={loading} disabled />}
       {error && <MessageError>{error}</MessageError>}
       {!error && video && (

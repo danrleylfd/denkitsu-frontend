@@ -23,10 +23,10 @@ import { useTheme } from "../contexts/ThemeContext"
 import { useAuth } from "../contexts/AuthContext"
 
 const MainContent = ({ children }) => (
-  <main className="flex flex-col justify-center items-center p-2 gap-2 mx-auto h-screen max-w-[67%] md:max-w-[75%]">{children}</main>
+  <main className="flex flex-col items-center p-2 gap-2 mx-auto w-full xs:max-w-[100%] sm:max-w-[90%] ml-[3.5rem] md:ml-auto md:max-w-[75%] lg:max-w-[67%]">{children}</main>
 )
 
-const SideMenu = ({ children, className, style, ContentView = MainContent }) => {
+const SideMenu = ({ children, className, style, fixed, ContentView = MainContent }) => {
   const { theme, toggleTheme } = useTheme()
   const { signed } = useAuth()
 
@@ -75,8 +75,7 @@ const SideMenu = ({ children, className, style, ContentView = MainContent }) => 
       <aside
         className={`h-screen transition-all duration-300 ease-in-out z-40 shadow-md border-r ${
           isOpen ? "w-48" : "w-14"
-        } bg-light-cardBg dark:bg-dark-cardBg border-border`}
-        style={style}>
+        } bg-light-cardBg dark:bg-dark-cardBg border-border ${fixed && "fixed"}`}>
         <nav className="flex flex-col gap-1">
           <div className="w-0 h-0 p-0 m-0"></div>
           <button onClick={toggleMenu} className={menuItemClass}>

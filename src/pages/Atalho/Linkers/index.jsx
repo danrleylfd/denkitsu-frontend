@@ -130,7 +130,7 @@ const Linkers = () => {
   }
 
   return (
-    <SideMenu style={{ position: "fixed" }} ContentView={SideContentContainer}>
+    <SideMenu fixed ContentView={SideContentContainer}>
       {/* <Title>Meus Atalhos</Title> */}
       {/* {message && <MessageSuccess>{message}</MessageSuccess>} */}
       <Paper>
