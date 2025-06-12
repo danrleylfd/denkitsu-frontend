@@ -9,7 +9,7 @@ import SignIn from "../pages/SignIn"
 import ForgotPassword from "../pages/ForgotPassword"
 import ResetPassword from "../pages/ResetPassword"
 
-import Linkers from "../pages/Linkers"
+import Shortcut from "../pages/Shortcut"
 import Redirect from "../pages/Redirect"
 
 import AI from "../pages/AI"
@@ -44,7 +44,7 @@ const AppRoutes = () => {
             <Route path="/video/:videoId" element={<VideoDetail />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/:userId" element={<Profile />} />
-            <Route path="/atalho" element={<Linkers />} />
+            <Route path="/atalho" element={<Shortcut />} />
             <Route path="/chat" element={<AI />} />
             <Route path="/access/:label" element={<Redirect />} />
             <Route path="/auth/:label" element={<Redirect />} />

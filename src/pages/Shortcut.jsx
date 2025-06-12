@@ -10,7 +10,7 @@ import Input from "../components/Input"
 import Button from "../components/Button"
 import { MessageBase, MessageWarning, MessageError } from "../components/Notifications"
 
-const Linkers = () => {
+const Shortcut = () => {
   const { signed } = useAuth()
   const [linkers, setLinkers] = useState([])
   const [newLabel, setNewLabel] = useState("")
@@ -190,4 +190,4 @@ const Linkers = () => {
   )
 }
 
-export default Linkers
+export default Shortcut
