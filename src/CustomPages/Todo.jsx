@@ -138,13 +138,13 @@ const Column = ({ id, title, tasks, onDeleteTask, onUpdateTask, editingId, setEd
 }
 
 const TrashZone = ({ isDragging, isOver }) => {
-  const { setNodeRef } = useDroppable({ id: "trash" });
+  const { setNodeRef } = useDroppable({ id: "trash" })
 
-  const baseClasses = "fixed bottom-0 left-0 right-0 z-10 p-6 bg-zinc-900/80 backdrop-blur-sm transition-transform duration-300 ease-in-out";
-  const draggingClasses = isDragging ? "translate-y-0" : "translate-y-full";
+  const baseClasses = "fixed bottom-0 left-0 right-0 z-10 p-6 bg-zinc-900/80 backdrop-blur-sm transition-transform duration-300 ease-in-out"
+  const draggingClasses = isDragging ? "translate-y-0" : "translate-y-full"
 
-  const contentBaseClasses = "flex items-center justify-center border-2 border-dashed rounded-lg p-6 transition-colors duration-200";
-  const contentOverClasses = isOver ? "border-red-500 bg-red-500/20 text-red-400" : "border-zinc-600 text-zinc-400";
+  const contentBaseClasses = "flex items-center justify-center border-2 border-dashed rounded-lg p-6 transition-colors duration-200"
+  const contentOverClasses = isOver ? "border-red-500 bg-red-500/20 text-red-400" : "border-zinc-600 text-zinc-400"
 
   return (
     <div ref={setNodeRef} className={`${baseClasses} ${draggingClasses}`}>
@@ -153,8 +153,8 @@ const TrashZone = ({ isDragging, isOver }) => {
         <span>Arraste a tarefa aqui para excluir</span>
       </div>
     </div>
-  );
-};
+  )
+}
 
 const INITIAL_TASKS = {
   todo: [
@@ -202,8 +202,8 @@ const KanbanApp = () => {
   }
 
   const handleMagicAddTask = async () => {
-    const goal = newTask.trim();
-    if (!goal) return;
+    const goal = newTask.trim()
+    if (!goal) return
     setLoading(true)
     try {
       const prompt = { role: "user", content: `Divida o seguinte objetivo em uma lista de tarefas pequenas e acionáveis. Responda APENAS com um array JSON de strings, onde cada string é uma tarefa. Objetivo: "${goal}"` }
@@ -217,7 +217,7 @@ const KanbanApp = () => {
     } finally {
       setLoading(false)
     }
-  };
+  }
 
   const handleDeleteTask = (id) => {
     const container = findContainer(id)
@@ -230,16 +230,16 @@ const KanbanApp = () => {
   }
 
   const handleUpdateTask = (id, newContent) => {
-    const container = findContainer(id);
+    const container = findContainer(id)
     if (container) {
         setTasks((prev) => ({
             ...prev,
             [container]: prev[container].map((task) =>
                 task.id === id ? { ...task, content: newContent } : task
             ),
-        }));
+        }))
     }
-  };
+  }
 
 
   const handleDragStart = (event) => {
@@ -247,14 +247,14 @@ const KanbanApp = () => {
     if (active.data.current?.type === "Task") {
       setActiveTask(active.data.current.task)
     }
-    setEditingId(null);
-    setIsOverTrash(false);
+    setEditingId(null)
+    setIsOverTrash(false)
   }
 
   const handleDragOver = (event) => {
     const { active, over } = event
 
-    setIsOverTrash(over?.id === 'trash')
+    setIsOverTrash(over?.id === "trash")
 
     if (!over || active.id === over.id) return
     const activeContainer = findContainer(active.id)
@@ -301,22 +301,22 @@ const KanbanApp = () => {
       }
     }
     setActiveTask(null)
-    setIsOverTrash(false);
+    setIsOverTrash(false)
   }
 
   const collisionDetectionStrategy = (args) => {
-    const trashContainer = args.droppableContainers.find(container => container.id === 'trash');
-    const otherContainers = args.droppableContainers.filter(container => container.id !== 'trash');
+    const trashContainer = args.droppableContainers.find(container => container.id === "trash")
+    const otherContainers = args.droppableContainers.filter(container => container.id !== "trash")
 
     if (trashContainer && activeTask) {
-        const trashCollisions = rectIntersection({ ...args, droppableContainers: [trashContainer] });
+        const trashCollisions = rectIntersection({ ...args, droppableContainers: [trashContainer] })
         if (trashCollisions.length > 0) {
-            return trashCollisions;
+            return trashCollisions
         }
     }
 
-    return closestCorners({ ...args, droppableContainers: otherContainers });
-  };
+    return closestCorners({ ...args, droppableContainers: otherContainers })
+  }
 
   return (
     <main className="min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 px-4 sm:px-6 lg:px-8 py-8 font-sans">
@@ -349,7 +349,7 @@ const KanbanApp = () => {
               ) : (
                 <LuSparkles size={18} />
               )}
-               {loading ? 'Criando...' : '✨ Adicionar Mágico'}
+               {loading ? "Criando..." : "Gerar Passos"}
             </button>
           </div>
         </header>

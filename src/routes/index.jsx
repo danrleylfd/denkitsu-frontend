@@ -25,6 +25,7 @@ import Pomodoro from "../pages/Pomodoro"
 import Weather from "../pages/Weather"
 
 import Todo2 from "../CustomPages/Todo"
+import Outage from "../pages/Outage"
 
 const AppRoutes = () => {
   const { signed, loading } = useAuth()
@@ -36,6 +37,7 @@ const AppRoutes = () => {
           <>
             <Route path="/" element={<News />} />
             <Route path="/news" element={<News />} />
+            <Route path="/outage" element={<Outage />} />
             <Route path="/todo" element={<Todo />} />
             <Route path="/todo-beta" element={<Todo2 />} />
             <Route path="/pomodoro" element={<Pomodoro />} />
@@ -57,6 +59,7 @@ const AppRoutes = () => {
           <>
             <Route path="/" element={<News />} />
             <Route path="/news" element={<News />} />
+            <Route path="/outage" element={<Outage />} />
             <Route path="/todo" element={<Todo />} />
             <Route path="/todo-beta" element={<Todo2 />} />
             <Route path="/pomodoro" element={<Pomodoro />} />
