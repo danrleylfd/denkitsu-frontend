@@ -128,67 +128,65 @@ const Linkers = () => {
   }
 
   return (
-    <SideMenu fixed>
-      <div className="flex flex-col items-center px-2 py-2 gap-2 h-screen max-w-[67%] mx-auto md:max-w-[89%] md:absolute md:right-0">
-        <div className="bg-light-cardBg dark:bg-dark-cardBg p-4 rounded-md w-full">
-          <form onSubmit={handleCreateLink} className="flex flex-row items-center gap-2">
-            <Input placeholder="Apelido" value={newLabel} onChange={(e) => setNewLabel(e.target.value.trim())} disabled={formLoading} />
-            <Input placeholder="Link Original" value={newLink} onChange={(e) => setNewLink(e.target.value.trim())} disabled={formLoading} />
-            <Button type="submit" size="icon" $rounded title="Encurtar" loading={formLoading} disabled={!newLabel || !newLink}>
-              {!formLoading && <MdAdd size={16} />}
-            </Button>
-            {formError && <MessageError>{formError}</MessageError>}
-          </form>
-        </div>
-
-        {loading && <Button variant="outline" $rounded loading={loading} disabled />}
-        {message && <MessageBase>{message}</MessageBase>}
-        {error && <MessageError>{error}</MessageError>}
-        {!loading && linkers.length === 0 && <MessageWarning>Você ainda não criou nenhum atalho.</MessageWarning>}
-
-        {!loading && linkers.length > 0 && (
-          <>
-            {linkers.map((linker) => (
-              <div key={linker._id} className="flex justify-between items-center p-4 rounded-md w-full border bg-light-cardBg dark:bg-dark-cardBg border-light-border dark:border-dark-border">
-                {editingLinker?._id === linker._id ? (
-                  <form onSubmit={handleUpdateLink} className="flex flex-row items-center gap-2 w-full">
-                    <Input value={editLabel} onChange={(e) => setEditLabel(e.target.value.trim())} disabled={editLoading} />
-                    <Input value={editLink} onChange={(e) => setEditLink(e.target.value.trim())} disabled={editLoading} />
-                    <div className="flex gap-2">
-                      <Button variant="secondary" size="icon" $rounded title="Cancelar" onClick={cancelEditing} disabled={editLoading}>
-                        <MdCancel size={16} />
-                      </Button>
-                      <Button type="submit" variant="success" size="icon" $rounded title="Salvar" loading={editLoading} disabled={!editLabel || !editLink}>
-                        {!editLoading && <MdCheck size={16} />}
-                      </Button>
-                    </div>
-                    {editError && <MessageError className="text-left mt-1">{editError}</MessageError>}
-                  </form>
-                ) : (
-                  <>
-                    <div className="flex gap-2">
-                      <Link to={`/access/${linker.label}`} target="_blank" rel="noopener noreferrer">
-                        Acessar /{linker.label}
-                      </Link>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button variant="success" size="icon" $rounded title="Copiar" onClick={() => copyToClipboard(`${window.origin}/access/${linker.label}`)}>
-                        <MdContentCopy size={16} />
-                      </Button>
-                      <Button variant="warning" size="icon" $rounded title="Editar" onClick={() => startEditing(linker)}>
-                        <MdEdit size={16} />
-                      </Button>
-                      <Button variant="danger" size="icon" $rounded title="Deletar" onClick={() => handleDeleteLink(linker.label)}>
-                        <MdDelete size={16} />
-                      </Button>
-                    </div>
-                  </>
-                )}
-              </div>
-            ))}
-          </>
-        )}
+    <SideMenu fixed className="bg-no-repeat bg-contain bg-[url('/background.jpg')] bg-brand-purple">
+      <div className="bg-light-cardBg dark:bg-dark-cardBg p-4 rounded-md w-full">
+        <form onSubmit={handleCreateLink} className="flex flex-row items-center gap-2">
+          <Input placeholder="Apelido" value={newLabel} onChange={(e) => setNewLabel(e.target.value.trim())} disabled={formLoading} />
+          <Input placeholder="Link Original" value={newLink} onChange={(e) => setNewLink(e.target.value.trim())} disabled={formLoading} />
+          <Button type="submit" size="icon" $rounded title="Encurtar" loading={formLoading} disabled={!newLabel || !newLink}>
+            {!formLoading && <MdAdd size={16} />}
+          </Button>
+          {formError && <MessageError>{formError}</MessageError>}
+        </form>
       </div>
+      {loading && <Button variant="outline" $rounded loading={loading} disabled />}
+      {message && <MessageBase>{message}</MessageBase>}
+      {error && <MessageError>{error}</MessageError>}
+      {!loading && linkers.length === 0 && <MessageWarning>Você ainda não criou nenhum atalho.</MessageWarning>}
+      {!loading && linkers.length > 0 && (
+        <>
+          {linkers.map((linker) => (
+            <div
+              key={linker._id}
+              className="flex justify-between items-center p-4 rounded-md w-full border bg-light-cardBg dark:bg-dark-cardBg border-light-border dark:border-dark-border">
+              {editingLinker?._id === linker._id ? (
+                <form onSubmit={handleUpdateLink} className="flex flex-row items-center gap-2 w-full">
+                  <Input value={editLabel} onChange={(e) => setEditLabel(e.target.value.trim())} disabled={editLoading} />
+                  <Input value={editLink} onChange={(e) => setEditLink(e.target.value.trim())} disabled={editLoading} />
+                  <div className="flex gap-2">
+                    <Button variant="secondary" size="icon" $rounded title="Cancelar" onClick={cancelEditing} disabled={editLoading}>
+                      <MdCancel size={16} />
+                    </Button>
+                    <Button type="submit" variant="success" size="icon" $rounded title="Salvar" loading={editLoading} disabled={!editLabel || !editLink}>
+                      {!editLoading && <MdCheck size={16} />}
+                    </Button>
+                  </div>
+                  {editError && <MessageError className="text-left mt-1">{editError}</MessageError>}
+                </form>
+              ) : (
+                <>
+                  <div className="flex gap-2">
+                    <Link to={`/access/${linker.label}`} target="_blank" rel="noopener noreferrer">
+                      Acessar /{linker.label}
+                    </Link>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button variant="success" size="icon" $rounded title="Copiar" onClick={() => copyToClipboard(`${window.origin}/access/${linker.label}`)}>
+                      <MdContentCopy size={16} />
+                    </Button>
+                    <Button variant="warning" size="icon" $rounded title="Editar" onClick={() => startEditing(linker)}>
+                      <MdEdit size={16} />
+                    </Button>
+                    <Button variant="danger" size="icon" $rounded title="Deletar" onClick={() => handleDeleteLink(linker.label)}>
+                      <MdDelete size={16} />
+                    </Button>
+                  </div>
+                </>
+              )}
+            </div>
+          ))}
+        </>
+      )}
     </SideMenu>
   )
 }
