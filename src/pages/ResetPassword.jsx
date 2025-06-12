@@ -2,13 +2,13 @@ import { useState, useEffect } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { LuEye, LuEyeClosed } from "react-icons/lu"
 
-import api from "../../services"
+import api from "../services"
 
-import Form from "../../components/Form"
-import SideMenu from "../../components/SideMenu"
-import Input from "../../components/Input"
-import Button from "../../components/Button"
-import { MessageBase, MessageError } from "../../components/Notifications"
+import Form from "../components/Form"
+import SideMenu from "../components/SideMenu"
+import Input from "../components/Input"
+import Button from "../components/Button"
+import { MessageBase, MessageError } from "../components/Notifications"
 
 const SideContentContainer = ({ children }) => (
   <div className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-screen bg-cover bg-[url('/background.jpg')] bg-brand-purple">

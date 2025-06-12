@@ -1,10 +1,14 @@
 import { useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 
-import { useAuth } from "../../contexts/AuthContext"
-import { getLinkByLabel  } from "../../services/linker"
+import { useAuth } from "../contexts/AuthContext"
+import { getLinkByLabel  } from "../services/linker"
 
-import SideMenu from "../../components/SideMenu"
+import SideMenu from "../components/SideMenu"
+
+const ContentView = ({ children }) => (
+  <main className="flex flex-col justify-center items-center p-2 gap-2 mx-auto h-screen w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[75%] lg:max-w-[67%] ml-[3.5rem] md:ml-auto">{children}</main>
+)
 
 const Redirect = () => {
   const { label } = useParams()
@@ -28,7 +32,7 @@ const Redirect = () => {
     fetchLink()
   }, [])
   return (
-    <SideMenu>
+    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
       <h3>Redirecionando para {label || "Início"}...</h3>
     </SideMenu>
   )

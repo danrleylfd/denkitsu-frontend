@@ -2,14 +2,13 @@ import { useState, useEffect, useCallback } from "react"
 import { Link } from "react-router-dom"
 import { MdContentCopy, MdAdd, MdEdit, MdDelete, MdCancel, MdCheck } from "react-icons/md"
 
-import { useAuth } from "../../contexts/AuthContext"
-import { getLinkersByUser, createLinker, deleteLinker, updateLinker } from "../../services/linker"
+import { useAuth } from "../contexts/AuthContext"
+import { getLinkersByUser, createLinker, deleteLinker, updateLinker } from "../services/linker"
 
-import SideMenu from "../../components/SideMenu"
-import Input from "../../components/Input"
-import Button from "../../components/Button"
-import Paper from "../../components/Paper"
-import { MessageBase, MessageWarning, MessageError } from "../../components/Notifications"
+import SideMenu from "../components/SideMenu"
+import Input from "../components/Input"
+import Button from "../components/Button"
+import { MessageBase, MessageWarning, MessageError } from "../components/Notifications"
 
 const Linkers = () => {
   const { signed } = useAuth()
@@ -144,11 +143,11 @@ const Linkers = () => {
       {error && <MessageError>{error}</MessageError>}
       {!loading && linkers.length === 0 && <MessageWarning>Você ainda não criou nenhum atalho.</MessageWarning>}
       {!loading && linkers.length > 0 && (
-        <>
+        <div className="flex flex-col gap-2 m-0 p-0 w-full">
           {linkers.map((linker) => (
             <div
               key={linker._id}
-              className="flex justify-between items-center p-4 rounded-md w-full border bg-light-cardBg dark:bg-dark-cardBg border-light-border dark:border-dark-border opacity-75 dark:opacity-90">
+              className="flex justify-between items-center p-4 rounded-md border bg-light-cardBg dark:bg-dark-cardBg border-light-border dark:border-dark-border w-full opacity-75 dark:opacity-90">
               {editingLinker?._id === linker._id ? (
                 <form onSubmit={handleUpdateLink} className="flex flex-row items-center gap-2 w-full">
                   <Input value={editLabel} onChange={(e) => setEditLabel(e.target.value.trim())} disabled={editLoading} />
@@ -185,7 +184,7 @@ const Linkers = () => {
               )}
             </div>
           ))}
-        </>
+        </div>
       )}
     </SideMenu>
   )

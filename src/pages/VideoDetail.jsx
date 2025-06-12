@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react"
 import { Link, useParams } from "react-router-dom"
 import { MdThumbUp, MdThumbDown, MdComment, MdShare, MdEdit, MdDelete } from "react-icons/md"
 
-import { useAuth } from "../../contexts/AuthContext"
+import { useAuth } from "../contexts/AuthContext"
 import {
   getVideoById,
   deleteVideoById,
@@ -14,14 +14,14 @@ import {
   replyToComment,
   // deleteReply,
   getCommentsForVideo
-} from "../../services/video"
+} from "../services/video"
 
-import SideMenu from "../../components/SideMenu"
-import Player from "../../components/Player"
-import Button from "../../components/Button"
-import CommentForm from "../../components/CommentForm"
-import CommentItem from "../../components/CommentItem"
-import { MessageSuccess, MessageError } from "../../components/Notifications"
+import SideMenu from "../components/SideMenu"
+import Player from "../components/Player"
+import Button from "../components/Button"
+import CommentForm from "../components/CommentForm"
+import CommentItem from "../components/CommentItem"
+import { MessageSuccess, MessageError } from "../components/Notifications"
 
 const ContentView = (props) => <div {...props} className="flex flex-1 flex-col items-center gap-2 p-2 w-full h-screen ml-[3.5rem]" />
 
