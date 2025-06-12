@@ -129,7 +129,7 @@ const Linkers = () => {
 
   return (
     <SideMenu fixed className="bg-no-repeat bg-contain bg-[url('/background.jpg')] bg-brand-purple">
-      <div className="bg-light-cardBg dark:bg-dark-cardBg p-4 rounded-md w-full">
+      <div className="bg-light-cardBg dark:bg-dark-cardBg p-4 rounded-md w-full opacity-75 dark:opacity-90">
         <form onSubmit={handleCreateLink} className="flex flex-row items-center gap-2">
           <Input placeholder="Apelido" value={newLabel} onChange={(e) => setNewLabel(e.target.value.trim())} disabled={formLoading} />
           <Input placeholder="Link Original" value={newLink} onChange={(e) => setNewLink(e.target.value.trim())} disabled={formLoading} />
@@ -148,7 +148,7 @@ const Linkers = () => {
           {linkers.map((linker) => (
             <div
               key={linker._id}
-              className="flex justify-between items-center p-4 rounded-md w-full border bg-light-cardBg dark:bg-dark-cardBg border-light-border dark:border-dark-border">
+              className="flex justify-between items-center p-4 rounded-md w-full border bg-light-cardBg dark:bg-dark-cardBg border-light-border dark:border-dark-border opacity-75 dark:opacity-90">
               {editingLinker?._id === linker._id ? (
                 <form onSubmit={handleUpdateLink} className="flex flex-row items-center gap-2 w-full">
                   <Input value={editLabel} onChange={(e) => setEditLabel(e.target.value.trim())} disabled={editLoading} />
