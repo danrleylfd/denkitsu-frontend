@@ -15,7 +15,7 @@ const initialTasks = {
   Feito: []
 }
 
-const SideContentContainer = ({ children }) => (
+const ContentView = ({ children }) => (
   <div className="mx-auto flex flex-1 flex-col items-center justify-start gap-2 p-2 bg-cover bg-repeat-y bg-[url('/background.jpg')] bg-brand-purple">
     {children}
   </div>
@@ -149,7 +149,7 @@ const Todo = () => {
   }
   const activeTask = activeId ? findTask(activeId) : null
   return (
-    <SideMenu ContentView={SideContentContainer}>
+    <SideMenu ContentView={ContentView}>
       <DndContext sensors={sensors} collisionDetection={closestCorners} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragCancel={onDragCancel}>
         <Paper>
           <Input placeholder="Nova tarefa..." value={newTaskContent} onChange={(e) => setNewTaskContent(e.target.value)} onKeyDown={handleKeyDown}>

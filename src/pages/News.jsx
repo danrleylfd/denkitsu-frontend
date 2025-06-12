@@ -71,6 +71,9 @@ const News = () => {
   return (
     <SideMenu fixed className="bg-no-repeat bg-contain bg-[url('/background.jpg')] bg-brand-purple">
       {error && <Paper>{error}</Paper>}
+      <Paper className="w-full opacity-75 dark:opacity-90">
+        <strong>Estamos com problemas para lidar com IA agora, aguarde 24 horas.</strong>
+      </Paper>
       {news.map((article) => (
         <Paper key={article._id} className="w-full opacity-75 dark:opacity-90">
           <ReactMarkdown

@@ -24,6 +24,8 @@ import Todo from "../pages/Todo"
 import Pomodoro from "../pages/Pomodoro"
 import Weather from "../pages/Weather"
 
+import Todo2 from "../CustomPages/Todo"
+
 const AppRoutes = () => {
   const { signed, loading } = useAuth()
   if (loading) return <Button variant="outline" $rounded loading={loading}/>
@@ -35,6 +37,7 @@ const AppRoutes = () => {
             <Route path="/" element={<News />} />
             <Route path="/news" element={<News />} />
             <Route path="/todo" element={<Todo />} />
+            <Route path="/todo-beta" element={<Todo2 />} />
             <Route path="/pomodoro" element={<Pomodoro />} />
             <Route path="/clima" element={<Weather />} />
             <Route path="/upload" element={<Upload />} />
@@ -55,6 +58,7 @@ const AppRoutes = () => {
             <Route path="/" element={<News />} />
             <Route path="/news" element={<News />} />
             <Route path="/todo" element={<Todo />} />
+            <Route path="/todo-beta" element={<Todo2 />} />
             <Route path="/pomodoro" element={<Pomodoro />} />
             <Route path="/clima" element={<Weather />} />
             <Route path="/signin" element={<SignIn />} />

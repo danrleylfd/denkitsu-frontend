@@ -44,6 +44,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
     { icon: LuCloud, label: "Clima", to: "/clima" },
     { icon: LuClock, label: "Pomodoro", to: "/pomodoro" },
     { icon: LuList, label: "Missões", to: "/todo"},
+    { icon: LuList, label: "Missões Beta", to: "/todo-beta"},
   ]
   signed && menuItems.push(
     { icon: LuBotMessageSquare, label: "AI", to: "/chat" },

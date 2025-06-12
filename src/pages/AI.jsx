@@ -26,6 +26,7 @@ const AI = () => {
   const [error, setError] = useState(null)
   const messagesEndRef = useRef(null)
   const textareaRef = useRef(null)
+
   useEffect(() => {
     async function loadModels() {
       const models = await getModels()
@@ -34,21 +35,26 @@ const AI = () => {
     }
     loadModels()
   }, [])
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
+
   useEffect(() => {
     scrollToBottom()
   }, [messages])
+
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto"
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
     }
   }, [inputText])
+
   useEffect(() => {
     if (!storedModel || storedModel !== model) localStorage.setItem("@Denkitsu:model", model)
   }, [model])
+
   const handleSendMessage = useCallback(async () => {
     const newUserMessage = { role: "user", content: inputText.trim() }
     const currentMessages = [...messages, newUserMessage]
@@ -69,12 +75,14 @@ const AI = () => {
       setLoading(false)
     }
   }, [inputText, loading, messages])
+
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
       handleSendMessage()
     }
   }
+
   return (
     <SideMenu ContentView={ContentView}>
       <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-2 bg-cover bg-[url('/background.jpg')] bg-brand-purple">
