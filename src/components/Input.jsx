@@ -1,9 +1,9 @@
 const Input = ({ type = "text", placeholder, value, onChange, containerClassName, className, children, ...props }) => {
   const containerClasses = [
-    "flex w-full items-center rounded-full border pr-1",
+    "flex gap-1 w-full items-center rounded-full border pr-1",
     "border-light-border bg-light-inputBg",
-    "text-light-textPrimary",
-    "dark:border-dark-border dark:bg-dark-inputBg dark:text-dark-textPrimary",
+    "text-light-primaryText",
+    "dark:border-dark-border dark:bg-dark-inputBg dark:text-dark-primaryText",
     containerClassName
   ].filter(Boolean).join(" ")
 

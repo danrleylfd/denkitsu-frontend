@@ -66,7 +66,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
   const menuItemClass = [
     "flex items-center px-4 py-1 mx-1 rounded-xl",
     "bg-transparent hover:bg-light-background dark:hover:bg-dark-background",
-    "text-light-textPrimary dark:text-dark-textPrimary hover:text-primary-light dark:hover:text-primary-light active:text-primary-dark dark:active:text-primary-dark",
+    "text-light-primaryText dark:text-dark-primaryText hover:text-primary-light dark:hover:text-primary-light active:text-primary-dark dark:active:text-primary-dark",
     "cursor-pointer",
     !isOpen && "justify-center"
   ].filter(Boolean).join(" ")

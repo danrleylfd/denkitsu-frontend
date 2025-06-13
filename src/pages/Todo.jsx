@@ -40,7 +40,7 @@ const Column = ({ id, tasks }) => {
   return (
     <SortableContext items={tasks.map((task) => task.id)} id={id}>
       <div ref={setNodeRef} className={`flex gap-2 h-min w-full md:max-w-[30%] md:min-w-[30%] flex-col rounded-lg bg-light-cardBg p-4 shadow-md dark:bg-dark-cardBg opacity-75 dark:opacity-90`}>
-        <h2 className="mb-4 border-b border-light-border pb-2 font-bold text-light-textPrimary dark:border-dark-border dark:text-dark-textPrimary">
+        <h2 className="mb-4 border-b border-light-border pb-2 font-bold text-light-primaryText dark:border-dark-border dark:text-dark-primaryText">
           {id.charAt(0).toUpperCase() + id.slice(1)}
         </h2>
         {tasks.map((task) => (

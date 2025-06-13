@@ -39,8 +39,8 @@ export default {
           cardBg: "#ececec",
           inputBg: "#f7f7f7",
           color: "#0d0d0d",
-          textPrimary: "#22223b",
-          textSecondary: "#4a4e69",
+          primaryText: "#22223b",
+          secondaryText: "#4a4e69",
           textMuted: "#9a8c98",
           btnBg: {
             base: "#E0E0E0",
@@ -54,8 +54,8 @@ export default {
           cardBg: "#303030",
           inputBg: "#252525",
           color: "#ffffff",
-          textPrimary: "#f8f8f2",
-          textSecondary: "#bfc6d1",
+          primaryText: "#f8f8f2",
+          secondaryText: "#bfc6d1",
           textMuted: "#6c757d",
           btnBg: {
             base: "#252525",

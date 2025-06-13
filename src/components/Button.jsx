@@ -16,7 +16,7 @@ const Button = ({
   const baseClasses = "relative flex select-none items-center justify-center font-bold uppercase transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-50"
   const variantClasses = {
     primary: "bg-primary-base text-white active:bg-primary-dark hover:bg-primary-light",
-    secondary: "bg-transparent text-light-textPrimary active:bg-light-btnBg-dark hover:bg-light-btnBg-light dark:text-dark-textPrimary dark:active:bg-dark-btnBg-dark dark:hover:bg-dark-btnBg-base",
+    secondary: "bg-transparent text-light-primaryText active:bg-light-btnBg-dark hover:bg-light-btnBg-light dark:text-dark-primaryText dark:active:bg-dark-btnBg-dark dark:hover:bg-dark-btnBg-base",
     outline: "bg-transparent text-primary-base active:bg-primary-dark active:text-white hover:bg-primary-light hover:text-white",
     success: "bg-transparent text-success-base active:bg-success-dark active:text-white hover:bg-success-base hover:text-white",
     warning: "bg-transparent text-warning-base active:bg-warning-dark active:text-white hover:bg-warning-base hover:text-white",

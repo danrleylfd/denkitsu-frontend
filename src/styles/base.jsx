@@ -93,7 +93,7 @@ export default createGlobalStyle`
   } */
 
   small, caption, sup, sub {
-    color: ${({ theme }) => theme.textSecondary};
+    color: ${({ theme }) => theme.secondaryText};
     /* font-size: .75rem;
     font-weight: 400;
     line-height: 1.43; */

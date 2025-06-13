@@ -1,5 +1,5 @@
 const MessageBase = ({ children }) => (
-  <p className="text-light-textPrimary dark:text-dark-textPrimary text-center py-2">{children}</p>
+  <p className="text-light-primaryText dark:text-dark-primaryText text-center py-2">{children}</p>
 )
 
 const MessageSuccess = ({ children }) => (
