@@ -21,7 +21,7 @@ import VideoDetail from "../pages/VideoDetail"
 import Upload from "../pages/Upload"
 import News from "../pages/News"
 import Todo from "../pages/Todo"
-import Kanban from "../Pages/Kanban"
+import Kanban from "../pages/Kanban"
 import Pomodoro from "../pages/Pomodoro"
 import Weather from "../pages/Weather"
 
