@@ -7,7 +7,7 @@ const AddTaskForm = () => {
   const { newTask, setNewTask, addTask, generateTasksWithAI, loading, error } = useKanban()
 
   return (
-    <header className="mb-8">
+    <header>
       <h1 className="text-center mb-2">KanKan</h1>
       {error && <p className="text-center text-danger-light">{error}</p>}
       <p className="text-center text-light-secondaryText dark:text-dark-secondaryText">Descreva um objetivo e deixe a IA criar as tarefas para você.</p>

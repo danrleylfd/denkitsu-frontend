@@ -66,7 +66,7 @@ const TaskCard = ({ task, showControls = true }) => {
       <button {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing p-1 -ml-1">
         <LuGripVertical className="text-light-textMuted dark:text-dark-textMuted" size={16} />
       </button>
-      <span className="flex-1 text-light-primaryText dark:text-dark-primaryText">{task.content}</span>
+      <span className="flex-1 text-light-primaryText dark:text-dark-primaryText break-all">{task.content}</span>
       {showControls && (
         <div className="flex items-center gap-1">
           <button onClick={() => setEditingId(task.id)} className="p-1 hover:text-primary-base transition-colors"><LuPenTool size={16} /></button>
