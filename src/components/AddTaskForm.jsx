@@ -15,6 +15,7 @@ const AddTaskForm = () => {
       <Input
         name="ai-key"
         type="password"
+        autoComplete="new-password"
         placeholder="Digite sua chave de api openrouter.ai"
         value={aiKey}
         onChange={(e) => setAiKey(e.target.value)}
