@@ -94,7 +94,7 @@ const Weather = () => {
 
   return (
     <SideMenu ContentView={CustomContentView}>
-      <div className="relative w-full max-w-xl rounded-lg shadow-lg bg-light-background p-4 opacity-75 dark:bg-dark-background dark:opacity-90">
+      <div className="relative w-full max-w-xl rounded-lg shadow-[6px_6px_16px_rgba(0,0,0,0.5)] bg-light-background p-4 opacity-75 dark:bg-dark-background dark:opacity-90">
         <div className="flex items-center gap-2 pb-2">
           <Input type="text" value={cityInput} onChange={(e) => setCityInput(e.target.value)} onKeyDown={handleKeyPress} placeholder="Buscar por cidade...">
             <Button variant="outline" size="icon" $rounded onClick={buscarPorCidade}>

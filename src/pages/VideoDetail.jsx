@@ -187,7 +187,7 @@ const VideoDetail = () => {
                 <small>Publicou em {new Date(video.createdAt).toLocaleString()}</small>
               </div>
             )}
-            <div className="flex flex-row items-center gap-2">
+            <div className="flex flex-row items-center gap-2 ">
               <Button
                 type="button"
                 variant={isLiked ? "danger" : "primary"}

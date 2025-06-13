@@ -83,7 +83,7 @@ const Player = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poster = "
     if (videoRef.current.requestFullscreen) videoRef.current.requestFullscreen()
   }
   return (
-    <div className="relative w-full overflow-hidden rounded-lg shadow-lg">
+    <div className="relative w-full overflow-hidden rounded-lg shadow-[6px_6px_16px_rgba(0,0,0,0.5)]">
       <video
         ref={videoRef}
         src={src}

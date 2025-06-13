@@ -73,7 +73,7 @@ const Pomodoro = () => {
         {children}
       </div>
     )}>
-      <div className="bg-white dark:bg-zinc-900 shadow-2xl p-4 rounded-lg w-full max-w-96 transition-colors opacity-75 dark:opacity-90">
+      <div className="bg-white dark:bg-zinc-900 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] p-4 rounded-lg w-full max-w-96 transition-colors opacity-75 dark:opacity-90">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center">
             <span className="w-8 h-8 text-zinc-700 dark:text-zinc-100 mr-2 flex items-center justify-center">

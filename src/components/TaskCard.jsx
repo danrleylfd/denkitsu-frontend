@@ -44,7 +44,7 @@ const TaskCard = ({ task, showControls = true }) => {
 
   if (isEditing) {
     return (
-      <div ref={setNodeRef} style={style} className="bg-light-background dark:bg-dark-inputBg p-3 rounded-lg shadow-lg flex flex-col gap-2 ring-2 ring-primary-base">
+      <div ref={setNodeRef} style={style} className="bg-light-cardBg dark:bg-dark-cardBg p-3 rounded-lg shadow-[6px_6px_16px_rgba(0,0,0,0.5)] flex flex-col gap-2 ring-2 ring-primary-base">
         <input
           type="text"
           value={editedContent}
@@ -62,11 +62,11 @@ const TaskCard = ({ task, showControls = true }) => {
   }
 
   return (
-    <div ref={setNodeRef} style={style} className="bg-light-inputBg dark:bg-dark-inputBg p-3 rounded-lg shadow-sm text-sm flex items-center gap-2">
+    <div ref={setNodeRef} style={style} className="bg-light-cardBg dark:bg-dark-cardBg p-3 rounded-lg shadow-[6px_6px_16px_rgba(0,0,0,0.5)] text-sm flex items-center gap-2">
       <button {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing p-1 -ml-1">
         <LuGripVertical className="text-light-textMuted dark:text-dark-textMuted" size={16} />
       </button>
-      <span className="flex-1 text-light-primaryText dark:text-dark-primaryText break-all">{task.content}</span>
+      <span className="flex-1 text-light-secondaryText dark:text-dark-secondaryText break-all">{task.content}</span>
       {showControls && (
         <div className="flex items-center gap-1">
           <button onClick={() => setEditingId(task.id)} className="p-1 hover:text-primary-base transition-colors"><LuPenTool size={16} /></button>

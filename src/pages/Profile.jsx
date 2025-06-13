@@ -104,11 +104,11 @@ const Profile = () => {
       {loading && !userData && <div className="p-2"><Button variant="secondary" $rounded loading={loading} disabled /></div>}
       {error && <MessageError>{error}</MessageError>}
       {!loading && !error && (
-        <div className="flex w-max h-max my-40 mx-auto p-4 gap-2 items-center bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-[8rem_0.5rem_0.5rem_8rem] shadow-lg opacity-75 dark:opacity-90">
+        <div className="flex w-max h-max my-40 mx-auto p-4 gap-2 items-center bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-[8rem_0.5rem_0.5rem_8rem] shadow-[6px_6px_16px_rgba(0,0,0,0.5)] opacity-75 dark:opacity-90">
           <img
             src={avatarUrl || userData.avatarUrl}
             alt={name || userData.name}
-            className="w-24 h-24 rounded-full object-cover border-4 border-violet-500 shadow-md"
+            className="w-24 h-24 rounded-full object-cover border-4 border-violet-500"
           />
           {userID === user._id && isEditing ? (
             <form className="flex-1 flex flex-col gap-6 items-center" onSubmit={(e) => e.preventDefault()}>

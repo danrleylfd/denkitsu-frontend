@@ -43,8 +43,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
     { icon: LuNewspaper, label: "Notícias", to: "/news" },
     { icon: LuCloud, label: "Clima", to: "/clima" },
     { icon: LuClock, label: "Pomodoro", to: "/pomodoro" },
-    { icon: LuList, label: "Missões", to: "/todo"},
-    { icon: LuList, label: "Missões Beta", to: "/todo-beta"},
+    { icon: LuList, label: "Kanban", to: "/kanban"},
   ]
   signed && menuItems.push(
     { icon: LuBotMessageSquare, label: "AI", to: "/chat" },
@@ -74,7 +73,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
   return (
     <div className={`flex ${className || ""}`}>
       <aside
-        className={`h-screen transition-all duration-300 ease-in-out z-40 shadow-md border-r ${
+        className={`h-screen transition-all duration-300 ease-in-out z-40 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] border-r ${
           isOpen ? "w-48" : "w-14"
         } bg-light-cardBg dark:bg-dark-cardBg border-border ${fixed && "fixed"}`}>
         <nav className="flex flex-col gap-1">

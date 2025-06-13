@@ -20,7 +20,6 @@ import Recents from "../pages/Recents"
 import VideoDetail from "../pages/VideoDetail"
 import Upload from "../pages/Upload"
 import News from "../pages/News"
-import Todo from "../pages/Todo"
 import Kanban from "../pages/Kanban"
 import Pomodoro from "../pages/Pomodoro"
 import Weather from "../pages/Weather"
@@ -35,8 +34,7 @@ const AppRoutes = () => {
           <>
             <Route path="/" element={<News />} />
             <Route path="/news" element={<News />} />
-            <Route path="/todo" element={<Todo />} />
-            <Route path="/todo-beta" element={<Kanban />} />
+            <Route path="/kanban" element={<Kanban />} />
             <Route path="/pomodoro" element={<Pomodoro />} />
             <Route path="/clima" element={<Weather />} />
             <Route path="/upload" element={<Upload />} />
@@ -56,8 +54,7 @@ const AppRoutes = () => {
           <>
             <Route path="/" element={<News />} />
             <Route path="/news" element={<News />} />
-            <Route path="/todo" element={<Todo />} />
-            <Route path="/todo-beta" element={<Kanban />} />
+            <Route path="/todo" element={<Kanban />} />
             <Route path="/pomodoro" element={<Pomodoro />} />
             <Route path="/clima" element={<Weather />} />
             <Route path="/signin" element={<SignIn />} />

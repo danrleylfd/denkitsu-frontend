@@ -18,7 +18,7 @@ const KanbanBoard = () => {
     <div className="w-full flex flex-col py-2 gap-2">
       <AddTaskForm />
       <DndContext sensors={sensors} collisionDetection={collisionDetectionStrategy} onDragStart={onDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 w-full">
           {Object.keys(COLUMN_TITLES).map((columnKey) => (
             <Column key={columnKey} id={columnKey} />
           ))}
