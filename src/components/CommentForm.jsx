@@ -25,7 +25,7 @@ const CommentForm = ({ onSubmit, placeholder = "Digite seu comentário", actionL
   return (
     <form
       onSubmit={handleSubmit}
-      className={`bg-light-cardBg dark:bg-dark-cardBg flex items-center gap-2 p-4 rounded-md ${className}`}
+      className={`bg-lightBg-secondary dark:bg-darkBg-secondary flex items-center gap-2 p-4 rounded-md ${className}`}
     >
       <Input
         placeholder={placeholder}

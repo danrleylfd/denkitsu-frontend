@@ -94,7 +94,7 @@ const Weather = () => {
 
   return (
     <SideMenu ContentView={CustomContentView}>
-      <div className="relative w-full max-w-xl rounded-lg shadow-[6px_6px_16px_rgba(0,0,0,0.5)] bg-light-background p-4 opacity-75 dark:bg-dark-background dark:opacity-90">
+      <div className="relative w-full max-w-xl rounded-lg shadow-[6px_6px_16px_rgba(0,0,0,0.5)] bg-lightBg-primary p-4 opacity-75 dark:bg-darkBg-primary dark:opacity-90">
         <div className="flex items-center gap-2 pb-2">
           <Input type="text" value={cityInput} onChange={(e) => setCityInput(e.target.value)} onKeyDown={handleKeyPress} placeholder="Buscar por cidade...">
             <Button variant="outline" size="icon" $rounded onClick={buscarPorCidade}>
@@ -123,12 +123,12 @@ const Weather = () => {
 
         {!loading && !error && weatherData && (
           <div className="flex flex-col gap-2 md:flex-row">
-            <div className="flex flex-1 flex-col justify-between border-b border-light-border/10 pb-2 md:border-b-0 md:border-r md:pb-0 md:pr-2">
+            <div className="flex flex-1 flex-col justify-between pb-2 md:pb-0 md:pr-2">
               <div>
-                <div className="mb-2 text-2xl font-bold text-light-primaryText opacity-90 dark:text-dark-primaryText">
+                <div className="mb-2 text-2xl font-bold text-lightFg-primary opacity-90 dark:text-darkFg-primary">
                   {weatherData.name}, {weatherData.sys.country}
                 </div>
-                <div className="mb-2 text-lg capitalize text-light-secondaryText dark:text-dark-secondaryText">
+                <div className="mb-2 text-lg capitalize text-lightFg-secondary dark:text-darkFg-secondary ">
                   {weatherData.weather[0].description}
                 </div>
               </div>
@@ -140,21 +140,21 @@ const Weather = () => {
 
             <div className="mt-2 flex-1">
               <div className="grid grid-cols-2 gap-2">
-                <div className="rounded-xl bg-light-cardBg p-4 backdrop-blur-sm dark:bg-dark-cardBg">
-                  <span className="mb-2 block text-xs text-light-textMuted dark:text-dark-textMuted">🌬️ Vento</span>
-                  <div className="text-lg font-semibold text-light-primaryText dark:text-dark-primaryText">{Math.round(weatherData.wind.speed * 3.6)} km/h</div>
+                <div className="rounded-xl bg-lightBg-secondary p-4 backdrop-blur-sm dark:bg-darkBg-secondary">
+                  <span className="mb-2 block text-xs text-lightFg-tertiary dark:text-darkFg-tertiary">🌬️ Vento</span>
+                  <div className="text-lg font-semibold text-lightFg-primary dark:text-darkFg-primary">{Math.round(weatherData.wind.speed * 3.6)} km/h</div>
                 </div>
-                <div className="rounded-xl bg-light-cardBg p-4 backdrop-blur-sm dark:bg-dark-cardBg">
-                  <span className="mb-2 block text-xs text-light-textMuted dark:text-dark-textMuted">💧 Umidade</span>
-                  <div className="text-lg font-semibold text-light-primaryText dark:text-dark-primaryText">{weatherData.main.humidity}%</div>
+                <div className="rounded-xl bg-lightBg-secondary p-4 backdrop-blur-sm dark:bg-darkBg-secondary">
+                  <span className="mb-2 block text-xs text-lightFg-tertiary dark:text-darkFg-tertiary">💧 Umidade</span>
+                  <div className="text-lg font-semibold text-lightFg-primary dark:text-darkFg-primary">{weatherData.main.humidity}%</div>
                 </div>
-                <div className="rounded-xl bg-light-cardBg p-4 backdrop-blur-sm dark:bg-dark-cardBg">
-                  <span className="mb-2 block text-xs text-light-textMuted dark:text-dark-textMuted">🌡️ Sensação</span>
-                  <div className="text-lg font-semibold text-light-primaryText dark:text-dark-primaryText">{Math.round(weatherData.main.feels_like)}°C</div>
+                <div className="rounded-xl bg-lightBg-secondary p-4 backdrop-blur-sm dark:bg-darkBg-secondary">
+                  <span className="mb-2 block text-xs text-lightFg-tertiary dark:text-darkFg-tertiary">🌡️ Sensação</span>
+                  <div className="text-lg font-semibold text-lightFg-primary dark:text-darkFg-primary">{Math.round(weatherData.main.feels_like)}°C</div>
                 </div>
-                <div className="rounded-xl bg-light-cardBg p-4 backdrop-blur-sm dark:bg-dark-cardBg">
-                  <span className="mb-2 block text-xs text-light-textMuted dark:text-dark-textMuted">📊 Pressão</span>
-                  <div className="text-lg font-semibold text-light-primaryText dark:text-dark-primaryText">{weatherData.main.pressure} hPa</div>
+                <div className="rounded-xl bg-lightBg-secondary p-4 backdrop-blur-sm dark:bg-darkBg-secondary">
+                  <span className="mb-2 block text-xs text-lightFg-tertiary dark:text-darkFg-tertiary">📊 Pressão</span>
+                  <div className="text-lg font-semibold text-lightFg-primary dark:text-darkFg-primary">{weatherData.main.pressure} hPa</div>
                 </div>
               </div>
             </div>

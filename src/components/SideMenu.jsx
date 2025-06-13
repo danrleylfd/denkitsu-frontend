@@ -64,8 +64,8 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
 
   const menuItemClass = [
     "flex items-center px-4 py-1 mx-1 rounded-xl",
-    "bg-transparent hover:bg-light-background dark:hover:bg-dark-background",
-    "text-light-primaryText dark:text-dark-primaryText hover:text-primary-light dark:hover:text-primary-light active:text-primary-dark dark:active:text-primary-dark",
+    "bg-transparent hover:bg-lightBg-primary dark:hover:bg-darkBg-primary",
+    "text-lightFg-primary dark:text-darkFg-primary hover:text-primary-light dark:hover:text-primary-light active:text-primary-dark dark:active:text-primary-dark",
     "cursor-pointer",
     !isOpen && "justify-center"
   ].filter(Boolean).join(" ")
@@ -75,7 +75,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
       <aside
         className={`h-screen transition-all duration-300 ease-in-out z-40 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] border-r ${
           isOpen ? "w-48" : "w-14"
-        } bg-light-cardBg dark:bg-dark-cardBg border-border ${fixed && "fixed"}`}>
+        } bg-lightBg-secondary dark:bg-darkBg-secondary border-border ${fixed && "fixed"}`}>
         <nav className="flex flex-col gap-1">
           <div className="w-0 h-0 p-0 m-0"></div>
           <button onClick={toggleMenu} className={menuItemClass}>

@@ -12,13 +12,16 @@ import { sendMessage, getModels } from "../services/aiChat"
 import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
 import { MessageError } from "../components/Notifications"
+import useAIKey from "../hooks/useAIKey"
 
 const ContentView = ({ children }) => <div className="flex flex-col flex-1 h-screen mx-auto p-0 gap-2">{children}</div>
 
 const AI = () => {
   const { user } = useAuth()
+  const { aiKey } = useAIKey()
   const storedModel = localStorage.getItem("@Denkitsu:model")
-  const [models, setModels] = useState([])
+  const [freeModels, setFreeModels] = useState([])
+  const [payModels, setPayModels] = useState([])
   const [model, setModel] = useState(storedModel || "deepseek/deepseek-r1:free")
   const [messages, setMessages] = useState([{ role: "assistant", content: "Olá! Como posso ajudar você hoje?\n Shift + Enter para quebrar a linha." }])
   const [inputText, setInputText] = useState("")
@@ -29,9 +32,10 @@ const AI = () => {
 
   useEffect(() => {
     async function loadModels() {
-      const models = await getModels()
-      if (models.error) throw new Error(models.error.message)
-      setModels(models)
+      const { freeModels, payModels } = await getModels()
+      // if (models.error) throw new Error(models.error.message)
+      setFreeModels(freeModels)
+      setPayModels(payModels)
     }
     loadModels()
   }, [])
@@ -64,7 +68,7 @@ const AI = () => {
     setError(null)
     try {
       const apiMessages = currentMessages.map(({ role, content }) => ({ role, content }))
-      const data = await sendMessage(model, apiMessages)
+      const data = await sendMessage(model, apiMessages, aiKey)
       if (data.error) throw new Error(data.error.message)
       const message = data?.choices?.[0]?.message
       if (!message) throw new Error("Serviço temporariamente indisponível.")
@@ -91,7 +95,7 @@ const AI = () => {
             key={idx}
             className={`flex items-end gap-2 px-2 ${msg.role === "assistant" ? "justify-start" : "justify-end"} ${msg.role === "system" ? "hidden" : ""}`}>
             <img src={msg.role === "assistant" ? "/denkitsu.png" : user.avatarUrl} alt={msg.role} className="w-8 h-8 rounded-full object-cover" />
-            <div className="max-w-[90%] md:max-w-[67%] break-words rounded-md px-4 py-2 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] text-light-color dark:text-dark-color bg-light-cardBg dark:bg-dark-cardBg">
+            <div className="max-w-[90%] md:max-w-[67%] break-words rounded-md px-4 py-2 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] text-lightFg-secondary dark:text-darkFg-secondary bg-lightBg-secondary dark:bg-darkBg-secondary opacity-75 dark:opacity-90">
               <ReactMarkdown
                 children={msg.content}
                 rehypePlugins={[rehypeHighlight, rehypeRaw]}
@@ -126,17 +130,24 @@ const AI = () => {
         <div ref={messagesEndRef} />
         {error && <MessageError>{error}</MessageError>}
       </div>
-      <div className="flex items-center justify-between gap-2 p-2 bg-light-background dark:bg-dark-background">
+      <div className="flex items-center justify-between gap-2 px-1 py-2 bg-lightBg-primary dark:bg-darkBg-primary">
         <div className="w-0 h-0 p-0 m-0"/>
         <select
           id="model-select"
           value={model}
           onChange={(e) => setModel(e.target.value)}
           disabled={loading}
-          className="bg-light-cardBg dark:bg-dark-cardBg text-light-color dark:text-dark-color text-sm min-h-[48px] max-w-[6.5rem] rounded-md">
+          className="bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary text-sm min-h-[48px] max-w-[6.5rem] rounded-md">
           <option disabled>Selecionar Modelo</option>
-          {models.map((model) => (
+          <option disabled>Gratuito</option>
+          {freeModels.map((model) => (
             <option key={model.id} value={model.id}>
+              {model.name}
+            </option>
+          ))}
+          <option disabled>Premium</option>
+          {payModels.map((model) => (
+            <option key={model.id} disabled value={model.id}>
               {model.name}
             </option>
           ))}
@@ -150,7 +161,7 @@ const AI = () => {
           placeholder={!loading ? "Escreva seu prompt" : "Pensando..."}
           disabled={loading}
           rows={1}
-          className="flex-1 resize-y min-h-[44px] max-h-[120px] max-w-full overflow-y-hidden px-2 py-4 rounded-md font-mono text-sm bg-light-cardBg dark:bg-dark-cardBg text-light-color dark:text-dark-color"
+          className="flex-1 resize-y min-h-[44px] max-h-[120px] max-w-full overflow-y-hidden px-2 py-4 rounded-md font-mono text-sm bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary"
         />
         <Button size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || !inputText.trim()}>
           {!loading && <MdSend size={16} />}

@@ -14,10 +14,22 @@ export default {
       },
       colors: {
         "brand-purple": "#7159C1",
+        bLight: "#E0E0E0",
+        bDark: "#252525",
         primary: {
           base: "#8257E5",
           light: "#9885F0",
           dark: "#633BBC"
+        },
+        lightBtnBg: {
+          base: "#E0E0E0",
+          light: "#F5F5F5",
+          dark: "#CCCCCC"
+        },
+        darkBtnBg: {
+          base: "#252525",
+          light: "#333333",
+          dark: "#212121"
         },
         success: {
           base: "#1B873F",
@@ -34,35 +46,25 @@ export default {
           light: "#F75A68",
           dark: "#2D090C"
         },
-        light: {
-          background: "#ffffff",
-          cardBg: "#ececec",
-          inputBg: "#f7f7f7",
-          color: "#0d0d0d",
-          primaryText: "#22223b",
-          secondaryText: "#4a4e69",
-          textMuted: "#9a8c98",
-          btnBg: {
-            base: "#E0E0E0",
-            light: "#F5F5F5",
-            dark: "#CCCCCC"
-          },
-          border: "#E0E0E0"
+        lightBg: {
+          primary: "#ffffff",
+          secondary: "#ececec",
+          tertiary: "#f7f7f7",
         },
-        dark: {
-          background: "#151515",
-          cardBg: "#303030",
-          inputBg: "#252525",
-          color: "#ffffff",
-          primaryText: "#f8f8f2",
-          secondaryText: "#bfc6d1",
-          textMuted: "#6c757d",
-          btnBg: {
-            base: "#252525",
-            light: "#333333",
-            dark: "#212121"
-          },
-          border: "#252525"
+        darkBg: {
+          primary: "#151515",
+          secondary: "#303030",
+          tertiary: "#252525",
+        },
+        lightFg: {
+          primary: "#171717",
+          secondary: "#525252",
+          tertiary: "#a3a3a3",
+        },
+        darkFg: {
+          primary: "#f5f5f5",
+          secondary: "#a3a3a3",
+          tertiary: "#525252",
         },
       },
     },

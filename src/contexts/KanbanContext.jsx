@@ -1,6 +1,7 @@
 import { createContext, useContext } from "react"
 import { useTasks } from "../hooks/useTasks"
 import { useDnd } from "../hooks/useDnd"
+import useAIKey from "../hooks/useAIKey"
 
 const KanbanContext = createContext()
 
@@ -12,11 +13,13 @@ export const useKanban = () => {
 
 export const KanbanProvider = ({ children }) => {
   const tasksApi = useTasks()
+  const aiKey = useAIKey()
   const dndApi = useDnd(tasksApi.tasks, tasksApi.setTasks, tasksApi.findTaskContainer, tasksApi.deleteTask)
 
   const value = {
     ...tasksApi,
-    ...dndApi
+    ...dndApi,
+    ...aiKey
   }
 
   return <KanbanContext.Provider value={value}>{children}</KanbanContext.Provider>

@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom"
 import { MdEdit, MdDelete, MdCancel, MdCheck } from "react-icons/md"
 
 import { useAuth } from "../contexts/AuthContext"
+import useAIKey from "../hooks/useAIKey"
 import { getUserAccount, editUserAccount, deleteUserAccount } from "../services/account"
 
 import SideMenu from "../components/SideMenu"
@@ -12,6 +13,7 @@ import { MessageSuccess, MessageError } from "../components/Notifications"
 
 const Profile = () => {
   const { userId } = useParams()
+  const { aiKey, setAiKey, saveKey, removeKey } = useAIKey()
   const { user, signOut, updateUser } = useAuth()
   const userID = userId || user._id
   const [userData, setUserData] = useState(null)
@@ -54,6 +56,7 @@ const Profile = () => {
 
   const handleSaveChanges = async (e) => {
     e.preventDefault()
+    aiKey === "" ? removeKey() : saveKey()
     setError(null)
     setMessage("")
     setLoading(true)
@@ -104,16 +107,17 @@ const Profile = () => {
       {loading && !userData && <div className="p-2"><Button variant="secondary" $rounded loading={loading} disabled /></div>}
       {error && <MessageError>{error}</MessageError>}
       {!loading && !error && (
-        <div className="flex w-max h-max my-40 mx-auto p-4 gap-2 items-center bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-[8rem_0.5rem_0.5rem_8rem] shadow-[6px_6px_16px_rgba(0,0,0,0.5)] opacity-75 dark:opacity-90">
+        <div className="flex w-max h-max my-40 min-w-96 mx-auto p-4 gap-2 items-center bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-[8rem_0.5rem_0.5rem_8rem] shadow-[6px_6px_16px_rgba(0,0,0,0.5)] opacity-75 dark:opacity-90">
           <img
             src={avatarUrl || userData.avatarUrl}
             alt={name || userData.name}
             className="w-24 h-24 rounded-full object-cover border-4 border-violet-500"
           />
           {userID === user._id && isEditing ? (
-            <form className="flex-1 flex flex-col gap-6 items-center" onSubmit={(e) => e.preventDefault()}>
+            <form className="flex-1 flex flex-col gap-0 items-center" onSubmit={(e) => e.preventDefault()}>
               <Input id="name" value={name} onChange={(e) => setName(e.target.value)} disabled={loading} />
               <Input id="avatarUrl" value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} disabled={loading} />
+              <Input id="aiKey" value={aiKey} onChange={(e) => setAiKey(e.target.value)} disabled={loading} />
               {error && <MessageError>{error}</MessageError>}
               <div className="flex w-full gap-2 justify-between">
                 <Button variant="secondary" size="icon" $rounded title="Cancelar" onClick={handleEditToggle} loading={loading}>
@@ -131,7 +135,7 @@ const Profile = () => {
               <small className="text-xs text-zinc-500 dark:text-zinc-400">Conta criada em {new Date(userData.createdAt).toLocaleString()}</small>
               <small className="text-xs text-zinc-500 dark:text-zinc-400">Conta editada em {new Date(userData.updatedAt).toLocaleString()}</small>
               { userID === user._id && (
-                <>
+                <div className="flex-1 flex flex-col gap-0 items-center">
                   <div className="flex w-full gap-2 justify-between">
                     <Button variant="warning" size="icon" $rounded title="Editar" onClick={handleEditToggle}>
                       <MdEdit size={16}/>
@@ -142,7 +146,7 @@ const Profile = () => {
                   </div>
                   {message && <MessageSuccess>{message}</MessageSuccess>}
                   {error && !isEditing && <MessageError>{error}</MessageError>}
-                </>
+                </div>
               )}
             </div>
           )}

@@ -1,17 +1,17 @@
 const Input = ({ type = "text", placeholder, value, onChange, containerClassName, className, children, ...props }) => {
   const containerClasses = [
-    "flex gap-1 w-full items-center rounded-full border pr-1",
-    "border-light-border bg-light-inputBg",
-    "text-light-primaryText",
-    "dark:border-dark-border dark:bg-dark-inputBg dark:text-dark-primaryText",
+    "flex gap-1 w-full items-center rounded-full pr-1 my-1",
+    "bg-lightBg-tertiary",
+    "text-lightFg-primary",
+    "dark:bg-darkBg-tertiary dark:text-darkFg-primary",
     containerClassName
   ].filter(Boolean).join(" ")
 
   const inputClasses = [
     "w-full rounded-full bg-transparent py-2 px-2",
-    "text-base placeholder:text-light-textMuted",
+    "text-base placeholder:text-lightFg-tertiary",
     "focus:outline-none",
-    "dark:placeholder:text-dark-textMuted",
+    "dark:placeholder:text-darkFg-tertiary",
     className
   ].filter(Boolean).join(" ")
   return (

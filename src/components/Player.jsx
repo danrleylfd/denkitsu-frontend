@@ -93,7 +93,7 @@ const Player = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poster = "
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
       >Seu navegador não suporta o elemento de vídeo.</video>
-      <div className="absolute bottom-0 left-0 z-10 w-full bg-gradient-to-t from-black/70 to-transparent p-4 text-dark-primaryText">
+      <div className="absolute bottom-0 left-0 z-10 w-full bg-gradient-to-t from-black/70 to-transparent p-4 text-darkFg-primary">
         <input
           type="range"
           min={0}
@@ -106,7 +106,7 @@ const Player = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poster = "
           <button onClick={togglePlay} className="transition-transform hover:scale-110">
             {playing ? <LuPause size={20} /> : <LuPlay size={20} />}
           </button>
-          <button onClick={toggleRepeat} className={`transition-transform hover:scale-110 ${repeat ? "text-primary-base" : "text-dark-primaryText"}`}>
+          <button onClick={toggleRepeat} className={`transition-transform hover:scale-110 ${repeat ? "text-primary-base" : "text-darkFg-primary"}`}>
             <LuRefreshCw size={20} />
           </button>
           <div

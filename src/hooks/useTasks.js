@@ -42,14 +42,14 @@ export const useTasks = () => {
     setNewTask("")
   }
 
-  const generateTasksWithAI = async () => {
+  const generateTasksWithAI = async (aiKey) => {
     const goal = newTask.trim()
     if (!goal) return
     setLoading(true)
     setError(null)
     try {
       const prompt = { role: "user", content: `Divida o seguinte objetivo em uma lista de tarefas pequenas e acionáveis. Responda APENAS com um array JSON de strings, onde cada string é uma tarefa. Objetivo: "${goal}". Proibido markdown, qualquer formatação adicional resultará em erro.` }
-      const data = await sendMessage(null, [prompt])
+      const data = await sendMessage(null, [prompt], aiKey)
       if (data.error) throw new Error(data.error.message)
 
       const messageContent = data?.choices?.[0]?.message?.content

@@ -7,7 +7,7 @@ import Button from "./Button"
 const Card = ({ video }) => {
   if (!video) return
   return (
-    <div className="h-fit w-full md:max-w-xs overflow-hidden rounded-lg border border-solid border-light-border dark:border-dark-border">
+    <div className="h-fit w-full md:max-w-xs overflow-hidden rounded-lg border border-solid border-bLight dark:border-bDark">
       <div className="flex h-40 w-full">
         <img
           src={video.thumbnail}
@@ -15,7 +15,7 @@ const Card = ({ video }) => {
           className="h-full w-full object-cover"
         />
       </div>
-      <div className="flex h-fit flex-col gap-2 bg-light-cardBg p-2 transition-colors duration-300 ease-in-out dark:bg-dark-cardBg">
+      <div className="flex h-fit flex-col gap-2 bg-lightBg-secondary p-2 transition-colors duration-300 ease-in-out dark:bg-darkBg-secondary">
         <Link
           to={`/video/${video._id}`}
           title={video.content}

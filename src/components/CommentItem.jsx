@@ -51,7 +51,7 @@ const CommentItem = ({ comment, videoId, onCommentDeleted, onReplyAdded, disable
   }
 
   return (
-    <div className="bg-light-cardBg dark:bg-dark-cardBg flex flex-col gap-2 p-4 rounded-md">
+    <div className="bg-lightBg-secondary dark:bg-darkBg-secondary flex flex-col gap-2 p-4 rounded-md">
       <div className="flex items-center gap-2">
         <img
           src={comment.user.avatarUrl}
@@ -62,7 +62,7 @@ const CommentItem = ({ comment, videoId, onCommentDeleted, onReplyAdded, disable
           <Link to={`/profile/${comment.user._id}`} className="text-sm font-medium">
             {comment.user.name}
           </Link>
-          <small className="text-sm font-medium text-light-textMuted dark:text-dark-textMuted">{new Date(comment.createdAt).toLocaleString()}</small>
+          <small className="text-sm font-medium text-lightFg-tertiary dark:text-darkFg-tertiary">{new Date(comment.createdAt).toLocaleString()}</small>
         </div>
       </div>
       <p className="text-md break-words">{comment.content}</p>
