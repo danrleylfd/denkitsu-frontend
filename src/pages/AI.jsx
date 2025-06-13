@@ -14,7 +14,7 @@ import Button from "../components/Button"
 import { MessageError } from "../components/Notifications"
 import useAIKey from "../hooks/useAIKey"
 
-const ContentView = ({ children }) => <div className="flex flex-col flex-1 h-screen mx-auto p-0 gap-2">{children}</div>
+const ContentView = ({ children }) => <div className="flex flex-col flex-1 h-screen mx-auto p-0">{children}</div>
 
 const AI = () => {
   const { user } = useAuth()
@@ -88,8 +88,8 @@ const AI = () => {
   }
 
   return (
-    <SideMenu ContentView={ContentView}>
-      <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-2 bg-cover bg-[url('/background.jpg')] bg-brand-purple">
+    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
+      <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-2">
         {messages.map((msg, idx) => (
           <div
             key={idx}

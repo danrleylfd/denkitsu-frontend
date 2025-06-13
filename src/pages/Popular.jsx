@@ -39,7 +39,7 @@ const Popular = () => {
   }, [])
 
   return (
-    <SideMenu fixed ContentView={ContentView}>
+    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple h-screen">
       {loading && <Button $rounded loading={loading} disabled />}
       {error && <MessageError>{error}</MessageError>}
       {!loading && !error && <Feed videos={popularVideos} />}
