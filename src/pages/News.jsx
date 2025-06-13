@@ -7,7 +7,6 @@ import { getNewsPaginate } from "../services/news"
 import SideMenu from "../components/SideMenu"
 import Paper from "../components/Paper"
 import Button from "../components/Button"
-import { Link } from "react-router-dom"
 
 const News = () => {
   const { user } = useAuth()
@@ -72,10 +71,6 @@ const News = () => {
   return (
     <SideMenu fixed className="bg-no-repeat bg-contain bg-[url('/background.jpg')] bg-brand-purple">
       {error && <Paper>{error}</Paper>}
-      <Paper className="w-full opacity-75 dark:opacity-90 flex flex-col">
-        <strong>Estamos enfrentando problemas em nossos serviços agora, aguarde 24 horas.</strong>
-        <Link to={"/outage"}>Leia Mais</Link>
-      </Paper>
       {news.map((article) => (
         <Paper key={article._id} className="w-full opacity-75 dark:opacity-90">
           <ReactMarkdown
