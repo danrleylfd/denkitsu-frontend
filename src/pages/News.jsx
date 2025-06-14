@@ -69,7 +69,7 @@ const News = () => {
   }, [handleScroll])
 
   return (
-    <SideMenu fixed className="bg-no-repeat bg-contain bg-[url('/background.jpg')] bg-brand-purple">
+    <SideMenu fixed className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
       {error && <Paper>{error}</Paper>}
       {news.map((article) => (
         <Paper key={article._id}>

@@ -1,10 +1,11 @@
-import { useState, useEffect, useRef, useCallback } from "react"
+import { useState, useEffect, useRef, useCallback, useMemo } from "react"
 import ReactMarkdown from "react-markdown"
 import rehypeHighlight from "rehype-highlight"
 import rehypeRaw from "rehype-raw"
 import remarkGfm from "remark-gfm"
 import "highlight.js/styles/gml.css"
 import { MdSend } from "react-icons/md"
+import { FiCopy, FiTerminal, FiPlusSquare } from "react-icons/fi"
 
 import { useAuth } from "../contexts/AuthContext"
 import { sendMessage, getModels } from "../services/aiChat"
@@ -13,8 +14,54 @@ import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
 import { MessageError } from "../components/Notifications"
 import useAIKey from "../hooks/useAIKey"
+import { useKanban, KanbanProvider } from "../contexts/KanbanContext"
 
-const ContentView = ({ children }) => <div className="flex flex-col flex-1 h-screen mx-auto p-0">{children}</div>
+const MessageActions = ({ message }) => {
+  const [copyStatus, setCopyStatus] = useState(null)
+  const { setTasks } = useKanban()
+
+  const extractCodeFromMarkdown = (markdown) => {
+    const codeRegex = /^```(\w*)\n([\s\S]+?)\n^```/gm
+    const matches = [...markdown.matchAll(codeRegex)]
+    return matches.map(match => match[2].trim()).join("\n\n")
+  }
+
+  const codeToCopy = useMemo(() => extractCodeFromMarkdown(message.content), [message.content])
+
+  const handleCopy = (text, type) => {
+    navigator.clipboard.writeText(text)
+    setCopyStatus(type)
+    setTimeout(() => setCopyStatus(null), 2000)
+  }
+
+  const handleAddToKanban = () => {
+    const contentMessage = codeToCopy || message.content
+    const newTasks = JSON.parse(contentMessage).map((content, index) => ({
+        id: `task-${Date.now()}-${index}`,
+        content
+    }))
+    setTasks((prev) => ({ ...prev, todo: [...prev.todo, ...newTasks] }))
+    alert(`Conteúdo enviado para o Kanban:\n\n${contentMessage}`)
+  }
+
+  return (
+    <div className="flex items-center gap-2 mt-2">
+      <Button variant="outline" $rounded onClick={handleAddToKanban} title="Adicionar ao Kanban">
+        <FiPlusSquare size={16} /> Kanban
+      </Button>
+      <Button variant="outline" $rounded onClick={() => handleCopy(message.content, "text")} title="Copiar Resposta">
+        <FiCopy size={16} /> {copyStatus === "text" ? "Copiado!" : "Copiar"}
+      </Button>
+      {codeToCopy && (
+        <Button variant="outline" $rounded onClick={() => handleCopy(codeToCopy, "code")} title="Copiar Código">
+          <FiTerminal size={16} /> {copyStatus === "code" ? "Copiado!" : "Copiar Código"}
+        </Button>
+      )}
+    </div>
+  )
+}
+
+const ContentView = ({ children }) => <div className="flex flex-col flex-1 h-screen mx-auto">{children}</div>
 
 const AI = () => {
   const { user } = useAuth()
@@ -78,7 +125,7 @@ const AI = () => {
     } finally {
       setLoading(false)
     }
-  }, [inputText, loading, messages])
+  }, [inputText, loading, messages, model, aiKey])
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -89,11 +136,12 @@ const AI = () => {
 
   return (
     <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
+      <KanbanProvider>
       <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-2">
         {messages.map((msg, idx) => (
           <div
             key={idx}
-            className={`flex items-end gap-2 px-2 ${msg.role === "assistant" ? "justify-start" : "justify-end"} ${msg.role === "system" ? "hidden" : ""}`}>
+            className={`flex items-end gap-2 px-2 ${msg.role === "assistant" ? "flex-row" : "flex-row-reverse"} ${msg.role === "system" ? "hidden" : ""}`}>
             <img src={msg.role === "assistant" ? "/denkitsu.png" : user.avatarUrl} alt={msg.role} className="w-8 h-8 rounded-full object-cover" />
             <div className="max-w-[90%] md:max-w-[67%] break-words rounded-md px-4 py-2 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] text-lightFg-secondary dark:text-darkFg-secondary bg-lightBg-secondary dark:bg-darkBg-secondary opacity-75 dark:opacity-90">
               <ReactMarkdown
@@ -110,20 +158,21 @@ const AI = () => {
                   h5: ({ node, ...props }) => <strong {...props} />,
                   h6: ({ node, ...props }) => <strong {...props} />,
                   p: ({ node, ...props }) => <p {...props}/>,
-                  pre: ({ node, ...props }) => <pre {...props} className="text-xs font-mono p-2 rounded-md" />,
+                  pre: ({ node, ...props }) => <pre {...props} className="bg-lightBg-tertiary dark:bg-darkBg-tertiary text-xs font-mono p-2 rounded-md" />,
                   code: ({ node, inline, className, children, ...props }) =>
                     inline ? (
-                      <code {...props} className="text-xs font-mono p-2 rounded-md">
+                      <code {...props} className="bg-lightBg-tertiary dark:bg-darkBg-tertiary text-xs font-mono p-2 rounded-md">
                         {children}
                       </code>
                     ) : (
-                      <div {...props} className="text-xs font-mono p-2 rounded-md">
+                      <div {...props} className="bg-lightBg-tertiary dark:bg-darkBg-tertiary text-xs font-mono p-2 rounded-md">
                         {children}
                       </div>
                     ),
                   think: ({ node, ...props }) => <blockquote className="text-xs">💭 {props.children} 💭</blockquote>
                 }}
               />
+              {msg.role === "assistant" && idx > 0 && <MessageActions message={msg} />}
             </div>
           </div>
         ))}
@@ -167,6 +216,7 @@ const AI = () => {
           {!loading && <MdSend size={16} />}
         </Button>
       </div>
+      </KanbanProvider>
     </SideMenu>
   )
 }
