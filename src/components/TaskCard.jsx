@@ -2,10 +2,10 @@ import { useState } from "react"
 import { LuTrash2, LuPenTool, LuCheck, LuX, LuGripVertical } from "react-icons/lu"
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
-import { useKanban } from "../contexts/KanbanContext"
+import { useTasks } from "../contexts/TasksContext"
 
 const TaskCard = ({ task, showControls = true }) => {
-  const { updateTask, deleteTask, editingId, setEditingId } = useKanban()
+  const { updateTask, deleteTask, editingId, setEditingId } = useTasks()
   const [editedContent, setEditedContent] = useState(task.content)
   const isEditing = task.id === editingId
 

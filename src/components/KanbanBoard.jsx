@@ -1,5 +1,8 @@
 import { DndContext, DragOverlay } from "@dnd-kit/core"
+
 import { useKanban } from "../contexts/KanbanContext"
+import { useTasks } from "../contexts/TasksContext"
+
 import { COLUMN_TITLES } from "../constants"
 import Column from "./Column"
 import TaskCard from "./TaskCard"
@@ -7,8 +10,8 @@ import TrashZone from "./TrashZone"
 import AddTaskForm from "./AddTaskForm"
 
 const KanbanBoard = () => {
-  const { tasks, sensors, collisionDetectionStrategy, handleDragStart, handleDragOver, handleDragEnd, activeTask, setEditingId } = useKanban()
-
+  const { sensors, collisionDetectionStrategy, handleDragStart, handleDragOver, handleDragEnd, activeTask } = useKanban()
+  const { tasks, setEditingId } = useTasks()
   const onDragStart = (event) => {
     setEditingId(null)
     handleDragStart(event)

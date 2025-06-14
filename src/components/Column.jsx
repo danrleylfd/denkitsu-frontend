@@ -2,10 +2,10 @@ import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { useDroppable } from "@dnd-kit/core"
 import TaskCard from "./TaskCard"
 import { COLUMN_TITLES } from "../constants"
-import { useKanban } from "../contexts/KanbanContext"
+import { useTasks } from "../contexts/TasksContext"
 
 const Column = ({ id }) => {
-  const { tasks } = useKanban()
+  const { tasks } = useTasks()
   const { setNodeRef } = useDroppable({ id })
   const columnTasks = tasks[id] || []
 

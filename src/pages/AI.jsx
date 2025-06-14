@@ -14,7 +14,7 @@ import { publishNews } from "../services/news"
 import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
 import { MessageError } from "../components/Notifications"
-import useAIKey from "../hooks/useAIKey"
+import { useAI } from "../contexts/AIContext"
 import { useKanban } from "../contexts/KanbanContext"
 
 const MessageActions = ({ message }) => {
@@ -93,7 +93,7 @@ const ContentView = ({ children }) => <div className="flex flex-col flex-1 h-scr
 
 const AI = () => {
   const { user } = useAuth()
-  const { aiKey } = useAIKey()
+  const { aiKey } = useAI()
   const storedModel = localStorage.getItem("@Denkitsu:model")
   const [freeModels, setFreeModels] = useState([])
   const [payModels, setPayModels] = useState([])

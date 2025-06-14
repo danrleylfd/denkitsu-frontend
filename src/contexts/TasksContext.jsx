@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react" // Importamos o useEffect
+import { createContext, useState, useEffect, useCallback, useContext } from "react"
 import { INITIAL_TASKS } from "../constants"
 import { sendMessage } from "../services/aiChat"
+import { useAI } from "./AIContext"
 
-const STORAGE_KEY = "kanban-tasks"
+const TasksContext = createContext({})
 
-export const useTasks = () => {
+const TasksProvider = ({ children }) => {
+  const STORAGE_KEY = "kanban-tasks"
   const [tasks, setTasks] = useState(() => {
     try {
       const savedTasks = window.localStorage.getItem(STORAGE_KEY)
@@ -20,6 +22,8 @@ export const useTasks = () => {
   const [error, setError] = useState(null)
   const [editingId, setEditingId] = useState(null)
 
+  const { aiKey } = useAI()
+
   useEffect(() => {
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
@@ -28,27 +32,26 @@ export const useTasks = () => {
     }
   }, [tasks])
 
-
-  const findTaskContainer = (taskId) => {
+  const findTaskContainer = useCallback((taskId) => {
     if (taskId in tasks) return taskId
     return Object.keys(tasks).find((key) => tasks[key].some((task) => task.id === taskId))
-  }
+  }, [tasks])
 
-  const addTask = () => {
+  const addTask = useCallback(() => {
     if (!newTask.trim()) return
     const id = `task-${Date.now()}`
     const task = { id, content: newTask.trim() }
     setTasks((prev) => ({ ...prev, todo: [...prev.todo, task] }))
     setNewTask("")
-  }
+  }, [newTask])
 
-  const generateTasksWithAI = async (aiKey) => {
+  const generateTasksWithAI = useCallback(async () => {
     const goal = newTask.trim()
     if (!goal) return
     setLoading(true)
     setError(null)
     try {
-      const prompt = { role: "user", content: `Divida o seguinte objetivo em uma lista de tarefas pequenas e acionáveis. Responda APENAS com um array JSON de strings, onde cada string é uma tarefa. Objetivo: "${goal}". Proibido markdown, qualquer formatação adicional resultará em erro.` }
+      const prompt = { role: "user", content: `Objetivo: "${goal}` }
       const data = await sendMessage(null, [prompt], aiKey)
       if (data.error) throw new Error(data.error.message)
 
@@ -67,9 +70,9 @@ export const useTasks = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [newTask, aiKey])
 
-  const deleteTask = (taskId) => {
+  const deleteTask = useCallback((taskId) => {
     const container = findTaskContainer(taskId)
     if (container) {
       setTasks((prev) => ({
@@ -77,9 +80,9 @@ export const useTasks = () => {
         [container]: prev[container].filter((task) => task.id !== taskId)
       }))
     }
-  }
+  }, [findTaskContainer])
 
-  const updateTask = (taskId, newContent) => {
+  const updateTask = useCallback((taskId, newContent) => {
     const container = findTaskContainer(taskId)
     if (container) {
       setTasks((prev) => ({
@@ -90,15 +93,14 @@ export const useTasks = () => {
       }))
     }
     setEditingId(null)
-  }
+  }, [findTaskContainer])
 
-  const resetTasks = () => {
+  const resetTasks = useCallback(() => {
     window.localStorage.removeItem(STORAGE_KEY)
     setTasks(INITIAL_TASKS)
-  }
+  }, [])
 
-
-  return {
+  const value = {
     tasks,
     setTasks,
     newTask,
@@ -114,4 +116,18 @@ export const useTasks = () => {
     updateTask,
     resetTasks
   }
+
+  return (
+    <TasksContext.Provider value={value}>
+      {children}
+    </TasksContext.Provider>
+  )
 }
+
+const useTasks = () => {
+  const context = useContext(TasksContext)
+  if (!context) throw new Error("useTasks deve ser usado dentro de um <TasksProvider>")
+  return context
+}
+
+export { TasksProvider, useTasks }

@@ -1,114 +1,15 @@
-import { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react"
+import { createContext, useContext, useState } from "react"
 import { KeyboardSensor, PointerSensor, useSensor, useSensors, closestCorners, rectIntersection } from "@dnd-kit/core"
 import { sortableKeyboardCoordinates, arrayMove } from "@dnd-kit/sortable"
-import { INITIAL_TASKS } from "../constants"
-import { sendMessage } from "../services/aiChat"
-import { useAI } from "./AIContext"
+import { useTasks } from "./TasksContext"
 
-const KanbanContext = createContext()
+const KanbanContext = createContext({})
 
-export const useKanban = () => {
-  const context = useContext(KanbanContext)
-  if (!context) throw new Error("useKanban deve ser usado dentro de um KanbanProvider")
-  return context
-}
+const KanbanProvider = ({ children }) => {
+  // 1. Consome o TasksContext para interagir com as tarefas
+  const { setTasks, findTaskContainer, deleteTask } = useTasks()
 
-export const KanbanProvider = ({ children }) => {
-  const STORAGE_KEY = "kanban-tasks"
-  const [tasks, setTasks] = useState(() => {
-    try {
-      const savedTasks = window.localStorage.getItem(STORAGE_KEY)
-      return savedTasks ? JSON.parse(savedTasks) : INITIAL_TASKS
-    } catch (error) {
-      console.error("Failed to parse tasks from localStorage", error)
-      return INITIAL_TASKS
-    }
-  })
-
-  const [newTask, setNewTask] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-  const [editingId, setEditingId] = useState(null)
-
-  useEffect(() => {
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
-    } catch (error) {
-      console.error("Failed to save tasks to localStorage", error)
-    }
-  }, [tasks])
-
-  const findTaskContainer = (taskId) => {
-    if (taskId in tasks) return taskId
-    return Object.keys(tasks).find((key) => tasks[key].some((task) => task.id === taskId))
-  }
-
-  const addTask = () => {
-    if (!newTask.trim()) return
-    const id = `task-${Date.now()}`
-    const task = { id, content: newTask.trim() }
-    setTasks((prev) => ({ ...prev, todo: [...prev.todo, task] }))
-    setNewTask("")
-  }
-
-  const { aiKey } = useAI()
-
-  const generateTasksWithAI = async () => {
-    const goal = newTask.trim()
-    if (!goal) return
-    setLoading(true)
-    setError(null)
-    try {
-      const prompt = { role: "user", content: `Objetivo: "${goal}` }
-      const data = await sendMessage(null, [prompt], aiKey)
-      if (data.error) throw new Error(data.error.message)
-
-      const messageContent = data?.choices?.[0]?.message?.content
-      if (!messageContent) throw new Error("Serviço temporariamente indisponível.")
-
-      const newTasks = JSON.parse(messageContent).map((content, index) => ({
-        id: `task-${Date.now()}-${index}`,
-        content
-      }))
-
-      setTasks((prev) => ({ ...prev, todo: [...prev.todo, ...newTasks] }))
-      setNewTask("")
-    } catch (err) {
-      setError(err.message || "Falha ao gerar tarefas. Verifique o formato da resposta da IA.")
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const deleteTask = (taskId) => {
-    const container = findTaskContainer(taskId)
-    if (container) {
-      setTasks((prev) => ({
-        ...prev,
-        [container]: prev[container].filter((task) => task.id !== taskId)
-      }))
-    }
-  }
-
-  const updateTask = (taskId, newContent) => {
-    const container = findTaskContainer(taskId)
-    if (container) {
-      setTasks((prev) => ({
-        ...prev,
-        [container]: prev[container].map((task) =>
-          task.id === taskId ? { ...task, content: newContent } : task
-        )
-      }))
-    }
-    setEditingId(null)
-  }
-
-  const resetTasks = () => {
-    window.localStorage.removeItem(STORAGE_KEY)
-    setTasks(INITIAL_TASKS)
-  }
-
-  // Lógica do useDnd
+  // 2. Mantém apenas o estado específico do DnD
   const [activeTask, setActiveTask] = useState(null)
   const [isOverTrash, setIsOverTrash] = useState(false)
 
@@ -163,13 +64,13 @@ export const KanbanProvider = ({ children }) => {
     const { active, over } = event
 
     if (over?.id === "trash" && activeTask) {
-      deleteTask(activeTask.id)
+      deleteTask(activeTask.id) // Usa a função do TasksContext
     } else {
-      const activeContainer = findTaskContainer(active.id)
-      const overContainer = findTaskContainer(over?.id)
+      const activeContainer = findTaskContainer(active.id) // Usa a função do TasksContext
+      const overContainer = findTaskContainer(over?.id) // Usa a função do TasksContext
 
       if (activeContainer && overContainer && activeContainer === overContainer && over) {
-        setTasks((prev) => {
+        setTasks((prev) => { // Usa a função do TasksContext
           const activeIndex = prev[activeContainer].findIndex((t) => t.id === active.id)
           const overIndex = prev[overContainer].findIndex((t) => t.id === over.id)
           if (activeIndex !== overIndex) {
@@ -194,24 +95,8 @@ export const KanbanProvider = ({ children }) => {
     return closestCorners({ ...args, droppableContainers: args.droppableContainers.filter(c => c.id !== "trash") })
   }
 
-  const tasksApi = {
-    tasks,
-    setTasks,
-    newTask,
-    setNewTask,
-    loading,
-    error,
-    editingId,
-    setEditingId,
-    findTaskContainer,
-    addTask,
-    generateTasksWithAI,
-    deleteTask,
-    updateTask,
-    resetTasks
-  }
-
-  const dndApi = {
+  // 3. Expõe apenas os valores e funções de DnD
+  const value = {
     activeTask,
     isOverTrash,
     sensors,
@@ -221,10 +106,19 @@ export const KanbanProvider = ({ children }) => {
     collisionDetectionStrategy
   }
 
-  const value = {
-    ...tasksApi,
-    ...dndApi
-  }
-
-  return <KanbanContext.Provider value={value}>{children}</KanbanContext.Provider>
+  return (
+    <KanbanContext.Provider value={value}>
+      {children}
+    </KanbanContext.Provider>
+  )
 }
+
+const useKanban = () => {
+  const context = useContext(KanbanContext)
+  if (!context) {
+    throw new Error("useKanban deve ser usado dentro de um <KanbanProvider>")
+  }
+  return context
+}
+
+export { KanbanProvider, useKanban }

@@ -1,6 +1,6 @@
 import { LuPlus, LuSparkles, LuSave, LuTrash2 } from "react-icons/lu"
 import { useAI } from "../contexts/AIContext"
-import { useKanban } from "../contexts/KanbanContext"
+import { useTasks } from "../contexts/TasksContext"
 
 import Paper from "./Paper"
 import Input from "./Input"
@@ -8,7 +8,7 @@ import Button from "./Button"
 
 const AddTaskForm = () => {
   const { aiKey, setAiKey, hasKey, saveKey, removeKey } = useAI()
-  const { newTask, setNewTask, addTask, generateTasksWithAI, loading, error } = useKanban()
+  const { newTask, setNewTask, addTask, generateTasksWithAI, loading, error } = useTasks()
   return (
     <Paper className="bg-lightBg-primary dark:bg-darkBg-primary">
       <h1 className="text-center text-lightFg-primary dark:text-darkFg-primary">Kanban</h1>
