@@ -2,7 +2,7 @@ import { createContext, useState, useEffect, useContext } from "react"
 
 const ThemeContext = createContext()
 
-const ThemeProvider = ({ children }) => {
+export const ThemeProvider = ({ children }) => {
   const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
   let themeStorage = localStorage.getItem("@Denkitsu:theme")
   const [theme, setTheme] = useState(themeStorage || (mediaQuery.matches? "dark" : "light"))
@@ -28,5 +28,4 @@ const ThemeProvider = ({ children }) => {
   )
 }
 
-export default ThemeProvider
 export const useTheme = () => useContext(ThemeContext)

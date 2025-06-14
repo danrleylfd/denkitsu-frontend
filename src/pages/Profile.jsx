@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom"
 import { MdEdit, MdDelete, MdCancel, MdCheck } from "react-icons/md"
 
 import { useAuth } from "../contexts/AuthContext"
-import useAIKey from "../hooks/useAIKey"
+import { useAI } from "../contexts/AIContext"
 import { getUserAccount, editUserAccount, deleteUserAccount } from "../services/account"
 
 import SideMenu from "../components/SideMenu"
@@ -13,7 +13,7 @@ import { MessageSuccess, MessageError } from "../components/Notifications"
 
 const Profile = () => {
   const { userId } = useParams()
-  const { aiKey, setAiKey, saveKey, removeKey } = useAIKey()
+  const { aiKey, setAiKey, saveKey, removeKey } = useAI()
   const { user, signOut, updateUser } = useAuth()
   const userID = userId || user._id
   const [userData, setUserData] = useState(null)

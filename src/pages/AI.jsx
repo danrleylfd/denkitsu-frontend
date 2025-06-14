@@ -15,7 +15,7 @@ import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
 import { MessageError } from "../components/Notifications"
 import useAIKey from "../hooks/useAIKey"
-import { useKanban, KanbanProvider } from "../contexts/KanbanContext"
+import { useKanban } from "../contexts/KanbanContext"
 
 const MessageActions = ({ message }) => {
   const [isPublishing, setIsPublishing] = useState(false)
@@ -25,7 +25,7 @@ const MessageActions = ({ message }) => {
   const extractCodeFromMarkdown = (markdown) => {
     const codeRegex = /^```(\w*)\n([\s\S]+?)\n^```/gm
     const matches = [...markdown.matchAll(codeRegex)]
-    return matches.map(match => match[2].trim()).join("\n\n")
+    return matches.map((match) => match[2].trim()).join("\n\n")
   }
 
   const codeToCopy = useMemo(() => extractCodeFromMarkdown(message.content), [message.content])
@@ -39,8 +39,8 @@ const MessageActions = ({ message }) => {
   const handleAddToKanban = () => {
     const contentMessage = codeToCopy || message.content
     const newTasks = JSON.parse(contentMessage).map((content, index) => ({
-        id: `task-${Date.now()}-${index}`,
-        content
+      id: `task-${Date.now()}-${index}`,
+      content
     }))
     setTasks((prev) => ({ ...prev, todo: [...prev.todo, ...newTasks] }))
     alert(`Conteúdo enviado para o Kanban:\n\n${contentMessage}`)
@@ -164,7 +164,6 @@ const AI = () => {
 
   return (
     <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
-      <KanbanProvider>
       <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-2">
         {messages.map((msg, idx) => (
           <div
@@ -185,7 +184,7 @@ const AI = () => {
                   h4: ({ node, ...props }) => <strong {...props} />,
                   h5: ({ node, ...props }) => <strong {...props} />,
                   h6: ({ node, ...props }) => <strong {...props} />,
-                  p: ({ node, ...props }) => <p {...props}/>,
+                  p: ({ node, ...props }) => <p {...props} />,
                   pre: ({ node, ...props }) => <pre {...props} className="bg-lightBg-tertiary dark:bg-darkBg-tertiary text-xs font-mono p-2 rounded-md" />,
                   code: ({ node, inline, className, children, ...props }) =>
                     inline ? (
@@ -208,7 +207,7 @@ const AI = () => {
         {error && <MessageError>{error}</MessageError>}
       </div>
       <div className="flex items-center justify-between gap-2 px-1 py-2 bg-lightBg-primary dark:bg-darkBg-primary">
-        <div className="w-0 h-0 p-0 m-0"/>
+        <div className="w-0 h-0 p-0 m-0" />
         <select
           id="model-select"
           value={model}
@@ -244,7 +243,6 @@ const AI = () => {
           {!loading && <MdSend size={16} />}
         </Button>
       </div>
-      </KanbanProvider>
     </SideMenu>
   )
 }

@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom"
 import { MdImage, MdUpload } from "react-icons/md"
 import { VscLightbulbSparkle } from "react-icons/vsc"
 
+import { useAI } from "../contexts/AIContext"
+
 import { sendMessage } from "../services/aiChat"
 import { createVideo } from "../services/video"
 import { resizeImage } from "../utils/image"
@@ -20,6 +22,7 @@ const SideContentContainer = ({ children }) => (
 )
 
 const Upload = () => {
+  const { aiKey, hasKey } = useAI()
   const [content, setContent] = useState("")
   const [thumbnail, setThumbnail] = useState("")
   const [fileUrl, setFileUrl] = useState("")
@@ -32,7 +35,7 @@ const Upload = () => {
     setLoading(true)
     try {
       const prompt = { role: "user", content: `Ativar Modo Influencer para uma única mensagem. Assunto: ${content}` }
-      const data = await sendMessage(null, [prompt])
+      const data = await sendMessage(null, [prompt], aiKey)
       if (data.error) return setError(data.error.message)
       const message = data?.choices?.[0]?.message
       if (!message) return setError("Serviço temporariamente indisponível.")

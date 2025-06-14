@@ -75,7 +75,7 @@ const News = () => {
         <Paper key={article._id}>
           <ReactMarkdown
             components={{
-              img: ({ node, ...props }) => <img className="w-full rounded" {...props} />,
+              img: ({ node, src, ...props }) => <img src={src || null} className="w-full rounded" {...props} />,
               a: ({ node, ...props }) => <a target="_blank" rel="noopener noreferrer" {...props} />,
               h1: ({ node, ...props }) => <strong {...props} />,
               h2: ({ node, ...props }) => <strong {...props} />,

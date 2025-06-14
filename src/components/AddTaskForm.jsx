@@ -1,4 +1,5 @@
 import { LuPlus, LuSparkles, LuSave, LuTrash2 } from "react-icons/lu"
+import { useAI } from "../contexts/AIContext"
 import { useKanban } from "../contexts/KanbanContext"
 
 import Paper from "./Paper"
@@ -6,13 +7,14 @@ import Input from "./Input"
 import Button from "./Button"
 
 const AddTaskForm = () => {
-  const { aiKey, setAiKey, hasKey, saveKey, removeKey, newTask, setNewTask, addTask, generateTasksWithAI, loading, error } = useKanban()
+  const { aiKey, setAiKey, hasKey, saveKey, removeKey } = useAI()
+  const { newTask, setNewTask, addTask, generateTasksWithAI, loading, error } = useKanban()
   return (
     <Paper className="bg-lightBg-primary dark:bg-darkBg-primary">
       <h1 className="text-center text-lightFg-primary dark:text-darkFg-primary">Kanban</h1>
       {error && <p className="text-center text-danger-light">{error}</p>}
       <p className="text-center text-lightFg-secondary dark:text-darkFg-secondary ">Descreva um objetivo e deixe a IA criar as tarefas para você.</p>
-      <Input
+      {/* <Input
         name="ai-key"
         type="password"
         autoComplete="new-password"
@@ -27,7 +29,7 @@ const AddTaskForm = () => {
         <Button variant="danger" size="icon" $rounded onClick={removeKey} title="Excluir" disabled={!aiKey || loading}>
           <LuTrash2 size={16} />
         </Button>
-      </Input>
+      </Input> */}
       <Input
         placeholder="Adicionar tarefa ou descrever um objetivo..."
         value={newTask}
