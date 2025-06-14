@@ -9,6 +9,7 @@ import { FiCopy, FiTerminal, FiPlusSquare } from "react-icons/fi"
 
 import { useAuth } from "../contexts/AuthContext"
 import { sendMessage, getModels } from "../services/aiChat"
+import { publishNews } from "../services/news"
 
 import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
@@ -17,6 +18,7 @@ import useAIKey from "../hooks/useAIKey"
 import { useKanban, KanbanProvider } from "../contexts/KanbanContext"
 
 const MessageActions = ({ message }) => {
+  const [isPublishing, setIsPublishing] = useState(false)
   const [copyStatus, setCopyStatus] = useState(null)
   const { setTasks } = useKanban()
 
@@ -44,6 +46,29 @@ const MessageActions = ({ message }) => {
     alert(`Conteúdo enviado para o Kanban:\n\n${contentMessage}`)
   }
 
+  const handlePublish = async () => {
+    setIsPublishing(true)
+    try {
+      const contentParts = message.content.split("**Fonte(s):**")
+      const content = contentParts[0].trim()
+      let source = "Gerado por IA"
+      if (contentParts.length > 1 && contentParts[1]) {
+        const sourceText = contentParts[1]
+        const urlRegex = /\((https?:\/\/[^\s)]+)\)/
+        const match = sourceText.match(urlRegex)
+        if (match && match[1]) {
+          source = match[1]
+        }
+      }
+      const newArticle = await publishNews(message.content, source)
+      alert(`Artigo publicado com sucesso! Fontes: ${source}`)
+    } catch (error) {
+      alert(`Erro ao publicar: ${error.message}`)
+    } finally {
+      setIsPublishing(false)
+    }
+  }
+
   return (
     <div className="flex items-center gap-2 mt-2">
       <Button variant="outline" $rounded onClick={handleAddToKanban} title="Adicionar ao Kanban">
@@ -57,6 +82,9 @@ const MessageActions = ({ message }) => {
           <FiTerminal size={16} /> {copyStatus === "code" ? "Copiado!" : "Copiar Código"}
         </Button>
       )}
+      <Button variant="outline" $rounded onClick={handlePublish} disabled={isPublishing} title="Publicar Artigo">
+        <FiPlusSquare size={16} /> {isPublishing ? "Publicando..." : "Publicar"}
+      </Button>
     </div>
   )
 }
