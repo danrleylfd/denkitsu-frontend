@@ -15,12 +15,12 @@ import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
 import { MessageError } from "../components/Notifications"
 import { useAI } from "../contexts/AIContext"
-import { useKanban } from "../contexts/KanbanContext"
+import { useTasks } from "../contexts/TasksContext"
 
 const MessageActions = ({ message }) => {
   const [isPublishing, setIsPublishing] = useState(false)
   const [copyStatus, setCopyStatus] = useState(null)
-  const { setTasks } = useKanban()
+  const { setTasks } = useTasks()
 
   const extractCodeFromMarkdown = (markdown) => {
     const codeRegex = /^```(\w*)\n([\s\S]+?)\n^```/gm
@@ -50,7 +50,6 @@ const MessageActions = ({ message }) => {
     setIsPublishing(true)
     try {
       const contentParts = message.content.split("**Fonte(s):**")
-      const content = contentParts[0].trim()
       let source = "Gerado por IA"
       if (contentParts.length > 1 && contentParts[1]) {
         const sourceText = contentParts[1]
