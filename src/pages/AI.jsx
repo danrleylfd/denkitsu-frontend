@@ -175,8 +175,8 @@ const AI = () => {
                 rehypePlugins={[rehypeHighlight, rehypeRaw]}
                 remarkPlugins={[remarkGfm]}
                 components={{
-                  img: ({ node, ...props }) => <img {...props} className="w-full rounded" />,
-                  a: ({ node, ...props }) => <a {...props} target="_blank" rel="noopener noreferrer" />,
+                  img: ({ node, ...props }) => <img className="w-full rounded" {...props} />,
+                  a: ({ node, ...props }) => <a target="_blank" rel="noopener noreferrer" {...props} />,
                   h1: ({ node, ...props }) => <strong {...props} />,
                   h2: ({ node, ...props }) => <strong {...props} />,
                   h3: ({ node, ...props }) => <strong {...props} />,
@@ -184,18 +184,13 @@ const AI = () => {
                   h5: ({ node, ...props }) => <strong {...props} />,
                   h6: ({ node, ...props }) => <strong {...props} />,
                   p: ({ node, ...props }) => <p {...props} />,
-                  pre: ({ node, ...props }) => <pre {...props} className="bg-lightBg-tertiary dark:bg-darkBg-tertiary text-xs font-mono p-2 rounded-md" />,
-                  code: ({ node, inline, className, children, ...props }) =>
-                    inline ? (
-                      <code {...props} className="bg-lightBg-tertiary dark:bg-darkBg-tertiary text-xs font-mono p-2 rounded-md">
-                        {children}
-                      </code>
-                    ) : (
-                      <div {...props} className="bg-lightBg-tertiary dark:bg-darkBg-tertiary text-xs font-mono p-2 rounded-md">
-                        {children}
-                      </div>
-                    ),
-                  think: ({ node, ...props }) => <blockquote className="text-xs">💭 {props.children} 💭</blockquote>
+                  pre: ({ node, ...props }) => <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary break-words text-pretty text-xs p-2 rounded-md" {...props} />,
+                  code: ({ node, inline, className, children, ...props }) => (
+                    <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary break-words text-pretty text-xs p-2 rounded-md" {...props}>
+                      {children}
+                    </code>
+                  ),
+                  think: ({ children }) => <blockquote className="break-words text-pretty text-xs">💭 {children} 💭</blockquote>
                 }}
               />
               {msg.role === "assistant" && idx > 0 && <MessageActions message={msg} />}
@@ -212,7 +207,7 @@ const AI = () => {
           value={model}
           onChange={(e) => setModel(e.target.value)}
           disabled={loading}
-          className="bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary text-sm min-h-[48px] max-w-[6.5rem] rounded-md">
+          className="bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary text-sm min-h-[48px] max-w-[6rem] rounded-md">
           <option disabled>Selecionar Modelo</option>
           <option disabled>Gratuito</option>
           {freeModels.map((model) => (
