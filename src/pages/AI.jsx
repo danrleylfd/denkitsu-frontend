@@ -207,7 +207,7 @@ const AI = () => {
           value={model}
           onChange={(e) => setModel(e.target.value)}
           disabled={loading}
-          className="bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary text-sm min-h-[48px] max-w-[6rem] rounded-md">
+          className="bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary text-sm min-h-[48px] max-w-[6.5rem] rounded-md">
           <option disabled>Selecionar Modelo</option>
           <option disabled>Gratuito</option>
           {freeModels.map((model) => (
