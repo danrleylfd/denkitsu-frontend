@@ -14,22 +14,6 @@ const AddTaskForm = () => {
       <h1 className="text-center text-lightFg-primary dark:text-darkFg-primary">Kanban</h1>
       {error && <p className="text-center text-danger-light">{error}</p>}
       <p className="text-center text-lightFg-secondary dark:text-darkFg-secondary ">Descreva um objetivo e deixe a IA criar as tarefas para você.</p>
-      {/* <Input
-        name="ai-key"
-        type="password"
-        autoComplete="new-password"
-        placeholder="Digite sua chave de api openrouter.ai"
-        value={aiKey}
-        onChange={(e) => setAiKey(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && saveKey()}
-        disabled={loading}>
-        <Button variant="outline" size="icon" $rounded onClick={saveKey} title="Salvar" disabled={!aiKey || loading}>
-          <LuSave size={16} />
-        </Button>
-        <Button variant="danger" size="icon" $rounded onClick={removeKey} title="Excluir" disabled={!aiKey || loading}>
-          <LuTrash2 size={16} />
-        </Button>
-      </Input> */}
       <Input
         placeholder="Adicionar tarefa ou descrever um objetivo..."
         value={newTask}

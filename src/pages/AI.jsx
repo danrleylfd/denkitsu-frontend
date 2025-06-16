@@ -70,9 +70,6 @@ const MessageActions = ({ message }) => {
 
   return (
     <div className="flex items-center gap-2 mt-2">
-      <Button variant="outline" $rounded onClick={handleAddToKanban} title="Adicionar ao Kanban">
-        <FiPlusSquare size={16} /> Kanban
-      </Button>
       <Button variant="outline" $rounded onClick={() => handleCopy(message.content, "text")} title="Copiar Resposta">
         <FiCopy size={16} /> {copyStatus === "text" ? "Copiado!" : "Copiar"}
       </Button>
@@ -81,6 +78,9 @@ const MessageActions = ({ message }) => {
           <FiTerminal size={16} /> {copyStatus === "code" ? "Copiado!" : "Copiar Código"}
         </Button>
       )}
+      <Button variant="outline" $rounded onClick={handleAddToKanban} title="Adicionar ao Kanban">
+        <FiPlusSquare size={16} /> Kanban
+      </Button>
       <Button variant="outline" $rounded onClick={handlePublish} disabled={isPublishing} title="Publicar Artigo">
         <FiPlusSquare size={16} /> {isPublishing ? "Publicando..." : "Publicar"}
       </Button>
