@@ -1,4 +1,4 @@
-import { LuPlus, LuSparkles, LuSave, LuTrash2 } from "react-icons/lu"
+import { LuPlus, LuSparkles } from "react-icons/lu"
 import { useAI } from "../contexts/AIContext"
 import { useTasks } from "../contexts/TasksContext"
 

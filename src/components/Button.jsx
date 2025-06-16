@@ -34,7 +34,6 @@ const Button = ({
     return "rounded-md"
   }
   return (
-    <div className="flex justify-center">
       <button
         {...props}
         type={type}
@@ -49,7 +48,6 @@ const Button = ({
       >
         {loading && <Spinner />} {children}
       </button>
-    </div>
   )
 }
 

@@ -1,7 +1,7 @@
 import { useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { MdImage, MdUpload } from "react-icons/md"
-import { VscLightbulbSparkle } from "react-icons/vsc"
+import { LuSparkles } from "react-icons/lu"
 
 import { useAI } from "../contexts/AIContext"
 
@@ -90,8 +90,8 @@ const Upload = () => {
           value={content}
           onChange={(e) => setContent(e.target.value)}
           disabled={loading}>
-          <Button type="button" variant="warning" size="icon" $rounded title="Reescrever" onClick={handleGenerateContent} loading={loading} disabled={!content}>
-            {!loading && <VscLightbulbSparkle size={16} />}
+          <Button type="button" variant="outline" size="icon" $rounded title="Reescrever" onClick={handleGenerateContent} loading={loading} disabled={!content}>
+            {!loading && <LuSparkles size={16} />}
           </Button>
         </Input>
 

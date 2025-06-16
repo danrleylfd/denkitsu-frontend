@@ -1,92 +1,16 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react"
-import ReactMarkdown from "react-markdown"
-import rehypeHighlight from "rehype-highlight"
-import rehypeRaw from "rehype-raw"
-import remarkGfm from "remark-gfm"
-import "highlight.js/styles/gml.css"
 import { MdSend } from "react-icons/md"
-import { FiCopy, FiTerminal, FiPlusSquare } from "react-icons/fi"
 
 import { useAuth } from "../contexts/AuthContext"
-import { sendMessage, getModels } from "../services/aiChat"
-import { publishNews } from "../services/news"
+import { useAI } from "../contexts/AIContext"
+
+import { sendMessageStream, sendMessage, getModels } from "../services/aiChat"
 
 import SideMenu from "../components/SideMenu"
+import Markdown from "../components/Markdown"
+import MessageActions from "../components/MessageActions"
 import Button from "../components/Button"
 import { MessageError } from "../components/Notifications"
-import { useAI } from "../contexts/AIContext"
-import { useTasks } from "../contexts/TasksContext"
-
-const MessageActions = ({ message }) => {
-  const [isPublishing, setIsPublishing] = useState(false)
-  const [copyStatus, setCopyStatus] = useState(null)
-  const { setTasks } = useTasks()
-
-  const extractCodeFromMarkdown = (markdown) => {
-    const codeRegex = /^```(\w*)\n([\s\S]+?)\n^```/gm
-    const matches = [...markdown.matchAll(codeRegex)]
-    return matches.map((match) => match[2].trim()).join("\n\n")
-  }
-
-  const codeToCopy = useMemo(() => extractCodeFromMarkdown(message.content), [message.content])
-
-  const handleCopy = (text, type) => {
-    navigator.clipboard.writeText(text)
-    setCopyStatus(type)
-    setTimeout(() => setCopyStatus(null), 2000)
-  }
-
-  const handleAddToKanban = () => {
-    const contentMessage = codeToCopy || message.content
-    const newTasks = JSON.parse(contentMessage).map((content, index) => ({
-      id: `task-${Date.now()}-${index}`,
-      content
-    }))
-    setTasks((prev) => ({ ...prev, todo: [...prev.todo, ...newTasks] }))
-    alert(`Conteúdo enviado para o Kanban:\n\n${contentMessage}`)
-  }
-
-  const handlePublish = async () => {
-    setIsPublishing(true)
-    try {
-      const contentParts = message.content.split("**Fonte(s):**")
-      let source = "Gerado por IA"
-      if (contentParts.length > 1 && contentParts[1]) {
-        const sourceText = contentParts[1]
-        const urlRegex = /\((https?:\/\/[^\s)]+)\)/
-        const match = sourceText.match(urlRegex)
-        if (match && match[1]) {
-          source = match[1]
-        }
-      }
-      const newArticle = await publishNews(message.content, source)
-      alert(`Artigo publicado com sucesso! Fontes: ${source}`)
-    } catch (error) {
-      alert(`Erro ao publicar: ${error.message}`)
-    } finally {
-      setIsPublishing(false)
-    }
-  }
-
-  return (
-    <div className="flex items-center gap-2 mt-2">
-      <Button variant="outline" $rounded onClick={() => handleCopy(message.content, "text")} title="Copiar Resposta">
-        <FiCopy size={16} /> {copyStatus === "text" ? "Copiado!" : "Copiar"}
-      </Button>
-      {codeToCopy && (
-        <Button variant="outline" $rounded onClick={() => handleCopy(codeToCopy, "code")} title="Copiar Código">
-          <FiTerminal size={16} /> {copyStatus === "code" ? "Copiado!" : "Copiar Código"}
-        </Button>
-      )}
-      <Button variant="outline" $rounded onClick={handleAddToKanban} title="Adicionar ao Kanban">
-        <FiPlusSquare size={16} /> Kanban
-      </Button>
-      <Button variant="outline" $rounded onClick={handlePublish} disabled={isPublishing} title="Publicar Artigo">
-        <FiPlusSquare size={16} /> {isPublishing ? "Publicando..." : "Publicar"}
-      </Button>
-    </div>
-  )
-}
 
 const ContentView = ({ children }) => <div className="flex flex-col flex-1 h-screen mx-auto">{children}</div>
 
@@ -107,9 +31,9 @@ const AI = () => {
   useEffect(() => {
     async function loadModels() {
       const { freeModels, payModels } = await getModels()
-      // if (models.error) throw new Error(models.error.message)
       setFreeModels(freeModels)
-      setPayModels(payModels)
+      // setPayModels(payModels)
+      setPayModels([])
     }
     loadModels()
   }, [])
@@ -142,13 +66,22 @@ const AI = () => {
     setError(null)
     try {
       const apiMessages = currentMessages.map(({ role, content }) => ({ role, content }))
-      const data = await sendMessage(model, apiMessages, aiKey)
-      if (data.error) throw new Error(data.error.message)
-      const message = data?.choices?.[0]?.message
-      if (!message) throw new Error("Serviço temporariamente indisponível.")
-      setMessages((prevMessages) => [...prevMessages, message])
+      const streamedAssistantMessage = { role: "assistant", content: "", reasoning: "" }
+      setMessages((prev) => [...prev, streamedAssistantMessage])
+      await sendMessageStream(model, apiMessages, aiKey, (delta) => {
+        if (delta.content) streamedAssistantMessage.content += delta.content
+        if (delta.reasoning) streamedAssistantMessage.reasoning += delta.reasoning
+        if (delta.tool_calls?.[0]?.arguments?.reasoning) {
+          streamedAssistantMessage.reasoning += delta.tool_calls[0].arguments.reasoning
+        }
+        setMessages((prev) => {
+          const updated = [...prev]
+          updated[updated.length - 1] = { ...streamedAssistantMessage }
+          return updated
+        })
+      })
     } catch (error) {
-      setError(error.message)
+      setError(error.message || "Erro desconhecido")
     } finally {
       setLoading(false)
     }
@@ -164,36 +97,15 @@ const AI = () => {
   return (
     <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
       <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-2">
-        {messages.map((msg, idx) => (
+        {messages.map((msg, pos) => (
           <div
-            key={idx}
+            key={pos}
             className={`flex items-end gap-2 px-2 ${msg.role === "assistant" ? "flex-row" : "flex-row-reverse"} ${msg.role === "system" ? "hidden" : ""}`}>
             <img src={msg.role === "assistant" ? "/denkitsu.png" : user.avatarUrl} alt={msg.role} className="w-8 h-8 rounded-full object-cover" />
             <div className="max-w-[90%] md:max-w-[67%] break-words rounded-md px-4 py-2 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] text-lightFg-secondary dark:text-darkFg-secondary bg-lightBg-secondary dark:bg-darkBg-secondary opacity-75 dark:opacity-90">
-              <ReactMarkdown
-                children={`<think>${msg.reasoning || "Sem Pensamento"}</think>\n\n${msg.content}`}
-                rehypePlugins={[rehypeHighlight, rehypeRaw]}
-                remarkPlugins={[remarkGfm]}
-                components={{
-                  img: ({ node, ...props }) => <img className="w-full rounded" {...props} />,
-                  a: ({ node, ...props }) => <a target="_blank" rel="noopener noreferrer" {...props} />,
-                  h1: ({ node, ...props }) => <strong {...props} />,
-                  h2: ({ node, ...props }) => <strong {...props} />,
-                  h3: ({ node, ...props }) => <strong {...props} />,
-                  h4: ({ node, ...props }) => <strong {...props} />,
-                  h5: ({ node, ...props }) => <strong {...props} />,
-                  h6: ({ node, ...props }) => <strong {...props} />,
-                  p: ({ node, ...props }) => <p {...props} />,
-                  pre: ({ node, ...props }) => <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary break-words text-pretty text-xs p-2 rounded-md" {...props} />,
-                  code: ({ node, inline, className, children, ...props }) => (
-                    <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary break-words text-pretty text-xs p-2 rounded-md" {...props}>
-                      {children}
-                    </code>
-                  ),
-                  think: ({ children }) => <div className="bg-lightBg-tertiary dark:bg-darkBg-tertiary break-words text-pretty text-xs p-2 rounded-md">💭 {children} 💭</div>
-                }}
-              />
-              {msg.role === "assistant" && idx > 0 && <MessageActions message={msg} />}
+              {pos > 0 && msg.role === "assistant" && msg.reasoning && <Markdown content={msg.reasoning} think />}
+              <Markdown content={msg.content} />
+              {pos > 0 && msg.role === "assistant" && <MessageActions message={msg} />}
             </div>
           </div>
         ))}

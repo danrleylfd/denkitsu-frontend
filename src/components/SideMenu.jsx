@@ -10,7 +10,7 @@ import {
   LuLogOut,
   LuLock,
   LuClock,
-  LuList,
+  LuKanban,
   LuPlay,
   LuUpload,
   LuLink,
@@ -43,7 +43,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
     { icon: LuNewspaper, label: "Notícias", to: "/news" },
     { icon: LuCloud, label: "Clima", to: "/clima" },
     { icon: LuClock, label: "Pomodoro", to: "/pomodoro" },
-    { icon: LuList, label: "Kanban", to: "/kanban"},
+    { icon: LuKanban, label: "Kanban", to: "/kanban"},
   ]
   signed && menuItems.push(
     { icon: LuBotMessageSquare, label: "AI", to: "/chat" },
@@ -78,16 +78,16 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
         } bg-lightBg-secondary dark:bg-darkBg-secondary border-border ${fixed && "fixed"}`}>
         <nav className="flex flex-col gap-1">
           <div className="w-0 h-0 p-0 m-0"></div>
-          <button onClick={toggleMenu} className={menuItemClass}>
+          <button onClick={toggleMenu} className={menuItemClass} title={!isOpen && "Menu"}>
             <div className="w-6 h-6 flex items-center justify-center">{isOpen ? <LuX size={16} /> : <LuMenu size={16} />}</div>
             {isOpen && <span className="ml-3 select-none">Menu</span>}
           </button>
-          <button onClick={toggleTheme} className={menuItemClass}>
+          <button onClick={toggleTheme} className={menuItemClass} title={!isOpen && "Alternar Tema"}>
             <div className="w-6 h-6 flex items-center justify-center">{theme === "dark" ? <LuSun size={16} /> : <LuMoon size={16} />}</div>
-            {isOpen && <span className="ml-3 select-none">Tema</span>}
+            {isOpen && <span className="ml-3 select-none">Alternar Tema</span>}
           </button>
           {menuItems.map(({ icon: Icon, label, to }, index) => (
-            <Link key={index} to={to} className={menuItemClass}>
+            <Link key={index} to={to} className={menuItemClass} title={!isOpen && label}>
               <div className="w-6 h-6 flex items-center justify-center">
                 <Icon size={16} />
               </div>
