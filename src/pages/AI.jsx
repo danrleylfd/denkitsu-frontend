@@ -190,7 +190,7 @@ const AI = () => {
                       {children}
                     </code>
                   ),
-                  think: ({ children }) => <blockquote className="bg-lightBg-tertiary dark:bg-darkBg-tertiary break-words text-pretty text-xs">💭 {children} 💭</blockquote>
+                  think: ({ children }) => <blockquote className="bg-lightBg-tertiary dark:bg-darkBg-tertiary break-words text-pretty text-xs p-2 rounded-md">💭 {children} 💭</blockquote>
                 }}
               />
               {msg.role === "assistant" && idx > 0 && <MessageActions message={msg} />}
