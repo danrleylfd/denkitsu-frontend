@@ -3,14 +3,6 @@ import { INITIAL_TASKS } from "../constants"
 import { sendMessage } from "../services/aiChat"
 import { useAI } from "./AIContext"
 
-const extractCodeFromMarkdown = (markdown) => {
-  const codeRegex = /^```(\w*)\n([\s\S]+?)\n^```/gm
-  const matches = [...markdown.matchAll(codeRegex)]
-  return matches.map((match) => match[2].trim()).join("\n\n")
-}
-
-const codeToCopy = useMemo((content) => extractCodeFromMarkdown(content), [content])
-
 const TasksContext = createContext({})
 
 const TasksProvider = ({ children }) => {
@@ -58,12 +50,18 @@ const TasksProvider = ({ children }) => {
     if (!goal) return
     setLoading(true)
     setError(null)
+    const extractCodeFromMarkdown = (markdown) => {
+      const codeRegex = /^```(\w*)\n([\s\S]+?)\n^```/gm
+      const matches = [...markdown.matchAll(codeRegex)]
+      return matches.map((match) => match[2].trim()).join("\n\n")
+    }
     try {
       const prompt = { role: "user", content: `Objetivo: "${goal}` }
       const data = await sendMessage(null, [prompt], aiKey)
+      const content = data?.choices?.[0]?.message?.content
+      const codeToCopy = useMemo(() => extractCodeFromMarkdown(content), [content])
       if (data.error) throw new Error(data.error.message)
-
-      const messageContent = codeToCopy(data?.choices?.[0]?.message?.content) ||  data?.choices?.[0]?.message?.content
+      const messageContent = codeToCopy() || content
       if (!messageContent) throw new Error("Serviço temporariamente indisponível.")
 
       const newTasks = JSON.parse(messageContent).map((content, index) => ({
