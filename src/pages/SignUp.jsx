@@ -10,11 +10,7 @@ import Input from "../components/Input"
 import Button from "../components/Button"
 import { MessageError } from "../components/Notifications"
 
-const SideContentContainer = ({ children }) => (
-  <div className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-screen bg-cover bg-[url('/background.jpg')] bg-brand-purple">
-    {children}
-  </div>
-)
+const ContentView = ({ children }) => <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-screen">{children}</main>
 
 const SignUp = () => {
   const [name, setName] = useState("")
@@ -42,7 +38,7 @@ const SignUp = () => {
     }
   }
   return (
-    <SideMenu ContentView={SideContentContainer}>
+    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
       <Form title="Cadastrar" onSubmit={handleSignUp}>
         <Input name="name" type="text" placeholder="Nome" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" disabled={loading}/>
         <Input name="email" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" disabled={loading}/>

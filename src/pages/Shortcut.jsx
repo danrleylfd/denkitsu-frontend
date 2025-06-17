@@ -10,6 +10,8 @@ import Input from "../components/Input"
 import Button from "../components/Button"
 import { MessageBase, MessageWarning, MessageError } from "../components/Notifications"
 
+const ContentView = ({ children }) => <main className="flex flex-col items-center p-2 gap-2 mx-auto min-h-screen w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[75%] lg:max-w-[67%] ml-[3.5rem] md:ml-auto">{children}</main>
+
 const Shortcut = () => {
   const { signed } = useAuth()
   const [linkers, setLinkers] = useState([])
@@ -127,7 +129,7 @@ const Shortcut = () => {
   }
 
   return (
-    <SideMenu fixed className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
+    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
       <div className="bg-lightBg-secondary dark:bg-darkBg-secondary p-4 rounded-md w-full shadow-[6px_6px_16px_rgba(0,0,0,0.5)] opacity-75 dark:opacity-90">
         <form onSubmit={handleCreateLink} className="flex flex-row items-center gap-2">
           <Input placeholder="Apelido" value={newLabel} onChange={(e) => setNewLabel(e.target.value.trim())} disabled={formLoading} />

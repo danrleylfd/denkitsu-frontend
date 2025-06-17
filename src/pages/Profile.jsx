@@ -11,6 +11,8 @@ import Input from "../components/Input"
 import Button from "../components/Button"
 import { MessageSuccess, MessageError } from "../components/Notifications"
 
+const ContentView = ({ children }) => <main className="flex justify-center items-center p-2 gap-2 min-h-screen w-full">{children}</main>
+
 const Profile = () => {
   const { userId } = useParams()
   const { aiKey, setAiKey, saveKey, removeKey } = useAI()
@@ -99,11 +101,7 @@ const Profile = () => {
   }
 
   return (
-    <SideMenu fixed ContentView={({ children }) => (
-      <div className="flex flex-col justify-center items-center p-2 gap-2 mx-auto w-full h-screen ml-[3.5rem] md:ml-auto bg-cover bg-[url('/background.jpg')] bg-brand-purple">
-        {children}
-      </div>
-    )}>
+    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
       {loading && !userData && <div className="p-2"><Button variant="secondary" $rounded loading={loading} disabled /></div>}
       {error && <MessageError>{error}</MessageError>}
       {!loading && !error && (

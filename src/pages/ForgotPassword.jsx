@@ -8,11 +8,7 @@ import Button from "../components/Button"
 import Input from "../components/Input"
 import { MessageBase, MessageError } from "../components/Notifications"
 
-const SideContentContainer = ({ children }) => (
-  <div className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-screen bg-cover bg-[url('/background.jpg')] bg-brand-purple">
-    {children}
-  </div>
-)
+const ContentView = ({ children }) => <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-screen">{children}</main>
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("")
@@ -35,7 +31,7 @@ const ForgotPassword = () => {
     }
   }
   return (
-    <SideMenu ContentView={SideContentContainer}>
+    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
       <Form title="Recuperar Conta" onSubmit={handleForgotPassword}>
         <p className="text-sm text-gray-200 -mt-2 mb-4">
           Digite seu email para receber o link de recuperação.

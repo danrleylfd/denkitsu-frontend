@@ -8,6 +8,8 @@ import SideMenu from "../components/SideMenu"
 import Paper from "../components/Paper"
 import Button from "../components/Button"
 
+const ContentView = ({ children }) => <main className="flex flex-col items-center p-2 gap-2 mx-auto min-h-screen w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[75%] lg:max-w-[67%] ml-[3.5rem] md:ml-auto">{children}</main>
+
 const News = () => {
   const { user } = useAuth()
   const [news, setNews] = useState([])
@@ -69,7 +71,7 @@ const News = () => {
   }, [handleScroll])
 
   return (
-    <SideMenu fixed className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
+    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
       {error && <Paper>{error}</Paper>}
       {news.map((article) => (
         <Paper key={article._id}>

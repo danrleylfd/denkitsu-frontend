@@ -10,9 +10,7 @@ import {
   unlikeVideo,
   shareVideo,
   addComment,
-  // deleteComment,
   replyToComment,
-  // deleteReply,
   getCommentsForVideo
 } from "../services/video"
 

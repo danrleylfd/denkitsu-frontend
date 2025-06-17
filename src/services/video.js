@@ -147,15 +147,6 @@ const getRepliesForComment = async (commentId) => {
   }
 }
 
-const deleteReply = async (replyId) => {
-  try {
-    await api.delete(`/replys/${replyId}`)
-  } catch (error) {
-    console.error(`Error deleting reply ${replyId}:`, error.response?.data || error.message)
-    throw error
-  }
-}
-
 const shareVideo = async (videoId) => {
   try {
     await api.post(`/shares/${videoId}`)
@@ -191,7 +182,6 @@ export {
   getVideoCommentCount,
   replyToComment,
   getRepliesForComment,
-  deleteReply,
   shareVideo,
   getVideoShares
 }

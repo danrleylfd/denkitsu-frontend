@@ -5,14 +5,12 @@ import { getRecentVideos } from "../services/video"
 import SideMenu from "../components/SideMenu"
 import Feed from "../components/Feed"
 import Button from "../components/Button"
-import { MessageError } from "../components/Notifications"
+import { MessageBase, MessageError } from "../components/Notifications"
 
-const ContentView = ({ children, ...props }) => (
-  <main {...props} className="flex flex-col items-center p-2 gap-2 mx-auto w-full xs:max-w-[100%] sm:max-w-[90%] ml-[3.5rem] md:max-w-[75%] lg:max-w-[100%]">{children}</main>
-)
+const ContentView = ({ children, ...props }) => <main {...props} className="flex flex-col items-center p-2 gap-2 mx-auto w-full xs:max-w-[100%] sm:max-w-[90%] ml-[3.5rem] md:max-w-[75%] lg:max-w-[100%]">{children}</main>
 
 const Recents = () => {
-  const [recentVideos, setRecentVideos] = useState([])
+  const [videos, setVideos] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -22,10 +20,10 @@ const Recents = () => {
         setLoading(true)
         setError(null)
         const [recentData] = await Promise.all([getRecentVideos()])
-        setRecentVideos(recentData || [])
+        setVideos(recentData || [])
       } catch (err) {
         if (err.response.status === 404) {
-          setRecentVideos([])
+          setVideos([])
           return
         }
         setError("Falha ao carregar vídeos. Tente novamente mais tarde.")
@@ -39,10 +37,11 @@ const Recents = () => {
   }, [])
 
   return (
-    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple h-screen">
+    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple min-h-screen">
       {loading && <Button $rounded loading={loading} disabled />}
       {error && <MessageError>{error}</MessageError>}
-      {!loading && !error && <Feed videos={recentVideos} />}
+      {!loading && videos.length === 0 && <MessageBase>Nenhum vídeo encontrado.</MessageBase>}
+      {!loading && !error && videos.length > 0 && <Feed videos={videos} />}
     </SideMenu>
   )
 }

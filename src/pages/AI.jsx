@@ -12,7 +12,7 @@ import MessageActions from "../components/MessageActions"
 import Button from "../components/Button"
 import { MessageError } from "../components/Notifications"
 
-const ContentView = ({ children }) => <div className="flex flex-col flex-1 h-screen mx-auto">{children}</div>
+const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-screen mx-auto">{children}</main>
 
 const AI = () => {
   const { user } = useAuth()

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import { MdReply, MdOutlineClose, MdEdit, MdDelete } from "react-icons/md"
 
 import { useAuth } from "../contexts/AuthContext"
-import { deleteComment, deleteReply, getRepliesForComment } from "../services/video"
+import { deleteComment, getRepliesForComment } from "../services/video"
 
 import CommentForm from "./CommentForm"
 import Button from "./Button"

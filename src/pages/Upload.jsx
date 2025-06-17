@@ -15,11 +15,7 @@ import Input from "../components/Input"
 import Button from "../components/Button"
 import { MessageError } from "../components/Notifications"
 
-const SideContentContainer = ({ children }) => (
-  <div className="flex-1 flex flex-col justify-center items-center p-2 gap-2 w-full h-screen bg-cover bg-[url('/background.jpg')] bg-brand-purple">
-    {children}
-  </div>
-)
+const ContentView = ({ children }) => <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-screen">{children}</main>
 
 const Upload = () => {
   const { aiKey, hasKey } = useAI()
@@ -81,7 +77,7 @@ const Upload = () => {
   }
 
   return (
-    <SideMenu ContentView={SideContentContainer}>
+    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
       <Form title="Upload" onSubmit={handleSubmit}>
         <Input
           name="content"

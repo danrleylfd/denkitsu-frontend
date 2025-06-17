@@ -5,6 +5,8 @@ import { useTheme } from "../contexts/ThemeContext"
 import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
 
+const ContentView = ({ children }) => <main className="flex justify-center items-center p-2 gap-2 min-h-screen w-full">{children}</main>
+
 const Pomodoro = () => {
   const [minutes, setMinutes] = useState(25)
   const [seconds, setSeconds] = useState(0)
@@ -68,11 +70,7 @@ const Pomodoro = () => {
   }
 
   return (
-    <SideMenu ContentView={({ children }) => (
-      <div className="flex-1 flex flex-col items-center justify-center p-2 gap-2 mx-auto h-screen bg-cover bg-[url('/background.jpg')] bg-brand-purple">
-        {children}
-      </div>
-    )}>
+    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
       <div className="bg-white dark:bg-zinc-900 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] p-4 rounded-lg w-full max-w-96 transition-colors opacity-75 dark:opacity-90">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center">

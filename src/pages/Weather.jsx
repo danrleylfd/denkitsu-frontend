@@ -9,9 +9,9 @@ import SideMenu from "../components/SideMenu"
 import Input from "../components/Input"
 import Button from "../components/Button"
 
-const Spinner = () => (
-  <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary-base/20 border-t-primary-base dark:border-warning-light/20 dark:border-t-warning-light" />
-)
+const ContentView = ({ children }) => <main className="flex justify-center items-center p-2 gap-2 min-h-screen w-full">{children}</main>
+
+const Spinner = () => <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary-base/20 border-t-primary-base dark:border-warning-light/20 dark:border-t-warning-light" />
 
 const Weather = () => {
   const { theme, toggleTheme } = useTheme()
@@ -86,14 +86,8 @@ const Weather = () => {
     buscarPorCoordenadas()
   }, [])
 
-  const CustomContentView = useCallback(({ children }) => (
-    <div className="flex-1 flex flex-col items-center justify-center p-2 gap-2 mx-auto h-screen bg-cover bg-[url('/background.jpg')] bg-brand-purple">
-      {children}
-    </div>
-  ), [])
-
   return (
-    <SideMenu ContentView={CustomContentView}>
+    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
       <div className="relative w-full max-w-xl rounded-lg shadow-[6px_6px_16px_rgba(0,0,0,0.5)] bg-lightBg-primary p-4 opacity-75 dark:bg-darkBg-primary dark:opacity-90">
         <div className="flex items-center gap-2 pb-2">
           <Input type="text" value={cityInput} onChange={(e) => setCityInput(e.target.value)} onKeyDown={handleKeyPress} placeholder="Buscar por cidade...">
