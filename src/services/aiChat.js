@@ -101,4 +101,4 @@ const getModels = async () => {
   }
 }
 
-export { sendMessageStream, sendMessage, getModels }
+export { sendMessageStream, sendMessage, getModels, getPrompt }
