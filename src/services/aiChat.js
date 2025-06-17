@@ -65,6 +65,8 @@ const getPrompt = async () => {
   try {
     const { data } = await api.get("/prompt")
     return data
+  } catch (error) {
+    console.error(error.message)
   }
 }
 
