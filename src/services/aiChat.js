@@ -1,17 +1,11 @@
 import axios from "axios"
 import api from "./"
 
-const sendMessageStream = async (model, messages, aiKey = undefined, onDelta) => {
+const sendMessageStream = async (model, messages, prompt, aiKey = undefined, onDelta) => {
   try {
-    const sysMsg = [
-      {
-        role: "system",
-        content: `Deve sempre pensar e responder em ${window.language || navigator.language}.`
-      }
-    ]
     const payload = {
       model: model || "deepseek/deepseek-r1:free",
-      messages: [...sysMsg, ...messages],
+      messages: [prompt, ...messages],
       stream: true
     }
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -64,6 +58,13 @@ const sendMessage = async (model, messages, aiKey = undefined) => {
     return data
   } catch (error) {
     console.error(error.response?.data?.error?.message || error.message)
+  }
+}
+
+const getPrompt = async () => {
+  try {
+    const { data } = await api.get("/prompt")
+    return data
   }
 }
 

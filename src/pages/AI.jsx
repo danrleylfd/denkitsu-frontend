@@ -4,7 +4,7 @@ import { MdSend } from "react-icons/md"
 import { useAuth } from "../contexts/AuthContext"
 import { useAI } from "../contexts/AIContext"
 
-import { sendMessageStream, sendMessage, getModels } from "../services/aiChat"
+import { sendMessageStream, sendMessage, getModels, getPrompt } from "../services/aiChat"
 
 import SideMenu from "../components/SideMenu"
 import Markdown from "../components/Markdown"
@@ -18,6 +18,7 @@ const AI = () => {
   const { user } = useAuth()
   const { aiKey } = useAI()
   const storedModel = localStorage.getItem("@Denkitsu:model")
+  const [prompt, setPrompt] = useState("")
   const [freeModels, setFreeModels] = useState([])
   const [payModels, setPayModels] = useState([])
   const [model, setModel] = useState(storedModel || "deepseek/deepseek-r1:free")
@@ -27,6 +28,14 @@ const AI = () => {
   const [error, setError] = useState(null)
   const messagesEndRef = useRef(null)
   const textareaRef = useRef(null)
+
+  useEffect(() => {
+    async function loadPrompt() {
+      const prompt = await getPrompt()
+      setPrompt(prompt)
+    }
+    loadPrompt()
+  }, [])
 
   useEffect(() => {
     async function loadModels() {
@@ -68,7 +77,7 @@ const AI = () => {
       const apiMessages = currentMessages.map(({ role, content }) => ({ role, content }))
       const streamedAssistantMessage = { role: "assistant", content: "", reasoning: "" }
       setMessages((prev) => [...prev, streamedAssistantMessage])
-      await sendMessageStream(model, apiMessages, aiKey, (delta) => {
+      await sendMessageStream(model, apiMessages, prompt, aiKey, (delta) => {
         if (delta.content) streamedAssistantMessage.content += delta.content
         if (delta.reasoning) streamedAssistantMessage.reasoning += delta.reasoning
         if (delta.tool_calls?.[0]?.arguments?.reasoning) {
