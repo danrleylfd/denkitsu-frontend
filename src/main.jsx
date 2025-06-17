@@ -5,7 +5,7 @@ import { ThemeProvider } from "./contexts/ThemeContext"
 import { AuthProvider } from "./contexts/AuthContext"
 import { AIProvider } from "./contexts/AIContext.jsx"
 import { TasksProvider } from "./contexts/TasksContext"
-import { KanbanProvider } from "./contexts/KanbanContext"
+import { DndProvider } from "./contexts/DndContext"
 import "./styles/base.css"
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -14,9 +14,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <AuthProvider>
         <AIProvider>
           <TasksProvider>
-            <KanbanProvider>
+            <DndProvider>
               <App />
-            </KanbanProvider>
+            </DndProvider>
           </TasksProvider>
         </AIProvider>
       </AuthProvider>

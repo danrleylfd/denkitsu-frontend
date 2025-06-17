@@ -30,7 +30,7 @@ const Upload = () => {
   const handleGenerateContent = async () => {
     setLoading(true)
     try {
-      const prompt = { role: "user", content: `Ativar Modo Influencer para uma única mensagem. Assunto: ${content}` }
+      const prompt = { role: "user", content: `Modo Blogueiro, Tema: ${content}` }
       const data = await sendMessage(null, [prompt], aiKey)
       if (data.error) return setError(data.error.message)
       const message = data?.choices?.[0]?.message

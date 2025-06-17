@@ -3,9 +3,9 @@ import { KeyboardSensor, PointerSensor, useSensor, useSensors, closestCorners, r
 import { sortableKeyboardCoordinates, arrayMove } from "@dnd-kit/sortable"
 import { useTasks } from "./TasksContext"
 
-const KanbanContext = createContext({})
+const DndContext = createContext({})
 
-const KanbanProvider = ({ children }) => {
+const DndProvider = ({ children }) => {
   // 1. Consome o TasksContext para interagir com as tarefas
   const { setTasks, findTaskContainer, deleteTask } = useTasks()
 
@@ -107,18 +107,18 @@ const KanbanProvider = ({ children }) => {
   }
 
   return (
-    <KanbanContext.Provider value={value}>
+    <DndContext.Provider value={value}>
       {children}
-    </KanbanContext.Provider>
+    </DndContext.Provider>
   )
 }
 
-const useKanban = () => {
-  const context = useContext(KanbanContext)
+const useDnd = () => {
+  const context = useContext(DndContext)
   if (!context) {
-    throw new Error("useKanban deve ser usado dentro de um <KanbanProvider>")
+    throw new Error("useDnd deve ser usado dentro de um <DndProvider>")
   }
   return context
 }
 
-export { KanbanProvider, useKanban }
+export { DndProvider, useDnd }

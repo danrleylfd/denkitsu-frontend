@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { MdSend } from "react-icons/md"
 
 import { useAuth } from "../contexts/AuthContext"

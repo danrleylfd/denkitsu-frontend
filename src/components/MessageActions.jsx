@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react"
+import { useState } from "react"
 import { LuCode, LuCopy, LuKanban, LuNewspaper } from "react-icons/lu"
 
 import { useTasks } from "../contexts/TasksContext"
@@ -7,7 +7,6 @@ import { publishNews } from "../services/news"
 import Button from "./Button"
 
 const MessageActions = ({ message }) => {
-  const [isPublishing, setIsPublishing] = useState(false)
   const [loading, setLoading] = useState(false)
   const [loadingType, setLoadingType] = useState(null)
   const { setTasks } = useTasks()
@@ -18,7 +17,7 @@ const MessageActions = ({ message }) => {
     return matches.map((match) => match[2].trim()).join("\n\n")
   }
 
-  const codeToCopy = useMemo(() => extractCodeFromMarkdown(message.content), [message.content])
+  const codeToCopy = () => extractCodeFromMarkdown(message.content)
 
   const handleCopy = (text, type) => {
     setLoading(true)
@@ -37,7 +36,6 @@ const MessageActions = ({ message }) => {
       content
     }))
     setTasks((prev) => ({ ...prev, todo: [...prev.todo, ...newTasks] }))
-    alert(`Conteúdo enviado para o Kanban:\n\n${contentMessage}`)
   }
 
   const handlePublish = async () => {

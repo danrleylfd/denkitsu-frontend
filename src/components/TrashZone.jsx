@@ -1,9 +1,9 @@
 import { LuTrash2 } from "react-icons/lu"
 import { useDroppable } from "@dnd-kit/core"
-import { useKanban } from "../contexts/KanbanContext"
+import { useDnd } from "../contexts/DndContext"
 
 const TrashZone = () => {
-  const { activeTask, isOverTrash } = useKanban()
+  const { activeTask, isOverTrash } = useDnd()
   const { setNodeRef } = useDroppable({ id: "trash" })
 
   const baseClasses = "fixed bottom-0 left-0 right-0 z-10 p-6 bg-zinc-900/80 backdrop-blur-sm transition-transform duration-300 ease-in-out"
