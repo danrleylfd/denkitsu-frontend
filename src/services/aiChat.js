@@ -4,7 +4,7 @@ import api from "./"
 const sendMessageStream = async (model, messages, prompt, aiKey = undefined, onDelta) => {
   try {
     const payload = {
-      model: model || "deepseek/deepseek-r1:free",
+      model,
       messages: [prompt, ...messages],
       stream: true
     }
@@ -49,7 +49,7 @@ const sendMessage = async (model, messages, aiKey = undefined) => {
   try {
     const sysMsg = [{ role: "system", content: `Deve sempre pensar e responder em ${window.language || navigator.language}.` }]
     const payload = {
-      model: model || "deepseek/deepseek-r1:free",
+      model,
       messages: [...sysMsg, ...messages],
       aiKey
     }

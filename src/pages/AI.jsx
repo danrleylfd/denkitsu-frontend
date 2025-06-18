@@ -8,6 +8,8 @@ import { sendMessageStream, sendMessage, getModels, getPrompt } from "../service
 
 import SideMenu from "../components/SideMenu"
 import Markdown from "../components/Markdown"
+import ModelSelect from "../components/ModelSelect"
+import PromptInput from "../components/PromptInput"
 import MessageActions from "../components/MessageActions"
 import Button from "../components/Button"
 import { MessageError } from "../components/Notifications"
@@ -47,11 +49,10 @@ const AI = () => {
     loadModels()
   }, [])
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
-
   useEffect(() => {
+    const scrollToBottom = () => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    }
     scrollToBottom()
   }, [messages])
 
@@ -123,36 +124,13 @@ const AI = () => {
       </div>
       <div className="flex items-center justify-between gap-2 px-1 py-2 bg-lightBg-primary dark:bg-darkBg-primary">
         <div className="w-0 h-0 p-0 m-0" />
-        <select
-          id="model-select"
-          value={model}
-          onChange={(e) => setModel(e.target.value)}
-          disabled={loading}
-          className="bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary text-sm min-h-[48px] max-w-[6.5rem] rounded-md">
-          <option disabled>Selecionar Modelo</option>
-          <option disabled>Gratuito</option>
-          {freeModels.map((model) => (
-            <option key={model.id} value={model.id}>
-              {model.name}
-            </option>
-          ))}
-          <option disabled>Premium</option>
-          {payModels.map((model) => (
-            <option key={model.id} disabled value={model.id}>
-              {model.name}
-            </option>
-          ))}
-        </select>
-        <textarea
-          id="prompt-input"
-          ref={textareaRef}
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder={!loading ? "Escreva seu prompt" : "Pensando..."}
-          disabled={loading}
-          rows={1}
-          className="flex-1 resize-y min-h-[44px] max-h-[120px] max-w-full overflow-y-hidden px-2 py-4 rounded-md font-mono text-sm bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary"
+        <ModelSelect model={model} setModel={setModel} loading={loading} freeModels={freeModels} payModels={payModels} />
+        <PromptInput
+          textareaRef={textareaRef}
+          inputText={inputText}
+          setInputText={setInputText}
+          handleKeyDown={handleKeyDown}
+          loading={loading}
         />
         <Button size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || !inputText.trim()}>
           {!loading && <MdSend size={16} />}
