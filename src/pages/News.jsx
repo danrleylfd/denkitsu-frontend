@@ -5,6 +5,7 @@ import { useAuth } from "../contexts/AuthContext"
 import { getNewsPaginate } from "../services/news"
 
 import SideMenu from "../components/SideMenu"
+import Markdown from "../components/Markdown"
 import Paper from "../components/Paper"
 import Button from "../components/Button"
 
@@ -75,24 +76,8 @@ const News = () => {
       {error && <Paper>{error}</Paper>}
       {news.map((article) => (
         <Paper key={article._id}>
-          <ReactMarkdown
-            components={{
-              img: ({ node, src, ...props }) => <img src={src || null} className="w-full rounded" {...props} />,
-              a: ({ node, ...props }) => <a target="_blank" rel="noopener noreferrer" {...props} />,
-              h1: ({ node, ...props }) => <strong {...props} />,
-              h2: ({ node, ...props }) => <strong {...props} />,
-              h3: ({ node, ...props }) => <strong {...props} />,
-              h4: ({ node, ...props }) => <strong {...props} />,
-              h5: ({ node, ...props }) => <strong {...props} />,
-              h6: ({ node, ...props }) => <strong {...props} />,
-              p: ({ node, ...props }) => <p {...props}/>,
-              pre: ({ node, ...props }) => <p {...props}/>,
-              code: ({ node, ...props }) => <p {...props}/>,
-            }}
-          >
-            {article.content}
-          </ReactMarkdown>
-          <small className="text-xs text-gray-500">Publicado em {new Date(article.createdAt).toLocaleString()}</small>
+          <Markdown content={article.content} />
+          <small className="text-xs text-lightFg-secondary dark:text-darkFg-secondary">Publicado em {new Date(article.createdAt).toLocaleString()}</small>
         </Paper>
       ))}
       <Button variant="outline" $rounded onClick={loadNews} loading={loading} disabled={!hasMore}>

@@ -128,10 +128,10 @@ const Profile = () => {
             </form>
           ) : (
             <div className="flex-1 flex flex-col gap-2">
-              <h5 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">{userData.name}</h5>
-              <p className="text-zinc-600 dark:text-zinc-400">@{userData.email.split("@")[0]}</p>
-              <small className="text-xs text-zinc-500 dark:text-zinc-400">Conta criada em {new Date(userData.createdAt).toLocaleString()}</small>
-              <small className="text-xs text-zinc-500 dark:text-zinc-400">Conta editada em {new Date(userData.updatedAt).toLocaleString()}</small>
+              <h5 className="text-lg font-bold text-lightFg-primary dark:text-darkFg-primary">{userData.name}</h5>
+              <p className="text-lightFg-secondary dark:text-darkFg-secondary">@{userData.email.split("@")[0]}</p>
+              <small className="text-xs text-lightFg-secondary dark:text-darkFg-secondary">Conta criada em {new Date(userData.createdAt).toLocaleString()}</small>
+              <small className="text-xs text-lightFg-secondary dark:text-darkFg-secondary">Conta editada em {new Date(userData.updatedAt).toLocaleString()}</small>
               { userID === user._id && (
                 <div className="flex-1 flex flex-col gap-0 items-center">
                   <div className="flex w-full gap-2 justify-between">

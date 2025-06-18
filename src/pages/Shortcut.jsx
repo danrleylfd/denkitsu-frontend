@@ -167,7 +167,7 @@ const Shortcut = () => {
               ) : (
                 <>
                   <div className="flex gap-2">
-                    <Link to={`/access/${linker.label}`} target="_blank" rel="noopener noreferrer">
+                    <Link className="text-primary-base hover:text-primary-light active:text-primary-dark" to={`/access/${linker.label}`} target="_blank" rel="noopener noreferrer">
                       Acessar /{linker.label}
                     </Link>
                   </div>
