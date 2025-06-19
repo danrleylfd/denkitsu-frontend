@@ -116,6 +116,9 @@ p, span, label, mark, ol, ul, li {
 }
 
 ol, ul, li {
+  font-size: .75rem;
+  font-weight: 400;
+  line-height: 1.6;
   list-style-position: inside;
 }
 
@@ -132,7 +135,7 @@ em {
 }
 
 small, caption, sup, sub {
-  font-size: .625rem;
+  font-size: .6875rem;
   font-weight: 400;
   line-height: 1.43;
 }
