@@ -40,7 +40,7 @@ const Markdown = ({ content, think }) => {
             p: ({ node, children, ...props }) => <p className="text-lightFg-primary dark:text-darkFg-primary" {...props}>{children}</p>,
             a: ({ node, children, ...props }) => <a className="text-primary-base hover:text-primary-light active:text-primary-dark" target="_blank" rel="noopener noreferrer" {...props}>{children}</a>,
             span: ({ node, children, ...props }) => <span className="text-lightFg-secondary dark:text-darkFg-secondary" {...props}>{children}</span>,
-            img: ({ node, ...props }) => <img className="w-full rounded" {...props} />,
+            img: ({ node, children, ...props }) => <img className="w-full rounded" {...props}>{children}</img>,
             pre: ({ node, children, ...props }) => <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary break-words text-pretty text-xs p-2 rounded-md" {...props}>{children}</pre>,
             code: ({ node, className, children, ...props }) => <code className={`bg-lightBg-tertiary dark:bg-darkBg-tertiary break-words text-pretty text-xs p-2 rounded-md ${className}`} {...props}>{children}</code>,
             table: ({ node, children, ...props }) => <table className="w-full my-4 border-collapse border border-lightBorder dark:border-darkBorder rounded" {...props}>{children}</table>,
