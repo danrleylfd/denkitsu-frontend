@@ -43,7 +43,7 @@ const MessageActions = ({ message }) => {
     setLoadingType("news")
     try {
       const contentParts = message.content.split("**Fonte(s):**")
-      let source = "Gerado por IA"
+      let source = `Denkitsu ${new Date().toLocaleString()}`
       if (contentParts.length > 1 && contentParts[1]) {
         const sourceText = contentParts[1]
         const urlRegex = /\((https?:\/\/[^\s)]+)\)/
