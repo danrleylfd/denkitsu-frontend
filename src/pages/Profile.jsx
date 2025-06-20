@@ -101,7 +101,7 @@ const Profile = () => {
   }
 
   return (
-    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
+    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
       {loading && !userData && <div className="p-2"><Button variant="secondary" $rounded loading={loading} disabled /></div>}
       {error && <MessageError>{error}</MessageError>}
       {!loading && !error && (
