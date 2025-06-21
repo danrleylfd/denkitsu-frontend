@@ -4,16 +4,16 @@ import { MdSend } from "react-icons/md"
 import { useAuth } from "../contexts/AuthContext"
 import { useAI } from "../contexts/AIContext"
 
-import { sendMessageStream, sendMessage, getModels, getPrompt } from "../services/aiChat"
+import { sendMessageStream, getModels, getPrompt } from "../services/aiChat"
 
+// Componentes
 import SideMenu from "../components/SideMenu"
-import Markdown from "../components/Markdown"
+import ChatMessage from "../components/ChatMessage"
+import CodePreview from "../components/CodePreview"
 import ModelSelect from "../components/ModelSelect"
 import PromptInput from "../components/PromptInput"
-import MessageActions from "../components/MessageActions"
 import Button from "../components/Button"
 import { MessageError } from "../components/Notifications"
-import CanvaPreview from "../components/CanvaPreview"
 
 const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-screen mx-auto">{children}</main>
 
@@ -21,40 +21,39 @@ const AI = () => {
   const { user } = useAuth()
   const { aiKey } = useAI()
   const storedModel = localStorage.getItem("@Denkitsu:model")
+
   const [prompt, setPrompt] = useState("")
   const [freeModels, setFreeModels] = useState([])
   const [payModels, setPayModels] = useState([])
   const [model, setModel] = useState(storedModel || "deepseek/deepseek-r1:free")
-  const [messages, setMessages] = useState([{ role: "assistant", content: "Olá! Como posso ajudar você hoje?\n Shift + Enter para quebrar a linha." }])
+  const [messages, setMessages] = useState([{ id: 1, role: "assistant", content: "Olá! Como posso ajudar você hoje?\n Shift + Enter para quebrar a linha." }])
   const [inputText, setInputText] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [canvaContent, setCanvaContent] = useState(null)
+
   const messagesEndRef = useRef(null)
   const textareaRef = useRef(null)
 
   useEffect(() => {
     async function loadPrompt() {
-      const prompt = await getPrompt()
-      setPrompt(prompt)
+      const promptData = await getPrompt()
+      setPrompt(promptData)
     }
     loadPrompt()
   }, [])
 
   useEffect(() => {
     async function loadModels() {
-      const { freeModels, payModels } = await getModels()
-      setFreeModels(freeModels)
-      aiKey && setPayModels(payModels)
+      const { freeModels: loadedFree, payModels: loadedPay } = await getModels()
+      setFreeModels(loadedFree || [])
+      if(aiKey) setPayModels(loadedPay || [])
     }
     loadModels()
-  }, [])
+  }, [aiKey])
 
   useEffect(() => {
-    const scrollToBottom = () => {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-    }
-    scrollToBottom()
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
 
   useEffect(() => {
@@ -65,38 +64,46 @@ const AI = () => {
   }, [inputText])
 
   useEffect(() => {
-    if (!storedModel || storedModel !== model) localStorage.setItem("@Denkitsu:model", model)
+    localStorage.setItem("@Denkitsu:model", model)
   }, [model])
 
+
   const handleSendMessage = useCallback(async () => {
-    const newUserMessage = { role: "user", content: inputText.trim() }
+    if (!inputText.trim()) return;
+
+    const newUserMessage = { id: Date.now(), role: "user", content: inputText.trim() }
+
+    setMessages(prevMessages => [...prevMessages, newUserMessage])
+
     const currentMessages = [...messages, newUserMessage]
-    setMessages(currentMessages)
     setInputText("")
     setLoading(true)
     setError(null)
+
     try {
       const apiMessages = currentMessages.map(({ role, content }) => ({ role, content }))
-      const streamedAssistantMessage = { role: "assistant", content: "", reasoning: "" }
-      setMessages((prev) => [...prev, streamedAssistantMessage])
+      const streamedAssistantMessage = { id: Date.now() + 1, role: "assistant", content: "", reasoning: "" }
+      setMessages(prev => [...prev, streamedAssistantMessage])
+
       await sendMessageStream(model, apiMessages, prompt, aiKey, (delta) => {
         if (delta.content) streamedAssistantMessage.content += delta.content
         if (delta.reasoning) streamedAssistantMessage.reasoning += delta.reasoning
         if (delta.tool_calls?.[0]?.arguments?.reasoning) {
           streamedAssistantMessage.reasoning += delta.tool_calls[0].arguments.reasoning
         }
-        setMessages((prev) => {
+
+        setMessages(prev => {
           const updated = [...prev]
           updated[updated.length - 1] = { ...streamedAssistantMessage }
           return updated
         })
       })
-    } catch (error) {
-      setError(error.message || "Erro desconhecido")
+    } catch (err) {
+      setError(err.message || "Erro desconhecido")
     } finally {
       setLoading(false)
     }
-  }, [inputText, loading, messages, model, aiKey])
+  }, [inputText, messages, model, aiKey, prompt])
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -105,28 +112,25 @@ const AI = () => {
     }
   }
 
-  const handleShowCanva = (htmlCode) => {
+  const handleShowCanva = useCallback((htmlCode) => {
     setCanvaContent(htmlCode)
-  }
+  }, [])
 
-  const handleCloseCanva = () => {
+  const handleCloseCanva = useCallback(() => {
     setCanvaContent(null)
-  }
+  }, [])
 
   return (
     <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
       <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-2">
-        {messages.map((msg, pos) => (
-          <div
-            key={pos}
-            className={`flex items-end gap-2 px-2 ${msg.role === "assistant" ? "flex-row" : "flex-row-reverse"} ${msg.role === "system" ? "hidden" : ""}`}>
-            <img src={msg.role === "assistant" ? "/denkitsu.png" : user.avatarUrl} alt={msg.role} className="w-8 h-8 rounded-full object-cover" />
-            <div className="max-w-[90%] md:max-w-[67%] break-words rounded-md px-4 py-2 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] text-lightFg-secondary dark:text-darkFg-secondary bg-lightBg-secondary dark:bg-darkBg-secondary opacity-75 dark:opacity-90">
-              {pos > 0 && msg.role === "assistant" && msg.reasoning && <Markdown content={msg.reasoning} think />}
-              <Markdown content={msg.content} />
-              {pos > 0 && msg.role === "assistant" && <MessageActions message={msg} onShowCanva={handleShowCanva} />}
-            </div>
-          </div>
+        {messages.map((msg) => (
+          <ChatMessage
+            key={msg.id}
+            msg={msg}
+            user={user}
+            onShowCanva={handleShowCanva}
+            loading={loading}
+          />
         ))}
         <div ref={messagesEndRef} />
         {error && <MessageError>{error}</MessageError>}
@@ -145,7 +149,7 @@ const AI = () => {
           {!loading && <MdSend size={16} />}
         </Button>
       </div>
-      <CanvaPreview htmlContent={canvaContent} onClose={handleCloseCanva} />
+      <CodePreview htmlContent={canvaContent} onClose={handleCloseCanva} />
     </SideMenu>
   )
 }

@@ -1,7 +1,7 @@
 import { LuX } from "react-icons/lu"
 import Button from "./Button"
 
-const CanvaPreview = ({ htmlContent, onClose }) => {
+const CodePreview = ({ htmlContent, onClose }) => {
   if (!htmlContent) return null
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
@@ -23,4 +23,4 @@ const CanvaPreview = ({ htmlContent, onClose }) => {
   )
 }
 
-export default CanvaPreview
+export default CodePreview
