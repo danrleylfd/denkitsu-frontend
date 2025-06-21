@@ -9,16 +9,9 @@ import Button from "./Button"
 import YoutubeEmbed from "./YoutubeEmbed"
 
 const getYouTubeVideoId = (url) => {
-  let ID = '';
-  url = url.replace(/(>|<)/gi,'').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/|shorts\/)/);
-  if (url[2] !== undefined) {
-    ID = url[2].split(/[^0-9a-z_\-]/i);
-    ID = ID[0];
-  }
-  else {
-    ID = url;
-  }
-  return ID;
+  const regex = /(?:https?:\/\/)?(?:www\.)?(?:m\.)?(?:youtube\.com|music\.youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|shorts\/|browse\/)?([\w-]{11})(?:\S+)?/;
+  const match = url.match(regex);
+  return match ? match[1] : null;
 }
 
 const Markdown = ({ content, think }) => {
