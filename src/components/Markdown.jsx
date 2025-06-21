@@ -14,6 +14,12 @@ const getYouTubeVideoId = (url) => {
   return match ? match[1] : null;
 }
 
+const getTweetId = (url) => {
+  const regex = /(?:https?:\/\/)?(?:www\.)?(?:x|twitter)\.com\/\w+\/status\/(\d+)/
+  const match = url.match(regex)
+  return match ? match[1] : null
+}
+
 const Markdown = ({ content, think }) => {
   const [collapsed, setCollapsed] = useState(false)
 
@@ -44,6 +50,10 @@ const Markdown = ({ content, think }) => {
               const videoId = getYouTubeVideoId(href);
               if (videoId) {
                 return <YoutubeEmbed videoId={videoId} />;
+              }
+              const tweetId = getTweetId(href)
+              if (tweetId) {
+                return <TweetEmbed tweetID={tweetId} />
               }
               return (
                 <a href={href} className="text-primary-base hover:text-primary-light active:text-primary-dark" target="_blank" rel="noopener noreferrer" {...props}>
