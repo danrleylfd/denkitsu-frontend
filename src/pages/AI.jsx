@@ -13,6 +13,7 @@ import PromptInput from "../components/PromptInput"
 import MessageActions from "../components/MessageActions"
 import Button from "../components/Button"
 import { MessageError } from "../components/Notifications"
+import CanvaPreview from "../components/CanvaPreview"
 
 const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-screen mx-auto">{children}</main>
 
@@ -28,6 +29,7 @@ const AI = () => {
   const [inputText, setInputText] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [canvaContent, setCanvaContent] = useState(null)
   const messagesEndRef = useRef(null)
   const textareaRef = useRef(null)
 
@@ -43,8 +45,7 @@ const AI = () => {
     async function loadModels() {
       const { freeModels, payModels } = await getModels()
       setFreeModels(freeModels)
-      // setPayModels(payModels)
-      setPayModels([])
+      aiKey && setPayModels(payModels)
     }
     loadModels()
   }, [])
@@ -104,6 +105,14 @@ const AI = () => {
     }
   }
 
+  const handleShowCanva = (htmlCode) => {
+    setCanvaContent(htmlCode)
+  }
+
+  const handleCloseCanva = () => {
+    setCanvaContent(null)
+  }
+
   return (
     <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
       <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-2">
@@ -115,7 +124,7 @@ const AI = () => {
             <div className="max-w-[90%] md:max-w-[67%] break-words rounded-md px-4 py-2 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] text-lightFg-secondary dark:text-darkFg-secondary bg-lightBg-secondary dark:bg-darkBg-secondary opacity-75 dark:opacity-90">
               {pos > 0 && msg.role === "assistant" && msg.reasoning && <Markdown content={msg.reasoning} think />}
               <Markdown content={msg.content} />
-              {pos > 0 && msg.role === "assistant" && <MessageActions message={msg} />}
+              {pos > 0 && msg.role === "assistant" && <MessageActions message={msg} onShowCanva={handleShowCanva} />}
             </div>
           </div>
         ))}
@@ -136,6 +145,7 @@ const AI = () => {
           {!loading && <MdSend size={16} />}
         </Button>
       </div>
+      <CanvaPreview htmlContent={canvaContent} onClose={handleCloseCanva} />
     </SideMenu>
   )
 }

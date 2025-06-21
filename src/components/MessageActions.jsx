@@ -1,12 +1,12 @@
 import { useState } from "react"
-import { LuCode, LuCopy, LuKanban, LuNewspaper } from "react-icons/lu"
+import { LuCode, LuCopy, LuKanban, LuNewspaper, LuEye, LuPresentation } from "react-icons/lu"
 
 import { useTasks } from "../contexts/TasksContext"
 import { publishNews } from "../services/news"
 
 import Button from "./Button"
 
-const MessageActions = ({ message }) => {
+const MessageActions = ({ message, onShowCanva }) => {
   const [loading, setLoading] = useState(false)
   const [loadingType, setLoadingType] = useState(null)
   const { setTasks } = useTasks()
@@ -60,6 +60,16 @@ const MessageActions = ({ message }) => {
     }
   }
 
+  const handlePreview = () => {
+    setLoading(true)
+    setLoadingType("preview")
+    setTimeout(() => {
+      setLoading(false)
+      setLoadingType(null)
+      onShowCanva(codeToCopy)
+    }, 333)
+  }
+
   return (
     <div className="flex items-center gap-2 mt-2">
       {message.reasoning && (
@@ -67,13 +77,18 @@ const MessageActions = ({ message }) => {
           {loadingType !== "reasoning" && <LuCopy size={16} />}
         </Button>
       )}
-      <Button variant="outline" size="icon" $rounded onClick={() => handleCopy(message.content, "content")} loading={loadingType === "content" && loading} title="Copiar Resposta">
+      <Button variant="secondary" size="icon" $rounded onClick={() => handleCopy(message.content, "content")} loading={loadingType === "content" && loading} title="Copiar Resposta">
         {loadingType !== "content" && <LuCopy size={16} />}
       </Button>
       {codeToCopy && (
-        <Button variant="danger" size="icon" $rounded onClick={() => handleCopy(codeToCopy, "code")} loading={loadingType === "code" && loading} title="Copiar Código">
-          {loadingType !== "code" && <LuCode size={16} />}
-        </Button>
+        <>
+          <Button variant="secondary" size="icon" $rounded onClick={() => handleCopy(codeToCopy(), "code")} loading={loadingType === "code" && loading} title="Copiar Código">
+            {loadingType !== "code" && <LuCode size={16} />}
+          </Button>
+          <Button variant="outline" size="icon" $rounded onClick={handlePreview} loading={loadingType === "preview" && loading} title="Visualizar Página">
+            {loadingType !== "preview" && <LuPresentation size={16} />}
+          </Button>
+        </>
       )}
       <Button variant="warning" size="icon" $rounded onClick={handleAddToKanban} loading={loadingType === "kanban" && loading} title="Adicionar ao Kanban">
         {loadingType !== "kanban" && <LuKanban size={16} />}
