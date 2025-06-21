@@ -6,6 +6,13 @@ import remarkGfm from "remark-gfm"
 import "highlight.js/styles/atom-one-dark.css"
 
 import Button from "./Button"
+import YoutubeEmbed from "./YoutubeEmbed"
+
+const getYouTubeVideoId = (url) => {
+  const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+  const match = url.match(regex)
+  return match ? match[1] : null
+}
 
 const Markdown = ({ content, think }) => {
   const [collapsed, setCollapsed] = useState(false)
@@ -32,7 +39,16 @@ const Markdown = ({ content, think }) => {
             h6: ({ node, children, ...props }) => <h6 className="text-lightFg-primary dark:text-darkFg-primary" {...props}>{children}</h6>,
             strong: ({ node, children, ...props }) => <strong className="text-lightFg-primary dark:text-darkFg-primary" {...props}>{children}</strong>,
             blockquote: ({ node, children, ...props }) => <blockquote className="bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-secondary dark:text-darkFg-secondary border border-solid border-brand-purple rounded border-l-4 border-r-0 border-y-0 p-2 italic" {...props}>{children}</blockquote>,
-            p: ({ node, children, ...props }) => <p className="text-lightFg-primary dark:text-darkFg-primary" {...props}>{children}</p>,
+            p: ({ node, ...props }) => {
+              if (node.children.length === 1 && node.children[0].tagName === "a") {
+                const link = node.children[0]
+                const videoId = getYouTubeVideoId(link.properties.href)
+                if (videoId) {
+                  return <YoutubeEmbed videoId={videoId} />
+                }
+              }
+              return <p {...props} className="text-lightFg-primary dark:text-darkFg-primary" />
+            },
             a: ({ node, children, ...props }) => <a className="text-primary-base hover:text-primary-light active:text-primary-dark" target="_blank" rel="noopener noreferrer" {...props}>{children}</a>,
             span: ({ node, children, ...props }) => <span className="text-lightFg-secondary dark:text-darkFg-secondary" {...props}>{children}</span>,
             img: ({ node, children, ...props }) => <img className="w-full rounded" {...props}>{children}</img>,
