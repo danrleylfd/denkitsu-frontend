@@ -9,9 +9,16 @@ import Button from "./Button"
 import YoutubeEmbed from "./YoutubeEmbed"
 
 const getYouTubeVideoId = (url) => {
-  const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
-  const match = url.match(regex)
-  return match ? match[1] : null
+  let ID = '';
+  url = url.replace(/(>|<)/gi,'').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/|shorts\/)/);
+  if (url[2] !== undefined) {
+    ID = url[2].split(/[^0-9a-z_\-]/i);
+    ID = ID[0];
+  }
+  else {
+    ID = url;
+  }
+  return ID;
 }
 
 const Markdown = ({ content, think }) => {
@@ -39,7 +46,7 @@ const Markdown = ({ content, think }) => {
             h6: ({ node, children, ...props }) => <h6 className="text-lightFg-primary dark:text-darkFg-primary" {...props}>{children}</h6>,
             strong: ({ node, children, ...props }) => <strong className="text-lightFg-primary dark:text-darkFg-primary" {...props}>{children}</strong>,
             blockquote: ({ node, children, ...props }) => <blockquote className="bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-secondary dark:text-darkFg-secondary border border-solid border-brand-purple rounded border-l-4 border-r-0 border-y-0 p-2 italic" {...props}>{children}</blockquote>,
-            p: ({ node, ...props }) => {
+            p: ({ node, children, ...props }) => {
               if (node.children.length === 1 && node.children[0].tagName === "a") {
                 const link = node.children[0]
                 const videoId = getYouTubeVideoId(link.properties.href)
@@ -47,7 +54,7 @@ const Markdown = ({ content, think }) => {
                   return <YoutubeEmbed videoId={videoId} />
                 }
               }
-              return <p {...props} className="text-lightFg-primary dark:text-darkFg-primary" />
+              return <p {...props} className="text-lightFg-primary dark:text-darkFg-primary">{children}</p>
             },
             a: ({ node, children, ...props }) => <a className="text-primary-base hover:text-primary-light active:text-primary-dark" target="_blank" rel="noopener noreferrer" {...props}>{children}</a>,
             span: ({ node, children, ...props }) => <span className="text-lightFg-secondary dark:text-darkFg-secondary" {...props}>{children}</span>,

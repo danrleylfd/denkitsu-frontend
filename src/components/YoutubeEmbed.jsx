@@ -1,9 +1,9 @@
 const YouTubeEmbed = ({ videoId }) => {
   if (!videoId) return null
   return (
-    <div className="relative w-full overflow-hidden rounded-lg shadow-lg" style={{ paddingTop: "56.25%" }}>
+    <div className="w-full overflow-hidden rounded-lg shadow-lg">
       <iframe
-        className="absolute top-0 left-0 h-full w-full"
+        className="w-full h-full min-w-96 min-h-56"
         src={`https://www.youtube.com/embed/${videoId}`}
         title="YouTube video player"
         frameBorder="0"
