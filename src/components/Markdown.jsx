@@ -32,6 +32,11 @@ const Markdown = ({ content, think }) => {
 
   return (
     <div className={containerClass}>
+      {think && (
+        <Button variant="secondary" $rounded onClick={toggleCollapse}>
+          {collapsed ? "Mostrar raciocínio" : "Esconder raciocínio"}
+        </Button>
+      )}
       {!collapsed && (
         <ReactMarkdown
           children={content}
