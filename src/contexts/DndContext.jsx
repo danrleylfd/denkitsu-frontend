@@ -6,10 +6,7 @@ import { useTasks } from "./TasksContext"
 const DndContext = createContext({})
 
 const DndProvider = ({ children }) => {
-  // 1. Consome o TasksContext para interagir com as tarefas
   const { setTasks, findTaskContainer, deleteTask } = useTasks()
-
-  // 2. Mantém apenas o estado específico do DnD
   const [activeTask, setActiveTask] = useState(null)
   const [isOverTrash, setIsOverTrash] = useState(false)
 
@@ -64,13 +61,13 @@ const DndProvider = ({ children }) => {
     const { active, over } = event
 
     if (over?.id === "trash" && activeTask) {
-      deleteTask(activeTask.id) // Usa a função do TasksContext
+      deleteTask(activeTask.id)
     } else {
-      const activeContainer = findTaskContainer(active.id) // Usa a função do TasksContext
-      const overContainer = findTaskContainer(over?.id) // Usa a função do TasksContext
+      const activeContainer = findTaskContainer(active.id)
+      const overContainer = findTaskContainer(over?.id)
 
       if (activeContainer && overContainer && activeContainer === overContainer && over) {
-        setTasks((prev) => { // Usa a função do TasksContext
+        setTasks((prev) => {
           const activeIndex = prev[activeContainer].findIndex((t) => t.id === active.id)
           const overIndex = prev[overContainer].findIndex((t) => t.id === over.id)
           if (activeIndex !== overIndex) {

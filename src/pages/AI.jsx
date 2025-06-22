@@ -6,10 +6,9 @@ import { useAI } from "../contexts/AIContext"
 
 import { sendMessageStream, getModels, getPrompt } from "../services/aiChat"
 
-// Componentes
 import SideMenu from "../components/SideMenu"
 import ChatMessage from "../components/ChatMessage"
-import CodePreview from "../components/CodePreview"
+import Lousa from "../components/Lousa"
 import ModelSelect from "../components/ModelSelect"
 import PromptInput from "../components/PromptInput"
 import Button from "../components/Button"
@@ -149,7 +148,7 @@ const AI = () => {
           {!loading && <MdSend size={16} />}
         </Button>
       </div>
-      <CodePreview htmlContent={canvaContent} onClose={handleCloseCanva} />
+      <Lousa htmlContent={canvaContent} onClose={handleCloseCanva} />
     </SideMenu>
   )
 }

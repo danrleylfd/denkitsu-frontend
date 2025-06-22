@@ -136,7 +136,7 @@ const MessageActions = ({ message, onShowCanva }) => {
       )}
 
       {htmlBlockForPreview && (
-        <Button variant="outline" size="icon" $rounded onClick={() => handlePreview(htmlBlockForPreview.code)} loading={loadingType === "preview" && loading} title="Visualizar Página">
+        <Button variant="outline" size="icon" $rounded onClick={() => handlePreview(htmlBlockForPreview.code)} loading={loadingType === "preview" && loading} title="Desenhar na Lousa">
           {loadingType !== "preview" && <LuPresentation size={16} />}
         </Button>
       )}
