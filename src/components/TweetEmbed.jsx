@@ -14,7 +14,7 @@ const TweetEmbed = ({ tweetID }) => {
 
   return (
     <TweetContainer>
-      <Tweet id={tweetID} theme={theme} />
+      <Tweet id={tweetID} />
     </TweetContainer>
   )
 }
