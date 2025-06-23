@@ -3,32 +3,24 @@ import { createContext, useState, useEffect, useCallback, useMemo, useContext } 
 const AIContext = createContext()
 
 export const AIProvider = ({ children }) => {
-  const [aiKey, setAiKey] = useState("")
+  const storedKey = localStorage.getItem("openRouterApiKey")
+  const [aiKey, setAiKey] = useState(storedKey || "")
+  const storedModel = localStorage.getItem("@Denkitsu:model")
+  const [model, setModel] = useState(storedModel || "deepseek/deepseek-r1:free")
 
   useEffect(() => {
-    const storedKey = localStorage.getItem("openRouterApiKey")
-    if (storedKey) {
-      setAiKey(storedKey)
-    }
-  }, [])
-
-  const saveKey = useCallback(() => {
-    if (typeof aiKey !== "string" || aiKey.trim() === "") {
-      console.error("Tentativa de salvar uma chave de API inválida.")
-      return
-    }
+    if (aiKey.trim() === "") return localStorage.removeItem("openRouterApiKey")
     localStorage.setItem("openRouterApiKey", aiKey)
   }, [aiKey])
 
-  const removeKey = useCallback(() => {
-    localStorage.removeItem("openRouterApiKey")
-    setAiKey("")
-  }, [])
+  useEffect(() => {
+    localStorage.setItem("@Denkitsu:model", model)
+  }, [model])
 
   const hasKey = useMemo(() => aiKey.trim() !== "", [aiKey])
 
   return (
-    <AIContext.Provider value={{ aiKey, setAiKey, hasKey, saveKey, removeKey }}>
+    <AIContext.Provider value={{ aiKey, setAiKey, hasKey, model, setModel }}>
       {children}
     </AIContext.Provider>
   )

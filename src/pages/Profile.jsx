@@ -15,7 +15,7 @@ const ContentView = ({ children }) => <main className="flex justify-center items
 
 const Profile = () => {
   const { userId } = useParams()
-  const { aiKey, setAiKey, saveKey, removeKey } = useAI()
+  const { aiKey, setAiKey } = useAI()
   const { user, signOut, updateUser } = useAuth()
   const userID = userId || user._id
   const [userData, setUserData] = useState(null)
@@ -58,7 +58,6 @@ const Profile = () => {
 
   const handleSaveChanges = async (e) => {
     e.preventDefault()
-    aiKey === "" ? removeKey() : saveKey()
     setError(null)
     setMessage("")
     setLoading(true)

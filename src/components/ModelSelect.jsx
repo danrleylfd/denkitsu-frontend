@@ -14,7 +14,7 @@ const ModelSelect = ({ model, setModel, loading, freeModels, payModels }) => (
     ))}
     <option disabled>Premium</option>
     {payModels.map((model) => (
-      <option key={model.id} disabled value={model.id}>
+      <option key={model.id} value={model.id}>
         {model.name}
       </option>
     ))}

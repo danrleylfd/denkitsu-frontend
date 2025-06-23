@@ -18,13 +18,11 @@ const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-sc
 
 const AI = () => {
   const { user } = useAuth()
-  const { aiKey } = useAI()
-  const storedModel = localStorage.getItem("@Denkitsu:model")
+  const { aiKey, model, setModel } = useAI()
 
   const [prompt, setPrompt] = useState("")
   const [freeModels, setFreeModels] = useState([])
   const [payModels, setPayModels] = useState([])
-  const [model, setModel] = useState(storedModel || "deepseek/deepseek-r1:free")
   const [messages, setMessages] = useState([{ id: 1, role: "assistant", content: "Olá! Como posso ajudar você hoje?\n Shift + Enter para quebrar a linha." }])
   const [inputText, setInputText] = useState("")
   const [loading, setLoading] = useState(false)
