@@ -4,13 +4,14 @@ import MessageActions from "./MessageActions"
 import Button from "./Button"
 
 const ChatMessage = ({ msg, user, onShowCanva, loading }) => {
-  const isAssistant = msg.role === "assistant"
   const isSystem = msg.role === "system"
-  if (isSystem) return null
+  if (isSystem) return null // ${isAssistant ? "flex-row" : "flex-row-reverse"}`} {isAssistant ? "/denkitsu.png" : user.avatarUrl}
+  const isAssistant = msg.role === "assistant"
+  const isUser = msg.role === "user"
   return (
-    <div className={`flex items-end gap-2 px-2 ${isAssistant ? "flex-row" : "flex-row-reverse"}`}>
+    <div className={`flex items-end gap-2 px-2 ${isUser ? "flex-row-reverse" : "flex-row"}`}>
       <img
-        src={isAssistant ? "/denkitsu.png" : user.avatarUrl}
+        src={isUser ? user.avatarUrl : "/denkitsu.png" }
         alt={msg.role}
         className="w-8 h-8 rounded-full object-cover"
       />

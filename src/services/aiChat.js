@@ -1,12 +1,12 @@
 import axios from "axios"
 import api from "./"
 
-const sendMessageStream = async (model, messages, prompt, aiKey = undefined, onDelta) => {
+const sendMessageStream = async (aiKey, model, messages, onDelta) => {
   try {
     const payload = {
       aiKey,
       model,
-      messages: [prompt, ...messages],
+      messages,
       stream: true
     }
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -46,7 +46,7 @@ const sendMessageStream = async (model, messages, prompt, aiKey = undefined, onD
   }
 }
 
-const sendMessage = async (model, messages, aiKey = undefined) => {
+const sendMessage = async (aiKey, model, messages) => {
   try {
     const sysMsg = [{ role: "system", content: `Deve sempre pensar e responder em ${window.language || navigator.language}.` }]
     const payload = {

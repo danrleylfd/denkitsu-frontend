@@ -18,7 +18,7 @@ import { MessageError } from "../components/Notifications"
 const ContentView = ({ children }) => <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-screen">{children}</main>
 
 const Upload = () => {
-  const { aiKey, hasKey } = useAI()
+  const { aiKey, model } = useAI()
   const [content, setContent] = useState("")
   const [thumbnail, setThumbnail] = useState("")
   const [fileUrl, setFileUrl] = useState("")
@@ -31,7 +31,7 @@ const Upload = () => {
     setLoading(true)
     try {
       const prompt = { role: "user", content: `Modo Blogueiro, Tema: ${content}` }
-      const data = await sendMessage(null, [prompt], aiKey)
+      const data = await sendMessage(aiKey, model, [prompt])
       if (data.error) return setError(data.error.message)
       const message = data?.choices?.[0]?.message
       if (!message) return setError("Serviço temporariamente indisponível.")

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react"
-import { MdSend } from "react-icons/md"
+import { MdSend, MdClearAll } from "react-icons/md"
 
 import { useAuth } from "../contexts/AuthContext"
 import { useAI } from "../contexts/AIContext"
@@ -18,12 +18,9 @@ const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-sc
 
 const AI = () => {
   const { user } = useAuth()
-  const { aiKey, model, setModel } = useAI()
-
-  const [prompt, setPrompt] = useState("")
+  const { aiKey, model, setModel, prompt, setPrompt, messages, setMessages, clearHistory } = useAI()
   const [freeModels, setFreeModels] = useState([])
   const [payModels, setPayModels] = useState([])
-  const [messages, setMessages] = useState([{ id: 1, role: "assistant", content: "Olá! Como posso ajudar você hoje?\n Shift + Enter para quebrar a linha." }])
   const [inputText, setInputText] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -31,14 +28,6 @@ const AI = () => {
 
   const messagesEndRef = useRef(null)
   const textareaRef = useRef(null)
-
-  useEffect(() => {
-    async function loadPrompt() {
-      const promptData = await getPrompt()
-      setPrompt(promptData)
-    }
-    loadPrompt()
-  }, [])
 
   useEffect(() => {
     async function loadModels() {
@@ -60,35 +49,24 @@ const AI = () => {
     }
   }, [inputText])
 
-  useEffect(() => {
-    localStorage.setItem("@Denkitsu:model", model)
-  }, [model])
-
-
   const handleSendMessage = useCallback(async () => {
     if (!inputText.trim()) return;
-
     const newUserMessage = { id: Date.now(), role: "user", content: inputText.trim() }
-
     setMessages(prevMessages => [...prevMessages, newUserMessage])
-
     const currentMessages = [...messages, newUserMessage]
     setInputText("")
     setLoading(true)
     setError(null)
-
     try {
       const apiMessages = currentMessages.map(({ role, content }) => ({ role, content }))
       const streamedAssistantMessage = { id: Date.now() + 1, role: "assistant", content: "", reasoning: "" }
       setMessages(prev => [...prev, streamedAssistantMessage])
-
-      await sendMessageStream(model, apiMessages, prompt, aiKey, (delta) => {
+      await sendMessageStream(aiKey, model, apiMessages, (delta) => {
         if (delta.content) streamedAssistantMessage.content += delta.content
         if (delta.reasoning) streamedAssistantMessage.reasoning += delta.reasoning
         if (delta.tool_calls?.[0]?.arguments?.reasoning) {
           streamedAssistantMessage.reasoning += delta.tool_calls[0].arguments.reasoning
         }
-
         setMessages(prev => {
           const updated = [...prev]
           updated[updated.length - 1] = { ...streamedAssistantMessage }
@@ -144,6 +122,9 @@ const AI = () => {
         />
         <Button size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || !inputText.trim()}>
           {!loading && <MdSend size={16} />}
+        </Button>
+        <Button variant="danger" size="icon" $rounded title="Apagar Conversa" onClick={clearHistory} disabled={loading}>
+          <MdClearAll size={16} />
         </Button>
       </div>
       <Lousa htmlContent={canvaContent} onClose={handleCloseCanva} />
