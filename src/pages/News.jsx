@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react"
-
+import { LuSearch } from "react-icons/lu"
 import { useAuth } from "../contexts/AuthContext"
 import { getNewsPaginate } from "../services/news"
 import { generateNews } from "../services/aiChat"
@@ -90,9 +90,9 @@ const News = () => {
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
       {error && <Paper>{error}</Paper>}
       <Paper>
-        <Input placeholder="Escreva um artigo sobre..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)}>
-          <Button variant="primary" $rounded onClick={() => handleGenerate()}>
-            Gerar
+        <Input placeholder="Pesquise um tópico e deixe a IA gerar a notícia mais recente sobre..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)}>
+          <Button variant="primary" size="icon" $rounded onClick={() => handleGenerate()} loading={loading} title="Pesquisar e Gerar">
+            <LuSearch size={16} />
           </Button>
         </Input>
       </Paper>
