@@ -90,7 +90,7 @@ const News = () => {
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
       {error && <Paper>{error}</Paper>}
       <Paper>
-        <Input value={searchTerm} onChange={setSearchTerm}>
+        <Input placeholder="Escreva um artigo sobre..." value={searchTerm} onChange={setSearchTerm}>
           <Button variant="primary" $rounded onClick={() => handleGenerate()}>
             Gerar
           </Button>
