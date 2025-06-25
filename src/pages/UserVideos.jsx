@@ -4,7 +4,7 @@ import { useAuth } from "../contexts/AuthContext"
 import { getVideosByUser } from "../services/video"
 
 import SideMenu from "../components/SideMenu"
-import Feed from "../components/Feed"
+import VideoFeed from "../components/VideoFeed"
 import Button from "../components/Button"
 import { MessageBase, MessageError } from "../components/Notifications"
 
@@ -42,7 +42,7 @@ const UserVideos = () => {
       {loading && <Button $rounded loading={loading} disabled />}
       {error && <MessageError>{error}</MessageError>}
       {!loading && videos.length === 0 && <MessageBase>Nenhum vídeo encontrado.</MessageBase>}
-      {!loading && !error && videos.length > 0 && <Feed videos={videos} />}
+      {!loading && !error && videos.length > 0 && <VideoFeed videos={videos} />}
     </SideMenu>
   )
 }

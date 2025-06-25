@@ -4,7 +4,7 @@ import { LuThumbsUp, LuMessageCircle, LuShare2 } from "react-icons/lu"
 import Input from "./Input"
 import Button from "./Button"
 
-const Card = ({ video }) => {
+const VideoCard = ({ video }) => {
   if (!video) return
   return (
     <div className="h-fit w-full md:max-w-xs overflow-hidden rounded-lg border border-solid border-bLight dark:border-bDark">
@@ -41,4 +41,8 @@ const Card = ({ video }) => {
   )
 }
 
-export default Card
+VideoCard.propTypes = {
+  video: PropTypes.object.isRequired
+}
+
+export default VideoCard
