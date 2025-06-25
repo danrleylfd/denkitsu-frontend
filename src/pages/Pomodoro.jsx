@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react"
-import { LuTimer, LuSettings, LuPlay, LuPause, LuRefreshCw, LuSun, LuMoon } from "react-icons/lu"
+import { LuTimer, LuSettings, LuPlay, LuPause, LuRefreshCw } from "react-icons/lu"
 
-import { useTheme } from "../contexts/ThemeContext"
 import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
 
@@ -13,7 +12,6 @@ const Pomodoro = () => {
   const [isActive, setIsActive] = useState(false)
   const [mode, setMode] = useState("work")
   const [cycles, setCycles] = useState(0)
-  const { theme, toggleTheme } = useTheme()
 
   useEffect(() => {
     const savedState = localStorage.getItem("pomodoroState")
@@ -82,9 +80,6 @@ const Pomodoro = () => {
               <h2 className="text-xl font-bold text-zinc-700 dark:text-zinc-300">by Denkitsu</h2>
             </div>
           </div>
-          <Button variant={theme == "dark" ? "warning" : "outline"} size="icon" $rounded title="Alternar tema" onClick={toggleTheme}>
-            {theme === "dark" ? <LuSun size={16} /> : <LuMoon size={16} />}
-          </Button>
         </div>
         <div className="text-center mb-8">
           <div className="text-6xl font-bold text-zinc-900 dark:text-zinc-100 mb-4">

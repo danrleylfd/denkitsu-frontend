@@ -81,7 +81,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
             {isOpen && <span className="ml-3 select-none">Menu</span>}
           </button>
           <button onClick={toggleTheme} className={menuItemClass} title={!isOpen ? "Alternar Tema" : ""}>
-            <div className="w-6 h-6 flex items-center justify-center">{theme === "dark" ? <LuSun size={16} /> : <LuMoon size={16} />}</div>
+            <div className="w-6 h-6 flex items-center justify-center">{theme === "dark" ? <LuMoon size={16} /> : <LuSun size={16} />}</div>
             {isOpen && <span className="ml-3 select-none">Alternar Tema</span>}
           </button>
           {menuItems.map(({ icon: Icon, label, to }, index) => (

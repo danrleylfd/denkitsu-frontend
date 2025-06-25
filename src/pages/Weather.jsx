@@ -1,8 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import { MdRefresh, MdSearch } from "react-icons/md"
-import { LuSun, LuMoon } from "react-icons/lu"
 
-import { useTheme } from "../contexts/ThemeContext"
 import { getWeatherByLocation, getWeatherByCoordinates } from "../services/weather"
 
 import SideMenu from "../components/SideMenu"
@@ -14,7 +12,6 @@ const ContentView = ({ children }) => <main className="flex justify-center items
 const Spinner = () => <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary-base/20 border-t-primary-base dark:border-warning-light/20 dark:border-t-warning-light" />
 
 const Weather = () => {
-  const { theme, toggleTheme } = useTheme()
   const [weatherData, setWeatherData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -89,19 +86,16 @@ const Weather = () => {
   return (
     <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
       <div className="relative w-full max-w-xl rounded-lg shadow-[6px_6px_16px_rgba(0,0,0,0.5)] bg-lightBg-primary p-4 opacity-75 dark:bg-darkBg-primary dark:opacity-90">
-        <div className="flex items-center gap-2 pb-2">
+        {/* <div className="flex items-center gap-2 pb-2"> */}
           <Input type="text" value={cityInput} onChange={(e) => setCityInput(e.target.value)} onKeyDown={handleKeyPress} placeholder="Buscar por cidade...">
             <Button variant="outline" size="icon" $rounded onClick={buscarPorCidade}>
               <MdSearch size={16} />
             </Button>
+            <Button variant="outline" size="icon" $rounded onClick={buscarPorCoordenadas}>
+              <MdRefresh size={16} />
+            </Button>
           </Input>
-          <Button variant="outline" size="icon" $rounded onClick={buscarPorCoordenadas}>
-            <MdRefresh size={16} />
-          </Button>
-          <Button variant={theme === "dark" ? "warning" : "outline"} size="icon" $rounded onClick={toggleTheme}>
-            {theme === "dark" ? <LuSun size={16} /> : <LuMoon size={16} />}
-          </Button>
-        </div>
+        {/* </div> */}
 
         {loading && (
           <div className="flex h-52 items-center justify-center">

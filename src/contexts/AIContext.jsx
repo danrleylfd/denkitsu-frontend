@@ -33,7 +33,6 @@ export const AIProvider = ({ children }) => {
 
   useEffect(() => {
     if(!prompt) return
-    console.log(messages)
     setMessages(prev => {
       const hasSystemMessage = prev.some(msg => msg.role === "system")
       if (!hasSystemMessage) return [{ id: 0, ...prompt }, ...prev]
