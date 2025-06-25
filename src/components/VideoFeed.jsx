@@ -8,8 +8,4 @@ const VideoFeed = ({ videos }) => {
   )
 }
 
-VideoFeed.propTypes = {
-  videos: PropTypes.array.isRequired,
-}
-
 export default VideoFeed

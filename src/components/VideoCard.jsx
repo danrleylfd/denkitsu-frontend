@@ -41,8 +41,4 @@ const VideoCard = ({ video }) => {
   )
 }
 
-VideoCard.propTypes = {
-  video: PropTypes.object.isRequired
-}
-
 export default VideoCard
