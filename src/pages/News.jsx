@@ -7,6 +7,7 @@ import { getNewsPaginate } from "../services/news"
 import SideMenu from "../components/SideMenu"
 import Markdown from "../components/Markdown"
 import Paper from "../components/Paper"
+import Input from "../components/Input"
 import Button from "../components/Button"
 
 const ContentView = ({ children }) => <main className="flex flex-col items-center p-2 gap-2 mx-auto min-h-screen w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[75%] lg:max-w-[67%] ml-[3.5rem] md:ml-auto">{children}</main>
@@ -74,6 +75,11 @@ const News = () => {
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
       {error && <Paper>{error}</Paper>}
+      <Paper>
+        <Input>
+          <Button variant="primary" $rounded>Gerar</Button>
+        </Input>
+      </Paper>
       {news.map((article) => (
         <Paper key={article._id}>
           <Markdown content={article.content} />
