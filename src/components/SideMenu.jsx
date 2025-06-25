@@ -41,9 +41,9 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
     { icon: LuNewspaper, label: "Notícias", to: "/news" },
     { icon: LuCloud, label: "Clima", to: "/clima" },
     { icon: LuClock, label: "Pomodoro", to: "/pomodoro" },
-    { icon: LuKanban, label: "Kanban", to: "/kanban"},
   ]
   signed && menuItems.push(
+    { icon: LuKanban, label: "Kanban", to: "/kanban"},
     { icon: LuBotMessageSquare, label: "AI", to: "/chat" },
     { icon: LuLink, label: "Atalho", to: "/atalho" },
     { icon: LuPlay, label: "Meus Vídeos", to: "/my-videos" },
