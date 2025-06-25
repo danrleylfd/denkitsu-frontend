@@ -104,4 +104,9 @@ const getModels = async () => {
   }
 }
 
-export { sendMessageStream, sendMessage, getModels, getPrompt }
+const generateNews = async (searchTerm) => {
+  const { data } = await api.post("/news/generate", { searchTerm })
+  return data
+}
+
+export { sendMessageStream, sendMessage, getModels, getPrompt, generateNews }

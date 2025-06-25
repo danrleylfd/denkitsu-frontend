@@ -1,9 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from "react"
-import ReactMarkdown from "react-markdown"
 
 import { useAuth } from "../contexts/AuthContext"
 import { getNewsPaginate } from "../services/news"
-
+import { generateNews } from "../services/aiChat"
 import SideMenu from "../components/SideMenu"
 import Markdown from "../components/Markdown"
 import Paper from "../components/Paper"
@@ -14,6 +13,7 @@ const ContentView = ({ children }) => <main className="flex flex-col items-cente
 
 const News = () => {
   const { user } = useAuth()
+  const [searchTerm, setSearchTerm] = useState("")
   const [news, setNews] = useState([])
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(false)
@@ -72,12 +72,28 @@ const News = () => {
     return () => window.removeEventListener("scroll", scrollHandler)
   }, [handleScroll])
 
+  const handleGenerate = async () => {
+    if (!searchTerm) return
+    setLoading(true)
+    try {
+      const articles = await generateNews(searchTerm)
+      setNews(articles)
+    } catch (error) {
+      setError("Não foi possível gerar as notícias")
+      setTimeout(() => isMounted.current && setError(null), 3000)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
       {error && <Paper>{error}</Paper>}
       <Paper>
-        <Input>
-          <Button variant="primary" $rounded>Gerar</Button>
+        <Input value={searchTerm} onChange={setSearchTerm}>
+          <Button variant="primary" $rounded onClick={() => handleGenerate()}>
+            Gerar
+          </Button>
         </Input>
       </Paper>
       {news.map((article) => (
