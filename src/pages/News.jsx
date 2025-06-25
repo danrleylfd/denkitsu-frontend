@@ -76,8 +76,8 @@ const News = () => {
     if (!searchTerm) return
     setLoading(true)
     try {
-      const articles = await generateNews(searchTerm)
-      setNews(articles)
+      const article = await generateNews(searchTerm)
+      setNews([article, ...news])
     } catch (error) {
       setError("Não foi possível gerar as notícias")
       setTimeout(() => isMounted.current && setError(null), 3000)
