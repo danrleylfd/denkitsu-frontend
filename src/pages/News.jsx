@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react"
-import { LuSearch } from "react-icons/lu"
+import { LuSearchSlash } from "react-icons/lu"
 import { useAuth } from "../contexts/AuthContext"
 import { getNewsPaginate } from "../services/news"
 import { generateNews } from "../services/aiChat"
@@ -91,8 +91,8 @@ const News = () => {
       {error && <Paper>{error}</Paper>}
       <Paper>
         <Input placeholder="Pesquise um tópico e deixe a IA gerar a notícia mais recente sobre..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)}>
-          <Button variant="primary" size="icon" $rounded onClick={() => handleGenerate()} loading={loading} disabled={!searchTerm} title="Pesquisar e Gerar">
-            {!loading && <LuSearch size={16} />}
+          <Button variant="outline" size="icon" $rounded onClick={() => handleGenerate()} loading={loading} disabled={searchTerm.length < 1} title="Pesquisar e Gerar">
+            {!loading && <LuSearchSlash size={16} />}
           </Button>
         </Input>
       </Paper>
