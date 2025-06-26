@@ -33,7 +33,7 @@ const Button = ({
   }
 
   const getShapeClasses = () => {
-    if ($triangular) return "[clip-path:polygon(50%_0%,0%_100%,100%_100%)] text-white w-8 h-8 rounded-sm"
+    if ($triangular) return "[clip-path:polygon(25%_0%,25%_100%,100%_50%)] text-white w-8 h-8"
     if ($rounded) return "rounded-full"
     if ($squared) return "rounded-none"
     return "rounded-md"
