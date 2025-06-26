@@ -8,22 +8,21 @@ const Button = ({
   size = "sm",
   $rounded = false,
   $squared = false,
+  $triangular = false,
   loading = false,
   disabled = false,
-  shape = "rectangle", // Nova prop: 'rectangle' ou 'triangle'
-  direction = "up",   // Nova prop: 'up', 'down', 'left', 'right'
   children,
   ...props
 }) => {
   const baseClasses = "relative flex select-none items-center justify-center font-bold uppercase transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-50"
 
   const variantClasses = {
-    primary: "bg-primary-base hover:bg-primary-light active:bg-primary-dark text-white",
-    secondary: "bg-transparent hover:bg-lightBtnBg-light active:bg-lightBtnBg-dark dark:hover:bg-darkBtnBg-light dark:active:bg-darkBtnBg-dark text-lightFg-primary dark:text-darkFg-primary",
-    outline: "bg-transparent hover:bg-primary-light active:bg-primary-dark text-primary-base hover:text-white active:text-white",
-    success: "bg-transparent hover:bg-success-light active:bg-success-dark text-success-base hover:text-white active:text-white",
-    warning: "bg-transparent hover:bg-warning-light active:bg-warning-dark text-warning-base hover:text-white active:text-white",
-    danger: "bg-transparent hover:bg-danger-light active:bg-danger-dark text-danger-base hover:text-white active:text-white"
+    primary: "bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white",
+    secondary: "bg-transparent hover:bg-gray-200 active:bg-gray-300 text-gray-800",
+    outline: "bg-transparent hover:bg-blue-500 active:bg-blue-700 text-blue-600 hover:text-white active:text-white",
+    success: "bg-transparent hover:bg-green-500 active:bg-green-700 text-green-600 hover:text-white active:text-white",
+    warning: "bg-transparent hover:bg-yellow-500 active:bg-yellow-700 text-yellow-600 hover:text-white active:text-white",
+    danger: "bg-transparent hover:bg-red-500 active:bg-red-700 text-red-600 hover:text-white active:text-white"
   }
 
   const sizeClasses = {
@@ -33,15 +32,8 @@ const Button = ({
     lg: "h-10 px-8 text-base"
   }
 
-  // Classes para botão triangular
-  const triangleClasses = {
-    up: "border-x-transparent border-x-[0.75rem] border-b-[1.3rem] border-b-primary-base",
-    down: "border-x-transparent border-x-[0.75rem] border-t-[1.3rem] border-t-primary-base",
-    left: "border-y-transparent border-y-[0.75rem] border-r-[1.3rem] border-r-primary-base",
-    right: "border-y-transparent border-y-[0.75rem] border-l-[1.3rem] border-l-primary-base"
-  }
-
-  const getBorderClasses = () => {
+  const getShapeClasses = () => {
+    if ($triangular) return "[clip-path:polygon(50%_0%,0%_100%,100%_100%)] text-white px-0 py-0 w-12 h-12"
     if ($rounded) return "rounded-full"
     if ($squared) return "rounded-none"
     return "rounded-md"
@@ -53,38 +45,14 @@ const Button = ({
       type={type}
       className={`
         ${baseClasses}
-        ${shape === "triangle" ? "!border-solid w-0 h-0" : variantClasses[variant]}
-        ${shape === "triangle" ? "" : loading ? sizeClasses.icon : sizeClasses[size]}
-        ${shape === "triangle" ? "" : getBorderClasses()}
+        ${variantClasses[variant]}
+        ${loading ? sizeClasses.icon : sizeClasses[size]}
+        ${getShapeClasses()}
         ${loading ? "pointer-events-none opacity-70" : ""}
-        ${shape === "triangle" ? triangleClasses[direction] : ""}
       `}
       disabled={loading || disabled}
     >
-      {/* Container para conteúdo no botão triangular */}
-      {shape === "triangle" ? (
-        <span className={`
-          absolute flex items-center justify-center
-          ${direction === "up" && "-top-3"}
-          ${direction === "down" && "-bottom-3"}
-          ${direction === "left" && "-left-3"}
-          ${direction === "right" && "-right-3"}
-          ${loading ? "opacity-0" : "opacity-100"}
-        `}>
-          {children}
-        </span>
-      ) : (
-        <>{children}</>
-      )}
-
-      {/* Spinner com posicionamento especial para triangular */}
-      {loading && (shape === "triangle" ? (
-        <span className="absolute">
-          <Spinner />
-        </span>
-      ) : (
-        <Spinner />
-      ))}
+      {loading && <Spinner />} {!loading && !$triangular && children}
     </button>
   )
 }

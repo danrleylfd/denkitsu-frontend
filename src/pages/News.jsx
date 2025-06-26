@@ -91,7 +91,7 @@ const News = () => {
       {error && <Paper>{error}</Paper>}
       <Paper>
         <Input placeholder="Pesquise um tópico e deixe a IA gerar a notícia mais recente sobre..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)}>
-          <Button variant="outline" size="icon" shape="triangle" onClick={() => handleGenerate()} loading={loading} disabled={searchTerm.length < 1} title="Pesquisar e Gerar">
+          <Button variant="outline" size="icon" $triangular onClick={() => handleGenerate()} loading={loading} disabled={searchTerm.length < 1} title="Pesquisar e Gerar">
             {!loading && <LuSearchSlash size={16} />}
           </Button>
         </Input>
