@@ -7,7 +7,7 @@ import SideMenu from "../components/SideMenu"
 import Markdown from "../components/Markdown"
 import Paper from "../components/Paper"
 import Input from "../components/Input"
-import Button from "../components/Button"
+import Button from "../components/Btn"
 
 const ContentView = ({ children }) => <main className="flex flex-col items-center p-2 gap-2 mx-auto min-h-screen w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[75%] lg:max-w-[67%] ml-[3.5rem] md:ml-auto">{children}</main>
 
@@ -91,7 +91,7 @@ const News = () => {
       {error && <Paper>{error}</Paper>}
       <Paper>
         <Input placeholder="Pesquise um tópico e deixe a IA gerar a notícia mais recente sobre..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)}>
-          <Button variant="outline" size="icon" $rounded onClick={() => handleGenerate()} loading={loading} disabled={searchTerm.length < 1} title="Pesquisar e Gerar">
+          <Button variant="outline" size="icon" shape="triangle" onClick={() => handleGenerate()} loading={loading} disabled={searchTerm.length < 1} title="Pesquisar e Gerar">
             {!loading && <LuSearchSlash size={16} />}
           </Button>
         </Input>
