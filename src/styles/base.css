@@ -93,7 +93,7 @@ h6 {
 }
 
 a {
-  font-size: .75rem;
+  font-size: .8125rem;
   font-weight: 500;
   text-decoration: none;
   color: var(--primary-base);
@@ -110,32 +110,32 @@ a {
 }
 
 p, span, label, mark, ol, ul, li {
-  font-size: .75rem;
+  font-size: .8125rem;
   font-weight: 400;
   line-height: 1.6;
 }
 
 ol, ul, li {
-  font-size: .75rem;
+  font-size: .8125rem;
   font-weight: 400;
   line-height: 1.6;
   list-style-position: inside;
 }
 
 strong {
-  font-size: .75rem;
+  font-size: .8125rem;
   font-weight: 700;
   line-height: 1.6;
 }
 
 em {
-  font-size: .75rem;
+  font-size: .8125rem;
   font-style: italic;
   line-height: 1.6;
 }
 
 small, caption, sup, sub {
-  font-size: .6875rem;
+  font-size: .75rem;
   font-weight: 400;
   line-height: 1.43;
 }

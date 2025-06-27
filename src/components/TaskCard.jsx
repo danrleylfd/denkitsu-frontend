@@ -51,11 +51,11 @@ const TaskCard = ({ task, showControls = true }) => {
           onChange={(e) => setEditedContent(e.target.value)}
           onKeyDown={handleKeyDown}
           autoFocus
-          className="bg-transparent w-full focus:outline-none"
+          className="bg-transparent text-lightFg-primary dark:text-darkFg-primary w-full focus:outline-none"
         />
         <div className="flex items-center justify-end gap-2">
-          <button onClick={handleCancel} className="p-1 text-danger-light hover:text-danger-base transition-colors"><LuX size={18} /></button>
-          <button onClick={handleSave} className="p-1 text-success-light hover:text-success-base transition-colors"><LuCheck size={18} /></button>
+          <button onClick={handleCancel} className="text-primary-base hover:text-primary-light active:text-primary-dark p-1 transition-colors"><LuX size={18} /></button>
+          <button onClick={handleSave} className="text-success-base hover:text-success-light active:text-success-dark p-1 transition-colors"><LuCheck size={18} /></button>
         </div>
       </div>
     )
@@ -69,8 +69,8 @@ const TaskCard = ({ task, showControls = true }) => {
       <span className="flex-1 text-lightFg-secondary dark:text-darkFg-secondary  break-all">{task.content}</span>
       {showControls && (
         <div className="flex items-center gap-1">
-          <button onClick={() => setEditingId(task.id)} className="p-1 hover:text-primary-base transition-colors"><LuPenTool size={16} /></button>
-          <button onClick={() => deleteTask(task.id)} className="p-1 hover:text-danger-base transition-colors"><LuTrash2 size={16} /></button>
+          <button onClick={() => setEditingId(task.id)} className="text-primary-base hover:text-primary-light active:text-primary-dark p-1 transition-colors"><LuPenTool size={16} /></button>
+          <button onClick={() => deleteTask(task.id)} className="text-danger-base hover:text-danger-light active:text-danger-dark p-1 transition-colors"><LuTrash2 size={16} /></button>
         </div>
       )}
     </div>

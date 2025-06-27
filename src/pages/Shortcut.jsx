@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react"
-import { Link } from "react-router-dom"
 import { MdContentCopy, MdAdd, MdEdit, MdDelete, MdCancel, MdCheck } from "react-icons/md"
 
 import { useAuth } from "../contexts/AuthContext"
@@ -9,6 +8,7 @@ import SideMenu from "../components/SideMenu"
 import Input from "../components/Input"
 import Button from "../components/Button"
 import { MessageBase, MessageWarning, MessageError } from "../components/Notifications"
+import PurpleLink from "../components/PurpleLink"
 
 const ContentView = ({ children }) => <main className="flex flex-col items-center p-2 gap-2 mx-auto min-h-screen w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[75%] lg:max-w-[67%] ml-[3.5rem] md:ml-auto">{children}</main>
 
@@ -167,9 +167,9 @@ const Shortcut = () => {
               ) : (
                 <>
                   <div className="flex gap-2">
-                    <Link className="text-primary-base hover:text-primary-light active:text-primary-dark" to={`/access/${linker.label}`} target="_blank" rel="noopener noreferrer">
+                    <PurpleLink to={`/access/${linker.label}`} target="_blank" rel="noopener noreferrer">
                       Acessar /{linker.label}
-                    </Link>
+                    </PurpleLink>
                   </div>
                   <div className="flex gap-2">
                     <Button variant="success" size="icon" $rounded title="Copiar" onClick={() => copyToClipboard(`${window.origin}/access/${linker.label}`)}>

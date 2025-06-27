@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react"
-import { Link } from "react-router-dom"
 import { MdReply, MdOutlineClose, MdEdit, MdDelete } from "react-icons/md"
 
 import { useAuth } from "../contexts/AuthContext"
@@ -7,6 +6,7 @@ import { deleteComment, getRepliesForComment } from "../services/video"
 
 import CommentForm from "./CommentForm"
 import Button from "./Button"
+import PurpleLink from "./PurpleLink"
 
 const CommentItem = ({ comment, videoId, onCommentDeleted, onReplyAdded, disabled }) => {
   const { user, signed } = useAuth()
@@ -59,13 +59,13 @@ const CommentItem = ({ comment, videoId, onCommentDeleted, onReplyAdded, disable
           className="w-8 h-8 rounded-full"
         />
         <div className="flex gap-1 align-middle justify-center">
-          <Link to={`/profile/${comment.user._id}`} className="text-sm font-medium">
+          <PurpleLink to={`/profile/${comment.user._id}`}>
             {comment.user.name}
-          </Link>
-          <small className="text-sm font-medium text-lightFg-tertiary dark:text-darkFg-tertiary">{new Date(comment.createdAt).toLocaleString()}</small>
+          </PurpleLink>
+          <small className="font-medium text-lightFg-tertiary dark:text-darkFg-tertiary">{new Date(comment.createdAt).toLocaleString()}</small>
         </div>
       </div>
-      <p className="text-md break-words">{comment.content}</p>
+      <p className="text-lightFg-primary dark:text-darkFg-primary text-md break-words">{comment.content}</p>
       <div className="flex gap-2">
         {signed && !comment.parent && (
           <Button

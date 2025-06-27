@@ -43,10 +43,10 @@ const Markdown = ({ content, think }) => {
           rehypePlugins={[rehypeHighlight, rehypeRaw]}
           remarkPlugins={[remarkGfm]}
           components={{
-            h1: ({ node, children, ...props }) => <h3 className="text-lightFg-primary dark:text-darkFg-primary" {...props}>{children}</h3>,
-            h2: ({ node, children, ...props }) => <h4 className="text-lightFg-primary dark:text-darkFg-primary" {...props}>{children}</h4>,
-            h3: ({ node, children, ...props }) => <h3 className="text-lightFg-primary dark:text-darkFg-primary" {...props}>{children}</h3>,
-            h4: ({ node, children, ...props }) => <h4 className="text-lightFg-primary dark:text-darkFg-primary" {...props}>{children}</h4>,
+            h1: ({ node, children, ...props }) => <h4 className="text-lightFg-primary dark:text-darkFg-primary" {...props}>{children}</h4>,
+            h2: ({ node, children, ...props }) => <h6 className="text-lightFg-primary dark:text-darkFg-primary" {...props}>{children}</h6>,
+            h3: ({ node, children, ...props }) => <h5 className="text-lightFg-primary dark:text-darkFg-primary" {...props}>{children}</h5>,
+            h4: ({ node, children, ...props }) => <h6 className="text-lightFg-primary dark:text-darkFg-primary" {...props}>{children}</h6>,
             h5: ({ node, children, ...props }) => <h5 className="text-lightFg-primary dark:text-darkFg-primary" {...props}>{children}</h5>,
             h6: ({ node, children, ...props }) => <h6 className="text-lightFg-primary dark:text-darkFg-primary" {...props}>{children}</h6>,
             strong: ({ node, children, ...props }) => <strong className="text-lightFg-primary dark:text-darkFg-primary" {...props}>{children}</strong>,

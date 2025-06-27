@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom"
 import { LuThumbsUp, LuMessageCircle, LuShare2 } from "react-icons/lu"
 
 import Input from "./Input"
 import Button from "./Button"
+import PurpleLink from "./PurpleLink"
 
 const VideoCard = ({ video }) => {
   if (!video) return
@@ -16,13 +16,13 @@ const VideoCard = ({ video }) => {
         />
       </div>
       <div className="flex h-fit flex-col gap-2 bg-lightBg-secondary p-2 transition-colors duration-300 ease-in-out dark:bg-darkBg-secondary">
-        <Link
+        <PurpleLink
           to={`/video/${video._id}`}
           title={video.content}
-          className="overflow-hidden text-ellipsis whitespace-nowrap text-xs font-medium"
+          className="overflow-hidden text-ellipsis whitespace-nowrap"
         >
           {video.content}
-        </Link>
+        </PurpleLink>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="icon" $rounded>
             <LuThumbsUp size={16}/>

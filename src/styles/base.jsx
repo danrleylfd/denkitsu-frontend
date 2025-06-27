@@ -52,17 +52,17 @@ export default createGlobalStyle`
     font-size: 1rem;
     font-weight: 500;
     line-height: 1.45;
-  } */
+  }
 
   a {
     color: ${({ theme }) => theme.primaryBase};
-    /* font-size: .875rem;
+    font-size: .875rem;
     font-weight: 500;
-    text-decoration: none; */
+    text-decoration: none;
 
     &:hover {
       color: ${({ theme }) => theme.primaryLight};
-      /* text-decoration: none; */
+      text-decoration: none;
     }
 
     &:active {
@@ -70,7 +70,7 @@ export default createGlobalStyle`
     }
   }
 
-  /* p, span, label, mark, ol, ul, li {
+  p, span, label, mark, ol, ul, li {
     font-size: .875rem;
     font-weight: 400;
     line-height: 1.6;

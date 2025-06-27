@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
-import { Link, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { MdThumbUp, MdThumbDown, MdComment, MdShare, MdEdit, MdDelete } from "react-icons/md"
 
 import { useAuth } from "../contexts/AuthContext"
@@ -20,8 +20,9 @@ import Button from "../components/Button"
 import CommentForm from "../components/CommentForm"
 import CommentItem from "../components/CommentItem"
 import { MessageSuccess, MessageError } from "../components/Notifications"
+import PurpleLink from "../components/PurpleLink"
 
-const ContentView = (props) => <div {...props} className="flex flex-1 flex-col items-center gap-2 p-2 w-full h-screen ml-[3.5rem]" />
+const ContentView = ({ children, ...props }) => <main {...props} className="flex flex-col items-center p-2 gap-2 mx-auto w-full xs:max-w-[100%] sm:max-w-[90%] ml-[3.5rem] md:max-w-[75%] lg:max-w-[100%]">{children}</main>
 
 const VideoDetail = () => {
   const { videoId } = useParams()
@@ -171,18 +172,18 @@ const VideoDetail = () => {
   }
 
   return (
-    <SideMenu fixed ContentView={ContentView}>
+    <SideMenu fixed ContentView={ContentView} className="bg-lightBg-primary dark:bg-darkBg-primary min-h-screen">
       {loading && <Button variant="outline" style={{ marginTop: ".5rem" }} $rounded loading={loading} disabled />}
       {error && <MessageError>{error}</MessageError>}
       {!error && video && (
         <div className="flex flex-col py-2 gap-2 w-full sm:max-w-lg md:max-w-2xl">
             <Player src={video.fileUrl} poster={video.thumbnail} />
-            <h5>{video.content}</h5>
+            <h5 className="text-lightFg-primary dark:text-darkFg-primary">{video.content}</h5>
             {video.user && (
               <div className="flex flex-row items-center gap-2">
                 <img className="w-8 h-8 rounded-full" src={video.user.avatarUrl} alt={video.user.name} />
-                <Link to={`/profile/${video.user._id}`}>{video.user.name}</Link>
-                <small>Publicou em {new Date(video.createdAt).toLocaleString()}</small>
+                <PurpleLink to={`/profile/${video.user._id}`}>{video.user.name}</PurpleLink>
+                <small className="font-medium text-lightFg-tertiary dark:text-darkFg-tertiary">{new Date(video.createdAt).toLocaleString()}</small>
               </div>
             )}
             <div className="flex flex-row items-center gap-2 ">
@@ -213,7 +214,7 @@ const VideoDetail = () => {
                 </>
               )}
             </div>
-            <MdComment size={16} />
+            <MdComment className="text-lightFg-primary dark:text-darkFg-primary" size={16} />
             <CommentForm onSubmit={handleAddComment} />
             <div className="flex flex-col gap-2">
               {loading && comments.length === 0 && <Button variant="outline" $rounded loading={loading} disabled />}
