@@ -6,7 +6,7 @@ import { AuthProvider } from "./contexts/AuthContext"
 import { AIProvider } from "./contexts/AIContext.jsx"
 import { TasksProvider } from "./contexts/TasksContext"
 import { DndProvider } from "./contexts/DndContext"
-import "./styles/base.css"
+import "./styles/global.css"
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
