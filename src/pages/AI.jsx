@@ -62,10 +62,10 @@ const AI = () => {
     setError(null)
     try {
       const apiMessages = currentMessages.map(({ role, content }) => ({ role, content }))
-      const streamedAssistantMessage = { id: Date.now() + 1, role: "assistant", content: "", reasoning: "" }
-      setMessages(prev => [...prev, streamedAssistantMessage])
+      // const streamedAssistantMessage = { id: Date.now() + 1, role: "assistant", content: "", reasoning: "" }
+      // setMessages(prev => [...prev, streamedAssistantMessage])
       const data = await sendMessage(aiKey, aiProvider, model, apiMessages)
-      setMessages([messages, { ...data.choices[0].message }])
+      setMessages([messages, { id: Date.now() + 1, ...data.choices[0].message }])
       // await sendMessageStream(aiKey, aiProvider, model, apiMessages, (delta) => {
       //   if (delta.content) streamedAssistantMessage.content += delta.content
       //   if (delta.reasoning) streamedAssistantMessage.reasoning += delta.reasoning
