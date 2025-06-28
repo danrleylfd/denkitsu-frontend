@@ -1,12 +1,10 @@
-const ModelSelect = ({ aiProvider, setAIProvider, model, setModel, loading, freeModels, payModels, groqModels }) => {
+const ModelSelect = ({ setAIProvider, model, setModel, loading, freeModels, payModels, groqModels }) => {
   const findProviderByModel = (model) => {
     if (freeModels.find((m) => m.id === model)) return "openrouter"
     if (payModels.find((m) => m.id === model)) return "openrouter"
     if (groqModels.find((m) => m.id === model)) return "groq"
     return null
   }
-  const selectedAIProvider = findProviderByModel(model)
-  setAIProvider(selectedAIProvider)
   const handleChange = (e) => {
     setModel(e.target.value)
     const provider = findProviderByModel(e.target.value)
