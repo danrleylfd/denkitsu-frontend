@@ -80,22 +80,22 @@ const getModels = async () => {
     const freeModels = data.data
       .filter((item) => item.id && item.id.includes(":free"))
       .map((item, index) => {
-        if (!item.id || !item.name) {
+        if (!item.id) {
           console.error(`Erro no item ${index}: id ou name ausente`, item)
           return null
         }
-        return { id: item.id, name: item.name }
+        return { id: item.id }
       })
       .filter((item) => item !== null)
       .sort((a, b) => a.id.localeCompare(b.id))
     const payModels = data.data
       .filter((item) => item.id && !item.id.includes(":free"))
       .map((item, index) => {
-        if (!item.id || !item.name) {
+        if (!item.id) {
           console.error(`Erro no item ${index}: id ou name ausente`, item)
           return null
         }
-        return { id: item.id, name: item.name }
+        return { id: item.id }
       })
       .filter((item) => item !== null)
       .sort((a, b) => a.id.localeCompare(b.id))
