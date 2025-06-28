@@ -77,7 +77,7 @@ const getModels = async () => {
     const { data } = await api.get("/ai/models")
     if (!data) throw new Error("Falha ao obter resposta da API")
     if (data.error) throw new Error(data.error?.message)
-    const freeModels = data.data
+    const freeModels = data.models
       .filter((item) => item.id && item.id.includes(":free"))
       .map((item, index) => {
         if (!item.id) {
@@ -88,7 +88,7 @@ const getModels = async () => {
       })
       .filter((item) => item !== null)
       .sort((a, b) => a.id.localeCompare(b.id))
-    const payModels = data.data
+    const payModels = data.models
       .filter((item) => item.id && !item.id.includes(":free"))
       .map((item, index) => {
         if (!item.id) {
