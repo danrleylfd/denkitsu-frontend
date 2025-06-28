@@ -108,7 +108,7 @@ const getModels = async () => {
 }
 
 const generateNews = async (searchTerm, aiProvider) => {
-  const { data } = await api.post("/news/generate", { searchTerm, llm: aiProvider })
+  const { data } = await api.post("/news/generate", { searchTerm, aiProvider: aiProvider })
   return data
 }
 
