@@ -5,9 +5,9 @@ const Player = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poster = "
   const videoRef = useRef(null)
   const [playing, setPlaying] = useState(false)
   const [repeat, setRepeat] = useState(false)
-  const [muted, setMuted] = useState(() => localStorage.getItem("muted") === "true")
+  const [muted, setMuted] = useState(() => localStorage.getItem("@Denkitsu:muted") === "true")
   const [volume, setVolume] = useState(() => {
-    const savedVolume = localStorage.getItem("volume")
+    const savedVolume = localStorage.getItem("@Denkitsu:volume")
     if (savedVolume !== null) return parseFloat(savedVolume)
     return 1
   })
@@ -15,15 +15,15 @@ const Player = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poster = "
   const [currentTime, setCurrentTime] = useState(0)
   const [showVolumeSlider, setShowVolumeSlider] = useState(false)
   useEffect(() => {
-    localStorage.setItem("muted", muted)
+    localStorage.setItem("@Denkitsu:muted", muted)
     if (videoRef.current) videoRef.current.muted = muted
   }, [muted])
   useEffect(() => {
-    localStorage.setItem("repeat", muted)
+    localStorage.setItem("@Denkitsu:repeat", muted)
     if (videoRef.current) videoRef.current.repeat = repeat
   }, [repeat])
   useEffect(() => {
-    localStorage.setItem("volume", volume)
+    localStorage.setItem("@Denkitsu:volume", volume)
     if (videoRef.current) videoRef.current.volume = volume
   }, [volume])
   useEffect(() => {

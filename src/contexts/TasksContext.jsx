@@ -6,7 +6,7 @@ import { useAI } from "./AIContext"
 const TasksContext = createContext({})
 
 const TasksProvider = ({ children }) => {
-  const STORAGE_KEY = "kanban-tasks"
+  const STORAGE_KEY = "@Denkitsu:kanban-tasks"
   const [tasks, setTasks] = useState(() => {
     try {
       const savedTasks = window.localStorage.getItem(STORAGE_KEY)
