@@ -115,7 +115,7 @@ const AI = () => {
       </div>
       <div className="flex items-center justify-between gap-2 px-1 py-2 bg-lightBg-primary dark:bg-darkBg-primary">
         <div className="w-0 h-0 p-0 m-0" />
-        <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
+        <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} disabled title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
           <LuBrain size={16} />
         </Button>
         <ModelSelect aiProvider={aiProvider} setAIProvider={setAIProvider} model={model} setModel={setModel} loading={loading} freeModels={freeModels} payModels={payModels} groqModels={groqModels} />

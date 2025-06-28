@@ -5,14 +5,15 @@ const AIContext = createContext()
 
 export const AIProvider = ({ children }) => {
   const initialMessage = { id: 1, role: "assistant", content: "Olá! Como posso ajudar você hoje?\n Shift + Enter para quebrar a linha." }
-  const storedKey = localStorage.getItem("openRouterApiKey")
+  const storedAIProvider = localStorage.getItem("@Denkitsu:aiProvider")
+  const storedKey = localStorage.getItem("@Denkitsu:OpenRouter")
   const storedModel = localStorage.getItem("@Denkitsu:model")
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
 
   const [prompt, setPrompt] = useState(null)
-  const [aiKey, setAiKey] = useState(storedKey || "")
+  const [aiKey, setAIKey] = useState(storedKey || "")
   const [model, setModel] = useState(storedModel || "deepseek/deepseek-r1:free")
-  const [aiProvider, setAIProvider] = useState("openrouter")
+  const [aiProvider, setAIProvider] = useState(storedAIProvider || "openrouter")
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [initialMessage])
 
   useEffect(() => {
@@ -24,8 +25,12 @@ export const AIProvider = ({ children }) => {
   }, [])
 
   useEffect(() => {
-    if (aiKey.trim() === "") return localStorage.removeItem("openRouterApiKey")
-    localStorage.setItem("openRouterApiKey", aiKey)
+    localStorage.setItem("@Denkitsu:aiProvider", aiProvider)
+  }, [aiProvider])
+
+  useEffect(() => {
+    if (aiKey.trim() === "") return localStorage.removeItem("@Denkitsu:OpenRouter")
+    localStorage.setItem("@Denkitsu:OpenRouter", aiKey)
   }, [aiKey])
 
   useEffect(() => {
@@ -54,7 +59,7 @@ export const AIProvider = ({ children }) => {
   }
 
   return (
-    <AIContext.Provider value={{ aiKey, setAiKey, model, setModel, prompt, setPrompt, aiProvider, setAIProvider, aiProviderToggle, messages, setMessages, clearHistory }}>
+    <AIContext.Provider value={{ aiKey, setAIKey, model, setModel, prompt, setPrompt, aiProvider, setAIProvider, aiProviderToggle, messages, setMessages, clearHistory }}>
       {children}
     </AIContext.Provider>
   )

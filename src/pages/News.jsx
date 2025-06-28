@@ -16,7 +16,7 @@ const ContentView = ({ children }) => <main className="flex flex-col items-cente
 
 const News = () => {
   const { user } = useAuth()
-  const { aiProvider, aiProviderToggle } = useAI()
+  const { aiProvider } = useAI()
   const [searchTerm, setSearchTerm] = useState("")
   const [news, setNews] = useState([])
   const [page, setPage] = useState(1)
@@ -98,7 +98,7 @@ const News = () => {
           <Button variant="outline" size="icon" $rounded onClick={() => handleGenerate()} loading={loading} disabled={searchTerm.length < 1} title="Pesquisar e Gerar">
             {!loading && <LuSearchSlash size={16} />}
           </Button>
-          <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
+          <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded disabled title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
             <LuBrain size={16} />
           </Button>
         </Input>

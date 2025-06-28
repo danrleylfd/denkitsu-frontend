@@ -15,7 +15,7 @@ const ContentView = ({ children }) => <main className="flex justify-center items
 
 const Profile = () => {
   const { userId } = useParams()
-  const { aiKey, setAiKey } = useAI()
+  const { aiKey, setAIKey } = useAI()
   const { user, signOut, updateUser } = useAuth()
   const userID = userId || user._id
   const [userData, setUserData] = useState(null)
@@ -114,7 +114,7 @@ const Profile = () => {
             <form className="flex-1 flex flex-col gap-0 items-center" onSubmit={(e) => e.preventDefault()}>
               <Input id="name" value={name} onChange={(e) => setName(e.target.value)} disabled={loading} />
               <Input id="avatarUrl" value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} disabled={loading} />
-              <Input id="aiKey" value={aiKey} onChange={(e) => setAiKey(e.target.value)} disabled={loading} />
+              <Input id="aiKey" value={aiKey} onChange={(e) => setAIKey(e.target.value)} disabled={loading} />
               {error && <MessageError>{error}</MessageError>}
               <div className="flex w-full gap-2 justify-between">
                 <Button variant="secondary" size="icon" $rounded title="Cancelar" onClick={handleEditToggle} loading={loading}>

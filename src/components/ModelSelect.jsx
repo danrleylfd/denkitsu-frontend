@@ -7,11 +7,16 @@ const ModelSelect = ({ aiProvider, setAIProvider, model, setModel, loading, free
   }
   const selectedAIProvider = findProviderByModel(model)
   setAIProvider(selectedAIProvider)
+  const handleChange = (e) => {
+    setModel(e.target.value)
+    const provider = findProviderByModel(e.target.value)
+    setAIProvider(provider)
+  }
   return (
     <select
       id="model-select"
       value={model}
-      onChange={(e) => setModel(e.target.value)}
+      onChange={handleChange}
       disabled={loading}
       className="bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary text-sm min-h-[48px] max-w-[6.5rem] rounded-md">
       <option disabled value="">Selecionar Modelo</option>
