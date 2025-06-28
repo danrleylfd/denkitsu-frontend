@@ -58,7 +58,7 @@ const TasksProvider = ({ children }) => {
     try {
       const prompt = { role: "user", content: `Modo Secretário, Objetivo: "${goal}` }
       const data = await sendMessage(aiKey, aiProvider, model, [prompt])
-      const content = data?.choices?.[0]?.message?.content
+      const content = data?.choices?.[0]?.message?.content.replace(/<think>[\s\S]*?<\/think>/g, "")
       const codeToCopy = () => extractCodeFromMarkdown(content)
       if (data.error) throw new Error(data.error.message)
       const messageContent = codeToCopy() || content
