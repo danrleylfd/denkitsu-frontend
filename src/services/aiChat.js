@@ -85,7 +85,7 @@ const getModels = async () => {
           console.error(`Erro no item ${index}: id ou name ausente`, item)
           return null
         }
-        return { id: item.id, llm: item.llm }
+        return { id: item.id, aiProvider: item.aiProvider }
       })
       .filter((item) => item !== null)
       .sort((a, b) => a.id.localeCompare(b.id))
@@ -96,7 +96,7 @@ const getModels = async () => {
           console.error(`Erro no item ${index}: id ou name ausente`, item)
           return null
         }
-        return { id: item.id, llm: item.llm }
+        return { id: item.id, aiProvider: item.aiProvider }
       })
       .filter((item) => item !== null)
       .sort((a, b) => a.id.localeCompare(b.id))

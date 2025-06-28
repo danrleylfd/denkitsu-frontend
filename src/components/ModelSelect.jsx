@@ -1,7 +1,7 @@
 const ModelSelect = ({ aiProvider, setAIProvider, model, setModel, loading, freeModels, payModels, groqModels }) => {
   const findProviderByModel = (model) => {
-    if (freeModels.find((m) => m.id === model)) return "openai"
-    if (payModels.find((m) => m.id === model)) return "openai"
+    if (freeModels.find((m) => m.id === model)) return "openrouter"
+    if (payModels.find((m) => m.id === model)) return "openrouter"
     if (groqModels.find((m) => m.id === model)) return "groq"
     return null
   }
