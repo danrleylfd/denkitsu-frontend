@@ -5,7 +5,7 @@ import { LuBrain } from "react-icons/lu"
 import { useAuth } from "../contexts/AuthContext"
 import { useAI } from "../contexts/AIContext"
 
-import { sendMessageStream, getModels, getPrompt, sendMessage } from "../services/aiChat"
+import { sendMessageStream, getModels } from "../services/aiChat"
 
 import SideMenu from "../components/SideMenu"
 import ChatMessage from "../components/ChatMessage"
@@ -62,22 +62,20 @@ const AI = () => {
     setError(null)
     try {
       const apiMessages = currentMessages.map(({ role, content }) => ({ role, content }))
-      // const streamedAssistantMessage = { id: Date.now() + 1, role: "assistant", content: "", reasoning: "" }
-      // setMessages(prev => [...prev, streamedAssistantMessage])
-      const data = await sendMessage(aiKey, aiProvider, model, apiMessages)
-      setMessages([messages, { id: Date.now() + 1, ...data.choices[0].message }])
-      // await sendMessageStream(aiKey, aiProvider, model, apiMessages, (delta) => {
-      //   if (delta.content) streamedAssistantMessage.content += delta.content
-      //   if (delta.reasoning) streamedAssistantMessage.reasoning += delta.reasoning
-      //   if (delta.tool_calls?.[0]?.arguments?.reasoning) {
-      //     streamedAssistantMessage.reasoning += delta.tool_calls[0].arguments.reasoning
-      //   }
-      //   setMessages(prev => {
-      //     const updated = [...prev]
-      //     updated[updated.length - 1] = { ...streamedAssistantMessage }
-      //     return updated
-      //   })
-      // })
+      const streamedAssistantMessage = { id: Date.now() + 1, role: "assistant", content: "", reasoning: "" }
+      setMessages(prev => [...prev, streamedAssistantMessage])
+      await sendMessageStream(aiKey, aiProvider, model, apiMessages, (delta) => {
+        if (delta.content) streamedAssistantMessage.content += delta.content
+        if (delta.reasoning) streamedAssistantMessage.reasoning += delta.reasoning
+        if (delta.tool_calls?.[0]?.arguments?.reasoning) {
+          streamedAssistantMessage.reasoning += delta.tool_calls[0].arguments.reasoning
+        }
+        setMessages(prev => {
+          const updated = [...prev]
+          updated[updated.length - 1] = { ...streamedAssistantMessage }
+          return updated
+        })
+      })
     } catch (err) {
       setError(err.message || "Erro desconhecido")
     } finally {
