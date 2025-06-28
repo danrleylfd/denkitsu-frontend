@@ -18,6 +18,12 @@ const ModelSelect = ({ model, setModel, loading, freeModels, payModels }) => (
         {model.id}
       </option>
     ))}
+    <option disabled>Groq</option>
+    {groqModels.map((model) => (
+      <option key={model.id} value={model.id}>
+        {model.id}
+      </option>
+    ))}
   </select>
 )
 

@@ -21,6 +21,7 @@ const AI = () => {
   const { aiKey, model, setModel, prompt, setPrompt, messages, setMessages, clearHistory } = useAI()
   const [freeModels, setFreeModels] = useState([])
   const [payModels, setPayModels] = useState([])
+  const [groqModels, setGroqModels] = useState([])
   const [inputText, setInputText] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -31,9 +32,10 @@ const AI = () => {
 
   useEffect(() => {
     async function loadModels() {
-      const { freeModels: loadedFree, payModels: loadedPay } = await getModels()
+      const { freeModels: loadedFree, payModels: loadedPay, groqModels: loadedGroq } = await getModels()
       setFreeModels(loadedFree || [])
       if(aiKey) setPayModels(loadedPay || [])
+      setGroqModels(loadedGroq || [])
     }
     loadModels()
   }, [aiKey])
@@ -112,7 +114,7 @@ const AI = () => {
       </div>
       <div className="flex items-center justify-between gap-2 px-1 py-2 bg-lightBg-primary dark:bg-darkBg-primary">
         <div className="w-0 h-0 p-0 m-0" />
-        <ModelSelect model={model} setModel={setModel} loading={loading} freeModels={freeModels} payModels={payModels} />
+        <ModelSelect model={model} setModel={setModel} loading={loading} freeModels={freeModels} payModels={payModels} groqModels={groqModels} />
         <PromptInput
           textareaRef={textareaRef}
           inputText={inputText}

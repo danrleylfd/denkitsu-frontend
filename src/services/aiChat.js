@@ -84,22 +84,23 @@ const getModels = async () => {
           console.error(`Erro no item ${index}: id ou name ausente`, item)
           return null
         }
-        return { id: item.id }
+        return { id: item.id, llm: item.llm }
       })
       .filter((item) => item !== null)
       .sort((a, b) => a.id.localeCompare(b.id))
     const payModels = data.models
-      .filter((item) => item.id && !item.id.includes(":free"))
+      .filter((item) => item.id && !item.id.includes(":free") && item.llm !== "groq")
       .map((item, index) => {
         if (!item.id) {
           console.error(`Erro no item ${index}: id ou name ausente`, item)
           return null
         }
-        return { id: item.id }
+        return { id: item.id, llm: item.llm }
       })
       .filter((item) => item !== null)
       .sort((a, b) => a.id.localeCompare(b.id))
-    return { freeModels, payModels }
+    const groqModels = data.models.filter((item) => item.llm ==="groq")
+    return { freeModels, payModels, groqModels }
   } catch (error) {
     console.error(error.response?.data?.error?.message || error.message)
   }
