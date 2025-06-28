@@ -8,7 +8,8 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, onDelta) =>
     messages,
     stream: true
   }
-  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+  const apiURL = aiProvider === "groq" ? "https://api.groq.com/openai/v1/chat/completions" : "https://openrouter.ai/api/v1/chat/completions"
+  const response = await fetch(apiURL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

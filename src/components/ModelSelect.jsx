@@ -34,7 +34,7 @@ const ModelSelect = ({ aiProvider, setAIProvider, model, setModel, loading, free
       ))}
       <option disabled>Groq</option>
       {groqModels.map((model) => (
-        <option key={model.id} value={model.id} disabled>
+        <option key={model.id} value={model.id}>
           {model.id}
         </option>
       ))}

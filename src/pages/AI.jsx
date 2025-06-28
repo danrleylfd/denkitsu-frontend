@@ -19,7 +19,7 @@ const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-sc
 
 const AI = () => {
   const { user } = useAuth()
-  const { aiKey, model, setModel, prompt, setPrompt, aiProvider, setAIProvider, aiProviderToggle , messages, setMessages, clearHistory } = useAI()
+  const { aiKey, model, setModel, prompt, setPrompt, aiProvider, setAIProvider, aiProviderToggle, messages, setMessages, clearHistory } = useAI()
   const [freeModels, setFreeModels] = useState([])
   const [payModels, setPayModels] = useState([])
   const [groqModels, setGroqModels] = useState([])
@@ -35,7 +35,7 @@ const AI = () => {
     async function loadModels() {
       const { freeModels: loadedFree, payModels: loadedPay, groqModels: loadedGroq } = await getModels()
       setFreeModels(loadedFree || [])
-      if(aiKey) setPayModels(loadedPay || [])
+      if (aiKey) setPayModels(loadedPay || [])
       setGroqModels(loadedGroq || [])
     }
     loadModels()
@@ -53,38 +53,59 @@ const AI = () => {
   }, [inputText])
 
   const handleSendMessage = useCallback(async () => {
-    if (!inputText.trim()) return;
+    if (!inputText.trim()) return
     const newUserMessage = { id: Date.now(), role: "user", content: inputText.trim() }
-    setMessages(prevMessages => [...prevMessages, newUserMessage])
+    setMessages((prevMessages) => [...prevMessages, newUserMessage])
     const currentMessages = [...messages, newUserMessage]
     setInputText("")
     setLoading(true)
     setError(null)
     try {
       const apiMessages = currentMessages.map(({ role, content }) => ({ role, content }))
-      const streamedAssistantMessage = { id: Date.now() + 1, role: "assistant", content: "", reasoning: "" }
-      setMessages(prev => [...prev, streamedAssistantMessage])
+      const streamedAssistantMessage = {
+        id: Date.now() + 1,
+        role: "assistant",
+        content: "",
+        reasoning: "",
+        _contentBuffer: "",
+        _reasoningBuffer: ""
+      }
+      setMessages((prev) => [...prev, streamedAssistantMessage])
       await sendMessageStream(aiKey, aiProvider, model, apiMessages, (delta) => {
-        if (delta.content) streamedAssistantMessage.content += delta.content
-        if (delta.reasoning) streamedAssistantMessage.reasoning += delta.reasoning
-        if (delta.tool_calls?.[0]?.arguments?.reasoning) {
-          streamedAssistantMessage.reasoning += delta.tool_calls[0].arguments.reasoning
+        if (delta.content) {
+          streamedAssistantMessage._contentBuffer += delta.content
         }
-        setMessages(prev => {
+        if (delta.reasoning) {
+          streamedAssistantMessage._reasoningBuffer += delta.reasoning
+        }
+        if (delta.tool_calls?.[0]?.arguments?.reasoning) {
+          streamedAssistantMessage._reasoningBuffer += delta.tool_calls[0].arguments.reasoning
+        }
+        let reasoningFromThink = ""
+        const finalContent = streamedAssistantMessage._contentBuffer.replace(/<think>(.*?)<\/think>/gs, (match, thought) => {
+          reasoningFromThink += thought
+          return ""
+        })
+        streamedAssistantMessage.content = finalContent
+        streamedAssistantMessage.reasoning = streamedAssistantMessage._reasoningBuffer + reasoningFromThink
+        setMessages((prev) => {
           const updated = [...prev]
           updated[updated.length - 1] = { ...streamedAssistantMessage }
           return updated
         })
       })
     } catch (err) {
-      setMessages(prev => {
-        prev[prev.length - 1].content = "Falha ao enviar mensagem.\n```markdown\n" + err.message + "\n```"
-        return [...prev]
+      setMessages((prev) => {
+        if (prev.length > 0 && prev[prev.length - 1].role === "assistant") {
+          prev[prev.length - 1].content = "Falha ao enviar mensagem.\n```markdown\n" + err.message + "\n```"
+          return [...prev]
+        }
+        return prev
       })
     } finally {
       setLoading(false)
     }
-  }, [inputText, messages, model, aiKey, prompt])
+  }, [inputText, messages, model, aiKey, aiProvider])
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -105,30 +126,33 @@ const AI = () => {
     <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
       <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-2">
         {messages.map((msg) => (
-          <ChatMessage
-            key={msg.id}
-            msg={msg}
-            user={user}
-            onShowCanva={handleShowCanva}
-            loading={loading}
-          />
+          <ChatMessage key={msg.id} msg={msg} user={user} onShowCanva={handleShowCanva} loading={loading} />
         ))}
         <div ref={messagesEndRef} />
         {error && <MessageError>{error}</MessageError>}
       </div>
       <div className="flex items-center justify-between gap-2 px-1 py-2 bg-lightBg-primary dark:bg-darkBg-primary">
         <div className="w-0 h-0 p-0 m-0" />
-        <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} disabled title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
+        <Button
+          variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"}
+          size="icon"
+          $rounded
+          onClick={aiProviderToggle}
+          disabled
+          title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
           <LuBrain size={16} />
         </Button>
-        <ModelSelect aiProvider={aiProvider} setAIProvider={setAIProvider} model={model} setModel={setModel} loading={loading} freeModels={freeModels} payModels={payModels} groqModels={groqModels} />
-        <PromptInput
-          textareaRef={textareaRef}
-          inputText={inputText}
-          setInputText={setInputText}
-          handleKeyDown={handleKeyDown}
+        <ModelSelect
+          aiProvider={aiProvider}
+          setAIProvider={setAIProvider}
+          model={model}
+          setModel={setModel}
           loading={loading}
+          freeModels={freeModels}
+          payModels={payModels}
+          groqModels={groqModels}
         />
+        <PromptInput textareaRef={textareaRef} inputText={inputText} setInputText={setInputText} handleKeyDown={handleKeyDown} loading={loading} />
         <Button size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || !inputText.trim()}>
           {!loading && <MdSend size={16} />}
         </Button>
