@@ -2,47 +2,43 @@ import axios from "axios"
 import api from "./"
 
 const sendMessageStream = async (aiKey, aiProvider, model, messages, onDelta) => {
-  try {
-    const payload = {
-      aiKey,
-      model,
-      messages,
-      stream: true
-    }
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(aiKey && { Authorization: `Bearer ${aiKey}` })
-      },
-      body: JSON.stringify(payload)
-    })
-    if (!response.ok) throw new Error("Falha ao obter resposta da API")
-    const reader = response.body.getReader()
-    const decoder = new TextDecoder("utf-8")
-    let done = false
-    while (!done) {
-      const { value, done: doneReading } = await reader.read()
-      done = doneReading
-      const chunk = decoder.decode(value)
-      chunk.split("\n").forEach((line) => {
-        if (line.startsWith("data: ")) {
-          const payload = line.replace("data: ", "")
-          if (payload === "[DONE]") return
-          try {
-            const json = JSON.parse(payload)
-            const delta = json.choices?.[0]?.delta
-            if (delta?.content || delta?.reasoning || delta?.tool_calls) {
-              onDelta(delta)
-            }
-          } catch (err) {
-            console.error("Erro ao parsear chunk:", err)
+  const payload = {
+    // aiKey,
+    model,
+    messages,
+    stream: true
+  }
+  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(aiKey && { Authorization: `Bearer ${aiKey}` })
+    },
+    body: JSON.stringify(payload)
+  })
+  if (!response.ok) throw new Error("Denkitsu está cansado, tente novamente mais tarde ou amanhã.")
+  const reader = response.body.getReader()
+  const decoder = new TextDecoder("utf-8")
+  let done = false
+  while (!done) {
+    const { value, done: doneReading } = await reader.read()
+    done = doneReading
+    const chunk = decoder.decode(value)
+    chunk.split("\n").forEach((line) => {
+      if (line.startsWith("data: ")) {
+        const payload = line.replace("data: ", "")
+        if (payload === "[DONE]") return
+        try {
+          const json = JSON.parse(payload)
+          const delta = json.choices?.[0]?.delta
+          if (delta?.content || delta?.reasoning || delta?.tool_calls) {
+            onDelta(delta)
           }
+        } catch (err) {
+          console.error("Erro ao parsear chunk:", err)
         }
-      })
-    }
-  } catch (error) {
-    console.error(error.message)
+      }
+    })
   }
 }
 
@@ -53,7 +49,7 @@ const sendMessage = async (aiKey, aiProvider, model, messages) => {
       aiKey,
       aiProvider,
       model,
-      messages: [...sysMsg, ...messages],
+      messages: [...sysMsg, ...messages]
     }
     const { data } = await api.post("/ai/chat/completions", payload)
     if (!data) throw new Error("Falha ao obter resposta da API")

@@ -77,8 +77,10 @@ const AI = () => {
         })
       })
     } catch (err) {
-      setMessages([...messages, { id: Date.now(), role: "assistant", content: "Máximo de requisições por dia atingido para OpenRouter.", error: true }])
-      // setError(err.message || "Erro desconhecido")
+      setMessages(prev => {
+        prev[prev.length - 1].content = "Falha ao enviar mensagem.\n```markdown\n" + err.message + "\n```"
+        return [...prev]
+      })
     } finally {
       setLoading(false)
     }
