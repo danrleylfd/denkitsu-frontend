@@ -9,13 +9,13 @@ const ModelSelect = ({ model, setModel, loading, freeModels, payModels }) => (
     <option disabled>Gratuito</option>
     {freeModels.map((model) => (
       <option key={model.id} value={model.id}>
-        {model.name}
+        {model.id}
       </option>
     ))}
     <option disabled>Premium</option>
     {payModels.map((model) => (
       <option key={model.id} value={model.id}>
-        {model.name}
+        {model.id}
       </option>
     ))}
   </select>
