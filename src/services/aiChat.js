@@ -99,7 +99,7 @@ const getModels = async () => {
       })
       .filter((item) => item !== null)
       .sort((a, b) => a.id.localeCompare(b.id))
-    const groqModels = data.models.filter((item) => item.llm ==="groq")
+    const groqModels = data.models.filter((item) => item.llm === "groq")
     return { freeModels, payModels, groqModels }
   } catch (error) {
     console.error(error.response?.data?.error?.message || error.message)

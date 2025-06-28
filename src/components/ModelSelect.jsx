@@ -1,4 +1,4 @@
-const ModelSelect = ({ model, setModel, loading, freeModels, payModels }) => (
+const ModelSelect = ({ model, setModel, loading, freeModels, payModels, groqModels }) => (
   <select
     id="model-select"
     value={model}
