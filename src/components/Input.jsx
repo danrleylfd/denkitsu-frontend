@@ -1,4 +1,4 @@
-const Input = ({ type = "text", placeholder, value, onChange, containerClassName, className, children, ...props }) => {
+const Input = ({ type = "text", placeholder, value, onChange, containerClassName, leftContent, rightContent, className, children, ...props }) => {
   const containerClasses = [
     "flex gap-1 w-full items-center rounded-full pr-1 my-1",
     "bg-lightBg-tertiary",
@@ -16,6 +16,7 @@ const Input = ({ type = "text", placeholder, value, onChange, containerClassName
   ].filter(Boolean).join(" ")
   return (
     <div className={containerClasses}>
+      {leftContent}
       <input
         type={type}
         placeholder={placeholder}

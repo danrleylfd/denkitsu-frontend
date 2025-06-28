@@ -31,7 +31,7 @@ const Redirect = () => {
   }, [])
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
-      <h3>Redirecionando para {label || "Início"}...</h3>
+      <h3 className="text-lightFg-primary dark:text-darkFg-primary">Redirecionando para {label || "Início"}...</h3>
     </SideMenu>
   )
 }

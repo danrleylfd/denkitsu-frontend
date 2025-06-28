@@ -95,7 +95,7 @@ const News = () => {
       {error && <Paper>{error}</Paper>}
       <Paper>
         <Input placeholder="Pesquise um tópico e deixe a IA gerar a notícia mais recente sobre..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)}>
-          <Button variant="outline" size="icon" $rounded onClick={() => handleGenerate()} loading={loading} disabled={searchTerm.length < 1} title="Pesquisar e Gerar">
+          <Button variant="outline" size="icon" $rounded onClick={handleGenerate} loading={loading} disabled={searchTerm.length < 1} title="Pesquisar e Gerar">
             {!loading && <LuSearchSlash size={16} />}
           </Button>
           <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
