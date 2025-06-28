@@ -12,6 +12,7 @@ export const AIProvider = ({ children }) => {
   const [prompt, setPrompt] = useState(null)
   const [aiKey, setAiKey] = useState(storedKey || "")
   const [model, setModel] = useState(storedModel || "deepseek/deepseek-r1:free")
+  const [aiProvider, setAIProvider] = useState("openrouter")
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [initialMessage])
 
   useEffect(() => {
@@ -41,6 +42,10 @@ export const AIProvider = ({ children }) => {
     localStorage.setItem("@Denkitsu:messages", JSON.stringify(messages))
   }, [prompt, messages])
 
+  const aiProviderToggle = () => {
+    setAIProvider((prev) => (prev === "groq"? "openrouter" : "groq"))
+  }
+
   const clearHistory = () => {
     setMessages(prev => [
       ...prev.filter(msg => msg.role === "system"),
@@ -49,7 +54,7 @@ export const AIProvider = ({ children }) => {
   }
 
   return (
-    <AIContext.Provider value={{ aiKey, setAiKey, model, setModel, prompt, setPrompt, messages, setMessages, clearHistory }}>
+    <AIContext.Provider value={{ aiKey, setAiKey, model, setModel, prompt, setPrompt, aiProvider, setAIProvider, aiProviderToggle, messages, setMessages, clearHistory }}>
       {children}
     </AIContext.Provider>
   )

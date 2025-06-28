@@ -22,7 +22,7 @@ const TasksProvider = ({ children }) => {
   const [error, setError] = useState(null)
   const [editingId, setEditingId] = useState(null)
 
-  const { aiKey, model } = useAI()
+  const { aiKey, model, aiProvider } = useAI()
 
   useEffect(() => {
     try {
@@ -57,7 +57,7 @@ const TasksProvider = ({ children }) => {
     }
     try {
       const prompt = { role: "user", content: `Modo Secretário, Objetivo: "${goal}` }
-      const data = await sendMessage(aiKey, model, [prompt])
+      const data = await sendMessage(aiKey, aiProvider, model, [prompt])
       const content = data?.choices?.[0]?.message?.content
       const codeToCopy = () => extractCodeFromMarkdown(content)
       if (data.error) throw new Error(data.error.message)

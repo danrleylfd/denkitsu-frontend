@@ -1,7 +1,7 @@
 import axios from "axios"
 import api from "./"
 
-const sendMessageStream = async (aiKey, model, messages, onDelta) => {
+const sendMessageStream = async (aiKey, aiProvider, model, messages, onDelta) => {
   try {
     const payload = {
       aiKey,
@@ -46,11 +46,12 @@ const sendMessageStream = async (aiKey, model, messages, onDelta) => {
   }
 }
 
-const sendMessage = async (aiKey, model, messages) => {
+const sendMessage = async (aiKey, aiProvider, model, messages) => {
   try {
     const sysMsg = [{ role: "system", content: `Deve sempre pensar e responder em ${window.language || navigator.language}.` }]
     const payload = {
       aiKey,
+      aiProvider,
       model,
       messages: [...sysMsg, ...messages],
     }
@@ -106,8 +107,8 @@ const getModels = async () => {
   }
 }
 
-const generateNews = async (searchTerm) => {
-  const { data } = await api.post("/news/generate", { searchTerm })
+const generateNews = async (searchTerm, aiProvider) => {
+  const { data } = await api.post("/news/generate", { searchTerm, llm: aiProvider })
   return data
 }
 

@@ -1,8 +1,11 @@
 import { useState, useEffect, useCallback, useRef } from "react"
-import { LuSearchSlash } from "react-icons/lu"
+import { LuSearchSlash, LuBrain } from "react-icons/lu"
+
 import { useAuth } from "../contexts/AuthContext"
+import { useAI } from "../contexts/AIContext"
 import { getNewsPaginate } from "../services/news"
 import { generateNews } from "../services/aiChat"
+
 import SideMenu from "../components/SideMenu"
 import Markdown from "../components/Markdown"
 import Paper from "../components/Paper"
@@ -13,6 +16,7 @@ const ContentView = ({ children }) => <main className="flex flex-col items-cente
 
 const News = () => {
   const { user } = useAuth()
+  const { aiProvider, aiProviderToggle } = useAI()
   const [searchTerm, setSearchTerm] = useState("")
   const [news, setNews] = useState([])
   const [page, setPage] = useState(1)
@@ -76,7 +80,7 @@ const News = () => {
     if (!searchTerm) return
     setLoading(true)
     try {
-      const article = await generateNews(searchTerm)
+      const article = await generateNews(searchTerm, aiProvider)
       setNews([article, ...news])
     } catch (error) {
       setError("Não foi possível gerar as notícias")
@@ -93,6 +97,9 @@ const News = () => {
         <Input placeholder="Pesquise um tópico e deixe a IA gerar a notícia mais recente sobre..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)}>
           <Button variant="outline" size="icon" $rounded onClick={() => handleGenerate()} loading={loading} disabled={searchTerm.length < 1} title="Pesquisar e Gerar">
             {!loading && <LuSearchSlash size={16} />}
+          </Button>
+          <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
+            <LuBrain size={16} />
           </Button>
         </Input>
       </Paper>

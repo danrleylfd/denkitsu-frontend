@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react"
 import { MdSend, MdClearAll } from "react-icons/md"
+import { LuBrain } from "react-icons/lu"
 
 import { useAuth } from "../contexts/AuthContext"
 import { useAI } from "../contexts/AIContext"
@@ -18,7 +19,7 @@ const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-sc
 
 const AI = () => {
   const { user } = useAuth()
-  const { aiKey, model, setModel, prompt, setPrompt, messages, setMessages, clearHistory } = useAI()
+  const { aiKey, model, setModel, prompt, setPrompt, aiProvider, setAIProvider, aiProviderToggle , messages, setMessages, clearHistory } = useAI()
   const [freeModels, setFreeModels] = useState([])
   const [payModels, setPayModels] = useState([])
   const [groqModels, setGroqModels] = useState([])
@@ -63,7 +64,7 @@ const AI = () => {
       const apiMessages = currentMessages.map(({ role, content }) => ({ role, content }))
       const streamedAssistantMessage = { id: Date.now() + 1, role: "assistant", content: "", reasoning: "" }
       setMessages(prev => [...prev, streamedAssistantMessage])
-      await sendMessageStream(aiKey, model, apiMessages, (delta) => {
+      await sendMessageStream(aiKey, aiProvider, model, apiMessages, (delta) => {
         if (delta.content) streamedAssistantMessage.content += delta.content
         if (delta.reasoning) streamedAssistantMessage.reasoning += delta.reasoning
         if (delta.tool_calls?.[0]?.arguments?.reasoning) {
@@ -114,7 +115,10 @@ const AI = () => {
       </div>
       <div className="flex items-center justify-between gap-2 px-1 py-2 bg-lightBg-primary dark:bg-darkBg-primary">
         <div className="w-0 h-0 p-0 m-0" />
-        <ModelSelect model={model} setModel={setModel} loading={loading} freeModels={freeModels} payModels={payModels} groqModels={groqModels} />
+        <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
+          <LuBrain size={16} />
+        </Button>
+        <ModelSelect aiProvider={aiProvider} setAIProvider={setAIProvider} model={model} setModel={setModel} loading={loading} freeModels={freeModels} payModels={payModels} groqModels={groqModels} />
         <PromptInput
           textareaRef={textareaRef}
           inputText={inputText}

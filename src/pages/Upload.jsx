@@ -1,7 +1,7 @@
 import { useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { MdImage, MdUpload } from "react-icons/md"
-import { LuSparkles } from "react-icons/lu"
+import { LuSparkles, LuBrain } from "react-icons/lu"
 
 import { useAI } from "../contexts/AIContext"
 
@@ -18,7 +18,7 @@ import { MessageError } from "../components/Notifications"
 const ContentView = ({ children }) => <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-screen">{children}</main>
 
 const Upload = () => {
-  const { aiKey, model } = useAI()
+  const { aiKey, model, aiProvider, aiProviderToggle } = useAI()
   const [content, setContent] = useState("")
   const [thumbnail, setThumbnail] = useState("")
   const [fileUrl, setFileUrl] = useState("")
@@ -31,7 +31,7 @@ const Upload = () => {
     setLoading(true)
     try {
       const prompt = { role: "user", content: `Modo Blogueiro, Tema: ${content}` }
-      const data = await sendMessage(aiKey, model, [prompt])
+      const data = await sendMessage(aiKey, aiProvider, model, [prompt])
       if (data.error) return setError(data.error.message)
       const message = data?.choices?.[0]?.message
       if (!message) return setError("Serviço temporariamente indisponível.")
@@ -88,6 +88,9 @@ const Upload = () => {
           disabled={loading}>
           <Button type="button" variant="outline" size="icon" $rounded title="Reescrever" onClick={handleGenerateContent} loading={loading} disabled={!content}>
             {!loading && <LuSparkles size={16} />}
+          </Button>
+          <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
+            <LuBrain size={16} />
           </Button>
         </Input>
 

@@ -1,4 +1,4 @@
-import { LuPlus, LuSparkles } from "react-icons/lu"
+import { LuPlus, LuSparkles, LuBrain } from "react-icons/lu"
 import { useAI } from "../contexts/AIContext"
 import { useTasks } from "../contexts/TasksContext"
 
@@ -7,7 +7,7 @@ import Input from "./Input"
 import Button from "./Button"
 
 const AddTaskForm = () => {
-  const { aiKey } = useAI()
+  const { aiKey, aiProvider, aiProviderToggle } = useAI()
   const { newTask, setNewTask, addTask, generateTasksWithAI, loading, error } = useTasks()
   return (
     <Paper className="bg-lightBg-primary dark:bg-darkBg-primary">
@@ -25,6 +25,9 @@ const AddTaskForm = () => {
         </Button>
         <Button variant="outline" size="icon" $rounded onClick={() => generateTasksWithAI(aiKey)} title="Gerar Passos" loading={loading} disabled={!newTask}>
           {!loading && <LuSparkles size={16} />}
+        </Button>
+        <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
+          <LuBrain size={16} />
         </Button>
       </Input>
     </Paper>
