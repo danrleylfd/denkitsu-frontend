@@ -54,7 +54,7 @@ const sendMessage = async (aiKey, model, messages) => {
       model,
       messages: [...sysMsg, ...messages],
     }
-    const { data } = await api.post("/chat/completions", payload)
+    const { data } = await api.post("/ai/chat/completions", payload)
     if (!data) throw new Error("Falha ao obter resposta da API")
     return data
   } catch (error) {
@@ -64,7 +64,7 @@ const sendMessage = async (aiKey, model, messages) => {
 
 const getPrompt = async () => {
   try {
-    const { data } = await api.get("/prompt")
+    const { data } = await api.get("/ai/prompt")
     return data
   } catch (error) {
     console.error(error.message)
