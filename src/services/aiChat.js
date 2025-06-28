@@ -73,7 +73,8 @@ const getPrompt = async () => {
 
 const getModels = async () => {
   try {
-    const { data } = await axios.get("https://openrouter.ai/api/v1/models")
+    // const { data } = await axios.get("https://openrouter.ai/api/v1/models")
+    const { data } = await api.get("/ai/models")
     if (!data) throw new Error("Falha ao obter resposta da API")
     if (data.error) throw new Error(data.error?.message)
     const freeModels = data.data
