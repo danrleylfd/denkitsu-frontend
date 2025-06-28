@@ -6,16 +6,18 @@ const AIContext = createContext()
 export const AIProvider = ({ children }) => {
   const initialMessage = { id: 1, role: "assistant", content: "Olá! Como posso ajudar você hoje?\n Shift + Enter para quebrar a linha." }
   const storedAIProvider = localStorage.getItem("@Denkitsu:aiProvider")
-  const storedKey = localStorage.getItem("@Denkitsu:OpenRouter")
+  const storedOpenRouterKey = localStorage.getItem("@Denkitsu:OpenRouter")
   const storedGroqKey = localStorage.getItem("@Denkitsu:Groq")
-  const storedModel = localStorage.getItem("@Denkitsu:model")
+  const storedModelGroq = localStorage.getItem("@Denkitsu:GroqModel")
+  const storedOpenRouterModel = localStorage.getItem("@Denkitsu:OpenRouterModel")
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
 
   const [prompt, setPrompt] = useState(null)
-  const [aiKey, setAIKey] = useState(storedKey || "")
-  const [groqKey, setGroqKey] = useState(storedGroqKey || "")
-  const [model, setModel] = useState(storedModel || "deepseek/deepseek-r1:free")
   const [aiProvider, setAIProvider] = useState(storedAIProvider || "openrouter")
+  const [openRouterKey, setOpenRouterKey] = useState(storedOpenRouterKey || "")
+  const [groqKey, setGroqKey] = useState(storedGroqKey || "")
+  const [openRouterModel, setOpenRouterModel] = useState(storedOpenRouterModel || "deepseek/deepseek-r1:free")
+  const [groqModel, setGroqModel] = useState(storedModelGroq || "deepseek-r1-distill-llama-70b")
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [initialMessage])
 
   useEffect(() => {
@@ -31,9 +33,9 @@ export const AIProvider = ({ children }) => {
   }, [aiProvider])
 
   useEffect(() => {
-    if (aiKey.trim() === "") return localStorage.removeItem("@Denkitsu:OpenRouter")
-    localStorage.setItem("@Denkitsu:OpenRouter", aiKey)
-  }, [aiKey])
+    if (openRouterKey.trim() === "") return localStorage.removeItem("@Denkitsu:OpenRouter")
+    localStorage.setItem("@Denkitsu:OpenRouter", openRouterKey)
+  }, [openRouterKey])
 
   useEffect(() => {
     if (groqKey.trim() === "") return localStorage.removeItem("@Denkitsu:Groq")
@@ -41,8 +43,12 @@ export const AIProvider = ({ children }) => {
   }, [groqKey])
 
   useEffect(() => {
-    localStorage.setItem("@Denkitsu:model", model)
-  }, [model])
+    localStorage.setItem("@Denkitsu:groqModel", groqModel)
+  }, [groqModel])
+
+  useEffect(() => {
+    localStorage.setItem("@Denkitsu:openRouterModel", openRouterModel)
+  }, [openRouterModel])
 
   useEffect(() => {
     if(!prompt) return
@@ -65,8 +71,16 @@ export const AIProvider = ({ children }) => {
     ])
   }
 
+  const values = {
+    prompt, setPrompt,
+    aiProvider, setAIProvider, aiProviderToggle,
+    aiKey: aiProvider === "groq" ? groqKey : openRouterKey, setAIKey: aiProvider === "groq" ? setGroqKey : setOpenRouterKey,
+    model: aiProvider === "groq" ? groqModel : openRouterModel, setModel: aiProvider === "groq"? setGroqModel : setOpenRouterModel,
+    messages, setMessages, clearHistory
+  }
+
   return (
-    <AIContext.Provider value={{ aiKey: aiProvider === "groq" ? groqKey : aiKey, setAIKey: aiProvider === "groq" ? setGroqKey : setAIKey, model, setModel, prompt, setPrompt, aiProvider, setAIProvider, aiProviderToggle, messages, setMessages, clearHistory }}>
+    <AIContext.Provider value={values}>
       {children}
     </AIContext.Provider>
   )
