@@ -7,7 +7,7 @@ import Input from "./Input"
 import Button from "./Button"
 
 const AddTaskForm = () => {
-  const { aiProvider } = useAI()
+  const { aiProvider, aiProviderToggle } = useAI()
   const { newTask, setNewTask, addTask, generateTasksWithAI, loading, error } = useTasks()
   return (
     <Paper className="bg-lightBg-primary dark:bg-darkBg-primary">
@@ -26,7 +26,7 @@ const AddTaskForm = () => {
         <Button variant="outline" size="icon" $rounded onClick={generateTasksWithAI} title="Gerar Passos" loading={loading} disabled={!newTask}>
           {!loading && <LuSparkles size={16} />}
         </Button>
-        <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded disabled title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
+        <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
           <LuBrain size={16} />
         </Button>
       </Input>

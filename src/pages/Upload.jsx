@@ -18,7 +18,7 @@ import { MessageError } from "../components/Notifications"
 const ContentView = ({ children }) => <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-screen">{children}</main>
 
 const Upload = () => {
-  const { aiKey, model, aiProvider } = useAI()
+  const { aiKey, model, aiProvider, aiProviderToggle } = useAI()
   const [content, setContent] = useState("")
   const [thumbnail, setThumbnail] = useState("")
   const [fileUrl, setFileUrl] = useState("")
@@ -89,7 +89,7 @@ const Upload = () => {
           <Button type="button" variant="outline" size="icon" $rounded title="Reescrever" onClick={handleGenerateContent} loading={loading} disabled={!content}>
             {!loading && <LuSparkles size={16} />}
           </Button>
-          <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded disabled title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
+          <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
             <LuBrain size={16} />
           </Button>
         </Input>
