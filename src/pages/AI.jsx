@@ -39,7 +39,7 @@ const AI = () => {
       setGroqModels(loadedGroq || [])
     }
     loadModels()
-  }, [aiKey])
+  }, [])
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -97,7 +97,7 @@ const AI = () => {
     } catch (err) {
       setMessages((prev) => {
         if (prev.length > 0 && prev[prev.length - 1].role === "assistant") {
-          prev[prev.length - 1].content = "Falha ao enviar mensagem.\n```markdown\n" + err.message + "\n```"
+          prev[prev.length - 1].content = "Falha ao enviar mensagem.\n```diff\n- " + err.message + "\n+ Tente usar algum modelo de outro provedor.\n```"
           return [...prev]
         }
         return prev
@@ -138,7 +138,6 @@ const AI = () => {
           size="icon"
           $rounded
           onClick={aiProviderToggle}
-          disabled
           title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
           <LuBrain size={16} />
         </Button>

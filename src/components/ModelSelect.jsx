@@ -17,20 +17,20 @@ const ModelSelect = ({ setAIProvider, model, setModel, loading, freeModels, payM
       onChange={handleChange}
       disabled={loading}
       className="bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary text-sm min-h-[48px] max-w-[6.5rem] rounded-md">
-      <option disabled value="">Selecionar Modelo</option>
-      <option disabled>Gratuito</option>
+      <option className="text-primary-base" disabled value="">Selecionar Modelo</option>
+      <option className="text-primary-base" disabled>OpenRouter Gratuito</option>
       {freeModels.map((model) => (
         <option key={model.id} value={model.id}>
           {model.id}
         </option>
       ))}
-      <option disabled>Premium</option>
+      <option className="text-primary-base" disabled>OpenRouter Premium</option>
       {payModels.map((model) => (
         <option key={model.id} value={model.id}>
           {model.id}
         </option>
       ))}
-      <option disabled>Groq</option>
+      <option className="text-primary-base" disabled>Groq Gratuito</option>
       {groqModels.map((model) => (
         <option key={model.id} value={model.id}>
           {model.id}
