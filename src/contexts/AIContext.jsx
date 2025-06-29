@@ -67,7 +67,7 @@ export const AIProvider = ({ children }) => {
   }
 
   const clearHistory = () => {
-    setMessages((prev) => [...prev.filter((msg) => msg.role === "system"), initialMessage])
+    setMessages([...prompt, initialMessage])
   }
 
   const values = {
