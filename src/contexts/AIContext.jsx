@@ -13,7 +13,7 @@ export const AIProvider = ({ children }) => {
 
   const initialMessage = { id: 2, role: "assistant", content: "Olá! Como posso ajudar você hoje?\n Shift + Enter para quebrar a linha." }
 
-  const [prompt, setPrompt] = useState(null)
+  const [prompt, setPrompt] = useState([])
   const [aiProvider, setAIProvider] = useState(storedAIProvider || "openrouter")
   const [groqKey, setGroqKey] = useState(storedGroqKey || "")
   const [openRouterKey, setOpenRouterKey] = useState(storedOpenRouterKey || "")
