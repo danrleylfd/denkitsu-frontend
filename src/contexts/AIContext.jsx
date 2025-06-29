@@ -9,11 +9,13 @@ export const AIProvider = ({ children }) => {
   const storedOpenRouterKey = localStorage.getItem("@Denkitsu:OpenRouter")
   const storedModelGroq = localStorage.getItem("@Denkitsu:GroqModel")
   const storedOpenRouterModel = localStorage.getItem("@Denkitsu:OpenRouterModel")
+  const storedCustomPrompt = localStorage.getItem("@Denkitsu:customPrompt")
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
 
-  const initialMessage = { id: 2, role: "assistant", content: "Olá! Como posso ajudar você hoje?\n Shift + Enter para quebrar a linha." }
+  const initialMessage = { id: 3, role: "assistant", content: "Olá! Como posso ajudar você hoje?\n Shift + Enter para quebrar a linha." }
 
   const [prompt, setPrompt] = useState([])
+  const [customPrompt, setCustomPrompt] = useState(storedCustomPrompt || "Responda em português do Brasil (pt-BR).")
   const [aiProvider, setAIProvider] = useState(storedAIProvider || "openrouter")
   const [groqKey, setGroqKey] = useState(storedGroqKey || "")
   const [openRouterKey, setOpenRouterKey] = useState(storedOpenRouterKey || "")
@@ -55,18 +57,22 @@ export const AIProvider = ({ children }) => {
     if (!prompt) return
     setMessages((prev) => {
       const hasSystemMessage = prev.some((msg) => msg.role === "system")
-      if (!hasSystemMessage) return [...prompt.map((msg, pos) => ({ id: pos,...msg })), initialMessage]
+      if (!hasSystemMessage) return [...prompt.map((msg, pos) => ({ id: pos,...msg })), { id: 2, role: "system", content: customPrompt }, initialMessage]
       return prev
     })
     localStorage.setItem("@Denkitsu:messages", JSON.stringify(messages))
   }, [prompt, messages])
+
+  useEffect(() => {
+    localStorage.setItem("@Denkitsu:customPrompt", customPrompt)
+  }, [customPrompt])
 
   const aiProviderToggle = () => {
     setAIProvider((prev) => (prev === "groq" ? "openrouter" : "groq"))
   }
 
   const clearHistory = () => {
-    setMessages([...prompt, initialMessage])
+    setMessages([...prompt, { id: 2, role: "system", content: customPrompt }, initialMessage])
   }
 
   const values = {
@@ -79,6 +85,8 @@ export const AIProvider = ({ children }) => {
     setAIKey: aiProvider === "groq" ? setGroqKey : setOpenRouterKey,
     model: aiProvider === "groq" ? groqModel : openRouterModel,
     setModel: aiProvider === "groq" ? setGroqModel : setOpenRouterModel,
+    customPrompt,
+    setCustomPrompt,
     messages,
     setMessages,
     clearHistory

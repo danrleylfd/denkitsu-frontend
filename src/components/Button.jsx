@@ -10,6 +10,7 @@ const Button = ({
   $squared = false,
   loading = false,
   disabled = false,
+  className,
   children,
   ...props
 }) => {
@@ -31,14 +32,15 @@ const Button = ({
   }
   const sizeClasses = {
     icon: "h-8 px-2 text-xs",
+    xs: "h-6 px-2 text-xs",
     sm: "h-8 px-4 text-xs",
     md: "h-9 px-6 text-base",
     lg: "h-10 px-8 text-base"
   }
   const getBorderClasses = () => {
     if ($rounded) return "rounded-full"
-    if ($squared) return "rounded-none"
-    return "rounded-md"
+    if ($squared) return "rounded-md"
+    return "rounded-none"
   }
   return (
       <button
@@ -50,6 +52,7 @@ const Button = ({
           ${loading ? sizeClasses.icon : sizeClasses[size]}
           ${getBorderClasses()}
           ${loading ? "pointer-events-none opacity-70" : ""}
+          ${className}
         `}
         disabled={loading || disabled}
       >
