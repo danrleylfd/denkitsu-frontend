@@ -71,7 +71,6 @@ const AI = () => {
         _reasoningBuffer: ""
       }
       setMessages((prev) => [...prev, streamedAssistantMessage])
-      console.log(prompt)
       await sendMessageStream(aiKey, aiProvider, model, apiMessages, (delta) => {
         if (delta.content) {
           streamedAssistantMessage._contentBuffer += delta.content
