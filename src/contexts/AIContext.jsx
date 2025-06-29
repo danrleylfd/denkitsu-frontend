@@ -55,7 +55,7 @@ export const AIProvider = ({ children }) => {
     if (!prompt) return
     setMessages((prev) => {
       const hasSystemMessage = prev.some((msg) => msg.role === "system")
-      if (!hasSystemMessage) return [{ id: 0, ...prompt }, ...prev]
+      if (!hasSystemMessage) return prompt.map((msg, pos) => ({ id: pos,...msg }))
       return prev
     })
     localStorage.setItem("@Denkitsu:messages", JSON.stringify(messages))
