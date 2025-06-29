@@ -11,7 +11,7 @@ export const AIProvider = ({ children }) => {
   const storedOpenRouterModel = localStorage.getItem("@Denkitsu:OpenRouterModel")
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
 
-  const initialMessage = { id: 1, role: "assistant", content: "Olá! Como posso ajudar você hoje?\n Shift + Enter para quebrar a linha." }
+  const initialMessage = { id: 2, role: "assistant", content: "Olá! Como posso ajudar você hoje?\n Shift + Enter para quebrar a linha." }
 
   const [prompt, setPrompt] = useState(null)
   const [aiProvider, setAIProvider] = useState(storedAIProvider || "openrouter")
