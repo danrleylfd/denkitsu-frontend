@@ -24,6 +24,7 @@ export const AIProvider = ({ children }) => {
   useEffect(() => {
     async function loadPrompt() {
       const promptData = await getPrompt()
+      console.log(typeof promptData)
       setPrompt(promptData)
     }
     loadPrompt()
