@@ -11,7 +11,7 @@ import Button from "../components/Button"
 import { MessageError } from "../components/Notifications"
 
 const ContentView = ({ children }) => (
-  <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-screen" data-oid="fs365jw">
+  <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-screen">
     {children}
   </main>
 )
@@ -39,8 +39,8 @@ const SignIn = () => {
     }
   }
   return (
-    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple" data-oid="v8yo0nw">
-      <Form title="Entrar" onSubmit={handleSignIn} data-oid="vgd1js4">
+    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
+      <Form title="Entrar" onSubmit={handleSignIn}>
         <Input
           name="email"
           type="email"
@@ -49,7 +49,7 @@ const SignIn = () => {
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="email"
           disabled={loading}
-          data-oid="7a_b639"
+
         />
 
         <Input
@@ -59,17 +59,16 @@ const SignIn = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           autoComplete="current-password"
-          disabled={loading}
-          data-oid="e83e3cv">
-          <Button type="button" variant="outline" size="icon" $rounded onClick={() => setShowPassword(!showPassword)} disabled={loading} data-oid="h34gvul">
-            {showPassword ? <LuEye size={16} data-oid="a37xdrq" /> : <LuEyeClosed size={16} data-oid="rj.vvlz" />}
+          disabled={loading}>
+          <Button type="button" variant="outline" size="icon" $rounded onClick={() => setShowPassword(!showPassword)} disabled={loading}>
+            {showPassword ? <LuEye size={16} /> : <LuEyeClosed size={16} />}
           </Button>
         </Input>
 
-        <Button type="submit" $rounded loading={loading} disabled={loading || !email || !password} data-oid="eim-d75">
+        <Button type="submit" $rounded loading={loading} disabled={loading || !email || !password}>
           {!loading && "Entrar"}
         </Button>
-        {error && <MessageError data-oid="2hrpq6y">{error}</MessageError>}
+        {error && <MessageError>{error}</MessageError>}
       </Form>
     </SideMenu>
   )

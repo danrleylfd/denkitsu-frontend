@@ -19,9 +19,9 @@ const Input = ({ type = "text", placeholder, value, onChange, containerClassName
     .filter(Boolean)
     .join(" ")
   return (
-    <div className={containerClasses} data-oid="qlqf9x9">
+    <div className={containerClasses}>
       {leftContent}
-      <input type={type} placeholder={placeholder} value={value} onChange={onChange} className={inputClasses} {...props} data-oid="s2fys3m" />
+      <input type={type} placeholder={placeholder} value={value} onChange={onChange} className={inputClasses} {...props} />
 
       {children}
     </div>

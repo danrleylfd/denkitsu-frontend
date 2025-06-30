@@ -11,7 +11,7 @@ import Button from "../components/Button"
 import { MessageError } from "../components/Notifications"
 
 const ContentView = ({ children }) => (
-  <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-screen" data-oid="v2qsphr">
+  <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-screen">
     {children}
   </main>
 )
@@ -42,8 +42,8 @@ const SignUp = () => {
     }
   }
   return (
-    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple" data-oid="-m_yarz">
-      <Form title="Cadastrar" onSubmit={handleSignUp} data-oid=":rcmg41">
+    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
+      <Form title="Cadastrar" onSubmit={handleSignUp}>
         <Input
           name="name"
           type="text"
@@ -52,7 +52,7 @@ const SignUp = () => {
           onChange={(e) => setName(e.target.value)}
           autoComplete="name"
           disabled={loading}
-          data-oid="9:roprw"
+
         />
         <Input
           name="email"
@@ -62,7 +62,7 @@ const SignUp = () => {
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="email"
           disabled={loading}
-          data-oid="3axei1g"
+
         />
         <Input
           name="password"
@@ -71,10 +71,9 @@ const SignUp = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           autoComplete="new-password"
-          disabled={loading}
-          data-oid="d4w.oq.">
-          <Button type="button" variant="outline" size="icon" $rounded onClick={() => setShowPassword(!showPassword)} disabled={loading} data-oid=".vq6nnt">
-            {showPassword ? <LuEye size={16} data-oid="mk1t84j" /> : <LuEyeClosed size={16} data-oid="c_90e:h" />}
+          disabled={loading}>
+          <Button type="button" variant="outline" size="icon" $rounded onClick={() => setShowPassword(!showPassword)} disabled={loading}>
+            {showPassword ? <LuEye size={16} /> : <LuEyeClosed size={16} />}
           </Button>
         </Input>
         <Input
@@ -85,12 +84,12 @@ const SignUp = () => {
           onChange={(e) => setConfirmPassword(e.target.value)}
           autoComplete="new-password"
           disabled={loading}
-          data-oid="cmqoinl"
+
         />
-        <Button type="submit" $rounded loading={loading} disabled={loading} data-oid="spaihdx">
+        <Button type="submit" $rounded loading={loading} disabled={loading}>
           {!loading && "Cadastrar"}
         </Button>
-        {error && <MessageError data-oid="i_i1q0j">{error}</MessageError>}
+        {error && <MessageError>{error}</MessageError>}
       </Form>
     </SideMenu>
   )

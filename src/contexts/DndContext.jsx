@@ -101,7 +101,7 @@ const DndProvider = ({ children }) => {
   }
 
   return (
-    <DndContext.Provider value={value} data-oid="zjuxnq8">
+    <DndContext.Provider value={value}>
       {children}
     </DndContext.Provider>
   )

@@ -8,7 +8,7 @@ import Input from "../components/Input"
 import Button from "../components/Button"
 
 const ContentView = ({ children }) => (
-  <main className="flex justify-center items-center p-2 gap-2 min-h-screen w-full" data-oid="uzcouwo">
+  <main className="flex justify-center items-center p-2 gap-2 min-h-screen w-full">
     {children}
   </main>
 )
@@ -16,7 +16,7 @@ const ContentView = ({ children }) => (
 const Spinner = () => (
   <div
     className="h-12 w-12 animate-spin rounded-full border-4 border-primary-base/20 border-t-primary-base dark:border-warning-light/20 dark:border-t-warning-light"
-    data-oid="9oc_j_."
+
   />
 )
 
@@ -93,92 +93,90 @@ const Weather = () => {
   }, [])
 
   return (
-    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple" data-oid="tcer7hf">
+    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
       <div
-        className="relative w-full max-w-xl rounded-lg shadow-[6px_6px_16px_rgba(0,0,0,0.5)] bg-lightBg-primary p-4 opacity-75 dark:bg-darkBg-primary dark:opacity-90"
-        data-oid="cwuqfp5">
+        className="relative w-full max-w-xl rounded-lg shadow-[6px_6px_16px_rgba(0,0,0,0.5)] bg-lightBg-primary p-4 opacity-75 dark:bg-darkBg-primary dark:opacity-90">
         {/* <div className="flex items-center gap-2 pb-2"> */}
         <Input
           type="text"
           value={cityInput}
           onChange={(e) => setCityInput(e.target.value)}
           onKeyDown={handleKeyPress}
-          placeholder="Buscar por cidade..."
-          data-oid="h7_3pn.">
-          <Button variant="outline" size="icon" $rounded onClick={buscarPorCidade} data-oid=".6igpsu">
-            <MdSearch size={16} data-oid="wyhcii7" />
+          placeholder="Buscar por cidade...">
+          <Button variant="outline" size="icon" $rounded onClick={buscarPorCidade}>
+            <MdSearch size={16} />
           </Button>
-          <Button variant="outline" size="icon" $rounded onClick={buscarPorCoordenadas} data-oid="9ysk.eg">
-            <MdRefresh size={16} data-oid="m2ofnl6" />
+          <Button variant="outline" size="icon" $rounded onClick={buscarPorCoordenadas}>
+            <MdRefresh size={16} />
           </Button>
         </Input>
         {/* </div> */}
 
         {loading && (
-          <div className="flex h-52 items-center justify-center" data-oid="qjhwt1v">
-            <Spinner data-oid="n0slz2c" />
+          <div className="flex h-52 items-center justify-center">
+            <Spinner />
           </div>
         )}
 
         {error && !loading && (
-          <div className="flex h-52 items-center justify-center p-4 text-center text-danger-base dark:text-danger-light" data-oid="h2fqtcq">
+          <div className="flex h-52 items-center justify-center p-4 text-center text-danger-base dark:text-danger-light">
             {error}
           </div>
         )}
 
         {!loading && !error && weatherData && (
-          <div className="flex flex-col gap-2 md:flex-row" data-oid="wo3y3xn">
-            <div className="flex flex-1 flex-col justify-between pb-2 md:pb-0 md:pr-2" data-oid="d6._h-i">
-              <div data-oid="lsz57eb">
-                <div className="mb-2 text-2xl font-bold text-lightFg-primary opacity-90 dark:text-darkFg-primary" data-oid="nchaqtk">
+          <div className="flex flex-col gap-2 md:flex-row">
+            <div className="flex flex-1 flex-col justify-between pb-2 md:pb-0 md:pr-2">
+              <div>
+                <div className="mb-2 text-2xl font-bold text-lightFg-primary opacity-90 dark:text-darkFg-primary">
                   {weatherData.name}, {weatherData.sys.country}
                 </div>
-                <div className="mb-2 text-lg capitalize text-lightFg-secondary dark:text-darkFg-secondary " data-oid="z30kmzt">
+                <div className="mb-2 text-lg capitalize text-lightFg-secondary dark:text-darkFg-secondary ">
                   {weatherData.weather[0].description}
                 </div>
               </div>
-              <div className="mb-2 text-5xl font-light leading-none text-warning-light dark:text-primary-base" data-oid="ujsag5_">
+              <div className="mb-2 text-5xl font-light leading-none text-warning-light dark:text-primary-base">
                 {Math.round(weatherData.main.temp)}°C
               </div>
               <img
                 className="h-28 w-28 -my-2 drop-shadow-[0_0_10px_rgba(130,87,229,0.3)] dark:drop-shadow-[0_0_10px_rgba(251,169,76,0.3)]"
                 src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@4x.png`}
                 alt={weatherData.weather[0].description}
-                data-oid="gh0urum"
+
               />
             </div>
 
-            <div className="mt-2 flex-1" data-oid="spfcg-i">
-              <div className="grid grid-cols-2 gap-2" data-oid="pwo4nau">
-                <div className="rounded-xl bg-lightBg-secondary p-4 backdrop-blur-sm dark:bg-darkBg-secondary" data-oid="fuwo4hu">
-                  <span className="mb-2 block text-xs text-lightFg-tertiary dark:text-darkFg-tertiary" data-oid="-jvy1cy">
+            <div className="mt-2 flex-1">
+              <div className="grid grid-cols-2 gap-2">
+                <div className="rounded-xl bg-lightBg-secondary p-4 backdrop-blur-sm dark:bg-darkBg-secondary">
+                  <span className="mb-2 block text-xs text-lightFg-tertiary dark:text-darkFg-tertiary">
                     🌬️ Vento
                   </span>
-                  <div className="text-lg font-semibold text-lightFg-primary dark:text-darkFg-primary" data-oid="bzl5re:">
+                  <div className="text-lg font-semibold text-lightFg-primary dark:text-darkFg-primary">
                     {Math.round(weatherData.wind.speed * 3.6)} km/h
                   </div>
                 </div>
-                <div className="rounded-xl bg-lightBg-secondary p-4 backdrop-blur-sm dark:bg-darkBg-secondary" data-oid="zooq2nn">
-                  <span className="mb-2 block text-xs text-lightFg-tertiary dark:text-darkFg-tertiary" data-oid="trh50w.">
+                <div className="rounded-xl bg-lightBg-secondary p-4 backdrop-blur-sm dark:bg-darkBg-secondary">
+                  <span className="mb-2 block text-xs text-lightFg-tertiary dark:text-darkFg-tertiary">
                     💧 Umidade
                   </span>
-                  <div className="text-lg font-semibold text-lightFg-primary dark:text-darkFg-primary" data-oid="sar_.cq">
+                  <div className="text-lg font-semibold text-lightFg-primary dark:text-darkFg-primary">
                     {weatherData.main.humidity}%
                   </div>
                 </div>
-                <div className="rounded-xl bg-lightBg-secondary p-4 backdrop-blur-sm dark:bg-darkBg-secondary" data-oid="ll-:t4w">
-                  <span className="mb-2 block text-xs text-lightFg-tertiary dark:text-darkFg-tertiary" data-oid="pvyc08s">
+                <div className="rounded-xl bg-lightBg-secondary p-4 backdrop-blur-sm dark:bg-darkBg-secondary">
+                  <span className="mb-2 block text-xs text-lightFg-tertiary dark:text-darkFg-tertiary">
                     🌡️ Sensação
                   </span>
-                  <div className="text-lg font-semibold text-lightFg-primary dark:text-darkFg-primary" data-oid="ochqd5.">
+                  <div className="text-lg font-semibold text-lightFg-primary dark:text-darkFg-primary">
                     {Math.round(weatherData.main.feels_like)}°C
                   </div>
                 </div>
-                <div className="rounded-xl bg-lightBg-secondary p-4 backdrop-blur-sm dark:bg-darkBg-secondary" data-oid="c2fa45u">
-                  <span className="mb-2 block text-xs text-lightFg-tertiary dark:text-darkFg-tertiary" data-oid="y80le6y">
+                <div className="rounded-xl bg-lightBg-secondary p-4 backdrop-blur-sm dark:bg-darkBg-secondary">
+                  <span className="mb-2 block text-xs text-lightFg-tertiary dark:text-darkFg-tertiary">
                     📊 Pressão
                   </span>
-                  <div className="text-lg font-semibold text-lightFg-primary dark:text-darkFg-primary" data-oid="5si0ejh">
+                  <div className="text-lg font-semibold text-lightFg-primary dark:text-darkFg-primary">
                     {weatherData.main.pressure} hPa
                   </div>
                 </div>

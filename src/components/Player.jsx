@@ -83,7 +83,7 @@ const Player = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poster = "
     if (videoRef.current.requestFullscreen) videoRef.current.requestFullscreen()
   }
   return (
-    <div className="relative w-full overflow-hidden rounded-lg shadow-[6px_6px_16px_rgba(0,0,0,0.5)]" data-oid="-8jz:6p">
+    <div className="relative w-full overflow-hidden rounded-lg shadow-[6px_6px_16px_rgba(0,0,0,0.5)]">
       <video
         ref={videoRef}
         src={src}
@@ -91,11 +91,10 @@ const Player = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poster = "
         className="h-auto sm:min-w-[45rem] w-full cursor-pointer"
         onClick={togglePlay}
         onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={handleLoadedMetadata}
-        data-oid="i.d0olj">
+        onLoadedMetadata={handleLoadedMetadata}>
         Seu navegador não suporta o elemento de vídeo.
       </video>
-      <div className="absolute bottom-0 left-0 z-10 w-full bg-gradient-to-t from-black/70 to-transparent p-4 text-darkFg-primary" data-oid=".h3nzl_">
+      <div className="absolute bottom-0 left-0 z-10 w-full bg-gradient-to-t from-black/70 to-transparent p-4 text-darkFg-primary">
         <input
           type="range"
           min={0}
@@ -103,25 +102,24 @@ const Player = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poster = "
           value={currentTime}
           onChange={handleSeek}
           className="relative z-10 mb-2 h-1 w-full accent-primary-base"
-          data-oid="6xcq-lo"
+
         />
 
-        <div className="relative z-10 flex items-center gap-4" data-oid="-dh8a.i">
-          <button onClick={togglePlay} className="transition-transform hover:scale-110" data-oid="dwdj84d">
-            {playing ? <LuPause size={20} data-oid="qu8z.8r" /> : <LuPlay size={20} data-oid="k2nsfrb" />}
+        <div className="relative z-10 flex items-center gap-4">
+          <button onClick={togglePlay} className="transition-transform hover:scale-110">
+            {playing ? <LuPause size={20} /> : <LuPlay size={20} />}
           </button>
-          <button onClick={toggleRepeat} className={`transition-transform hover:scale-110 ${repeat ? "text-primary-base" : "text-darkFg-primary"}`} data-oid="o3fhazm">
-            <LuRefreshCw size={20} data-oid="9m7uvy9" />
+          <button onClick={toggleRepeat} className={`transition-transform hover:scale-110 ${repeat ? "text-primary-base" : "text-darkFg-primary"}`}>
+            <LuRefreshCw size={20} />
           </button>
           <div
             className="group relative flex items-center gap-2"
             onMouseEnter={() => setShowVolumeSlider(true)}
-            onMouseLeave={() => setShowVolumeSlider(false)}
-            data-oid="i8dg_ee">
-            <button onClick={toggleMute} className="transition-transform hover:scale-110" data-oid="skx2ftk">
-              {muted || volume === 0 ? <LuVolumeX size={20} data-oid="qik0x_a" /> : <LuVolume2 size={20} data-oid="t0h73rd" />}
+            onMouseLeave={() => setShowVolumeSlider(false)}>
+            <button onClick={toggleMute} className="transition-transform hover:scale-110">
+              {muted || volume === 0 ? <LuVolumeX size={20} /> : <LuVolume2 size={20} />}
             </button>
-            <div className="absolute left-full top-1/2 ml-2 -translate-y-1/2 overflow-hidden" data-oid=":b7ib_9">
+            <div className="absolute left-full top-1/2 ml-2 -translate-y-1/2 overflow-hidden">
               <input
                 type="range"
                 min={0}
@@ -132,13 +130,13 @@ const Player = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poster = "
                 className={`h-1 origin-left transform accent-primary-base transition-all duration-300 ${
                   showVolumeSlider ? "w-24 scale-x-100 opacity-100" : "w-0 scale-x-0 opacity-0"
                 }`}
-                data-oid="cr9t.-n"
+
               />
             </div>
           </div>
-          <div className="flex-1" data-oid="5mhk388" />
-          <button onClick={handleFullscreen} className="transition-transform hover:scale-110" data-oid="rw_jab2">
-            <LuExpand size={20} data-oid="2_v06:y" />
+          <div className="flex-1" />
+          <button onClick={handleFullscreen} className="transition-transform hover:scale-110">
+            <LuExpand size={20} />
           </button>
         </div>
       </div>

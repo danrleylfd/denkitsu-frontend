@@ -16,32 +16,31 @@ const ModelSelect = ({ setAIProvider, model, setModel, loading, freeModels, payM
       value={model}
       onChange={handleChange}
       disabled={loading}
-      className="bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary text-sm min-h-[48px] max-w-[20rem] rounded-md"
-      data-oid=".028eat">
-      <option className="text-primary-base" disabled value="" data-oid="wleskuv">
+      className="bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary text-sm min-h-[48px] max-w-[20rem] rounded-md">
+      <option className="text-primary-base" disabled value="">
         Selecionar Modelo
       </option>
-      <option className="text-primary-base" disabled data-oid="_nw6ry:">
+      <option className="text-primary-base" disabled>
         OpenRouter Gratuito
       </option>
       {freeModels.map((model) => (
-        <option key={model.id} value={model.id} data-oid="eoynmvj">
+        <option key={model.id} value={model.id}>
           {model.id}
         </option>
       ))}
-      <option className="text-primary-base" disabled data-oid="uqxwl4b">
+      <option className="text-primary-base" disabled>
         OpenRouter Premium
       </option>
       {payModels.map((model) => (
-        <option key={model.id} value={model.id} data-oid="35ak3v9">
+        <option key={model.id} value={model.id}>
           {model.id}
         </option>
       ))}
-      <option className="text-primary-base" disabled data-oid="pd98rc3">
+      <option className="text-primary-base" disabled>
         Groq Gratuito
       </option>
       {groqModels.map((model) => (
-        <option key={model.id} value={model.id} data-oid="1ag69t3">
+        <option key={model.id} value={model.id}>
           {model.id}
         </option>
       ))}

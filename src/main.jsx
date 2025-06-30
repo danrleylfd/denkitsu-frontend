@@ -9,13 +9,13 @@ import { DndProvider } from "./contexts/DndContext"
 import "./styles/global.css"
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode data-oid="j1-marm">
-    <ThemeProvider data-oid="apzujg:">
-      <AuthProvider data-oid="752moal">
-        <AIProvider data-oid="ldmy3p4">
-          <TasksProvider data-oid="7v0-963">
-            <DndProvider data-oid="6x9tkag">
-              <App data-oid=":4l2xqv" />
+  <React.StrictMode>
+    <ThemeProvider>
+      <AuthProvider>
+        <AIProvider>
+          <TasksProvider>
+            <DndProvider>
+              <App />
             </DndProvider>
           </TasksProvider>
         </AIProvider>

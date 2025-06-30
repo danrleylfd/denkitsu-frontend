@@ -18,22 +18,21 @@ const KanbanBoard = () => {
   }
 
   return (
-    <div className="w-full flex flex-col py-2 gap-2" data-oid=":h.08l6">
-      <AddTaskForm data-oid="sur0x04" />
+    <div className="w-full flex flex-col py-2 gap-2">
+      <AddTaskForm />
       <DndContext
         sensors={sensors}
         collisionDetection={collisionDetectionStrategy}
         onDragStart={onDragStart}
         onDragOver={handleDragOver}
-        onDragEnd={handleDragEnd}
-        data-oid="sjffybg">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 w-full" data-oid="jktj108">
+        onDragEnd={handleDragEnd}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 w-full">
           {Object.keys(COLUMN_TITLES).map((columnKey) => (
-            <Column key={columnKey} id={columnKey} data-oid="mtgjb--" />
+            <Column key={columnKey} id={columnKey} />
           ))}
         </div>
-        <DragOverlay data-oid="yu2s19v">{activeTask ? <TaskCard task={activeTask} showControls={false} data-oid="a1mcbg0" /> : null}</DragOverlay>
-        <TrashZone data-oid="._wy7v-" />
+        <DragOverlay>{activeTask ? <TaskCard task={activeTask} showControls={false} /> : null}</DragOverlay>
+        <TrashZone />
       </DndContext>
     </div>
   )

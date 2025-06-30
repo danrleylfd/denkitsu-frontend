@@ -82,7 +82,7 @@ const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ signed: !!user, user, loading, signIn, signUp, signOut, updateUser }} data-oid="b7x7ccb">
+    <AuthContext.Provider value={{ signed: !!user, user, loading, signIn, signUp, signOut, updateUser }}>
       {children}
     </AuthContext.Provider>
   )

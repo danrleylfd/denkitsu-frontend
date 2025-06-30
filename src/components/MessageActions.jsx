@@ -121,7 +121,7 @@ const MessageActions = ({ message, onShowCanva }) => {
   const hasContextualAction = !!htmlBlockForPreview || !!kanbanableJsonString || !!allCodeToCopy
 
   return (
-    <div className="flex items-center gap-2 mt-2" data-oid="o-c1btu">
+    <div className="flex items-center gap-2 mt-2">
       {message.reasoning && (
         <Button
           variant="secondary"
@@ -129,9 +129,8 @@ const MessageActions = ({ message, onShowCanva }) => {
           $rounded
           onClick={() => handleCopy(message.reasoning, "reasoning")}
           loading={loadingType === "reasoning" && loading}
-          title="Copiar Linha de Raciocínio"
-          data-oid="uuk:oqh">
-          {loadingType !== "reasoning" && <LuCopy size={16} data-oid="7f3y961" />}
+          title="Copiar Linha de Raciocínio">
+          {loadingType !== "reasoning" && <LuCopy size={16} />}
         </Button>
       )}
       <Button
@@ -140,9 +139,8 @@ const MessageActions = ({ message, onShowCanva }) => {
         $rounded
         onClick={() => handleCopy(message.content, "content")}
         loading={loadingType === "content" && loading}
-        title="Copiar Resposta"
-        data-oid="xzk:cj0">
-        {loadingType !== "content" && <LuCopy size={16} data-oid="v5b4uta" />}
+        title="Copiar Resposta">
+        {loadingType !== "content" && <LuCopy size={16} />}
       </Button>
 
       {allCodeToCopy && (
@@ -152,9 +150,8 @@ const MessageActions = ({ message, onShowCanva }) => {
           $rounded
           onClick={() => handleCopy(allCodeToCopy, "code")}
           loading={loadingType === "code" && loading}
-          title="Copiar Código"
-          data-oid="pq95ltc">
-          {loadingType !== "code" && <LuCode size={16} data-oid="mdfxuvi" />}
+          title="Copiar Código">
+          {loadingType !== "code" && <LuCode size={16} />}
         </Button>
       )}
 
@@ -165,9 +162,8 @@ const MessageActions = ({ message, onShowCanva }) => {
           $rounded
           onClick={() => handlePreview(htmlBlockForPreview.code)}
           loading={loadingType === "preview" && loading}
-          title="Desenhar na Lousa"
-          data-oid="7skxe1p">
-          {loadingType !== "preview" && <LuPresentation size={16} data-oid="2csv.uk" />}
+          title="Desenhar na Lousa">
+          {loadingType !== "preview" && <LuPresentation size={16} />}
         </Button>
       )}
 
@@ -177,9 +173,8 @@ const MessageActions = ({ message, onShowCanva }) => {
           size="icon"
           $rounded
           onClick={() => handleDownload(codeBlocks[0].code, codeBlocks[0].lang)}
-          title={`Salvar como .${getFileExtension(codeBlocks[0].lang)}`}
-          data-oid="a8:8.:5">
-          {loadingType !== "download" && <LuDownload size={16} data-oid="7zv_c2e" />}
+          title={`Salvar como .${getFileExtension(codeBlocks[0].lang)}`}>
+          {loadingType !== "download" && <LuDownload size={16} />}
         </Button>
       )}
 
@@ -190,15 +185,14 @@ const MessageActions = ({ message, onShowCanva }) => {
           $rounded
           onClick={() => handleAddToKanban(kanbanableJsonString)}
           loading={loadingType === "kanban" && loading}
-          title="Adicionar ao Kanban"
-          data-oid="sulzz:-">
-          {loadingType !== "kanban" && <LuKanban size={16} data-oid="_h0mf8s" />}
+          title="Adicionar ao Kanban">
+          {loadingType !== "kanban" && <LuKanban size={16} />}
         </Button>
       )}
 
       {!hasContextualAction && (
-        <Button variant="success" size="icon" $rounded onClick={handlePublish} loading={loadingType === "news" && loading} title="Publicar Artigo" data-oid="ddgm-m_">
-          {loadingType !== "news" && <LuNewspaper size={16} data-oid="-5ca.7w" />}
+        <Button variant="success" size="icon" $rounded onClick={handlePublish} loading={loadingType === "news" && loading} title="Publicar Artigo">
+          {loadingType !== "news" && <LuNewspaper size={16} />}
         </Button>
       )}
     </div>

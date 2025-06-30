@@ -12,7 +12,7 @@ import ChatInput from "../components/ChatInput"
 import { MessageError } from "../components/Notifications"
 
 const ContentView = ({ children }) => (
-  <main className="flex flex-col flex-1 h-screen mx-auto" data-oid="mvsmdwz">
+  <main className="flex flex-col flex-1 h-screen mx-auto">
     {children}
   </main>
 )
@@ -117,13 +117,13 @@ const AI = () => {
   }, [])
 
   return (
-    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple" data-oid="y_q4oh.">
-      <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-2" data-oid=":_nev52">
+    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
+      <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-2">
         {messages.map((msg) => (
-          <ChatMessage key={msg.id} msg={msg} user={user} onShowCanva={handleShowCanva} loading={loading && msg.content === ""} data-oid="zebt8ak" />
+          <ChatMessage key={msg.id} msg={msg} user={user} onShowCanva={handleShowCanva} loading={loading && msg.content === ""} />
         ))}
-        <div ref={messagesEndRef} data-oid="t6yf7yp" />
-        {error && <MessageError data-oid="6ug82oq">{error}</MessageError>}
+        <div ref={messagesEndRef} />
+        {error && <MessageError>{error}</MessageError>}
       </div>
       <ChatInput
         inputText={inputText}
@@ -132,7 +132,7 @@ const AI = () => {
         clearHistory={clearHistory}
         toggleSettings={() => setIsSettingsOpen(true)}
         loading={loading}
-        data-oid="ggfrn_1"
+
       />
 
       <AISettings
@@ -142,10 +142,10 @@ const AI = () => {
         payModels={payModels}
         groqModels={groqModels}
         clearHistory={clearHistory}
-        data-oid="iiypovr"
+
       />
 
-      <Lousa htmlContent={canvaContent} onClose={handleCloseCanva} data-oid="qu6h-_6" />
+      <Lousa htmlContent={canvaContent} onClose={handleCloseCanva} />
     </SideMenu>
   )
 }

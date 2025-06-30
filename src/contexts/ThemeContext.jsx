@@ -22,7 +22,7 @@ export const ThemeProvider = ({ children }) => {
   const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light")
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }} data-oid="2z1.dth">
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   )

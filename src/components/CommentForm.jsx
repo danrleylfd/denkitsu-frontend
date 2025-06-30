@@ -23,8 +23,8 @@ const CommentForm = ({ onSubmit, placeholder = "Digite seu comentário", actionL
   }
 
   return (
-    <form onSubmit={handleSubmit} className={`bg-lightBg-secondary dark:bg-darkBg-secondary flex items-center gap-2 p-4 rounded-md ${className}`} data-oid="9q1lu_j">
-      <Input placeholder={placeholder} value={content} onChange={(e) => setContent(e.target.value)} data-oid="jceg9m2">
+    <form onSubmit={handleSubmit} className={`bg-lightBg-secondary dark:bg-darkBg-secondary flex items-center gap-2 p-4 rounded-md ${className}`}>
+      <Input placeholder={placeholder} value={content} onChange={(e) => setContent(e.target.value)}>
         <Button
           type="submit"
           variant="outline"
@@ -32,9 +32,8 @@ const CommentForm = ({ onSubmit, placeholder = "Digite seu comentário", actionL
           $rounded
           title={actionLabel}
           loading={loading}
-          disabled={disabled || loading || !content.trim()}
-          data-oid="2mkniuk">
-          {!loading && <MdComment size={16} data-oid="39y:27q" />}
+          disabled={disabled || loading || !content.trim()}>
+          {!loading && <MdComment size={16} />}
         </Button>
       </Input>
     </form>

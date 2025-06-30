@@ -93,7 +93,7 @@ export const AIProvider = ({ children }) => {
   }
 
   return (
-    <AIContext.Provider value={values} data-oid="re1ahhe">
+    <AIContext.Provider value={values}>
       {children}
     </AIContext.Provider>
   )

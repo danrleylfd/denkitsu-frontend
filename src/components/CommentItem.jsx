@@ -51,23 +51,23 @@ const CommentItem = ({ comment, videoId, onCommentDeleted, onReplyAdded, disable
   }
 
   return (
-    <div className="bg-lightBg-secondary dark:bg-darkBg-secondary flex flex-col gap-2 p-4 rounded-md" data-oid="pj1hmnc">
-      <div className="flex items-center gap-2" data-oid="t-vzl4a">
-        <img src={comment.user.avatarUrl} alt={comment.user.name} className="w-8 h-8 rounded-full" data-oid="7h53xnm" />
+    <div className="bg-lightBg-secondary dark:bg-darkBg-secondary flex flex-col gap-2 p-4 rounded-md">
+      <div className="flex items-center gap-2">
+        <img src={comment.user.avatarUrl} alt={comment.user.name} className="w-8 h-8 rounded-full" />
 
-        <div className="flex gap-1 align-middle justify-center" data-oid="5dmsmf6">
-          <PurpleLink to={`/profile/${comment.user._id}`} data-oid="x01kij-">
+        <div className="flex gap-1 align-middle justify-center">
+          <PurpleLink to={`/profile/${comment.user._id}`}>
             {comment.user.name}
           </PurpleLink>
-          <small className="font-medium text-lightFg-tertiary dark:text-darkFg-tertiary" data-oid="aq.9.m2">
+          <small className="font-medium text-lightFg-tertiary dark:text-darkFg-tertiary">
             {new Date(comment.createdAt).toLocaleString()}
           </small>
         </div>
       </div>
-      <p className="text-lightFg-primary dark:text-darkFg-primary text-md break-words" data-oid="q6.ze2o">
+      <p className="text-lightFg-primary dark:text-darkFg-primary text-md break-words">
         {comment.content}
       </p>
-      <div className="flex gap-2" data-oid="937me0i">
+      <div className="flex gap-2">
         {signed && !comment.parent && (
           <Button
             variant="secondary"
@@ -75,25 +75,24 @@ const CommentItem = ({ comment, videoId, onCommentDeleted, onReplyAdded, disable
             $rounded
             title={showReplyForm ? "Cancelar" : "Responder"}
             onClick={() => setShowReplyForm(!showReplyForm)}
-            disabled={disabled}
-            data-oid="sz_5-ah">
-            {showReplyForm ? <MdOutlineClose size={16} data-oid="4n06252" /> : <MdReply size={16} data-oid="g0v90.q" />}
+            disabled={disabled}>
+            {showReplyForm ? <MdOutlineClose size={16} /> : <MdReply size={16} />}
           </Button>
         )}
         {isAuthor && (
           <>
-            <Button variant="warning" size="icon" $rounded title="Editar" onClick={() => {}} disabled data-oid="fy2q5w7">
-              <MdEdit size={16} data-oid="6j8.ig1" />
+            <Button variant="warning" size="icon" $rounded title="Editar" onClick={() => {}} disabled>
+              <MdEdit size={16} />
             </Button>
-            <Button type="submit" variant="danger" size="icon" $rounded title="Deletar" onClick={handleDelete} disabled={disabled} data-oid="m0d4j_z">
-              <MdDelete size={16} data-oid="sx0e:6i" />
+            <Button type="submit" variant="danger" size="icon" $rounded title="Deletar" onClick={handleDelete} disabled={disabled}>
+              <MdDelete size={16} />
             </Button>
           </>
         )}
       </div>
       {showReplyForm && (
         <>
-          <CommentForm onSubmit={handleReplySubmit} className="px-0 py-0" data-oid="h9bfrtp" />
+          <CommentForm onSubmit={handleReplySubmit} className="px-0 py-0" />
           {replies.map((reply) => (
             <CommentItem
               key={reply._id}
@@ -102,7 +101,7 @@ const CommentItem = ({ comment, videoId, onCommentDeleted, onReplyAdded, disable
               onCommentDeleted={handleDeleteReply}
               onReplyAdded={() => {}}
               disabled={disabled}
-              data-oid="a6z.r5w"
+
             />
           ))}
         </>
