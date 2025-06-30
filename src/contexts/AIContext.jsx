@@ -72,7 +72,7 @@ export const AIProvider = ({ children }) => {
   }
 
   const clearHistory = () => {
-    setMessages([...prompt, { id: 2, role: "system", content: customPrompt }, initialMessage])
+    setMessages([...prompt.map((msg, pos) => ({ id: pos, ...msg })), { id: 2, role: "system", content: customPrompt }, initialMessage])
   }
 
   const values = {
