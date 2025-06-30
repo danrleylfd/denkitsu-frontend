@@ -28,7 +28,10 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, onDelta) =>
     chunk.split("\n").forEach((line) => {
       if (line.startsWith("data: ")) {
         const payload = line.replace("data: ", "")
-        if (payload === "[DONE]") return
+        if (payload === "[DONE]") {
+          done = true
+          return
+        }
         try {
           const json = JSON.parse(payload)
           const delta = json.choices?.[0]?.delta
