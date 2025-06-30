@@ -55,7 +55,8 @@ const useChat = () => {
     if (selectedPrompt) {
       const modePromptObject = prompt.find(p => p.content.includes(selectedPrompt))
       if (modePromptObject) {
-          messagesToSend.push(modePromptObject)
+        const promptAlreadyExists = messagesToSend.some((msg) => msg.role === 'system' && msg.content === modePromptObject.content)
+        if (!promptAlreadyExists) messagesToSend.push(modePromptObject)
       }
     }
     messagesToSend.push(newUserMessage)

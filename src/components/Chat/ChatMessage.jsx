@@ -1,6 +1,6 @@
 import { memo } from "react"
 import Markdown from "../Markdown"
-import MessageActions from "../MessageActions"
+import MessageActions from "./MessageActions"
 import Button from "../Button"
 import PurpleLink from "../PurpleLink"
 

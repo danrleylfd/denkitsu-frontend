@@ -1,10 +1,10 @@
 import { useState, useMemo } from "react"
 import { LuCode, LuCopy, LuKanban, LuNewspaper, LuPresentation, LuDownload } from "react-icons/lu"
 
-import { useTasks } from "../contexts/TasksContext"
-import { publishNews } from "../services/news"
+import { useTasks } from "../../contexts/TasksContext"
+import { publishNews } from "../../services/news"
 
-import Button from "./Button"
+import Button from "../Button"
 
 const isValidJsonStringArray = (str) => {
   if (typeof str !== "string" || !str.trim().startsWith("[") || !str.trim().endsWith("]")) {
