@@ -45,12 +45,11 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, onDelta) =>
 
 const sendMessage = async (aiKey, aiProvider, model, messages) => {
   try {
-    const sysMsg = [{ role: "system", content: `Deve sempre pensar e responder em ${window.language || navigator.language}.` }]
     const payload = {
       aiKey,
       aiProvider,
       model,
-      messages: [...sysMsg, ...messages]
+      messages: [...messages]
     }
     const { data } = await api.post("/ai/chat/completions", payload)
     if (!data) throw new Error("Falha ao obter resposta da API")
