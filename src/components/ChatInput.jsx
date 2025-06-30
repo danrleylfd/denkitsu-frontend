@@ -1,9 +1,9 @@
-import { LuSettings, LuSendHorizontal, LuImagePlus, LuX } from "react-icons/lu"
+import { LuSettings, LuSendHorizontal, LuImagePlus } from "react-icons/lu"
 import PromptInput from "./PromptInput"
-import Button from "../Button"
-import Paper from "../Paper"
+import Button from "./Button"
+import Paper from "./Paper"
 
-const ChatInput = ({ inputText, setInputText, imageUrl, setImageUrl, handleSendMessage, toggleSettings, loading }) => {
+const ChatInput = ({ inputText, setInputText, setImageUrl, handleSendMessage, toggleSettings, loading }) => {
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
@@ -24,22 +24,14 @@ const ChatInput = ({ inputText, setInputText, imageUrl, setImageUrl, handleSendM
         <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettings} disabled={loading}>
           <LuSettings size={16} />
         </Button>
-        {!imageUrl && (
-          <Button variant="secondary" size="icon" $rounded title="Adicionar Imagem por URL" onClick={handleAddImageUrl} disabled={loading}>
-            <LuImagePlus size={16} />
-          </Button>
-        )}
-        {imageUrl && (
-          <Button variant="danger" size="icon" $rounded onClick={() => setImageUrl("")}>
-            <LuX size={16} />
-          </Button>
-        )}
+        <Button variant="secondary" size="icon" $rounded title="Adicionar Imagem por URL" onClick={handleAddImageUrl} disabled={loading}>
+          <LuImagePlus size={16} />
+        </Button>
         <PromptInput inputText={inputText} setInputText={setInputText} handleKeyDown={handleKeyDown} loading={loading} />
         <Button size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || (!inputText.trim() && !Image.url)}>
           {!loading && <LuSendHorizontal size={16} />}
         </Button>
       </div>
-      {/* O seletor foi removido daqui */}
     </Paper>
   )
 }

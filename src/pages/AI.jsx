@@ -1,14 +1,17 @@
 // src/pages/AI.jsx
+
+import { useState, useEffect, useRef, useCallback } from "react"
 import { LuX } from "react-icons/lu"
+
 import { useAuth } from "../contexts/AuthContext"
 import { useAI } from "../contexts/AIContext"
-import useChat from "../hooks/useChat"
+import { sendMessageStream, getModels } from "../services/aiChat"
 
 import SideMenu from "../components/SideMenu"
-import ChatMessage from "../components/Chat/ChatMessage"
-import Lousa from "../components/Chat/Lousa"
-import ChatSettings from "../components/Chat/ChatSettings"
-import ChatInput from "../components/Chat/ChatInput"
+import ChatMessage from "../components/ChatMessage"
+import Lousa from "../components/Lousa"
+import AISettings from "../components/AISettings"
+import ChatInput from "../components/ChatInput"
 import { MessageError } from "../components/Notifications"
 import Paper from "../components/Paper"
 import Button from "../components/Button"
@@ -17,16 +20,141 @@ const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-sc
 
 const AI = () => {
   const { user } = useAuth()
-  const { prompt, clearHistory, customPrompt, setCustomPrompt } = useAI()
-  const {
-    messages, inputText, imageUrl, loading, error, canvaContent, isSettingsOpen, selectedPrompt,
-    freeModels, payModels, groqModels, messagesEndRef, setInputText, setImageUrl, setSelectedPrompt,
-    handleSendMessage, handleShowCanva, handleCloseCanva, toggleSettings
-  } = useChat()
+  const { aiKey, model, setModel, aiProvider, setAIProvider, prompt, messages, setMessages, clearHistory, customPrompt, setCustomPrompt } = useAI()
+
+  const [freeModels, setFreeModels] = useState([])
+  const [payModels, setPayModels] = useState([])
+  const [groqModels, setGroqModels] = useState([])
+  const [inputText, setInputText] = useState("")
+  const [imageUrl, setImageUrl] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [canvaContent, setCanvaContent] = useState(null)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [selectedPrompt, setSelectedPrompt] = useState("")
+
+  const messagesEndRef = useRef(null)
+
+  useEffect(() => {
+    async function loadModels() {
+      const { freeModels: loadedFree, payModels: loadedPay, groqModels: loadedGroq } = await getModels()
+      setFreeModels(loadedFree || [])
+      if (aiKey) setPayModels(loadedPay || [])
+      setGroqModels(loadedGroq || [])
+    }
+    loadModels()
+  }, [aiKey])
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [messages, loading])
+
+  const handleSendMessage = useCallback(async () => {
+    if (!inputText.trim() && !imageUrl) return
+
+    const messageContent = []
+    if (inputText.trim()) {
+      messageContent.push({ type: "text", content: inputText.trim() })
+    }
+    if (imageUrl) {
+      messageContent.push({ type: "image_url", image_url: { url: imageUrl } })
+    }
+
+    const newUserMessage = { role: "user", content: messageContent.length === 1 ? messageContent[0].content : messageContent }
+
+    const messagesToSend = [...messages]
+
+    let modePrompt = null
+    if (selectedPrompt) {
+      modePrompt = prompt.find(p => p.content.includes(selectedPrompt))
+      if (modePrompt) {
+        const exists = messages.some(msg => msg.content === modePrompt.content)
+        console.log(exists)
+        if (!exists) messagesToSend.push(modePrompt)
+      }
+    }
+    messagesToSend.push(newUserMessage)
+
+    setMessages(messagesToSend)
+    setInputText("")
+    setImageUrl("")
+    setLoading(true)
+    setError(null)
+
+    try {
+      const apiMessages = messagesToSend.map(({ role, content }) => {
+        if (Array.isArray(content)) {
+          const apiContent = content.map((item) => {
+            if (item.type === "text") return { type: "text", text: item.content }
+            return item
+          })
+          return { role, content: apiContent }
+        }
+        return { role, content }
+      })
+
+      const streamedAssistantMessage = {
+        id: Date.now() + 1,
+        role: "assistant",
+        content: "",
+        reasoning: "",
+        _contentBuffer: "",
+        _reasoningBuffer: ""
+      }
+      setMessages((prev) => [...prev, streamedAssistantMessage])
+      await sendMessageStream(aiKey, aiProvider, model, apiMessages, (delta) => {
+        if (delta.content) {
+          streamedAssistantMessage._contentBuffer += delta.content
+        }
+        if (delta.reasoning) {
+          streamedAssistantMessage._reasoningBuffer += delta.reasoning
+        }
+        if (delta.tool_calls?.[0]?.arguments?.reasoning) {
+          streamedAssistantMessage._reasoningBuffer += delta.tool_calls[0].arguments.reasoning
+        }
+        let reasoningFromThink = ""
+        const finalContent = streamedAssistantMessage._contentBuffer.replace(/<think>(.*?)<\/think>/gs, (match, thought) => {
+          reasoningFromThink += thought
+          return ""
+        })
+        streamedAssistantMessage.content = finalContent
+        streamedAssistantMessage.reasoning = streamedAssistantMessage._reasoningBuffer + reasoningFromThink
+        setMessages((prev) => {
+          const updated = [...prev]
+          const msgIndex = updated.findIndex((msg) => msg.id === streamedAssistantMessage.id)
+          if (msgIndex !== -1) updated[msgIndex] = { ...streamedAssistantMessage }
+          return updated
+        })
+      })
+    } catch (err) {
+      setMessages((prev) => {
+        const updated = [...prev]
+        const msgIndex = updated.findIndex((msg) => msg.role === "assistant" && msg.content === "")
+        if (msgIndex !== -1) {
+          updated[msgIndex].content =
+            "Falha ao enviar mensagem.\n```diff\n- " +
+            err.message +
+            "\n+ Tente usar algum modelo de outro provedor ou verifique sua chave de API nas configurações.\n```"
+        }
+        return updated
+      })
+    } finally {
+      setLoading(false)
+    }
+  }, [inputText, imageUrl, messages, model, aiKey, aiProvider, setMessages, selectedPrompt])
+
+  const handleShowCanva = useCallback((htmlCode) => {
+    setCanvaContent(htmlCode)
+  }, [])
+
+  const handleCloseCanva = useCallback(() => {
+    setCanvaContent(null)
+  }, [])
 
   return (
     <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
       <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-2">
+        <ChatMessage msg={{ role: "assistant", content: "Olá! Como posso ajudar você hoje?\n Shift + Enter para quebrar a linha." }} />
         {messages.map((msg, pos) => (
           <ChatMessage key={pos} msg={msg} user={user} onShowCanva={handleShowCanva} loading={loading && msg.content === ""} />
         ))}
@@ -35,24 +163,27 @@ const AI = () => {
       </div>
 
       {imageUrl && (
-        <Paper className="bg-lightBg-primary dark:bg-darkBg-primary rounded-none relative w-auto">
-          <img src={imageUrl} alt="Preview" className="max-h-16 rounded-lg object-cover" />
+        <Paper className="bg-lightBg-primary dark:bg-darkBg-primary mx-2 rounded-none relative w-auto">
+          <p className="text-xs mb-1 text-lightFg-secondary dark:text-darkFg-secondary">Preview da imagem:</p>
+          <img src={imageUrl} alt="Preview" className="max-h-24 rounded-md object-cover" />
+          <Button variant="danger" size="icon" $rounded onClick={() => setImageUrl("")} className="absolute top-1 right-1">
+            <LuX size={16} />
+          </Button>
         </Paper>
       )}
 
       <ChatInput
         inputText={inputText}
         setInputText={setInputText}
-        imageUrl={imageUrl}
         setImageUrl={setImageUrl}
         handleSendMessage={handleSendMessage}
-        toggleSettings={toggleSettings}
+        toggleSettings={() => setIsSettingsOpen(true)}
         loading={loading}
       />
 
-      <ChatSettings
+      <AISettings
         isOpen={isSettingsOpen}
-        onClose={toggleSettings}
+        onClose={() => setIsSettingsOpen(false)}
         freeModels={freeModels}
         payModels={payModels}
         groqModels={groqModels}
@@ -60,8 +191,6 @@ const AI = () => {
         prompts={prompt}
         selectedPrompt={selectedPrompt}
         onSelectPrompt={setSelectedPrompt}
-        customPrompt={customPrompt}
-        setCustomPrompt={setCustomPrompt}
       />
 
       <Lousa htmlContent={canvaContent} onClose={handleCloseCanva} />

@@ -1,8 +1,8 @@
 import { LuX, LuBrain } from "react-icons/lu"
 import { MdClearAll } from "react-icons/md"
-import { useAI } from "../../contexts/AIContext"
-import Button from "../Button"
-import Input from "../Input"
+import { useAI } from "../contexts/AIContext"
+import Button from "./Button"
+import Input from "./Input"
 import ModelSelect from "./ModelSelect"
 
 const AISettings = ({ isOpen, onClose, freeModels, payModels, groqModels, clearHistory, prompts, selectedPrompt, onSelectPrompt }) => {
@@ -54,13 +54,10 @@ const AISettings = ({ isOpen, onClose, freeModels, payModels, groqModels, clearH
               $rounded
               onClick={() => onSelectPrompt("")}
               disabled={loading}
-            >
-              Padrão
-            </Button>
+            >Padrão</Button>
             {prompts.slice(1).map((prompt) => {
               const modeName = getModeName(prompt.content)
               const selectedColor = modeColorMap.get(modeName) || "gradient-blue"
-
               return (
                 <Button
                   key={modeName}
@@ -68,8 +65,7 @@ const AISettings = ({ isOpen, onClose, freeModels, payModels, groqModels, clearH
                   size="xs"
                   $rounded
                   onClick={() => onSelectPrompt(prompt.content)}
-                  disabled={loading}
-                >
+                  disabled={loading}>
                   {modeName}
                 </Button>
               )
@@ -104,20 +100,21 @@ const AISettings = ({ isOpen, onClose, freeModels, payModels, groqModels, clearH
             Sua chave é salva localmente no seu navegador e nunca é enviada para nossos servidores.
           </small>
         </div>
-        <label className="text-lightFg-secondary dark:text-darkFg-secondary">Modelo</label>
+
+        <label htmlFor="model-select" className="text-lightFg-secondary dark:text-darkFg-secondary">
+          Modelo
+        </label>
         <div className="flex items-end gap-2">
-          <div className="flex flex-col gap-2 w-full">
-            <ModelSelect
-              aiProvider={aiProvider}
-              setAIProvider={setAIProvider}
-              model={model}
-              setModel={setModel}
-              loading={loading}
-              freeModels={freeModels}
-              payModels={payModels}
-              groqModels={groqModels}
-            />
-          </div>
+          <ModelSelect
+            aiProvider={aiProvider}
+            setAIProvider={setAIProvider}
+            model={model}
+            setModel={setModel}
+            loading={loading}
+            freeModels={freeModels}
+            payModels={payModels}
+            groqModels={groqModels}
+          />
           <Button
             variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"}
             size="icon"

@@ -12,7 +12,7 @@ export const AIProvider = ({ children }) => {
   const storedCustomPrompt = localStorage.getItem("@Denkitsu:customPrompt")
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
 
-  const initialMessage = { id: 8, role: "assistant", content: "Olá! Como posso ajudar você hoje?\n Shift + Enter para quebrar a linha." }
+  const initialMessage = { role: "assistant", content: "Olá! Como posso ajudar você hoje?\n Shift + Enter para quebrar a linha." }
 
   const [prompt, setPrompt] = useState([])
   const [customPrompt, setCustomPrompt] = useState(storedCustomPrompt || "Responda em português do Brasil (pt-BR).")
@@ -21,7 +21,7 @@ export const AIProvider = ({ children }) => {
   const [openRouterKey, setOpenRouterKey] = useState(storedOpenRouterKey || "")
   const [groqModel, setGroqModel] = useState(storedModelGroq || "deepseek-r1-distill-llama-70b")
   const [openRouterModel, setOpenRouterModel] = useState(storedOpenRouterModel || "deepseek/deepseek-r1:free")
-  const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [initialMessage])
+  const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
 
   useEffect(() => {
     async function loadPrompt() {
@@ -57,7 +57,7 @@ export const AIProvider = ({ children }) => {
     if (!prompt) return
     setMessages((prev) => {
       const hasSystemMessage = prev.some((msg) => msg.role === "system")
-      if (!hasSystemMessage) return [prompt[0], initialMessage, { id: 9, role: "system", content: customPrompt }]
+      if (!hasSystemMessage) return [prompt[0], { role: "system", content: customPrompt }]
       return prev
     })
     localStorage.setItem("@Denkitsu:messages", JSON.stringify(messages))
@@ -67,7 +67,7 @@ export const AIProvider = ({ children }) => {
 
   const aiProviderToggle = () => setAIProvider((prev) => (prev === "groq" ? "openrouter" : "groq"))
 
-  const clearHistory = () => setMessages([prompt[0], initialMessage, { id: 9, role: "system", content: customPrompt }])
+  const clearHistory = () => setMessages([prompt[0], { role: "system", content: customPrompt }])
 
   const values = {
     prompt,
