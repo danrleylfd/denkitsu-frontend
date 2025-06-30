@@ -32,10 +32,13 @@ const TasksProvider = ({ children }) => {
     }
   }, [tasks])
 
-  const findTaskContainer = useCallback((taskId) => {
-    if (taskId in tasks) return taskId
-    return Object.keys(tasks).find((key) => tasks[key].some((task) => task.id === taskId))
-  }, [tasks])
+  const findTaskContainer = useCallback(
+    (taskId) => {
+      if (taskId in tasks) return taskId
+      return Object.keys(tasks).find((key) => tasks[key].some((task) => task.id === taskId))
+    },
+    [tasks]
+  )
 
   const addTask = useCallback(() => {
     if (!newTask.trim()) return
@@ -78,28 +81,32 @@ const TasksProvider = ({ children }) => {
     }
   }, [newTask, aiKey])
 
-  const deleteTask = useCallback((taskId) => {
-    const container = findTaskContainer(taskId)
-    if (container) {
-      setTasks((prev) => ({
-        ...prev,
-        [container]: prev[container].filter((task) => task.id !== taskId)
-      }))
-    }
-  }, [findTaskContainer])
+  const deleteTask = useCallback(
+    (taskId) => {
+      const container = findTaskContainer(taskId)
+      if (container) {
+        setTasks((prev) => ({
+          ...prev,
+          [container]: prev[container].filter((task) => task.id !== taskId)
+        }))
+      }
+    },
+    [findTaskContainer]
+  )
 
-  const updateTask = useCallback((taskId, newContent) => {
-    const container = findTaskContainer(taskId)
-    if (container) {
-      setTasks((prev) => ({
-        ...prev,
-        [container]: prev[container].map((task) =>
-          task.id === taskId ? { ...task, content: newContent } : task
-        )
-      }))
-    }
-    setEditingId(null)
-  }, [findTaskContainer])
+  const updateTask = useCallback(
+    (taskId, newContent) => {
+      const container = findTaskContainer(taskId)
+      if (container) {
+        setTasks((prev) => ({
+          ...prev,
+          [container]: prev[container].map((task) => (task.id === taskId ? { ...task, content: newContent } : task))
+        }))
+      }
+      setEditingId(null)
+    },
+    [findTaskContainer]
+  )
 
   const resetTasks = useCallback(() => {
     window.localStorage.removeItem(STORAGE_KEY)
@@ -124,7 +131,7 @@ const TasksProvider = ({ children }) => {
   }
 
   return (
-    <TasksContext.Provider value={value}>
+    <TasksContext.Provider value={value} data-oid="ikbvssy">
       {children}
     </TasksContext.Provider>
   )

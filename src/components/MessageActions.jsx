@@ -12,7 +12,7 @@ const isValidJsonStringArray = (str) => {
   }
   try {
     const parsed = JSON.parse(str)
-    return Array.isArray(parsed) && parsed.every(item => typeof item === "string")
+    return Array.isArray(parsed) && parsed.every((item) => typeof item === "string")
   } catch (error) {
     return false
   }
@@ -39,13 +39,12 @@ const MessageActions = ({ message, onShowCanva }) => {
     if (!message?.content) {
       return { allCodeToCopy: null, htmlBlockForPreview: null, kanbanableJsonString: null, codeBlocks: [] }
     }
-    const blocks = [...message.content.matchAll(/^```(\w*)\n([\s\S]+?)\n^```/gm)]
-      .map(match => ({
-        lang: match[1].toLowerCase() || "md",
-        code: match[2].trim()
-      }))
-    const allCode = blocks.length > 0 ? blocks.map(block => block.code).join("\n\n") : null
-    const htmlBlock = blocks.find(block => block.lang === "html") || null
+    const blocks = [...message.content.matchAll(/^```(\w*)\n([\s\S]+?)\n^```/gm)].map((match) => ({
+      lang: match[1].toLowerCase() || "md",
+      code: match[2].trim()
+    }))
+    const allCode = blocks.length > 0 ? blocks.map((block) => block.code).join("\n\n") : null
+    const htmlBlock = blocks.find((block) => block.lang === "html") || null
     const firstCodeBlockContent = blocks.length > 0 ? blocks[0].code : null
     let kanbanJson = null
     if (firstCodeBlockContent && isValidJsonStringArray(firstCodeBlockContent)) {
@@ -78,7 +77,10 @@ const MessageActions = ({ message, onShowCanva }) => {
     setLoading(true)
     setLoadingType(type)
     navigator.clipboard.writeText(text)
-    setTimeout(() => { setLoading(false); setLoadingType(null); }, 333)
+    setTimeout(() => {
+      setLoading(false)
+      setLoadingType(null)
+    }, 333)
   }
 
   const handleAddToKanban = (jsonString) => {
@@ -119,43 +121,84 @@ const MessageActions = ({ message, onShowCanva }) => {
   const hasContextualAction = !!htmlBlockForPreview || !!kanbanableJsonString || !!allCodeToCopy
 
   return (
-    <div className="flex items-center gap-2 mt-2">
+    <div className="flex items-center gap-2 mt-2" data-oid="o-c1btu">
       {message.reasoning && (
-        <Button variant="secondary" size="icon" $rounded onClick={() => handleCopy(message.reasoning, "reasoning")} loading={loadingType === "reasoning" && loading} title="Copiar Linha de Raciocínio">
-          {loadingType !== "reasoning" && <LuCopy size={16} />}
+        <Button
+          variant="secondary"
+          size="icon"
+          $rounded
+          onClick={() => handleCopy(message.reasoning, "reasoning")}
+          loading={loadingType === "reasoning" && loading}
+          title="Copiar Linha de Raciocínio"
+          data-oid="uuk:oqh">
+          {loadingType !== "reasoning" && <LuCopy size={16} data-oid="7f3y961" />}
         </Button>
       )}
-      <Button variant="secondary" size="icon" $rounded onClick={() => handleCopy(message.content, "content")} loading={loadingType === "content" && loading} title="Copiar Resposta">
-        {loadingType !== "content" && <LuCopy size={16} />}
+      <Button
+        variant="secondary"
+        size="icon"
+        $rounded
+        onClick={() => handleCopy(message.content, "content")}
+        loading={loadingType === "content" && loading}
+        title="Copiar Resposta"
+        data-oid="xzk:cj0">
+        {loadingType !== "content" && <LuCopy size={16} data-oid="v5b4uta" />}
       </Button>
 
       {allCodeToCopy && (
-        <Button variant="secondary" size="icon" $rounded onClick={() => handleCopy(allCodeToCopy, "code")} loading={loadingType === "code" && loading} title="Copiar Código">
-          {loadingType !== "code" && <LuCode size={16} />}
+        <Button
+          variant="secondary"
+          size="icon"
+          $rounded
+          onClick={() => handleCopy(allCodeToCopy, "code")}
+          loading={loadingType === "code" && loading}
+          title="Copiar Código"
+          data-oid="pq95ltc">
+          {loadingType !== "code" && <LuCode size={16} data-oid="mdfxuvi" />}
         </Button>
       )}
 
       {htmlBlockForPreview && (
-        <Button variant="outline" size="icon" $rounded onClick={() => handlePreview(htmlBlockForPreview.code)} loading={loadingType === "preview" && loading} title="Desenhar na Lousa">
-          {loadingType !== "preview" && <LuPresentation size={16} />}
+        <Button
+          variant="outline"
+          size="icon"
+          $rounded
+          onClick={() => handlePreview(htmlBlockForPreview.code)}
+          loading={loadingType === "preview" && loading}
+          title="Desenhar na Lousa"
+          data-oid="7skxe1p">
+          {loadingType !== "preview" && <LuPresentation size={16} data-oid="2csv.uk" />}
         </Button>
       )}
 
       {codeBlocks.length === 1 && (
-        <Button variant="danger" size="icon" $rounded onClick={() => handleDownload(codeBlocks[0].code, codeBlocks[0].lang)} title={`Salvar como .${getFileExtension(codeBlocks[0].lang)}`}>
-          {loadingType !== "download" && <LuDownload size={16} />}
+        <Button
+          variant="danger"
+          size="icon"
+          $rounded
+          onClick={() => handleDownload(codeBlocks[0].code, codeBlocks[0].lang)}
+          title={`Salvar como .${getFileExtension(codeBlocks[0].lang)}`}
+          data-oid="a8:8.:5">
+          {loadingType !== "download" && <LuDownload size={16} data-oid="7zv_c2e" />}
         </Button>
       )}
 
       {kanbanableJsonString && (
-        <Button variant="warning" size="icon" $rounded onClick={() => handleAddToKanban(kanbanableJsonString)} loading={loadingType === "kanban" && loading} title="Adicionar ao Kanban">
-          {loadingType !== "kanban" && <LuKanban size={16} />}
+        <Button
+          variant="warning"
+          size="icon"
+          $rounded
+          onClick={() => handleAddToKanban(kanbanableJsonString)}
+          loading={loadingType === "kanban" && loading}
+          title="Adicionar ao Kanban"
+          data-oid="sulzz:-">
+          {loadingType !== "kanban" && <LuKanban size={16} data-oid="_h0mf8s" />}
         </Button>
       )}
 
       {!hasContextualAction && (
-        <Button variant="success" size="icon" $rounded onClick={handlePublish} loading={loadingType === "news" && loading} title="Publicar Artigo">
-          {loadingType !== "news" && <LuNewspaper size={16} />}
+        <Button variant="success" size="icon" $rounded onClick={handlePublish} loading={loadingType === "news" && loading} title="Publicar Artigo" data-oid="ddgm-m_">
+          {loadingType !== "news" && <LuNewspaper size={16} data-oid="-5ca.7w" />}
         </Button>
       )}
     </div>

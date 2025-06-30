@@ -57,7 +57,7 @@ export const AIProvider = ({ children }) => {
     if (!prompt) return
     setMessages((prev) => {
       const hasSystemMessage = prev.some((msg) => msg.role === "system")
-      if (!hasSystemMessage) return [...prompt.map((msg, pos) => ({ id: pos,...msg })), { id: 2, role: "system", content: customPrompt }, initialMessage]
+      if (!hasSystemMessage) return [...prompt.map((msg, pos) => ({ id: pos, ...msg })), { id: 2, role: "system", content: customPrompt }, initialMessage]
       return prev
     })
     localStorage.setItem("@Denkitsu:messages", JSON.stringify(messages))
@@ -92,7 +92,11 @@ export const AIProvider = ({ children }) => {
     clearHistory
   }
 
-  return <AIContext.Provider value={values}>{children}</AIContext.Provider>
+  return (
+    <AIContext.Provider value={values} data-oid="re1ahhe">
+      {children}
+    </AIContext.Provider>
+  )
 }
 
 export const useAI = () => {

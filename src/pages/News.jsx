@@ -12,7 +12,13 @@ import Paper from "../components/Paper"
 import Input from "../components/Input"
 import Button from "../components/Button"
 
-const ContentView = ({ children }) => <main className="flex flex-col items-center p-2 gap-2 mx-auto min-h-screen w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[75%] lg:max-w-[67%] ml-[3.5rem] md:ml-auto">{children}</main>
+const ContentView = ({ children }) => (
+  <main
+    className="flex flex-col items-center p-2 gap-2 mx-auto min-h-screen w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[75%] lg:max-w-[67%] ml-[3.5rem] md:ml-auto"
+    data-oid="qk4lrg4">
+    {children}
+  </main>
+)
 
 const News = () => {
   const { user } = useAuth()
@@ -91,25 +97,45 @@ const News = () => {
   }
 
   return (
-    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
-      {error && <Paper>{error}</Paper>}
-      <Paper>
-        <Input placeholder="Pesquise um tópico e deixe a IA gerar a notícia mais recente sobre..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)}>
-          <Button variant="outline" size="icon" $rounded onClick={handleGenerate} loading={loading} disabled={searchTerm.length < 1} title="Pesquisar e Gerar">
-            {!loading && <LuSearchSlash size={16} />}
+    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple" data-oid="-r-56u7">
+      {error && <Paper data-oid="y7esi.:">{error}</Paper>}
+      <Paper data-oid="s9p9udm">
+        <Input
+          placeholder="Pesquise um tópico e deixe a IA gerar a notícia mais recente sobre..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          data-oid="cztl3gs">
+          <Button
+            variant="outline"
+            size="icon"
+            $rounded
+            onClick={handleGenerate}
+            loading={loading}
+            disabled={searchTerm.length < 1}
+            title="Pesquisar e Gerar"
+            data-oid="l7x2q_o">
+            {!loading && <LuSearchSlash size={16} data-oid="x_yhcg0" />}
           </Button>
-          <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
-            <LuBrain size={16} />
+          <Button
+            variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"}
+            size="icon"
+            $rounded
+            onClick={aiProviderToggle}
+            title={aiProvider === "groq" ? "Groq" : "OpenRouter"}
+            data-oid="i75ydvq">
+            <LuBrain size={16} data-oid="bfcr:od" />
           </Button>
         </Input>
       </Paper>
       {news.map((article) => (
-        <Paper key={article._id}>
-          <Markdown content={article.content} />
-          <small className="text-xs text-lightFg-secondary dark:text-darkFg-secondary">Publicado em {new Date(article.createdAt).toLocaleString()}</small>
+        <Paper key={article._id} data-oid="x75wzh:">
+          <Markdown content={article.content} data-oid="66uwec." />
+          <small className="text-xs text-lightFg-secondary dark:text-darkFg-secondary" data-oid="d8-h1ks">
+            Publicado em {new Date(article.createdAt).toLocaleString()}
+          </small>
         </Paper>
       ))}
-      <Button variant="outline" $rounded onClick={loadNews} loading={loading} disabled={!hasMore}>
+      <Button variant="outline" $rounded onClick={loadNews} loading={loading} disabled={!hasMore} data-oid="c3x:ykg">
         {!hasMore ? "Fim" : !loading ? "Mais" : ""}
       </Button>
     </SideMenu>

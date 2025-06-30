@@ -12,10 +12,10 @@ const TrashZone = () => {
   const contentOverClasses = isOverTrash ? "border-red-500 bg-red-500/20 text-red-400" : "border-zinc-600 text-zinc-400"
 
   return (
-    <div ref={setNodeRef} className={`${baseClasses} ${draggingClasses}`}>
-      <div className={`${contentBaseClasses} ${contentOverClasses}`}>
-        <LuTrash2 size={24} className="mr-3" />
-        <span>Arraste a tarefa aqui para excluir</span>
+    <div ref={setNodeRef} className={`${baseClasses} ${draggingClasses}`} data-oid="t-w-tbv">
+      <div className={`${contentBaseClasses} ${contentOverClasses}`} data-oid="8uhx.3h">
+        <LuTrash2 size={24} className="mr-3" data-oid="5ibvvm5" />
+        <span data-oid="-jsz96s">Arraste a tarefa aqui para excluir</span>
       </div>
     </div>
   )

@@ -11,7 +11,11 @@ import AISettings from "../components/AISettings"
 import ChatInput from "../components/ChatInput"
 import { MessageError } from "../components/Notifications"
 
-const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-screen mx-auto">{children}</main>
+const ContentView = ({ children }) => (
+  <main className="flex flex-col flex-1 h-screen mx-auto" data-oid="mvsmdwz">
+    {children}
+  </main>
+)
 
 const AI = () => {
   const { user } = useAuth()
@@ -80,7 +84,7 @@ const AI = () => {
         streamedAssistantMessage.reasoning = streamedAssistantMessage._reasoningBuffer + reasoningFromThink
         setMessages((prev) => {
           const updated = [...prev]
-          const msgIndex = updated.findIndex(msg => msg.id === streamedAssistantMessage.id)
+          const msgIndex = updated.findIndex((msg) => msg.id === streamedAssistantMessage.id)
           if (msgIndex !== -1) {
             updated[msgIndex] = { ...streamedAssistantMessage }
           }
@@ -88,14 +92,17 @@ const AI = () => {
         })
       })
     } catch (err) {
-       setMessages((prev) => {
-         const updated = [...prev]
-         const msgIndex = updated.findIndex(msg => msg.role === "assistant" && msg.content === "")
-         if (msgIndex !== -1) {
-           updated[msgIndex].content = "Falha ao enviar mensagem.\n```diff\n- " + err.message + "\n+ Tente usar algum modelo de outro provedor ou verifique sua chave de API nas configurações.\n```"
-         }
-         return updated
-       })
+      setMessages((prev) => {
+        const updated = [...prev]
+        const msgIndex = updated.findIndex((msg) => msg.role === "assistant" && msg.content === "")
+        if (msgIndex !== -1) {
+          updated[msgIndex].content =
+            "Falha ao enviar mensagem.\n```diff\n- " +
+            err.message +
+            "\n+ Tente usar algum modelo de outro provedor ou verifique sua chave de API nas configurações.\n```"
+        }
+        return updated
+      })
     } finally {
       setLoading(false)
     }
@@ -110,13 +117,13 @@ const AI = () => {
   }, [])
 
   return (
-    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
-      <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-2">
+    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple" data-oid="y_q4oh.">
+      <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-2" data-oid=":_nev52">
         {messages.map((msg) => (
-          <ChatMessage key={msg.id} msg={msg} user={user} onShowCanva={handleShowCanva} loading={loading && msg.content === ""} />
+          <ChatMessage key={msg.id} msg={msg} user={user} onShowCanva={handleShowCanva} loading={loading && msg.content === ""} data-oid="zebt8ak" />
         ))}
-        <div ref={messagesEndRef} />
-        {error && <MessageError>{error}</MessageError>}
+        <div ref={messagesEndRef} data-oid="t6yf7yp" />
+        {error && <MessageError data-oid="6ug82oq">{error}</MessageError>}
       </div>
       <ChatInput
         inputText={inputText}
@@ -125,7 +132,9 @@ const AI = () => {
         clearHistory={clearHistory}
         toggleSettings={() => setIsSettingsOpen(true)}
         loading={loading}
+        data-oid="ggfrn_1"
       />
+
       <AISettings
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
@@ -133,8 +142,10 @@ const AI = () => {
         payModels={payModels}
         groqModels={groqModels}
         clearHistory={clearHistory}
+        data-oid="iiypovr"
       />
-      <Lousa htmlContent={canvaContent} onClose={handleCloseCanva} />
+
+      <Lousa htmlContent={canvaContent} onClose={handleCloseCanva} data-oid="qu6h-_6" />
     </SideMenu>
   )
 }

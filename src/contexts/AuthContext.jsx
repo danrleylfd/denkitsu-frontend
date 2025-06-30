@@ -77,12 +77,12 @@ const AuthProvider = ({ children }) => {
   }
 
   const updateUser = (userData) => {
-    localStorage.setItem("@Denkitsu:user", JSON.stringify({ ...user, ...userData}))
+    localStorage.setItem("@Denkitsu:user", JSON.stringify({ ...user, ...userData }))
     setUser(user)
   }
 
   return (
-    <AuthContext.Provider value={{ signed: !!user, user, loading, signIn, signUp, signOut, updateUser }}>
+    <AuthContext.Provider value={{ signed: !!user, user, loading, signIn, signUp, signOut, updateUser }} data-oid="b7x7ccb">
       {children}
     </AuthContext.Provider>
   )

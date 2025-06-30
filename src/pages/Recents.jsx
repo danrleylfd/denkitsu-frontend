@@ -7,7 +7,14 @@ import VideoFeed from "../components/VideoFeed"
 import Button from "../components/Button"
 import { MessageBase, MessageError } from "../components/Notifications"
 
-const ContentView = ({ children, ...props }) => <main {...props} className="flex flex-col items-center p-2 gap-2 mx-auto w-full xs:max-w-[100%] sm:max-w-[90%] ml-[3.5rem] md:max-w-[75%] lg:max-w-[100%]">{children}</main>
+const ContentView = ({ children, ...props }) => (
+  <main
+    {...props}
+    className="flex flex-col items-center p-2 gap-2 mx-auto w-full xs:max-w-[100%] sm:max-w-[90%] ml-[3.5rem] md:max-w-[75%] lg:max-w-[100%]"
+    data-oid="1hj71h5">
+    {children}
+  </main>
+)
 
 const Recents = () => {
   const [videos, setVideos] = useState([])
@@ -37,11 +44,11 @@ const Recents = () => {
   }, [])
 
   return (
-    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple min-h-screen">
-      {loading && <Button $rounded loading={loading} disabled />}
-      {error && <MessageError>{error}</MessageError>}
-      {!loading && videos.length === 0 && <MessageBase>Nenhum vídeo encontrado.</MessageBase>}
-      {!loading && !error && videos.length > 0 && <VideoFeed videos={videos} />}
+    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple min-h-screen" data-oid=".a993b2">
+      {loading && <Button $rounded loading={loading} disabled data-oid="uzsodow" />}
+      {error && <MessageError data-oid="cvm4qx6">{error}</MessageError>}
+      {!loading && videos.length === 0 && <MessageBase data-oid="u_06-fg">Nenhum vídeo encontrado.</MessageBase>}
+      {!loading && !error && videos.length > 0 && <VideoFeed videos={videos} data-oid="g3h3i6v" />}
     </SideMenu>
   )
 }

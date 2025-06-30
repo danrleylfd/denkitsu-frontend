@@ -10,10 +10,7 @@ const DndProvider = ({ children }) => {
   const [activeTask, setActiveTask] = useState(null)
   const [isOverTrash, setIsOverTrash] = useState(false)
 
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
-  )
+  const sensors = useSensors(useSensor(PointerSensor), useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }))
 
   const handleDragStart = (event) => {
     const { active } = event
@@ -85,11 +82,11 @@ const DndProvider = ({ children }) => {
   }
 
   const collisionDetectionStrategy = (args) => {
-    if (activeTask && args.droppableContainers.find(c => c.id === "trash")) {
-      const trashCollision = rectIntersection({ ...args, droppableContainers: args.droppableContainers.filter(c => c.id === "trash") })
+    if (activeTask && args.droppableContainers.find((c) => c.id === "trash")) {
+      const trashCollision = rectIntersection({ ...args, droppableContainers: args.droppableContainers.filter((c) => c.id === "trash") })
       if (trashCollision.length > 0) return trashCollision
     }
-    return closestCorners({ ...args, droppableContainers: args.droppableContainers.filter(c => c.id !== "trash") })
+    return closestCorners({ ...args, droppableContainers: args.droppableContainers.filter((c) => c.id !== "trash") })
   }
 
   // 3. Expõe apenas os valores e funções de DnD
@@ -104,7 +101,7 @@ const DndProvider = ({ children }) => {
   }
 
   return (
-    <DndContext.Provider value={value}>
+    <DndContext.Provider value={value} data-oid="zjuxnq8">
       {children}
     </DndContext.Provider>
   )

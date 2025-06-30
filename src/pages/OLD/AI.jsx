@@ -15,7 +15,11 @@ import PromptInput from "../components/PromptInput"
 import Button from "../components/Button"
 import { MessageError } from "../components/Notifications"
 
-const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-screen mx-auto">{children}</main>
+const ContentView = ({ children }) => (
+  <main className="flex flex-col flex-1 h-screen mx-auto" data-oid="pms588a">
+    {children}
+  </main>
+)
 
 const AI = () => {
   const { user } = useAuth()
@@ -123,23 +127,24 @@ const AI = () => {
   }, [])
 
   return (
-    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
-      <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-2">
+    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple" data-oid="8qre7dv">
+      <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-2" data-oid="6h_17cq">
         {messages.map((msg) => (
-          <ChatMessage key={msg.id} msg={msg} user={user} onShowCanva={handleShowCanva} loading={loading} />
+          <ChatMessage key={msg.id} msg={msg} user={user} onShowCanva={handleShowCanva} loading={loading} data-oid="ini7n2u" />
         ))}
-        <div ref={messagesEndRef} />
-        {error && <MessageError>{error}</MessageError>}
+        <div ref={messagesEndRef} data-oid="5zb-:g7" />
+        {error && <MessageError data-oid="jv68vlm">{error}</MessageError>}
       </div>
-      <div className="flex items-center justify-between gap-2 px-1 py-2 bg-lightBg-primary dark:bg-darkBg-primary">
-        <div className="w-0 h-0 p-0 m-0" />
+      <div className="flex items-center justify-between gap-2 px-1 py-2 bg-lightBg-primary dark:bg-darkBg-primary" data-oid="og5t_tf">
+        <div className="w-0 h-0 p-0 m-0" data-oid="y:od4uh" />
         <Button
           variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"}
           size="icon"
           $rounded
           onClick={aiProviderToggle}
-          title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
-          <LuBrain size={16} />
+          title={aiProvider === "groq" ? "Groq" : "OpenRouter"}
+          data-oid="g776nn-">
+          <LuBrain size={16} data-oid="5_.sst-" />
         </Button>
         <ModelSelect
           aiProvider={aiProvider}
@@ -150,16 +155,18 @@ const AI = () => {
           freeModels={freeModels}
           payModels={payModels}
           groqModels={groqModels}
+          data-oid="lds2ugu"
         />
-        <PromptInput textareaRef={textareaRef} inputText={inputText} setInputText={setInputText} handleKeyDown={handleKeyDown} loading={loading} />
-        <Button size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || !inputText.trim()}>
-          {!loading && <MdSend size={16} />}
+
+        <PromptInput textareaRef={textareaRef} inputText={inputText} setInputText={setInputText} handleKeyDown={handleKeyDown} loading={loading} data-oid="qhr0a0t" />
+        <Button size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || !inputText.trim()} data-oid="v6jjhym">
+          {!loading && <MdSend size={16} data-oid="680a_ej" />}
         </Button>
-        <Button variant="danger" size="icon" $rounded title="Apagar Conversa" onClick={clearHistory} disabled={loading}>
-          <MdClearAll size={16} />
+        <Button variant="danger" size="icon" $rounded title="Apagar Conversa" onClick={clearHistory} disabled={loading} data-oid=":9u-2k.">
+          <MdClearAll size={16} data-oid="-aqull5" />
         </Button>
       </div>
-      <Lousa htmlContent={canvaContent} onClose={handleCloseCanva} />
+      <Lousa htmlContent={canvaContent} onClose={handleCloseCanva} data-oid="20d4-ld" />
     </SideMenu>
   )
 }

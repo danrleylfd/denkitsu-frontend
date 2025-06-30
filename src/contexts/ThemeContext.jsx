@@ -5,7 +5,7 @@ const ThemeContext = createContext()
 export const ThemeProvider = ({ children }) => {
   const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
   let themeStorage = localStorage.getItem("@Denkitsu:theme")
-  const [theme, setTheme] = useState(themeStorage || (mediaQuery.matches? "dark" : "light"))
+  const [theme, setTheme] = useState(themeStorage || (mediaQuery.matches ? "dark" : "light"))
   !themeStorage && localStorage.setItem("@Denkitsu:theme", mediaQuery.matches ? "dark" : "light")
   themeStorage = localStorage.getItem("@Denkitsu:theme")
 
@@ -22,7 +22,7 @@ export const ThemeProvider = ({ children }) => {
   const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light")
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme }} data-oid="2z1.dth">
       {children}
     </ThemeContext.Provider>
   )

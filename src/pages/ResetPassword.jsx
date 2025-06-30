@@ -10,7 +10,11 @@ import Input from "../components/Input"
 import Button from "../components/Button"
 import { MessageBase, MessageError } from "../components/Notifications"
 
-const ContentView = ({ children }) => <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-screen">{children}</main>
+const ContentView = ({ children }) => (
+  <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-screen" data-oid="cx5yd9v">
+    {children}
+  </main>
+)
 
 const ResetPassword = () => {
   const [token, setToken] = useState("")
@@ -49,21 +53,56 @@ const ResetPassword = () => {
     }
   }
   return (
-    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
-      <Form title="Redefinir Senha" onSubmit={handleResetPassword}>
-        <Input name="token" type="text" placeholder="Token de Recuperação" value={token} onChange={(e) => setToken(e.target.value)} autoComplete="token" disabled={loading}/>
-        <Input name="email" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" disabled={loading}/>
-        <Input name="password" type={showPassword ? "text" : "password"} placeholder="Nova Senha" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" disabled={loading}>
-          <Button type="button" variant="outline" size="icon" $rounded onClick={() => setShowPassword(!showPassword)} disabled={loading}>
-            {showPassword ? <LuEye size={16}/> : <LuEyeClosed size={16}/>}
+    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple" data-oid="kc1hx1o">
+      <Form title="Redefinir Senha" onSubmit={handleResetPassword} data-oid="vs.ltj7">
+        <Input
+          name="token"
+          type="text"
+          placeholder="Token de Recuperação"
+          value={token}
+          onChange={(e) => setToken(e.target.value)}
+          autoComplete="token"
+          disabled={loading}
+          data-oid="7uynwv5"
+        />
+        <Input
+          name="email"
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoComplete="email"
+          disabled={loading}
+          data-oid="ss:4rr2"
+        />
+        <Input
+          name="password"
+          type={showPassword ? "text" : "password"}
+          placeholder="Nova Senha"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          autoComplete="new-password"
+          disabled={loading}
+          data-oid="9-aae_8">
+          <Button type="button" variant="outline" size="icon" $rounded onClick={() => setShowPassword(!showPassword)} disabled={loading} data-oid="yf8dee6">
+            {showPassword ? <LuEye size={16} data-oid="qc37o01" /> : <LuEyeClosed size={16} data-oid="lg.pol-" />}
           </Button>
         </Input>
-        <Input name="confirmPassword" type={showPassword ? "text" : "password"} placeholder="Confirmar Nova Senha" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} autoComplete="new-password" disabled={loading} />
-        <Button type="submit" $rounded loading={loading}>
+        <Input
+          name="confirmPassword"
+          type={showPassword ? "text" : "password"}
+          placeholder="Confirmar Nova Senha"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          autoComplete="new-password"
+          disabled={loading}
+          data-oid="-uq6t60"
+        />
+        <Button type="submit" $rounded loading={loading} data-oid="ju3f3l4">
           {!loading && "Redefinir Senha"}
         </Button>
-        {message && <MessageBase>{message}</MessageBase>}
-        {error && <MessageError>{error}</MessageError>}
+        {message && <MessageBase data-oid="jxn8qc9">{message}</MessageBase>}
+        {error && <MessageError data-oid="v9-:vpl">{error}</MessageError>}
       </Form>
     </SideMenu>
   )

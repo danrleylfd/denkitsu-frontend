@@ -5,7 +5,9 @@ const Input = ({ type = "text", placeholder, value, onChange, containerClassName
     "text-lightFg-primary",
     "dark:bg-darkBg-tertiary dark:text-darkFg-primary",
     containerClassName
-  ].filter(Boolean).join(" ")
+  ]
+    .filter(Boolean)
+    .join(" ")
 
   const inputClasses = [
     "w-full rounded-full bg-transparent py-2 px-2",
@@ -13,18 +15,14 @@ const Input = ({ type = "text", placeholder, value, onChange, containerClassName
     "focus:outline-none",
     "dark:placeholder:text-darkFg-tertiary",
     className
-  ].filter(Boolean).join(" ")
+  ]
+    .filter(Boolean)
+    .join(" ")
   return (
-    <div className={containerClasses}>
+    <div className={containerClasses} data-oid="qlqf9x9">
       {leftContent}
-      <input
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        className={inputClasses}
-        {...props}
-      />
+      <input type={type} placeholder={placeholder} value={value} onChange={onChange} className={inputClasses} {...props} data-oid="s2fys3m" />
+
       {children}
     </div>
   )
