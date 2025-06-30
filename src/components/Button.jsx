@@ -1,4 +1,4 @@
-const Spinner = () => <div className="h-4 w-4 animate-spin-fast rounded-full border-2 border-solid border-transparent border-t-current" data-oid="wc8j5kh" />
+const Spinner = () => <div className="h-4 w-4 animate-spin-fast rounded-full border-2 border-solid border-transparent border-t-current" />
 
 const Button = ({
   type = "button",
@@ -13,7 +13,7 @@ const Button = ({
   ...props
 }) => {
   const baseClasses =
-    "relative flex select-none items-center justify-center font-bold uppercase transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-50 w-min"
+    "relative flex select-none items-center justify-center font-bold uppercase transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-50 w-min mx-auto"
   const variantClasses = {
     primary: "bg-primary-base hover:bg-primary-light active:bg-primary-dark text-white transform transition-transform hover:scale-105 active:scale-95",
     secondary:
@@ -63,9 +63,8 @@ const Button = ({
           ${loading ? "pointer-events-none opacity-70" : ""}
           ${className}
         `}
-      disabled={loading || disabled}
-      data-oid="7uik9wa">
-      {loading && <Spinner data-oid="ywvbz5t" />} {children}
+      disabled={loading || disabled}>
+      {loading && <Spinner />} {children}
     </button>
   )
 }
