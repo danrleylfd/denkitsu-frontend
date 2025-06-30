@@ -1,3 +1,5 @@
+// src/pages/AI.jsx
+
 import { useState, useEffect, useRef, useCallback } from "react"
 import { LuX } from "react-icons/lu"
 
@@ -18,7 +20,7 @@ const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-sc
 
 const AI = () => {
   const { user } = useAuth()
-  const { aiKey, model, setModel, aiProvider, setAIProvider, messages, setMessages, clearHistory } = useAI()
+  const { aiKey, model, setModel, aiProvider, setAIProvider, prompt, messages, setMessages, clearHistory, customPrompt, setCustomPrompt } = useAI()
 
   const [freeModels, setFreeModels] = useState([])
   const [payModels, setPayModels] = useState([])
@@ -29,6 +31,7 @@ const AI = () => {
   const [error, setError] = useState(null)
   const [canvaContent, setCanvaContent] = useState(null)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [selectedPrompt, setSelectedPrompt] = useState("")
 
   const messagesEndRef = useRef(null)
 
@@ -58,16 +61,25 @@ const AI = () => {
     }
 
     const newUserMessage = { id: Date.now(), role: "user", content: messageContent.length === 1 ? messageContent[0].content : messageContent }
-    const currentMessages = [...messages, newUserMessage]
 
-    setMessages(currentMessages)
+    const messagesToSend = [...messages]
+
+    if (selectedPrompt) {
+      const modePromptObject = prompt.find(p => p.content.includes(selectedPrompt))
+      if (modePromptObject) {
+          messagesToSend.push(modePromptObject)
+      }
+    }
+    messagesToSend.push(newUserMessage)
+
+    setMessages((prev) => [...prev, newUserMessage])
     setInputText("")
     setImageUrl("")
     setLoading(true)
     setError(null)
 
     try {
-      const apiMessages = currentMessages.map(({ role, content }) => {
+      const apiMessages = messagesToSend.map(({ role, content }) => {
         if (Array.isArray(content)) {
           const apiContent = content.map((item) => {
             if (item.type === "text") return { type: "text", text: item.content }
@@ -128,7 +140,7 @@ const AI = () => {
     } finally {
       setLoading(false)
     }
-  }, [inputText, imageUrl, messages, model, aiKey, aiProvider, setMessages])
+  }, [inputText, imageUrl, messages, model, aiKey, aiProvider, setMessages, selectedPrompt])
 
   const handleShowCanva = useCallback((htmlCode) => {
     setCanvaContent(htmlCode)
@@ -163,7 +175,6 @@ const AI = () => {
         setInputText={setInputText}
         setImageUrl={setImageUrl}
         handleSendMessage={handleSendMessage}
-        clearHistory={clearHistory}
         toggleSettings={() => setIsSettingsOpen(true)}
         loading={loading}
       />
@@ -175,6 +186,9 @@ const AI = () => {
         payModels={payModels}
         groqModels={groqModels}
         clearHistory={clearHistory}
+        prompts={prompt}
+        selectedPrompt={selectedPrompt}
+        onSelectPrompt={setSelectedPrompt}
       />
 
       <Lousa htmlContent={canvaContent} onClose={handleCloseCanva} />

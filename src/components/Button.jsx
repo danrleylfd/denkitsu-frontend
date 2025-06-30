@@ -12,8 +12,7 @@ const Button = ({
   children,
   ...props
 }) => {
-  const baseClasses =
-    "relative flex select-none items-center justify-center font-bold uppercase transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-50 w-max self-center"
+  const baseClasses = "relative flex select-none items-center justify-center font-bold uppercase transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-50 w-max self-center"
   const variantClasses = {
     primary: "bg-primary-base hover:bg-primary-light active:bg-primary-dark text-white transform transition-transform hover:scale-105 active:scale-95",
     secondary:
@@ -37,7 +36,9 @@ const Button = ({
     "gradient-yellow":
       "text-white bg-gradient-to-br from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 active:from-yellow-500 active:to-amber-600 transform transition-transform hover:scale-105 active:scale-95",
     "gradient-pink":
-      "text-white bg-gradient-to-br from-pink-500 to-fuchsia-500 hover:from-pink-400 hover:to-fuchsia-400 active:from-pink-600 active:to-fuchsia-600 transform transition-transform hover:scale-105 active:scale-95"
+      "text-white bg-gradient-to-br from-pink-500 to-fuchsia-500 hover:from-pink-400 hover:to-fuchsia-400 active:from-pink-600 active:to-fuchsia-600 transform transition-transform hover:scale-105 active:scale-95",
+    "gradient-purple":
+      "text-white bg-gradient-to-br from-purple-500 to-violet-500 hover:from-purple-400 hover:to-violet-400 active:from-purple-600 active:to-violet-600 transform transition-transform hover:scale-105 active:scale-95",
   }
   const sizeClasses = {
     icon: "h-8 px-2 text-xs",

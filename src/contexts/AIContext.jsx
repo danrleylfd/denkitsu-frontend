@@ -57,7 +57,7 @@ export const AIProvider = ({ children }) => {
     if (!prompt) return
     setMessages((prev) => {
       const hasSystemMessage = prev.some((msg) => msg.role === "system")
-      if (!hasSystemMessage) return [...prompt.map((msg, pos) => ({ id: pos, ...msg })), initialMessage, { id: 9, role: "system", content: customPrompt }]
+      if (!hasSystemMessage) return [prompt[0], initialMessage, { id: 9, role: "system", content: customPrompt }]
       return prev
     })
     localStorage.setItem("@Denkitsu:messages", JSON.stringify(messages))
@@ -67,7 +67,7 @@ export const AIProvider = ({ children }) => {
 
   const aiProviderToggle = () => setAIProvider((prev) => (prev === "groq" ? "openrouter" : "groq"))
 
-  const clearHistory = () => setMessages([...prompt.map((msg, pos) => ({ id: pos, ...msg })), initialMessage, { id: 9, role: "system", content: customPrompt }])
+  const clearHistory = () => setMessages([prompt[0], initialMessage, { id: 9, role: "system", content: customPrompt }])
 
   const values = {
     prompt,

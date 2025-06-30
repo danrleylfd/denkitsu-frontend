@@ -32,6 +32,7 @@ const ChatInput = ({ inputText, setInputText, setImageUrl, handleSendMessage, to
           {!loading && <LuSendHorizontal size={16} />}
         </Button>
       </div>
+      {/* O seletor foi removido daqui */}
     </Paper>
   )
 }
