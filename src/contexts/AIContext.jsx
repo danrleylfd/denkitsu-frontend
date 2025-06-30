@@ -12,7 +12,7 @@ export const AIProvider = ({ children }) => {
   const storedCustomPrompt = localStorage.getItem("@Denkitsu:customPrompt")
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
 
-  const initialMessage = { id: 3, role: "assistant", content: "Olá! Como posso ajudar você hoje?\n Shift + Enter para quebrar a linha." }
+  const initialMessage = { id: 7, role: "assistant", content: "Olá! Como posso ajudar você hoje?\n Shift + Enter para quebrar a linha." }
 
   const [prompt, setPrompt] = useState([])
   const [customPrompt, setCustomPrompt] = useState(storedCustomPrompt || "Responda em português do Brasil (pt-BR).")
@@ -57,7 +57,7 @@ export const AIProvider = ({ children }) => {
     if (!prompt) return
     setMessages((prev) => {
       const hasSystemMessage = prev.some((msg) => msg.role === "system")
-      if (!hasSystemMessage) return [...prompt.map((msg, pos) => ({ id: pos, ...msg })), { id: 2, role: "system", content: customPrompt }, initialMessage]
+      if (!hasSystemMessage) return [...prompt.map((msg, pos) => ({ id: pos, ...msg })), initialMessage, { id: 8, role: "system", content: customPrompt }]
       return prev
     })
     localStorage.setItem("@Denkitsu:messages", JSON.stringify(messages))
@@ -72,7 +72,7 @@ export const AIProvider = ({ children }) => {
   }
 
   const clearHistory = () => {
-    setMessages([...prompt.map((msg, pos) => ({ id: pos, ...msg })), { id: 2, role: "system", content: customPrompt }, initialMessage])
+    setMessages([...prompt.map((msg, pos) => ({ id: pos, ...msg })), initialMessage, { id: 8, role: "system", content: customPrompt }])
   }
 
   const values = {
