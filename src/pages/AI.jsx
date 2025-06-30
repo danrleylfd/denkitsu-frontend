@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react"
+import { LuX } from "react-icons/lu"
 
 import { useAuth } from "../contexts/AuthContext"
 import { useAI } from "../contexts/AIContext"
@@ -10,12 +11,10 @@ import Lousa from "../components/Lousa"
 import AISettings from "../components/AISettings"
 import ChatInput from "../components/ChatInput"
 import { MessageError } from "../components/Notifications"
+import Paper from "../components/Paper"
+import Button from "../components/Button"
 
-const ContentView = ({ children }) => (
-  <main className="flex flex-col flex-1 h-screen mx-auto">
-    {children}
-  </main>
-)
+const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-screen mx-auto">{children}</main>
 
 const AI = () => {
   const { user } = useAuth()
@@ -25,6 +24,7 @@ const AI = () => {
   const [payModels, setPayModels] = useState([])
   const [groqModels, setGroqModels] = useState([])
   const [inputText, setInputText] = useState("")
+  const [imageUrl, setImageUrl] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [canvaContent, setCanvaContent] = useState(null)
@@ -47,15 +47,37 @@ const AI = () => {
   }, [messages, loading])
 
   const handleSendMessage = useCallback(async () => {
-    if (!inputText.trim()) return
-    const newUserMessage = { id: Date.now(), role: "user", content: inputText.trim() }
+    if (!inputText.trim() && !imageUrl) return
+
+    const messageContent = []
+    if (inputText.trim()) {
+      messageContent.push({ type: "text", content: inputText.trim() })
+    }
+    if (imageUrl) {
+      messageContent.push({ type: "image_url", image_url: { url: imageUrl } })
+    }
+
+    const newUserMessage = { id: Date.now(), role: "user", content: messageContent.length === 1 ? messageContent[0].content : messageContent }
     const currentMessages = [...messages, newUserMessage]
+
     setMessages(currentMessages)
     setInputText("")
+    setImageUrl("")
     setLoading(true)
     setError(null)
+
     try {
-      const apiMessages = currentMessages.map(({ role, content }) => ({ role, content }))
+      const apiMessages = currentMessages.map(({ role, content }) => {
+        if (Array.isArray(content)) {
+          const apiContent = content.map((item) => {
+            if (item.type === "text") return { type: "text", text: item.content }
+            return item
+          })
+          return { role, content: apiContent }
+        }
+        return { role, content }
+      })
+
       const streamedAssistantMessage = {
         id: Date.now() + 1,
         role: "assistant",
@@ -106,7 +128,7 @@ const AI = () => {
     } finally {
       setLoading(false)
     }
-  }, [inputText, messages, model, aiKey, aiProvider, setMessages])
+  }, [inputText, imageUrl, messages, model, aiKey, aiProvider, setMessages])
 
   const handleShowCanva = useCallback((htmlCode) => {
     setCanvaContent(htmlCode)
@@ -125,14 +147,25 @@ const AI = () => {
         <div ref={messagesEndRef} />
         {error && <MessageError>{error}</MessageError>}
       </div>
+
+      {imageUrl && (
+        <Paper className="bg-lightBg-primary dark:bg-darkBg-primary mx-2 rounded-none relative w-auto">
+          <p className="text-xs mb-1 text-lightFg-secondary dark:text-darkFg-secondary">Preview da imagem:</p>
+          <img src={imageUrl} alt="Preview" className="max-h-24 rounded-md object-cover" />
+          <Button variant="danger" size="icon" $rounded onClick={() => setImageUrl("")} className="absolute top-1 right-1">
+            <LuX size={16} />
+          </Button>
+        </Paper>
+      )}
+
       <ChatInput
         inputText={inputText}
         setInputText={setInputText}
+        setImageUrl={setImageUrl}
         handleSendMessage={handleSendMessage}
         clearHistory={clearHistory}
         toggleSettings={() => setIsSettingsOpen(true)}
         loading={loading}
-
       />
 
       <AISettings
@@ -142,7 +175,6 @@ const AI = () => {
         payModels={payModels}
         groqModels={groqModels}
         clearHistory={clearHistory}
-
       />
 
       <Lousa htmlContent={canvaContent} onClose={handleCloseCanva} />

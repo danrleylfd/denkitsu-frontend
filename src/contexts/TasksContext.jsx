@@ -22,7 +22,7 @@ const TasksProvider = ({ children }) => {
   const [error, setError] = useState(null)
   const [editingId, setEditingId] = useState(null)
 
-  const { aiKey, model, aiProvider } = useAI()
+  const { aiKey, model, aiProvider, prompt } = useAI()
 
   useEffect(() => {
     try {
@@ -59,8 +59,8 @@ const TasksProvider = ({ children }) => {
       return matches.map((match) => match[2].trim()).join("\n\n")
     }
     try {
-      const prompt = { role: "user", content: `Modo Secretário, Objetivo: "${goal}` }
-      const data = await sendMessage(aiKey, aiProvider, model, [prompt])
+      const userPrompt = { role: "user", content: `Modo Secretário, Objetivo: "${goal}` }
+      const data = await sendMessage(aiKey, aiProvider, model, [prompt[0], prompt[5], userPrompt])
       const content = data?.choices?.[0]?.message?.content.replace(/<think>[\s\S]*?<\/think>/g, "")
       const codeToCopy = () => extractCodeFromMarkdown(content)
       if (data.error) throw new Error(data.error.message)

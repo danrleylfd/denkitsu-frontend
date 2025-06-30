@@ -63,17 +63,11 @@ export const AIProvider = ({ children }) => {
     localStorage.setItem("@Denkitsu:messages", JSON.stringify(messages))
   }, [prompt, messages])
 
-  useEffect(() => {
-    localStorage.setItem("@Denkitsu:customPrompt", customPrompt)
-  }, [customPrompt])
+  useEffect(() => (localStorage.setItem("@Denkitsu:customPrompt", customPrompt)), [customPrompt])
 
-  const aiProviderToggle = () => {
-    setAIProvider((prev) => (prev === "groq" ? "openrouter" : "groq"))
-  }
+  const aiProviderToggle = () => setAIProvider((prev) => (prev === "groq" ? "openrouter" : "groq"))
 
-  const clearHistory = () => {
-    setMessages([...prompt.map((msg, pos) => ({ id: pos, ...msg })), initialMessage, { id: 9, role: "system", content: customPrompt }])
-  }
+  const clearHistory = () => setMessages([...prompt.map((msg, pos) => ({ id: pos, ...msg })), initialMessage, { id: 9, role: "system", content: customPrompt }])
 
   const values = {
     prompt,
