@@ -104,7 +104,7 @@ const AISettings = ({ isOpen, onClose, freeModels, payModels, groqModels, clearH
             Sua chave é salva localmente no seu navegador e nunca é enviada para nossos servidores.
           </small>
         </div>
-
+        <label className="text-lightFg-secondary dark:text-darkFg-secondary">Modelo</label>
         <div className="flex items-end gap-2">
           <div className="flex flex-col gap-2 w-full">
             <ModelSelect
@@ -116,7 +116,6 @@ const AISettings = ({ isOpen, onClose, freeModels, payModels, groqModels, clearH
               freeModels={freeModels}
               payModels={payModels}
               groqModels={groqModels}
-
             />
           </div>
           <Button
