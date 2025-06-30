@@ -35,9 +35,7 @@ const AISettings = ({ isOpen, onClose, freeModels, payModels, groqModels, clearH
             maxLength="7000"
             rows={15}
             className="w-full p-2 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary text-xs resize-y focus:outline-none focus:ring-2 focus:ring-primary-base"
-            placeholder="Digite seu prompt de sistema aqui..."
-
-          />
+            placeholder="Digite seu prompt de sistema aqui..." />
 
           <small className="text-right text-xs text-lightFg-tertiary dark:text-darkFg-tertiary self-end">
             {customPrompt.length} / 7000 caracteres.

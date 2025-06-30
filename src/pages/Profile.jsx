@@ -117,9 +117,7 @@ const Profile = () => {
           <img
             src={avatarUrl || userData.avatarUrl}
             alt={name || userData.name}
-            className="w-24 h-24 rounded-full object-cover border-4 border-violet-500"
-
-          />
+            className="w-24 h-24 rounded-full object-cover border-4 border-violet-500" />
 
           {userID === user._id && isEditing ? (
             <form className="flex-1 flex flex-col gap-0 items-center" onSubmit={(e) => e.preventDefault()}>
