@@ -1,8 +1,8 @@
 import { LuX, LuBrain } from "react-icons/lu"
 import { MdClearAll } from "react-icons/md"
-import { useAI } from "../contexts/AIContext"
-import Button from "./Button"
-import Input from "./Input"
+import { useAI } from "../../contexts/AIContext"
+import Button from "../Button"
+import Input from "../Input"
 import ModelSelect from "./ModelSelect"
 
 const AISettings = ({ isOpen, onClose, freeModels, payModels, groqModels, clearHistory, prompts, selectedPrompt, onSelectPrompt }) => {
@@ -107,9 +107,6 @@ const AISettings = ({ isOpen, onClose, freeModels, payModels, groqModels, clearH
 
         <div className="flex items-end gap-2">
           <div className="flex flex-col gap-2 w-full">
-            <label htmlFor="model-select" className="text-lightFg-secondary dark:text-darkFg-secondary">
-              Modelo
-            </label>
             <ModelSelect
               aiProvider={aiProvider}
               setAIProvider={setAIProvider}

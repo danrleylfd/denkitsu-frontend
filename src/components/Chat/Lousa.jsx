@@ -1,5 +1,5 @@
 import { LuX } from "react-icons/lu"
-import Button from "./Button"
+import Button from "../Button"
 
 const Lousa = ({ htmlContent, onClose }) => {
   if (!htmlContent) return null

@@ -1,8 +1,8 @@
 import { memo } from "react"
-import Markdown from "./Markdown"
-import MessageActions from "./MessageActions"
-import Button from "./Button"
-import PurpleLink from "./PurpleLink"
+import Markdown from "../Markdown"
+import MessageActions from "../MessageActions"
+import Button from "../Button"
+import PurpleLink from "../PurpleLink"
 
 const ChatMessage = ({ msg, user, onShowCanva, loading }) => {
   const isSystem = msg.role === "system"
