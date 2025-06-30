@@ -13,7 +13,7 @@ const Button = ({
   ...props
 }) => {
   const baseClasses =
-    "relative flex select-none items-center justify-center font-bold uppercase transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-50"
+    "relative flex select-none items-center justify-center font-bold uppercase transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-50 w-min"
   const variantClasses = {
     primary: "bg-primary-base hover:bg-primary-light active:bg-primary-dark text-white transform transition-transform hover:scale-105 active:scale-95",
     secondary:
