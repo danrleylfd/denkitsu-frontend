@@ -159,7 +159,7 @@ const AI = () => {
       </div>
 
       {imageUrl && (
-        <Paper className="bg-lightBg-primary dark:bg-darkBg-primary mx-2 rounded-none relative w-full">
+        <Paper className="bg-lightBg-primary dark:bg-darkBg-primary rounded-none relative w-full">
           <img src={imageUrl} alt="Preview" className="max-h-24 rounded-md object-cover" />
         </Paper>
       )}
