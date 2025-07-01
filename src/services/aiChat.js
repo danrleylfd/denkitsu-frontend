@@ -2,7 +2,7 @@ import axios from "axios"
 import api from "./"
 
 const sendMessageStream = async (aiKey, aiProvider, web, model, messages, onDelta) => {
-  const plugins = web ? { id: "web" } : undefined
+  const plugins = web ? [{ id: "web" }] : undefined
   const payload = {
     // aiKey,
     model,
