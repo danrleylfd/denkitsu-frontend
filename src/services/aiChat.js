@@ -1,7 +1,7 @@
 import axios from "axios"
 import api from "./"
 
-const sendMessageStream = async (aiKey, aiProvider, web, model, messages, onDelta) => {
+const sendMessageStream = async (aiKey, aiProvider, model, messages, web, onDelta) => {
   const permission = aiProvider === "groq" ? false : web
   const plugins = permission ? [{ id: "web" }] : undefined
   const payload = {
