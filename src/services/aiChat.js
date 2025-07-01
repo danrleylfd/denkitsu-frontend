@@ -1,14 +1,14 @@
 import axios from "axios"
 import api from "./"
 
-const sendMessageStream = async (aiKey, aiProvider, model, messages, web, onDelta) => {
-  const plugins = web ? [{ id: "web" }] : undefined
+const sendMessageStream = async (aiKey, aiProvider, web, model, messages, onDelta) => {
+  const plugins = web ? { id: "web" } : undefined
   const payload = {
     // aiKey,
     model,
     messages,
     plugins,
-    stream: true,
+    stream: true
   }
   const apiURL = aiProvider === "groq" ? "https://api.groq.com/openai/v1/chat/completions" : "https://openrouter.ai/api/v1/chat/completions"
   const response = await fetch(apiURL, {
@@ -31,7 +31,6 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, web, onDelt
       if (line.startsWith("data: ")) {
         const payload = line.replace("data: ", "")
         if (payload === "[DONE]") {
-          done = true
           return
         }
         try {
