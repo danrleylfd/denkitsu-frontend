@@ -163,12 +163,8 @@ const AI = () => {
       </div>
 
       {imageUrl && (
-        <Paper className="bg-lightBg-primary dark:bg-darkBg-primary mx-2 rounded-none relative w-auto">
-          <p className="text-xs mb-1 text-lightFg-secondary dark:text-darkFg-secondary">Preview da imagem:</p>
+        <Paper className="bg-lightBg-primary dark:bg-darkBg-primary mx-2 rounded-none relative w-full">
           <img src={imageUrl} alt="Preview" className="max-h-24 rounded-md object-cover" />
-          <Button variant="danger" size="icon" $rounded onClick={() => setImageUrl("")} className="absolute top-1 right-1">
-            <LuX size={16} />
-          </Button>
         </Paper>
       )}
 

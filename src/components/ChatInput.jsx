@@ -1,4 +1,4 @@
-import { LuSettings, LuSendHorizontal, LuImagePlus, LuGlobe } from "react-icons/lu"
+import { LuSettings, LuSendHorizontal, LuImagePlus, LuX, LuGlobe } from "react-icons/lu"
 import PromptInput from "./PromptInput"
 import Button from "./Button"
 import Paper from "./Paper"
@@ -27,6 +27,11 @@ const ChatInput = ({ inputText, setInputText, setImageUrl, web, setWeb, handleSe
         <Button variant="secondary" size="icon" $rounded title="Adicionar Imagem por URL" onClick={handleAddImageUrl} disabled={loading}>
           <LuImagePlus size={16} />
         </Button>
+        {Image.url && (
+          <Button variant="danger" size="icon" $rounded onClick={() => setImageUrl("")}>
+            <LuX size={16} />
+          </Button>
+        )}
         <Button variant={web ? "outline" : "secondary"} size="icon" $rounded title="Acesso à Internet" onClick={() => setWeb(!web)} disabled={loading}>
           <LuGlobe size={16} />
         </Button>
