@@ -10,6 +10,7 @@ export const AIProvider = ({ children }) => {
   const storedModelGroq = localStorage.getItem("@Denkitsu:GroqModel")
   const storedOpenRouterModel = localStorage.getItem("@Denkitsu:OpenRouterModel")
   const storedCustomPrompt = localStorage.getItem("@Denkitsu:customPrompt")
+  const storedWeb = JSON.parse(localStorage.getItem("@Denkitsu:Web"))
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
 
   const initialMessage = { role: "assistant", content: "Olá! Como posso ajudar você hoje?\n Shift + Enter para quebrar a linha." }
@@ -21,10 +22,12 @@ export const AIProvider = ({ children }) => {
   const [openRouterKey, setOpenRouterKey] = useState(storedOpenRouterKey || "")
   const [groqModel, setGroqModel] = useState(storedModelGroq || "deepseek-r1-distill-llama-70b")
   const [openRouterModel, setOpenRouterModel] = useState(storedOpenRouterModel || "deepseek/deepseek-r1:free")
+  const [web, setWeb] = useState(storedWeb)
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
 
   useEffect(() => {
     async function loadPrompt() {
+      if (prompt.length > 0) return
       const promptData = await getPrompt()
       setPrompt(promptData)
     }
@@ -33,7 +36,14 @@ export const AIProvider = ({ children }) => {
 
   useEffect(() => {
     localStorage.setItem("@Denkitsu:aiProvider", aiProvider)
-  }, [aiProvider])
+    console.log({ storedAIProvider, aiProvider })
+    localStorage.setItem("@Denkitsu:GroqModel", groqModel)
+    console.log({ storedModelGroq, groqModel })
+    localStorage.setItem("@Denkitsu:OpenRouterModel", openRouterModel)
+    console.log({ storedOpenRouterModel, openRouterModel })
+    localStorage.setItem("@Denkitsu:Web", web)
+    console.log({ storedWeb, web })
+  }, [aiProvider, groqModel, openRouterModel, web])
 
   useEffect(() => {
     if (groqKey.trim() === "") return localStorage.removeItem("@Denkitsu:Groq")
@@ -46,14 +56,6 @@ export const AIProvider = ({ children }) => {
   }, [openRouterKey])
 
   useEffect(() => {
-    localStorage.setItem("@Denkitsu:GroqModel", groqModel)
-  }, [groqModel])
-
-  useEffect(() => {
-    localStorage.setItem("@Denkitsu:OpenRouterModel", openRouterModel)
-  }, [openRouterModel])
-
-  useEffect(() => {
     if (!prompt) return
     setMessages((prev) => {
       const hasSystemMessage = prev.some((msg) => msg.role === "system")
@@ -61,7 +63,7 @@ export const AIProvider = ({ children }) => {
       return prev
     })
     localStorage.setItem("@Denkitsu:messages", JSON.stringify(messages))
-  }, [prompt, messages])
+  }, [prompt])
 
   useEffect(() => (localStorage.setItem("@Denkitsu:customPrompt", customPrompt)), [customPrompt])
 
@@ -72,6 +74,8 @@ export const AIProvider = ({ children }) => {
   const values = {
     prompt,
     setPrompt,
+    web,
+    setWeb,
     aiProvider,
     setAIProvider,
     aiProviderToggle,

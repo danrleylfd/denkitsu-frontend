@@ -1,9 +1,9 @@
-import { LuSettings, LuSendHorizontal, LuImagePlus } from "react-icons/lu"
+import { LuSettings, LuSendHorizontal, LuImagePlus, LuGlobe } from "react-icons/lu"
 import PromptInput from "./PromptInput"
 import Button from "./Button"
 import Paper from "./Paper"
 
-const ChatInput = ({ inputText, setInputText, setImageUrl, handleSendMessage, toggleSettings, loading }) => {
+const ChatInput = ({ inputText, setInputText, setImageUrl, web, setWeb, handleSendMessage, toggleSettings, loading }) => {
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
@@ -26,6 +26,9 @@ const ChatInput = ({ inputText, setInputText, setImageUrl, handleSendMessage, to
         </Button>
         <Button variant="secondary" size="icon" $rounded title="Adicionar Imagem por URL" onClick={handleAddImageUrl} disabled={loading}>
           <LuImagePlus size={16} />
+        </Button>
+        <Button variant={web ? "outline" : "secondary"} size="icon" $rounded title="Adicionar Imagem por URL" onClick={() => setWeb(!web)} disabled={loading}>
+          <LuGlobe size={16} />
         </Button>
         <PromptInput inputText={inputText} setInputText={setInputText} handleKeyDown={handleKeyDown} loading={loading} />
         <Button size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || (!inputText.trim() && !Image.url)}>

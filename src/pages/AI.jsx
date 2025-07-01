@@ -20,7 +20,7 @@ const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-sc
 
 const AI = () => {
   const { user } = useAuth()
-  const { aiKey, model, setModel, aiProvider, setAIProvider, prompt, messages, setMessages, clearHistory, customPrompt, setCustomPrompt } = useAI()
+  const { aiKey, model, setModel, aiProvider, setAIProvider, prompt, web, setWeb, messages, setMessages, clearHistory, customPrompt, setCustomPrompt } = useAI()
 
   const [freeModels, setFreeModels] = useState([])
   const [payModels, setPayModels] = useState([])
@@ -102,7 +102,7 @@ const AI = () => {
         _reasoningBuffer: ""
       }
       setMessages((prev) => [...prev, streamedAssistantMessage])
-      await sendMessageStream(aiKey, aiProvider, model, apiMessages, (delta) => {
+      await sendMessageStream(aiKey, aiProvider, model, apiMessages, aiProvider === "groq" ? false : web, (delta) => {
         if (delta.content) {
           streamedAssistantMessage._contentBuffer += delta.content
         }
@@ -176,6 +176,8 @@ const AI = () => {
         inputText={inputText}
         setInputText={setInputText}
         setImageUrl={setImageUrl}
+        web={web}
+        setWeb={setWeb}
         handleSendMessage={handleSendMessage}
         toggleSettings={() => setIsSettingsOpen(true)}
         loading={loading}

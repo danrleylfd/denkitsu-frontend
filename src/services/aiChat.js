@@ -1,12 +1,14 @@
 import axios from "axios"
 import api from "./"
 
-const sendMessageStream = async (aiKey, aiProvider, model, messages, onDelta) => {
+const sendMessageStream = async (aiKey, aiProvider, model, messages, web, onDelta) => {
+  const plugins = web ? [{ id: "web" }] : []
   const payload = {
     // aiKey,
     model,
     messages,
-    stream: true
+    plugins,
+    stream: true,
   }
   const apiURL = aiProvider === "groq" ? "https://api.groq.com/openai/v1/chat/completions" : "https://openrouter.ai/api/v1/chat/completions"
   const response = await fetch(apiURL, {
