@@ -27,7 +27,7 @@ const ChatInput = ({ inputText, setInputText, setImageUrl, web, setWeb, handleSe
         <Button variant="secondary" size="icon" $rounded title="Adicionar Imagem por URL" onClick={handleAddImageUrl} disabled={loading}>
           <LuImagePlus size={16} />
         </Button>
-        <Button variant={web ? "outline" : "secondary"} size="icon" $rounded title="Adicionar Imagem por URL" onClick={() => setWeb(!web)} disabled={loading}>
+        <Button variant={web ? "outline" : "secondary"} size="icon" $rounded title="Acesso à Internet" onClick={() => setWeb(!web)} disabled={loading}>
           <LuGlobe size={16} />
         </Button>
         <PromptInput inputText={inputText} setInputText={setInputText} handleKeyDown={handleKeyDown} loading={loading} />

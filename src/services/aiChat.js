@@ -1,56 +1,13 @@
 import axios from "axios"
 import api from "./"
 
-const newsToolSpec = {
-  type: "function",
-  function: {
-    name: "searchNews",
-    description: "Busca notícias recentes na NewsAPI com base em uma query",
-    parameters: {
-      type: "object",
-      properties: {
-        query: {
-          type: "string",
-          description: "Palavras-chave para buscar notícias"
-        }
-      },
-      required: ["query"]
-    }
-  }
-}
-
-const searchNews = async (query) => {
-  try {
-    const response = await axios.get("https://newsapi.org/v2/everything", {
-      params: {
-        apiKey: newsApiKey,
-        pageSize: 1,
-        q: query,
-        sources: "the-next-web,wired,ars-technica,engadget,techcrunch,techcrunch-cn,techradar,the-verge,wired-de,hacker-news,recode,t3n,gruenderszene,crypto-coins-news",
-      }
-    })
-    const articles = response.data.articles.map(article => ({
-      title: article.title,
-      description: article.description,
-      url: article.url,
-      publishedAt: article.publishedAt
-    }))
-    return { articles }
-  } catch (error) {
-    console.error("Erro ao buscar notícias:", error.response?.data || error.message)
-    throw new Error("Falha ao buscar notícias na NewsAPI")
-  }
-}
-
 const sendMessageStream = async (aiKey, aiProvider, model, messages, web, onDelta) => {
-  const plugins = web ? [{ id: "web" }] : []
+  const plugins = web ? [{ id: "web" }] : undefined
   const payload = {
     // aiKey,
     model,
     messages,
     plugins,
-    tools: [newsToolSpec],
-    tool_choice: { type: "function", function: { name: "searchNews" } },
     stream: true,
   }
   const apiURL = aiProvider === "groq" ? "https://api.groq.com/openai/v1/chat/completions" : "https://openrouter.ai/api/v1/chat/completions"

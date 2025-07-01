@@ -27,7 +27,6 @@ export const AIProvider = ({ children }) => {
 
   useEffect(() => {
     async function loadPrompt() {
-      if (prompt.length > 0) return
       const promptData = await getPrompt()
       setPrompt(promptData)
     }
@@ -36,14 +35,7 @@ export const AIProvider = ({ children }) => {
 
   useEffect(() => {
     localStorage.setItem("@Denkitsu:aiProvider", aiProvider)
-    console.log({ storedAIProvider, aiProvider })
-    localStorage.setItem("@Denkitsu:GroqModel", groqModel)
-    console.log({ storedModelGroq, groqModel })
-    localStorage.setItem("@Denkitsu:OpenRouterModel", openRouterModel)
-    console.log({ storedOpenRouterModel, openRouterModel })
-    localStorage.setItem("@Denkitsu:Web", web)
-    console.log({ storedWeb, web })
-  }, [aiProvider, groqModel, openRouterModel, web])
+  }, [aiProvider])
 
   useEffect(() => {
     if (groqKey.trim() === "") return localStorage.removeItem("@Denkitsu:Groq")
@@ -56,6 +48,18 @@ export const AIProvider = ({ children }) => {
   }, [openRouterKey])
 
   useEffect(() => {
+    localStorage.setItem("@Denkitsu:GroqModel", groqModel)
+  }, [groqModel])
+
+  useEffect(() => {
+    localStorage.setItem("@Denkitsu:OpenRouterModel", openRouterModel)
+  }, [openRouterModel])
+
+  useEffect(() => {
+    localStorage.setItem("@Denkitsu:Web", web)
+  }, [web])
+
+  useEffect(() => {
     if (!prompt) return
     setMessages((prev) => {
       const hasSystemMessage = prev.some((msg) => msg.role === "system")
@@ -63,7 +67,7 @@ export const AIProvider = ({ children }) => {
       return prev
     })
     localStorage.setItem("@Denkitsu:messages", JSON.stringify(messages))
-  }, [prompt])
+  }, [prompt, messages])
 
   useEffect(() => (localStorage.setItem("@Denkitsu:customPrompt", customPrompt)), [customPrompt])
 
