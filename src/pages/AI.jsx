@@ -1,7 +1,4 @@
-// src/pages/AI.jsx
-
 import { useState, useEffect, useRef, useCallback } from "react"
-import { LuX } from "react-icons/lu"
 
 import { useAuth } from "../contexts/AuthContext"
 import { useAI } from "../contexts/AIContext"
@@ -14,7 +11,6 @@ import AISettings from "../components/AISettings"
 import ChatInput from "../components/ChatInput"
 import { MessageError } from "../components/Notifications"
 import Paper from "../components/Paper"
-import Button from "../components/Button"
 
 const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-screen mx-auto">{children}</main>
 
@@ -171,6 +167,7 @@ const AI = () => {
       <ChatInput
         inputText={inputText}
         setInputText={setInputText}
+        imageUrl={imageUrl}
         setImageUrl={setImageUrl}
         web={web}
         setWeb={setWeb}

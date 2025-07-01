@@ -3,7 +3,7 @@ import PromptInput from "./PromptInput"
 import Button from "./Button"
 import Paper from "./Paper"
 
-const ChatInput = ({ inputText, setInputText, setImageUrl, web, setWeb, handleSendMessage, toggleSettings, loading }) => {
+const ChatInput = ({ inputText, setInputText, imageUrl, setImageUrl, web, setWeb, handleSendMessage, toggleSettings, loading }) => {
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
@@ -24,10 +24,10 @@ const ChatInput = ({ inputText, setInputText, setImageUrl, web, setWeb, handleSe
         <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettings} disabled={loading}>
           <LuSettings size={16} />
         </Button>
-        <Button variant="secondary" size="icon" $rounded title="Adicionar Imagem por URL" onClick={handleAddImageUrl} disabled={loading}>
+        {imageUrl.length === 0 && <Button variant="secondary" size="icon" $rounded title="Adicionar Imagem por URL" onClick={handleAddImageUrl} disabled={loading}>
           <LuImagePlus size={16} />
-        </Button>
-        {Image.url && (
+        </Button>}
+        {imageUrl && (
           <Button variant="danger" size="icon" $rounded onClick={() => setImageUrl("")}>
             <LuX size={16} />
           </Button>
