@@ -102,7 +102,7 @@ const AI = () => {
         _reasoningBuffer: ""
       }
       setMessages((prev) => [...prev, streamedAssistantMessage])
-      await sendMessageStream(aiKey, aiProvider, model, apiMessages, aiProvider === "groq" ? false : web, (delta) => {
+      await sendMessageStream(aiKey, aiProvider, model, apiMessages, web, (delta) => {
         if (delta.content) {
           streamedAssistantMessage._contentBuffer += delta.content
         }
