@@ -13,8 +13,6 @@ export const AIProvider = ({ children }) => {
   const storedWeb = JSON.parse(localStorage.getItem("@Denkitsu:Web"))
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
 
-  const initialMessage = { role: "assistant", content: "Olá! Como posso ajudar você hoje?\n Shift + Enter para quebrar a linha." }
-
   const [prompt, setPrompt] = useState([])
   const [customPrompt, setCustomPrompt] = useState(storedCustomPrompt || "Responda em português do Brasil (pt-BR).")
   const [aiProvider, setAIProvider] = useState(storedAIProvider || "openrouter")
@@ -60,7 +58,7 @@ export const AIProvider = ({ children }) => {
   }, [web])
 
   useEffect(() => {
-    if (!prompt) return
+    if (prompt.length === 0) return
     setMessages((prev) => {
       const hasSystemMessage = prev.some((msg) => msg.role === "system")
       if (!hasSystemMessage) return [prompt[0], { role: "system", content: customPrompt }]
