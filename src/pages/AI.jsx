@@ -176,7 +176,7 @@ const AI = () => {
       setMessages((prev) => [...prev, assistantPlaceholder])
       try {
         const data = await sendMessage(aiKey, aiProvider, model, apiMessages, web)
-        const responseMessage = data.choices[0].message
+        const responseMessage = data?.choices[0].message
         const finalMessage = {
           id: assistantPlaceholder.id,
           role: "assistant",
@@ -190,11 +190,12 @@ const AI = () => {
           return updated
         })
       } catch (err) {
+        const errMsg = err.response?.data?.error?.message || err.message || "Erro desconhecido"
         setMessages((prev) => {
           const updated = [...prev]
           const msgIndex = updated.findIndex((msg) => msg.id === assistantPlaceholder.id)
           if (msgIndex !== -1) {
-            updated[msgIndex].content = "Falha ao enviar mensagem.\n```diff\n- " + err.message + "\n```"
+            updated[msgIndex].content = "Falha ao enviar mensagem.\n```diff\n- " + errMsg + "\n```"
           }
           return updated
         })
