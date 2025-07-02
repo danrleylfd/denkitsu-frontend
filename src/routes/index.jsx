@@ -23,6 +23,7 @@ import News from "../pages/News"
 import Kanban from "../pages/Kanban"
 import Pomodoro from "../pages/Pomodoro"
 import Weather from "../pages/Weather"
+import Translator from "../pages/Translator"
 
 const AppRoutes = () => {
   const { signed, loading } = useAuth()
@@ -37,6 +38,7 @@ const AppRoutes = () => {
             <Route path="/kanban" element={<Kanban />} />
             <Route path="/pomodoro" element={<Pomodoro />} />
             <Route path="/clima" element={<Weather />} />
+            <Route path="/translator" element={<Translator />} />
             <Route path="/upload" element={<Upload />} />
             <Route path="/recents" element={<Recents />} />
             <Route path="/popular" element={<Popular />} />
@@ -57,6 +59,7 @@ const AppRoutes = () => {
             <Route path="/todo" element={<Kanban />} />
             <Route path="/pomodoro" element={<Pomodoro />} />
             <Route path="/clima" element={<Weather />} />
+            <Route path="/translator" element={<Translator />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/forgot_password" element={<ForgotPassword />} />

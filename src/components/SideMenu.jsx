@@ -16,7 +16,8 @@ import {
   LuLink,
   LuPersonStanding,
   LuSun,
-  LuMoon
+  LuMoon,
+  LuLanguages
 } from "react-icons/lu"
 import { MdHomeFilled } from "react-icons/md"
 import { useTheme } from "../contexts/ThemeContext"
@@ -45,7 +46,8 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
     { icon: MdHomeFilled, label: "Início", to: "/" },
     { icon: LuNewspaper, label: "Notícias", to: "/news" },
     { icon: LuCloud, label: "Clima", to: "/clima" },
-    { icon: LuClock, label: "Pomodoro", to: "/pomodoro" }
+    { icon: LuClock, label: "Pomodoro", to: "/pomodoro" },
+    { icon: LuLanguages, label: "Tradutor", to: "/translator" }
   ]
 
   signed &&
