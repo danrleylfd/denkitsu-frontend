@@ -105,11 +105,8 @@ const Tradutor = () => {
   }
 
   const swapLanguages = () => {
-    let a = sourceLang;
-    let b = targetLang;
-    [a, b] = [b, a];
-    setSourceLang(a);
-    setTargetLang(b);
+    setSourceLang(targetLang)
+    setTargetLang(sourceLang)
   }
 
   return (
