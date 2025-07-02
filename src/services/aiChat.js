@@ -49,7 +49,6 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, web, onDelt
 }
 
 const sendMessage = async (aiKey, aiProvider, model, messages, web) => {
-<<<<<<< HEAD
   const permission = aiProvider === "groq" ? false : web
   const plugins = permission ? [{ id: "web" }] : undefined
   const payload = {
@@ -58,21 +57,6 @@ const sendMessage = async (aiKey, aiProvider, model, messages, web) => {
     model,
     plugins,
     messages: [...messages]
-=======
-  try {
-    const permission = aiProvider === "groq" ? false : web
-    const plugins = permission ? [{ id: "web" }] : undefined
-    const payload = {
-      aiKey,
-      aiProvider,
-      model,
-      plugins,
-      messages: [...messages]
-    }
-    return await api.post("/ai/chat/completions", payload)
-  } catch (error) {
-    console.error(error.response?.data?.error?.message || error.message)
->>>>>>> 787277cdd856bf09e39e5b91558f3c35886a166d
   }
   return await api.post("/ai/chat/completions", payload)
 }
