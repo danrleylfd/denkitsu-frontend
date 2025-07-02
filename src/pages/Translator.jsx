@@ -119,7 +119,6 @@ const Tradutor = () => {
           <LuLanguages size={24} />
           <h2 className="text-xl font-bold">Tradutor Offline</h2>
         </div>
-
         {isApiAvailable ? (
           <>
             <textarea
@@ -129,7 +128,6 @@ const Tradutor = () => {
               className="w-full h-32 p-2 rounded-md resize-none bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary"
               disabled={loading}
             />
-
             <div className="flex items-center justify-between gap-4">
               <select value={sourceLang} onChange={(e) => setSourceLang(e.target.value)} className="p-2 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary">
                 {supportedLanguages.map(lang => (
@@ -138,8 +136,8 @@ const Tradutor = () => {
                   </option>
                 ))}
               </select>
-              <Button onClick={swapLanguages} disabled={loading || !inputText.trim()} $rounded>
-                <LuLanguages />
+              <Button variant="outline" size="icon" $rounded onClick={swapLanguages} disabled={loading}>
+                <LuLanguages size={16} />
               </Button>
               <Button onClick={handleTranslate} disabled={loading || !inputText.trim()} $rounded>
                 {loading ? <LuLoader className="animate-spin" /> : "Traduzir"}
@@ -152,7 +150,6 @@ const Tradutor = () => {
                 ))}
               </select>
             </div>
-
             <div className="relative">
               <textarea
                 value={outputText}
@@ -168,7 +165,6 @@ const Tradutor = () => {
             </div>
           </>
         ) : null}
-
         {error && <MessageError>{error}</MessageError>}
       </Paper>
     </SideMenu>
