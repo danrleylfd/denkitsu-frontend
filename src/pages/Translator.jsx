@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react"
-import { LuLanguages, LuCopy, LuLoader } from "react-icons/lu" // CORRIGIDO: LuLoader2
+import { LuLanguages, LuCopy, LuLoader, LuArrowRightLeft } from "react-icons/lu" // CORRIGIDO: LuLoader2
 
 import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
@@ -107,6 +107,8 @@ const Tradutor = () => {
   const swapLanguages = () => {
     setSourceLang(targetLang)
     setTargetLang(sourceLang)
+    setInputText(outputText)
+    setOutputText(inputText)
   }
 
   return (
@@ -134,7 +136,7 @@ const Tradutor = () => {
                 ))}
               </select>
               <Button variant="outline" size="icon" $rounded onClick={swapLanguages} disabled={loading}>
-                <LuLanguages size={16} />
+                <LuArrowRightLeft size={16} />
               </Button>
               <Button onClick={handleTranslate} disabled={loading || !inputText.trim()} $rounded>
                 {loading ? <LuLoader className="animate-spin" /> : "Traduzir"}
