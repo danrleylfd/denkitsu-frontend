@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react"
-import { LuLanguages, LuCopy, LuLoader, LuArrowRightLeft } from "react-icons/lu" // CORRIGIDO: LuLoader2
+import { LuLanguages, LuCopy, LuLoader, LuArrowRightLeft, LuArrowUpDown } from "react-icons/lu" // CORRIGIDO: LuLoader2
 
 import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
@@ -107,6 +107,9 @@ const Tradutor = () => {
   const swapLanguages = () => {
     setSourceLang(targetLang)
     setTargetLang(sourceLang)
+  }
+
+  const swapText = () => {
     setInputText(outputText)
     setOutputText(inputText)
   }
@@ -131,6 +134,12 @@ const Tradutor = () => {
               <Button variant="secondary" size="icon" $rounded onClick={swapLanguages} disabled={loading}>
                 <LuArrowRightLeft size={16} />
               </Button>
+              <Button size="icon" onClick={handleTranslate} disabled={loading || !inputText.trim()} $rounded>
+                {loading ? <LuLoader className="animate-spin" size={16} /> : <LuLanguages size={16} />}
+              </Button>
+              <Button variant="secondary" size="icon" $rounded onClick={swapText} disabled={loading}>
+                <LuArrowUpDown size={16} />
+              </Button>
               <select value={targetLang} onChange={(e) => setTargetLang(e.target.value)} className="p-2 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary">
                 {supportedLanguages.map(lang => (
                   <option key={lang.code} value={lang.code}>
@@ -150,7 +159,6 @@ const Tradutor = () => {
               <textarea
                 value={outputText}
                 readOnly
-                placeholder="Tradução..."
                 className="w-full h-32 p-2 rounded-md resize-none bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary"
               />
               {outputText && (
@@ -159,9 +167,6 @@ const Tradutor = () => {
                 </Button>
               )}
             </div>
-            <Button onClick={handleTranslate} disabled={loading || !inputText.trim()} $rounded>
-                {loading ? <LuLoader className="animate-spin" /> : "Traduzir"}
-              </Button>
           </div>
         ) : null}
         {error && <MessageError>{error}</MessageError>}
