@@ -104,6 +104,13 @@ const Tradutor = () => {
     navigator.clipboard.writeText(outputText)
   }
 
+  const swapLanguages = () => {
+    let a, b = sourceLang, targetLang
+    [a, b] = [b, a]
+    setSourceLang(a)
+    setTargetLang(b)
+  }
+
   return (
     <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
       <Paper className="w-full max-w-2xl flex flex-col gap-4 bg-lightBg-primary dark:bg-darkBg-primary">
@@ -130,14 +137,8 @@ const Tradutor = () => {
                   </option>
                 ))}
               </select>
-              <Button onClick={() => {
-                const a = sourceLang
-                const b = targetLang
-                [a,b] = [b,a]
-                setSourceLang(a)
-                setTargetLang(b)
-              }} disabled={loading || !inputText.trim()} $rounded>
-                {loading ? <LuLoader className="animate-spin" /> : "Trocar"}
+              <Button onClick={swapLanguages} disabled={loading || !inputText.trim()} $rounded>
+                <LuLanguages />
               </Button>
               <Button onClick={handleTranslate} disabled={loading || !inputText.trim()} $rounded>
                 {loading ? <LuLoader className="animate-spin" /> : "Traduzir"}
