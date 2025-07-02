@@ -12,6 +12,25 @@ const ContentView = ({ children }) => (
   </main>
 )
 
+const supportedLanguages = [
+  { code: 'de', name: 'Alemão' },
+  { code: 'ar', name: 'Árabe' },
+  { code: 'zh', name: 'Chinês (Simplificado)' },
+  { code: 'ko', name: 'Coreano' },
+  { code: 'es', name: 'Espanhol' },
+  { code: 'fr', name: 'Francês' },
+  { code: 'nl', name: 'Holandês' },
+  { code: 'hi', name: 'Hindi' },
+  { code: 'en', name: 'Inglês' },
+  { code: 'id', name: 'Indonésio' },
+  { code: 'it', name: 'Italiano' },
+  { code: 'ja', name: 'Japonês' },
+  { code: 'pl', name: 'Polonês' },
+  { code: 'pt', name: 'Português' },
+  { code: 'ru', name: 'Russo' },
+  { code: 'tr', name: 'Turco' }
+].sort((a, b) => a.name.localeCompare(b.name))
+
 const Tradutor = () => {
   const [inputText, setInputText] = useState("")
   const [outputText, setOutputText] = useState("")
@@ -86,11 +105,11 @@ const Tradutor = () => {
 
             <div className="flex items-center justify-between gap-4">
               <select value={sourceLang} onChange={(e) => setSourceLang(e.target.value)} className="p-2 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary">
-                <option value="en">Inglês</option>
-                <option value="pt">Português</option>
-                <option value="es">Espanhol</option>
-                <option value="fr">Francês</option>
-                <option value="de">Alemão</option>
+                {supportedLanguages.map(lang => (
+                  <option key={lang.code} value={lang.code}>
+                    {lang.name}
+                  </option>
+                ))}
               </select>
 
               <Button onClick={handleTranslate} disabled={loading || !inputText.trim()} $rounded>
@@ -98,11 +117,11 @@ const Tradutor = () => {
               </Button>
 
               <select value={targetLang} onChange={(e) => setTargetLang(e.target.value)} className="p-2 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary">
-                <option value="pt">Português</option>
-                <option value="en">Inglês</option>
-                <option value="es">Espanhol</option>
-                <option value="fr">Francês</option>
-                <option value="de">Alemão</option>
+                {supportedLanguages.map(lang => (
+                  <option key={lang.code} value={lang.code}>
+                    {lang.name}
+                  </option>
+                ))}
               </select>
             </div>
 
