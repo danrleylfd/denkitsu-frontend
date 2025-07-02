@@ -13,22 +13,41 @@ const ContentView = ({ children }) => (
 )
 
 const supportedLanguages = [
+  { code: 'af', name: 'Africâner' },
   { code: 'de', name: 'Alemão' },
   { code: 'ar', name: 'Árabe' },
+  { code: 'bn', name: 'Bengali' },
+  { code: 'ca', name: 'Catalão' },
   { code: 'zh', name: 'Chinês (Simplificado)' },
   { code: 'ko', name: 'Coreano' },
+  { code: 'da', name: 'Dinamarquês' },
+  { code: 'sk', name: 'Eslovaco' },
+  { code: 'sl', name: 'Esloveno' },
   { code: 'es', name: 'Espanhol' },
+  { code: 'fi', name: 'Finlandês' },
   { code: 'fr', name: 'Francês' },
-  { code: 'nl', name: 'Holandês' },
+  { code: 'el', name: 'Grego' },
+  { code: 'he', name: 'Hebraico' },
   { code: 'hi', name: 'Hindi' },
-  { code: 'en', name: 'Inglês' },
+  { code: 'nl', name: 'Holandês' },
+  { code: 'hu', name: 'Húngaro' },
   { code: 'id', name: 'Indonésio' },
+  { code: 'en', name: 'Inglês' },
   { code: 'it', name: 'Italiano' },
   { code: 'ja', name: 'Japonês' },
+  { code: 'ms', name: 'Malaio' },
+  { code: 'no', name: 'Norueguês' },
+  { code: 'fa', name: 'Persa' },
   { code: 'pl', name: 'Polonês' },
   { code: 'pt', name: 'Português' },
+  { code: 'ro', name: 'Romeno' },
   { code: 'ru', name: 'Russo' },
-  { code: 'tr', name: 'Turco' }
+  { code: 'sv', name: 'Sueco' },
+  { code: 'th', name: 'Tailandês' },
+  { code: 'cs', name: 'Tcheco' },
+  { code: 'tr', name: 'Turco' },
+  { code: 'uk', name: 'Ucraniano' },
+  { code: 'vi', name: 'Vietnamita' }
 ].sort((a, b) => a.name.localeCompare(b.name))
 
 const Tradutor = () => {
