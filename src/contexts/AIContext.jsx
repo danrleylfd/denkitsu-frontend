@@ -5,21 +5,23 @@ const AIContext = createContext()
 
 export const AIProvider = ({ children }) => {
   const storedAIProvider = localStorage.getItem("@Denkitsu:aiProvider")
-  const storedGroqKey = localStorage.getItem("@Denkitsu:Groq")
-  const storedOpenRouterKey = localStorage.getItem("@Denkitsu:OpenRouter")
   const storedModelGroq = localStorage.getItem("@Denkitsu:GroqModel")
   const storedOpenRouterModel = localStorage.getItem("@Denkitsu:OpenRouterModel")
   const storedCustomPrompt = localStorage.getItem("@Denkitsu:customPrompt")
+  const storedGroqKey = localStorage.getItem("@Denkitsu:Groq")
+  const storedOpenRouterKey = localStorage.getItem("@Denkitsu:OpenRouter")
+  const storedStream = JSON.parse(localStorage.getItem("@Denkitsu:Stream"))
   const storedWeb = JSON.parse(localStorage.getItem("@Denkitsu:Web"))
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
 
-  const [prompt, setPrompt] = useState([])
-  const [customPrompt, setCustomPrompt] = useState(storedCustomPrompt || "Responda em português do Brasil (pt-BR).")
   const [aiProvider, setAIProvider] = useState(storedAIProvider || "openrouter")
-  const [groqKey, setGroqKey] = useState(storedGroqKey || "")
-  const [openRouterKey, setOpenRouterKey] = useState(storedOpenRouterKey || "")
   const [groqModel, setGroqModel] = useState(storedModelGroq || "deepseek-r1-distill-llama-70b")
   const [openRouterModel, setOpenRouterModel] = useState(storedOpenRouterModel || "deepseek/deepseek-r1:free")
+  const [prompt, setPrompt] = useState([])
+  const [customPrompt, setCustomPrompt] = useState(storedCustomPrompt || "Responda em português do Brasil (pt-BR).")
+  const [groqKey, setGroqKey] = useState(storedGroqKey || "")
+  const [openRouterKey, setOpenRouterKey] = useState(storedOpenRouterKey || "")
+  const [stream, setStream] = useState(storedStream === null ? true : storedStream)
   const [imageUrls, setImageUrls] = useState([])
   const [web, setWeb] = useState(storedWeb)
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
@@ -32,9 +34,13 @@ export const AIProvider = ({ children }) => {
     loadPrompt()
   }, [])
 
-  useEffect(() => {
-    localStorage.setItem("@Denkitsu:aiProvider", aiProvider)
-  }, [aiProvider])
+  useEffect(() => (localStorage.setItem("@Denkitsu:aiProvider", aiProvider)), [aiProvider])
+
+  useEffect(() => (localStorage.setItem("@Denkitsu:GroqModel", groqModel)), [groqModel])
+
+  useEffect(() => (localStorage.setItem("@Denkitsu:OpenRouterModel", openRouterModel)), [openRouterModel])
+
+  useEffect(() => (localStorage.setItem("@Denkitsu:customPrompt", customPrompt)), [customPrompt])
 
   useEffect(() => {
     if (groqKey.trim() === "") return localStorage.removeItem("@Denkitsu:Groq")
@@ -46,17 +52,9 @@ export const AIProvider = ({ children }) => {
     localStorage.setItem("@Denkitsu:OpenRouter", openRouterKey)
   }, [openRouterKey])
 
-  useEffect(() => {
-    localStorage.setItem("@Denkitsu:GroqModel", groqModel)
-  }, [groqModel])
+  useEffect(() => (localStorage.setItem("@Denkitsu:Stream", stream)), [stream])
 
-  useEffect(() => {
-    localStorage.setItem("@Denkitsu:OpenRouterModel", openRouterModel)
-  }, [openRouterModel])
-
-  useEffect(() => {
-    localStorage.setItem("@Denkitsu:Web", web)
-  }, [web])
+  useEffect(() => (localStorage.setItem("@Denkitsu:Web", web)), [web])
 
   useEffect(() => {
     if (prompt.length === 0) return
@@ -68,8 +66,6 @@ export const AIProvider = ({ children }) => {
     localStorage.setItem("@Denkitsu:messages", JSON.stringify(messages))
   }, [prompt, messages])
 
-  useEffect(() => (localStorage.setItem("@Denkitsu:customPrompt", customPrompt)), [customPrompt])
-
   const aiProviderToggle = () => setAIProvider((prev) => (prev === "groq" ? "openrouter" : "groq"))
 
   const clearHistory = () => setMessages([prompt[0], { role: "system", content: customPrompt }])
@@ -77,6 +73,7 @@ export const AIProvider = ({ children }) => {
   const values = {
     prompt, setPrompt,
     web, setWeb,
+    stream, setStream,
     imageUrls, setImageUrls,
     aiProvider, setAIProvider, aiProviderToggle,
     aiKey: aiProvider === "groq" ? groqKey : openRouterKey,

@@ -1,9 +1,9 @@
-import { LuSettings, LuSendHorizontal, LuImagePlus, LuGlobe } from "react-icons/lu"
+import { LuSettings, LuSendHorizontal, LuImagePlus, LuGlobe, LuBinary } from "react-icons/lu"
 import PromptInput from "./PromptInput"
 import Button from "./Button"
 import Paper from "./Paper"
 
-const ChatInput = ({ inputText, setInputText, onAddImage, imageCount, web, setWeb, handleSendMessage, toggleSettings, loading }) => {
+const ChatInput = ({ inputText, setInputText, onAddImage, imageCount, web, setWeb, stream, setStream, handleSendMessage, toggleSettings, loading }) => {
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
@@ -18,6 +18,9 @@ const ChatInput = ({ inputText, setInputText, onAddImage, imageCount, web, setWe
       </Button>
       <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={loading}>
         <LuImagePlus size={16} />
+      </Button>
+      <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Stream" onClick={() => setStream(!stream)} disabled={loading}>
+        <LuBinary size={16} />
       </Button>
       <Button variant={web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Web" onClick={() => setWeb(!web)} disabled={loading}>
         <LuGlobe size={16} />

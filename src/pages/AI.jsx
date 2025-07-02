@@ -3,7 +3,7 @@ import { LuX } from "react-icons/lu"
 
 import { useAuth } from "../contexts/AuthContext"
 import { useAI } from "../contexts/AIContext"
-import { sendMessageStream, getModels } from "../services/aiChat"
+import { sendMessageStream, sendMessage, getModels } from "../services/aiChat"
 
 import SideMenu from "../components/SideMenu"
 import ChatMessage from "../components/ChatMessage"
@@ -22,6 +22,7 @@ const AI = () => {
     aiKey,
     model, setModel,
     aiProvider, setAIProvider,
+    stream, setStream,
     prompt,
     imageUrls, setImageUrls,
     web, setWeb,
@@ -94,15 +95,12 @@ const AI = () => {
     }
 
     const newUserMessage = { role: "user", content: messageContent.length === 1 ? messageContent[0].content : messageContent }
-
     const messagesToSend = [...messages]
-
     let modePrompt = null
     if (selectedPrompt) {
-      modePrompt = prompt.find(p => p.content.includes(selectedPrompt))
+      modePrompt = prompt.find((p) => p.content.includes(selectedPrompt))
       if (modePrompt) {
-        const exists = messages.some(msg => msg.content === modePrompt.content)
-        console.log(exists)
+        const exists = messages.some((msg) => msg.content === modePrompt.content)
         if (!exists) messagesToSend.push(modePrompt)
       }
     }
@@ -114,67 +112,97 @@ const AI = () => {
     setLoading(true)
     setError(null)
 
-    try {
-      const apiMessages = messagesToSend.map(({ role, content }) => {
-        if (Array.isArray(content)) {
-          const apiContent = content.map((item) => {
-            if (item.type === "text") return { type: "text", text: item.content }
-            return item
-          })
-          return { role, content: apiContent }
-        }
-        return { role, content }
-      })
-
-      const streamedAssistantMessage = {
-        id: Date.now() + 1,
-        role: "assistant",
-        content: "",
-        reasoning: "",
-        _contentBuffer: "",
-        _reasoningBuffer: ""
-      }
-      setMessages((prev) => [...prev, streamedAssistantMessage])
-      await sendMessageStream(aiKey, aiProvider, model, apiMessages, web, (delta) => {
-        if (delta.content) {
-          streamedAssistantMessage._contentBuffer += delta.content
-        }
-        if (delta.reasoning) {
-          streamedAssistantMessage._reasoningBuffer += delta.reasoning
-        }
-        if (delta.tool_calls?.[0]?.arguments?.reasoning) {
-          streamedAssistantMessage._reasoningBuffer += delta.tool_calls[0].arguments.reasoning
-        }
-        let reasoningFromThink = ""
-        const finalContent = streamedAssistantMessage._contentBuffer.replace(/<think>(.*?)<\/think>/gs, (match, thought) => {
-          reasoningFromThink += thought
-          return ""
+    const apiMessages = messagesToSend.map(({ role, content }) => {
+      if (Array.isArray(content)) {
+        const apiContent = content.map((item) => {
+          if (item.type === "text") return { type: "text", text: item.content }
+          return item
         })
-        streamedAssistantMessage.content = finalContent
-        streamedAssistantMessage.reasoning = streamedAssistantMessage._reasoningBuffer + reasoningFromThink
+        return { role, content: apiContent }
+      }
+      return { role, content }
+    })
+
+    if (stream) {
+      try {
+        const streamedAssistantMessage = {
+          id: Date.now() + 1,
+          role: "assistant",
+          content: "",
+          reasoning: "",
+          _contentBuffer: "",
+          _reasoningBuffer: ""
+        }
+        setMessages((prev) => [...prev, streamedAssistantMessage])
+        await sendMessageStream(aiKey, aiProvider, model, apiMessages, web, (delta) => {
+          if (delta.content) {
+            streamedAssistantMessage._contentBuffer += delta.content
+          }
+          if (delta.reasoning) {
+            streamedAssistantMessage._reasoningBuffer += delta.reasoning
+          }
+          if (delta.tool_calls?.[0]?.arguments?.reasoning) {
+            streamedAssistantMessage._reasoningBuffer += delta.tool_calls[0].arguments.reasoning
+          }
+          let reasoningFromThink = ""
+          const finalContent = streamedAssistantMessage._contentBuffer.replace(/<think>(.*?)<\/think>/gs, (match, thought) => {
+            reasoningFromThink += thought
+            return ""
+          })
+          streamedAssistantMessage.content = finalContent
+          streamedAssistantMessage.reasoning = streamedAssistantMessage._reasoningBuffer + reasoningFromThink
+          setMessages((prev) => {
+            const updated = [...prev]
+            const msgIndex = updated.findIndex((msg) => msg.id === streamedAssistantMessage.id)
+            if (msgIndex !== -1) updated[msgIndex] = { ...streamedAssistantMessage }
+            return updated
+          })
+        })
+      } catch (err) {
         setMessages((prev) => {
           const updated = [...prev]
-          const msgIndex = updated.findIndex((msg) => msg.id === streamedAssistantMessage.id)
-          if (msgIndex !== -1) updated[msgIndex] = { ...streamedAssistantMessage }
+          const msgIndex = updated.findIndex((msg) => msg.role === "assistant" && msg.content === "")
+          if (msgIndex !== -1) {
+            updated[msgIndex].content = "Falha ao enviar mensagem.\n```diff\n- " + err.message + "\n+ Tente usar algum modelo de outro provedor ou verifique sua chave de API nas configurações.\n```"
+          }
           return updated
         })
-      })
-    } catch (err) {
-      setMessages((prev) => {
-        const updated = [...prev]
-        const msgIndex = updated.findIndex((msg) => msg.role === "assistant" && msg.content === "")
-        if (msgIndex !== -1) {
-          updated[msgIndex].content =
-            "Falha ao enviar mensagem.\n```diff\n- " +
-            err.message +
-            "\n+ Tente usar algum modelo de outro provedor ou verifique sua chave de API nas configurações.\n```"
+      } finally {
+        setLoading(false)
+      }
+    } else {
+      // Non-streaming logic
+      const assistantPlaceholder = { id: Date.now() + 1, role: "assistant", content: "" }
+      setMessages((prev) => [...prev, assistantPlaceholder])
+      try {
+        const data = await sendMessage(aiKey, aiProvider, model, apiMessages, web)
+        const responseMessage = data.choices[0].message
+        const finalMessage = {
+          id: assistantPlaceholder.id,
+          role: "assistant",
+          content: responseMessage.content,
+          reasoning: responseMessage.reasoning || ""
         }
-        return updated
-      })
-    } finally {
-      setLoading(false)
+        setMessages((prev) => {
+          const updated = [...prev]
+          const msgIndex = updated.findIndex((msg) => msg.id === assistantPlaceholder.id)
+          if (msgIndex !== -1) updated[msgIndex] = finalMessage
+          return updated
+        })
+      } catch (err) {
+        setMessages((prev) => {
+          const updated = [...prev]
+          const msgIndex = updated.findIndex((msg) => msg.id === assistantPlaceholder.id)
+          if (msgIndex !== -1) {
+            updated[msgIndex].content = "Falha ao enviar mensagem.\n```diff\n- " + err.message + "\n```"
+          }
+          return updated
+        })
+      } finally {
+        setLoading(false)
+      }
     }
-  }, [inputText, imageUrls, messages, model, aiKey, aiProvider, setMessages, selectedPrompt, prompt])
+  }, [inputText, imageUrls, messages, model, aiKey, aiProvider, web, stream, setMessages, selectedPrompt, prompt])
 
   const handleShowCanva = useCallback((htmlCode) => {
     setCanvaContent(htmlCode)
@@ -212,12 +240,10 @@ const AI = () => {
         </Paper>
       )}
       <ChatInput
-        inputText={inputText}
-        setInputText={setInputText}
-        onAddImage={handleAddImageUrl}
-        imageCount={imageUrls.length}
-        web={web}
-        setWeb={setWeb}
+        inputText={inputText} setInputText={setInputText}
+        onAddImage={handleAddImageUrl} imageCount={imageUrls.length}
+        web={web} setWeb={setWeb}
+        stream={stream} setStream={setStream}
         handleSendMessage={handleSendMessage}
         toggleSettings={() => setIsSettingsOpen(true)}
         loading={loading}

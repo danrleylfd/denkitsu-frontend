@@ -48,12 +48,15 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, web, onDelt
   }
 }
 
-const sendMessage = async (aiKey, aiProvider, model, messages) => {
+const sendMessage = async (aiKey, aiProvider, model, messages, web) => {
   try {
+    const permission = aiProvider === "groq" ? false : web
+    const plugins = permission ? [{ id: "web" }] : undefined
     const payload = {
       aiKey,
       aiProvider,
       model,
+      plugins,
       messages: [...messages]
     }
     const { data } = await api.post("/ai/chat/completions", payload)
