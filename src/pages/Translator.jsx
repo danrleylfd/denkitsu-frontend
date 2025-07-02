@@ -152,8 +152,8 @@ const Tradutor = () => {
                 className="w-full h-32 p-2 rounded-md resize-none bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary"
               />
               {outputText && (
-                <Button size="icon" $rounded onClick={handleCopy} className="absolute top-2 right-2" title="Copiar">
-                  <LuCopy />
+                <Button variant="secondary" size="icon" $rounded onClick={handleCopy} title="Copiar">
+                  <LuCopy size={16} />
                 </Button>
               )}
             </div>
