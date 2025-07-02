@@ -20,7 +20,10 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, web, onDelt
     },
     body: JSON.stringify(payload)
   })
-  if (!response.ok) throw new Error("Denkitsu está cansado, tente novamente mais tarde ou amanhã.")
+  if (!response.ok) {
+    const error = await response.text()
+    throw new Error(error)
+  }
   const reader = response.body.getReader()
   const decoder = new TextDecoder("utf-8")
   let done = false
@@ -34,14 +37,10 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, web, onDelt
         if (payload === "[DONE]") {
           return
         }
-        try {
-          const json = JSON.parse(payload)
-          const delta = json.choices?.[0]?.delta
-          if (delta?.content || delta?.reasoning || delta?.tool_calls) {
-            onDelta(delta)
-          }
-        } catch (err) {
-          console.error("Erro ao parsear chunk:", err)
+        const json = JSON.parse(payload)
+        const delta = json.choices?.[0]?.delta
+        if (delta?.content || delta?.reasoning || delta?.tool_calls) {
+          onDelta(delta)
         }
       }
     })

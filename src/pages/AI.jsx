@@ -158,12 +158,13 @@ const AI = () => {
             return updated
           })
         })
-      } catch (err) {
+      } catch (error) {
+        const errMsg = error.response?.data?.error?.message || error.message || "Erro desconhecido"
         setMessages((prev) => {
           const updated = [...prev]
           const msgIndex = updated.findIndex((msg) => msg.role === "assistant" && msg.content === "")
           if (msgIndex !== -1) {
-            updated[msgIndex].content = "Falha ao enviar mensagem.\n```diff\n- " + err.message + "\n+ Tente usar algum modelo de outro provedor ou verifique sua chave de API nas configurações.\n+ Tente desativar a tool Web\n```"
+            updated[msgIndex].content = "Falha ao enviar mensagem.\n```diff\n- " + errMsg + "\n+ Tente usar algum modelo de outro provedor ou verifique sua chave de API nas configurações.\n+ Tente desativar a tool Web\n```"
           }
           return updated
         })
@@ -190,7 +191,7 @@ const AI = () => {
           return updated
         })
       } catch (error) {
-        const errMsg = error.response?.data?.error?.message || err.message || "Erro desconhecido"
+        const errMsg = error.response?.data?.error?.message || error.message || "Erro desconhecido"
         setMessages((prev) => {
           const updated = [...prev]
           const msgIndex = updated.findIndex((msg) => msg.id === assistantPlaceholder.id)
