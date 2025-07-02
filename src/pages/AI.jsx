@@ -159,7 +159,8 @@ const AI = () => {
           })
         })
       } catch (error) {
-        const errMsg = error.response?.data?.error?.message || error.message || "Erro desconhecido"
+        const { error: defaultErr } = JSON.parse(error.message)
+        const errMsg = error.response?.data?.error?.message || defaultErr.message
         setMessages((prev) => {
           const updated = [...prev]
           const msgIndex = updated.findIndex((msg) => msg.role === "assistant" && msg.content === "")
