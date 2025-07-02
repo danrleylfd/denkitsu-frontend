@@ -171,12 +171,12 @@ const AI = () => {
         setLoading(false)
       }
     } else {
-      // Non-streaming logic
       const assistantPlaceholder = { id: Date.now() + 1, role: "assistant", content: "" }
       setMessages((prev) => [...prev, assistantPlaceholder])
       try {
-        const data = await sendMessage(aiKey, aiProvider, model, apiMessages, web)
-        const responseMessage = data?.choices[0].message
+        const { data, error } = await sendMessage(aiKey, aiProvider, model, apiMessages, web)
+        if (!data) throw new Error(error)
+        const responseMessage = data?.choices[0]?.message
         const finalMessage = {
           id: assistantPlaceholder.id,
           role: "assistant",
@@ -189,8 +189,8 @@ const AI = () => {
           if (msgIndex !== -1) updated[msgIndex] = finalMessage
           return updated
         })
-      } catch (err) {
-        const errMsg = err.response?.data?.error?.message || err.message || "Erro desconhecido"
+      } catch (error) {
+        const errMsg = error.response?.data?.error?.message || err.message || "Erro desconhecido"
         setMessages((prev) => {
           const updated = [...prev]
           const msgIndex = updated.findIndex((msg) => msg.id === assistantPlaceholder.id)

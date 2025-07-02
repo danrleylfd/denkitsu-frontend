@@ -49,22 +49,16 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, web, onDelt
 }
 
 const sendMessage = async (aiKey, aiProvider, model, messages, web) => {
-  try {
-    const permission = aiProvider === "groq" ? false : web
-    const plugins = permission ? [{ id: "web" }] : undefined
-    const payload = {
-      aiKey,
-      aiProvider,
-      model,
-      plugins,
-      messages: [...messages]
-    }
-    const { data } = await api.post("/ai/chat/completions", payload)
-    if (!data) throw new Error("Falha ao obter resposta da API")
-    return data
-  } catch (error) {
-    console.error(error.response?.data?.error?.message || error.message)
+  const permission = aiProvider === "groq" ? false : web
+  const plugins = permission ? [{ id: "web" }] : undefined
+  const payload = {
+    aiKey,
+    aiProvider,
+    model,
+    plugins,
+    messages: [...messages]
   }
+  return await api.post("/ai/chat/completions", payload)
 }
 
 const getPrompt = async () => {
