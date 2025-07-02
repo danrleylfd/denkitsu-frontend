@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { LuMinimize2, LuMaximize2 } from "react-icons/lu"
 import ReactMarkdown from "react-markdown"
 import rehypeHighlight from "rehype-highlight"
 import rehypeRaw from "rehype-raw"
@@ -33,8 +34,8 @@ const Markdown = ({ content, think }) => {
   return (
     <div className={containerClass}>
       {think && (
-        <Button variant="secondary" $rounded onClick={toggleCollapse}>
-          {collapsed ? "Mostrar raciocínio" : "Esconder raciocínio"}
+        <Button variant="secondary" size="icon" $rounded onClick={toggleCollapse}>
+          {collapsed ? <LuMaximize2 size={16}/> : <LuMinimize2 size={16}/>}
         </Button>
       )}
       {!collapsed && (
@@ -166,9 +167,9 @@ const Markdown = ({ content, think }) => {
 
         />
       )}
-      {think && (
-        <Button variant="secondary" $rounded onClick={toggleCollapse}>
-          {collapsed ? "Mostrar raciocínio" : "Esconder raciocínio"}
+      {think && !collapsed && (
+        <Button variant="secondary" size="icon" $rounded onClick={toggleCollapse}>
+          <LuMinimize2 size={16}/>
         </Button>
       )}
     </div>

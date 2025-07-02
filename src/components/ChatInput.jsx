@@ -13,14 +13,14 @@ const ChatInput = ({ inputText, setInputText, onAddImage, imageCount, web, setWe
 
   return (
     <Paper className="bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-none flex items-center gap-2">
+      <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Stream" onClick={() => setStream(!stream)} disabled={loading}>
+        <LuBinary size={16} />
+      </Button>
       <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettings} disabled={loading}>
         <LuSettings size={16} />
       </Button>
       <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={loading}>
         <LuImagePlus size={16} />
-      </Button>
-      <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Stream" onClick={() => setStream(!stream)} disabled={loading}>
-        <LuBinary size={16} />
       </Button>
       <Button variant={web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Web" onClick={() => setWeb(!web)} disabled={loading}>
         <LuGlobe size={16} />
