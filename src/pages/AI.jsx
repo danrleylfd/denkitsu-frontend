@@ -163,7 +163,7 @@ const AI = () => {
           const updated = [...prev]
           const msgIndex = updated.findIndex((msg) => msg.role === "assistant" && msg.content === "")
           if (msgIndex !== -1) {
-            updated[msgIndex].content = "Falha ao enviar mensagem.\n```diff\n- " + err.message + "\n+ Tente usar algum modelo de outro provedor ou verifique sua chave de API nas configurações.\n```"
+            updated[msgIndex].content = "Falha ao enviar mensagem.\n```diff\n- " + err.message + "\n+ Tente usar algum modelo de outro provedor ou verifique sua chave de API nas configurações.\n+ Tente desativar a tool Web\n```"
           }
           return updated
         })
@@ -195,7 +195,7 @@ const AI = () => {
           const updated = [...prev]
           const msgIndex = updated.findIndex((msg) => msg.id === assistantPlaceholder.id)
           if (msgIndex !== -1) {
-            updated[msgIndex].content = "Falha ao enviar mensagem.\n```diff\n- " + errMsg + "\n```"
+            updated[msgIndex].content = "Falha ao enviar mensagem.\n```diff\n- " + errMsg + "\n+ Tente usar algum modelo de outro provedor ou verifique sua chave de API nas configurações.\n+ Tente desativar a tool Web\n```"
           }
           return updated
         })
