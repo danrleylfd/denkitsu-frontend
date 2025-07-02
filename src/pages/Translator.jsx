@@ -65,7 +65,7 @@ const Tradutor = () => {
       const browserLang = navigator.language.split('-')[0]
       if (browserLang) setTargetLang(browserLang)
     } else {
-      setError("A API de tradução offline não está disponível neste navegador.")
+      setError("A API de tradução não está disponível neste navegador.")
     }
   }, [])
   const handleTranslate = useCallback(async () => {
@@ -113,21 +113,14 @@ const Tradutor = () => {
 
   return (
     <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
-      <Paper className="w-full max-w-2xl flex flex-col gap-4 bg-lightBg-primary dark:bg-darkBg-primary">
+      <Paper className="w-full max-w-2xl flex flex-col gap-2 bg-lightBg-primary dark:bg-darkBg-primary">
         <div className="flex items-center gap-2 text-lightFg-primary dark:text-darkFg-primary">
           <LuLanguages size={24} />
-          <h2 className="text-xl font-bold">Tradutor Offline</h2>
+          <h2 className="text-xl font-bold">Tradutor</h2>
         </div>
         {isApiAvailable ? (
-          <>
-            <textarea
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              placeholder="Digite o texto para traduzir..."
-              className="w-full h-32 p-2 rounded-md resize-none bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary"
-              disabled={loading}
-            />
-            <div className="flex items-center justify-between gap-4">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between gap-2">
               <select value={sourceLang} onChange={(e) => setSourceLang(e.target.value)} className="p-2 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary">
                 {supportedLanguages.map(lang => (
                   <option key={lang.code} value={lang.code}>
@@ -135,11 +128,8 @@ const Tradutor = () => {
                   </option>
                 ))}
               </select>
-              <Button variant="outline" size="icon" $rounded onClick={swapLanguages} disabled={loading}>
+              <Button variant="secondary" size="icon" $rounded onClick={swapLanguages} disabled={loading}>
                 <LuArrowRightLeft size={16} />
-              </Button>
-              <Button onClick={handleTranslate} disabled={loading || !inputText.trim()} $rounded>
-                {loading ? <LuLoader className="animate-spin" /> : "Traduzir"}
               </Button>
               <select value={targetLang} onChange={(e) => setTargetLang(e.target.value)} className="p-2 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary">
                 {supportedLanguages.map(lang => (
@@ -149,6 +139,13 @@ const Tradutor = () => {
                 ))}
               </select>
             </div>
+            <textarea
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              placeholder="Digite o texto para traduzir..."
+              className="w-full h-32 p-2 rounded-md resize-none bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary"
+              disabled={loading}
+            />
             <div className="relative">
               <textarea
                 value={outputText}
@@ -162,7 +159,10 @@ const Tradutor = () => {
                 </Button>
               )}
             </div>
-          </>
+            <Button onClick={handleTranslate} disabled={loading || !inputText.trim()} $rounded>
+                {loading ? <LuLoader className="animate-spin" /> : "Traduzir"}
+              </Button>
+          </div>
         ) : null}
         {error && <MessageError>{error}</MessageError>}
       </Paper>
