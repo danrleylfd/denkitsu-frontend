@@ -175,8 +175,8 @@ const AI = () => {
       const assistantPlaceholder = { id: Date.now() + 1, role: "assistant", content: "" }
       setMessages((prev) => [...prev, assistantPlaceholder])
       try {
-        const data = await sendMessage(aiKey, aiProvider, model, apiMessages, web)
-        const responseMessage = data?.choices[0].message
+        const { data } = await sendMessage(aiKey, aiProvider, model, apiMessages, web)
+        const responseMessage = data?.choices[0]?.message
         const finalMessage = {
           id: assistantPlaceholder.id,
           role: "assistant",

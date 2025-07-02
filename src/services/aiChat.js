@@ -59,9 +59,7 @@ const sendMessage = async (aiKey, aiProvider, model, messages, web) => {
       plugins,
       messages: [...messages]
     }
-    const { data } = await api.post("/ai/chat/completions", payload)
-    if (!data) throw new Error("Falha ao obter resposta da API")
-    return data
+    return await api.post("/ai/chat/completions", payload)
   } catch (error) {
     console.error(error.response?.data?.error?.message || error.message)
   }
