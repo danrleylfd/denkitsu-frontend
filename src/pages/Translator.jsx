@@ -130,11 +130,18 @@ const Tradutor = () => {
                   </option>
                 ))}
               </select>
-
+              <Button onClick={() => {
+                const a = sourceLang
+                const b = targetLang
+                [a,b] = [b,a]
+                setSourceLang(a)
+                setTargetLang(b)
+              }} disabled={loading || !inputText.trim()} $rounded>
+                {loading ? <LuLoader className="animate-spin" /> : "Trocar"}
+              </Button>
               <Button onClick={handleTranslate} disabled={loading || !inputText.trim()} $rounded>
                 {loading ? <LuLoader className="animate-spin" /> : "Traduzir"}
               </Button>
-
               <select value={targetLang} onChange={(e) => setTargetLang(e.target.value)} className="p-2 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary">
                 {supportedLanguages.map(lang => (
                   <option key={lang.code} value={lang.code}>
