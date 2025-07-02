@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react"
+import { LuX } from "react-icons/lu"
 
 import { useAuth } from "../contexts/AuthContext"
 import { useAI } from "../contexts/AIContext"
@@ -11,18 +12,27 @@ import AISettings from "../components/AISettings"
 import ChatInput from "../components/ChatInput"
 import { MessageError } from "../components/Notifications"
 import Paper from "../components/Paper"
+import Button from "../components/Button"
 
 const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-screen mx-auto">{children}</main>
 
 const AI = () => {
   const { user } = useAuth()
-  const { aiKey, model, setModel, aiProvider, setAIProvider, prompt, web, setWeb, messages, setMessages, clearHistory, customPrompt, setCustomPrompt } = useAI()
+  const {
+    aiKey,
+    model, setModel,
+    aiProvider, setAIProvider,
+    prompt,
+    imageUrls, setImageUrls,
+    web, setWeb,
+    messages, setMessages, clearHistory,
+    customPrompt, setCustomPrompt
+  } = useAI()
 
   const [freeModels, setFreeModels] = useState([])
   const [payModels, setPayModels] = useState([])
   const [groqModels, setGroqModels] = useState([])
   const [inputText, setInputText] = useState("")
-  const [imageUrl, setImageUrl] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [canvaContent, setCanvaContent] = useState(null)
@@ -45,15 +55,42 @@ const AI = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages, loading])
 
+  const handleAddImageUrl = () => {
+    if (imageUrls.length >= 3) {
+      alert("Você pode adicionar no máximo 3 imagens.")
+      return
+    }
+
+    const url = window.prompt("Cole a URL da imagem:")
+    if (!url) return
+
+    const img = new Image()
+    img.src = url
+
+    img.onload = () => {
+      setImageUrls((prev) => [...prev, url])
+    }
+
+    img.onerror = () => {
+      alert("A URL fornecida não parece ser uma imagem válida ou não pode ser acessada.")
+    }
+  }
+
+  const handleRemoveImageUrl = (indexToRemove) => {
+    setImageUrls((prev) => prev.filter((_, index) => index !== indexToRemove))
+  }
+
   const handleSendMessage = useCallback(async () => {
-    if (!inputText.trim() && !imageUrl) return
+    if (!inputText.trim() && imageUrls.length === 0) return
 
     const messageContent = []
     if (inputText.trim()) {
       messageContent.push({ type: "text", content: inputText.trim() })
     }
-    if (imageUrl) {
-      messageContent.push({ type: "image_url", image_url: { url: imageUrl } })
+    if (imageUrls.length > 0) {
+      imageUrls.forEach((url) => {
+        messageContent.push({ type: "image_url", image_url: { url } })
+      })
     }
 
     const newUserMessage = { role: "user", content: messageContent.length === 1 ? messageContent[0].content : messageContent }
@@ -73,7 +110,7 @@ const AI = () => {
 
     setMessages(messagesToSend)
     setInputText("")
-    setImageUrl("")
+    setImageUrls([])
     setLoading(true)
     setError(null)
 
@@ -137,7 +174,7 @@ const AI = () => {
     } finally {
       setLoading(false)
     }
-  }, [inputText, imageUrl, messages, model, aiKey, aiProvider, setMessages, selectedPrompt])
+  }, [inputText, imageUrls, messages, model, aiKey, aiProvider, setMessages, selectedPrompt, prompt])
 
   const handleShowCanva = useCallback((htmlCode) => {
     setCanvaContent(htmlCode)
@@ -148,7 +185,7 @@ const AI = () => {
   }, [])
 
   return (
-    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
+    <SideMenu ContentView={ContentView} className="bg-brand-purple">
       <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-2">
         <ChatMessage msg={{ role: "assistant", content: "Olá! Como posso ajudar você hoje?\n Shift + Enter para quebrar a linha." }} />
         {messages.map((msg, pos) => (
@@ -157,18 +194,28 @@ const AI = () => {
         <div ref={messagesEndRef} />
         {error && <MessageError>{error}</MessageError>}
       </div>
-
-      {imageUrl && (
-        <Paper className="bg-lightBg-primary dark:bg-darkBg-primary rounded-none relative w-full">
-          <img src={imageUrl} alt="Preview" className="max-h-24 rounded-md object-cover" />
+      {imageUrls.length > 0 && (
+        <Paper className="bg-lightBg-secondary dark:bg-darkBg-secondary rounded-none flex gap-2 overflow-x-auto py-2">
+          {imageUrls.map((url, index) => (
+            <div key={index} className="flex flex-col gap-2">
+              <img src={url} alt={`Preview ${index + 1}`} className="h-16 w-auto rounded-md object-cover" />
+              <Button
+                variant="danger"
+                size="icon"
+                $rounded
+                onClick={() => handleRemoveImageUrl(index)}
+                title="Remover Imagem">
+                <LuX size={16} />
+              </Button>
+            </div>
+          ))}
         </Paper>
       )}
-
       <ChatInput
         inputText={inputText}
         setInputText={setInputText}
-        imageUrl={imageUrl}
-        setImageUrl={setImageUrl}
+        onAddImage={handleAddImageUrl}
+        imageCount={imageUrls.length}
         web={web}
         setWeb={setWeb}
         handleSendMessage={handleSendMessage}

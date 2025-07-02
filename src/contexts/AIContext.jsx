@@ -20,6 +20,7 @@ export const AIProvider = ({ children }) => {
   const [openRouterKey, setOpenRouterKey] = useState(storedOpenRouterKey || "")
   const [groqModel, setGroqModel] = useState(storedModelGroq || "deepseek-r1-distill-llama-70b")
   const [openRouterModel, setOpenRouterModel] = useState(storedOpenRouterModel || "deepseek/deepseek-r1:free")
+  const [imageUrls, setImageUrls] = useState([])
   const [web, setWeb] = useState(storedWeb)
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
 
@@ -74,22 +75,16 @@ export const AIProvider = ({ children }) => {
   const clearHistory = () => setMessages([prompt[0], { role: "system", content: customPrompt }])
 
   const values = {
-    prompt,
-    setPrompt,
-    web,
-    setWeb,
-    aiProvider,
-    setAIProvider,
-    aiProviderToggle,
+    prompt, setPrompt,
+    web, setWeb,
+    imageUrls, setImageUrls,
+    aiProvider, setAIProvider, aiProviderToggle,
     aiKey: aiProvider === "groq" ? groqKey : openRouterKey,
     setAIKey: aiProvider === "groq" ? setGroqKey : setOpenRouterKey,
     model: aiProvider === "groq" ? groqModel : openRouterModel,
     setModel: aiProvider === "groq" ? setGroqModel : setOpenRouterModel,
-    customPrompt,
-    setCustomPrompt,
-    messages,
-    setMessages,
-    clearHistory
+    customPrompt, setCustomPrompt,
+    messages, setMessages, clearHistory
   }
 
   return (
