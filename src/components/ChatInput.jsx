@@ -24,15 +24,15 @@ const ChatInput = ({ inputText, setInputText, imageUrl, setImageUrl, web, setWeb
         <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettings} disabled={loading}>
           <LuSettings size={16} />
         </Button>
-        {imageUrl.length === 0 && <Button variant="secondary" size="icon" $rounded title="Adicionar Imagem por URL" onClick={handleAddImageUrl} disabled={loading}>
+        {imageUrl.length === 0 && <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={handleAddImageUrl} disabled={loading}>
           <LuImagePlus size={16} />
         </Button>}
-        {imageUrl && (
+        {imageUrl.length > 0 && (
           <Button variant="danger" size="icon" $rounded onClick={() => setImageUrl("")}>
             <LuX size={16} />
           </Button>
         )}
-        <Button variant={web ? "outline" : "secondary"} size="icon" $rounded title="Acesso à Internet" onClick={() => setWeb(!web)} disabled={loading}>
+        <Button variant={web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Web" onClick={() => setWeb(!web)} disabled={loading}>
           <LuGlobe size={16} />
         </Button>
         <PromptInput inputText={inputText} setInputText={setInputText} handleKeyDown={handleKeyDown} loading={loading} />
