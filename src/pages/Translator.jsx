@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react"
-import { LuLanguages, LuCopy, LuLoader } from "react-icons/lu"
+import { LuLanguages, LuCopy, LuLoader } from "react-icons/lu" // CORRIGIDO: LuLoader2
 
 import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
@@ -12,80 +12,63 @@ const ContentView = ({ children }) => (
   </main>
 )
 
-const Translator = () => {
+const Tradutor = () => {
   const [inputText, setInputText] = useState("")
   const [outputText, setOutputText] = useState("")
-  const [sourceLang, setSourceLang] = useState("auto") // 'auto' para detecção automática
+  const [sourceLang, setSourceLang] = useState("en")
   const [targetLang, setTargetLang] = useState("pt")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [isApiAvailable, setIsApiAvailable] = useState(false)
 
-  // Verifica se a API está disponível quando o componente é montado
   useEffect(() => {
-    if (chrome.ml && chrome.ml.translator) {
+    if ('Translator' in self) {
       setIsApiAvailable(true)
-      // Define o idioma de destino padrão com base no idioma do navegador
-      const browserLang = chrome.i18n.getUILanguage().split('-')[0]
-      setTargetLang(browserLang)
+      const browserLang = navigator.language.split('-')[0]
+      if (browserLang) setTargetLang(browserLang)
     } else {
       setError("A API de tradução offline não está disponível neste navegador.")
     }
   }, [])
-
   const handleTranslate = useCallback(async () => {
-    if (!inputText.trim()) return
+    if (!inputText.trim() || !sourceLang) {
+        setError("Por favor, digite um texto e selecione o idioma de origem.")
+        return
+    }
     setLoading(true)
     setError(null)
     setOutputText("")
-
     try {
-      let finalSourceLang = sourceLang
-      // 1. Detecta o idioma se a opção 'auto' estiver selecionada
-      if (sourceLang === "auto") {
-        const { languages } = await chrome.i18n.detectLanguage(inputText)
-        if (!languages || languages.length === 0) {
-          throw new Error("Não foi possível detectar o idioma de origem.")
-        }
-        finalSourceLang = languages[0].language
-      }
-
-      if (finalSourceLang === targetLang) {
+      if (sourceLang === targetLang) {
         setOutputText(inputText)
         return
       }
-
-      // 2. Cria o tradutor e verifica o status do modelo
-      const translator = await chrome.ml.translator.createTranslator(finalSourceLang, targetLang)
-      const modelStatus = await translator.getModelStatus()
-
-      if (modelStatus === "not_supported") {
-        throw new Error(`A tradução de ${finalSourceLang} para ${targetLang} não é suportada.`)
+      const availability = await Translator.availability({ sourceLanguage: sourceLang, targetLanguage: targetLang });
+      if (availability.state === "not_supported") {
+        throw new Error(`A tradução de '${sourceLang}' para '${targetLang}' não é suportada.`);
       }
-      if (modelStatus === "needs_download") {
-        setError("O pacote de tradução para este idioma precisa ser baixado. Tente novamente em alguns instantes.")
-        return
+      if (availability.state === "needs_download") {
+        setError("O pacote de tradução precisa ser baixado. Tente novamente em alguns instantes.");
+        return;
       }
-
-      // 3. Realiza a tradução
+      const translator = await Translator.create({ sourceLanguage: sourceLang, targetLanguage: targetLang });
       const result = await translator.translate(inputText)
-      setOutputText(result.translation)
-
+      setOutputText(result)
     } catch (err) {
-      setError(err.message || "Ocorreu um erro desconhecido.")
+      setError(err.message || "Ocorreu um erro desconhecido.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [inputText, sourceLang, targetLang])
+  }, [inputText, sourceLang, targetLang]);
+
 
   const handleCopy = () => {
     navigator.clipboard.writeText(outputText)
-    // Opcional: mostrar uma notificação de "copiado!"
   }
 
   return (
     <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
-      <Paper className="w-full max-w-2xl flex flex-col gap-4">
+      <Paper className="w-full max-w-2xl flex flex-col gap-4 bg-lightBg-primary dark:bg-darkBg-primary">
         <div className="flex items-center gap-2 text-lightFg-primary dark:text-darkFg-primary">
           <LuLanguages size={24} />
           <h2 className="text-xl font-bold">Tradutor Offline</h2>
@@ -102,25 +85,24 @@ const Translator = () => {
             />
 
             <div className="flex items-center justify-between gap-4">
-              <select value={sourceLang} onChange={(e) => setSourceLang(e.target.value)} className="p-2 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary">
-                <option value="auto">Detectar Idioma</option>
+              <select value={sourceLang} onChange={(e) => setSourceLang(e.target.value)} className="p-2 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary">
                 <option value="en">Inglês</option>
                 <option value="pt">Português</option>
                 <option value="es">Espanhol</option>
                 <option value="fr">Francês</option>
-                {/* Adicione outros idiomas conforme necessário */}
+                <option value="de">Alemão</option>
               </select>
 
               <Button onClick={handleTranslate} disabled={loading || !inputText.trim()} $rounded>
                 {loading ? <LuLoader className="animate-spin" /> : "Traduzir"}
               </Button>
 
-              <select value={targetLang} onChange={(e) => setTargetLang(e.target.value)} className="p-2 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary">
+              <select value={targetLang} onChange={(e) => setTargetLang(e.target.value)} className="p-2 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary">
                 <option value="pt">Português</option>
                 <option value="en">Inglês</option>
                 <option value="es">Espanhol</option>
                 <option value="fr">Francês</option>
-                {/* Adicione outros idiomas conforme necessário */}
+                <option value="de">Alemão</option>
               </select>
             </div>
 
@@ -146,4 +128,4 @@ const Translator = () => {
   )
 }
 
-export default Translator
+export default Tradutor
