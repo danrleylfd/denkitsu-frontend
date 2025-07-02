@@ -174,8 +174,12 @@ const AI = () => {
       const assistantPlaceholder = { id: Date.now() + 1, role: "assistant", content: "" }
       setMessages((prev) => [...prev, assistantPlaceholder])
       try {
+<<<<<<< HEAD
         const { data, error } = await sendMessage(aiKey, aiProvider, model, apiMessages, web)
         if (!data) throw new Error(error)
+=======
+        const { data } = await sendMessage(aiKey, aiProvider, model, apiMessages, web)
+>>>>>>> 787277cdd856bf09e39e5b91558f3c35886a166d
         const responseMessage = data?.choices[0]?.message
         const finalMessage = {
           id: assistantPlaceholder.id,
