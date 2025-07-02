@@ -1,9 +1,9 @@
-const PromptInput = ({ textareaRef, inputText, setInputText, handleKeyDown, loading }) => (
+const PromptInput = ({ textareaRef, userPrompt, setUserPrompt, handleKeyDown, loading }) => (
   <textarea
     id="prompt-input"
     ref={textareaRef}
-    value={inputText}
-    onChange={(e) => setInputText(e.target.value)}
+    value={userPrompt}
+    onChange={(e) => setUserPrompt(e.target.value)}
     onKeyDown={handleKeyDown}
     placeholder={!loading ? "Escreva seu prompt" : "Pensando..."}
     disabled={loading}

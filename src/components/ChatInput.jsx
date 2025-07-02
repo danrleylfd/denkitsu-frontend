@@ -3,17 +3,16 @@ import PromptInput from "./PromptInput"
 import Button from "./Button"
 import Paper from "./Paper"
 
-const ChatInput = ({ inputText, setInputText, onAddImage, imageCount, web, setWeb, stream, setStream, handleSendMessage, toggleSettings, loading }) => {
+const ChatInput = ({ userPrompt, setUserPrompt, onAddImage, imageCount, web, toggleWeb, stream, toggleStream, handleSendMessage, toggleSettings, loading }) => {
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
       handleSendMessage()
     }
   }
-
   return (
     <Paper className="bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-none flex items-center gap-2">
-      <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Stream" onClick={() => setStream(!stream)} disabled={loading}>
+      <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Stream" onClick={toggleStream} disabled={loading}>
         <LuBinary size={16} />
       </Button>
       <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettings} disabled={loading}>
@@ -22,11 +21,11 @@ const ChatInput = ({ inputText, setInputText, onAddImage, imageCount, web, setWe
       <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={loading}>
         <LuImagePlus size={16} />
       </Button>
-      <Button variant={web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Web" onClick={() => setWeb(!web)} disabled={loading}>
+      <Button variant={web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Web" onClick={toggleWeb} disabled={loading}>
         <LuGlobe size={16} />
       </Button>
-      <PromptInput inputText={inputText} setInputText={setInputText} handleKeyDown={handleKeyDown} loading={loading} />
-      <Button size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || (!inputText.trim() && imageCount === 0)}>
+      <PromptInput userPrompt={userPrompt} setUserPrompt={setUserPrompt} handleKeyDown={handleKeyDown} loading={loading} />
+      <Button size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
         {!loading && <LuSendHorizontal size={16} />}
       </Button>
     </Paper>

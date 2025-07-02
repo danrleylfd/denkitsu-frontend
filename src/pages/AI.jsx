@@ -19,25 +19,24 @@ const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-sc
 const AI = () => {
   const { user } = useAuth()
   const {
-    aiKey,
-    model, setModel,
-    aiProvider, setAIProvider,
-    stream, setStream,
-    prompt,
-    imageUrls, setImageUrls,
+    prompts,
     web, setWeb,
+    stream, setStream,
+    imageUrls, setImageUrls,
+    aiProvider,
+    aiKey,
+    model,
+    freeModels, setFreeModels,
+    payModels, setPayModels,
+    groqModels, setGroqModels,
     messages, setMessages, clearHistory,
-    customPrompt, setCustomPrompt
+    userPrompt, setUserPrompt
   } = useAI()
 
-  const [freeModels, setFreeModels] = useState([])
-  const [payModels, setPayModels] = useState([])
-  const [groqModels, setGroqModels] = useState([])
-  const [inputText, setInputText] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [canvaContent, setCanvaContent] = useState(null)
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [settingsOpen, setSettingsOpen] = useState(false)
   const [selectedPrompt, setSelectedPrompt] = useState("")
 
   const messagesEndRef = useRef(null)
@@ -57,61 +56,44 @@ const AI = () => {
   }, [messages, loading])
 
   const handleAddImageUrl = () => {
-    if (imageUrls.length >= 3) {
-      alert("Você pode adicionar no máximo 3 imagens.")
-      return
-    }
-
+    if (imageUrls.length >= 3) return alert("Você pode adicionar no máximo 3 imagens.")
     const url = window.prompt("Cole a URL da imagem:")
     if (!url) return
-
     const img = new Image()
     img.src = url
-
-    img.onload = () => {
-      setImageUrls((prev) => [...prev, url])
-    }
-
-    img.onerror = () => {
-      alert("A URL fornecida não parece ser uma imagem válida ou não pode ser acessada.")
-    }
+    img.onload = () => (setImageUrls((prev) => [...prev, url]))
+    img.onerror = () => (alert("A URL fornecida não parece ser uma imagem válida ou não pode ser acessada."))
   }
 
-  const handleRemoveImageUrl = (indexToRemove) => {
-    setImageUrls((prev) => prev.filter((_, index) => index !== indexToRemove))
-  }
+  const handleRemoveImageUrl = (indexToRemove) => (setImageUrls((prev) => (prev.filter((_, index) => index !== indexToRemove))))
 
   const handleSendMessage = useCallback(async () => {
-    if (!inputText.trim() && imageUrls.length === 0) return
-
+    if (!userPrompt.trim() && imageUrls.length === 0) return
     const messageContent = []
-    if (inputText.trim()) {
-      messageContent.push({ type: "text", content: inputText.trim() })
+    if (userPrompt.trim()) {
+      messageContent.push({ type: "text", content: userPrompt.trim() })
     }
     if (imageUrls.length > 0) {
       imageUrls.forEach((url) => {
         messageContent.push({ type: "image_url", image_url: { url } })
       })
     }
-
     const newUserMessage = { role: "user", content: messageContent.length === 1 ? messageContent[0].content : messageContent }
     const messagesToSend = [...messages]
     let modePrompt = null
     if (selectedPrompt) {
-      modePrompt = prompt.find((p) => p.content.includes(selectedPrompt))
+      modePrompt = prompts.find((p) => p.content.includes(selectedPrompt))
       if (modePrompt) {
         const exists = messages.some((msg) => msg.content === modePrompt.content)
         if (!exists) messagesToSend.push(modePrompt)
       }
     }
     messagesToSend.push(newUserMessage)
-
     setMessages(messagesToSend)
-    setInputText("")
+    setUserPrompt("")
     setImageUrls([])
     setLoading(true)
     setError(null)
-
     const apiMessages = messagesToSend.map(({ role, content }) => {
       if (Array.isArray(content)) {
         const apiContent = content.map((item) => {
@@ -122,7 +104,6 @@ const AI = () => {
       }
       return { role, content }
     })
-
     if (stream) {
       try {
         const streamedAssistantMessage = {
@@ -205,22 +186,16 @@ const AI = () => {
         setLoading(false)
       }
     }
-  }, [inputText, imageUrls, messages, model, aiKey, aiProvider, web, stream, setMessages, selectedPrompt, prompt])
+  }, [userPrompt, imageUrls, messages, model, aiKey, aiProvider, web, stream, setMessages, selectedPrompt, prompts])
 
-  const handleShowCanva = useCallback((htmlCode) => {
-    setCanvaContent(htmlCode)
-  }, [])
-
-  const handleCloseCanva = useCallback(() => {
-    setCanvaContent(null)
-  }, [])
+  const toggleCanva = useCallback((htmlCode = null) => (canvaContent ? setCanvaContent(htmlCode) : setCanvaContent(htmlCode)), [])
 
   return (
-    <SideMenu ContentView={ContentView} className="bg-brand-purple">
+    <SideMenu ContentView={ContentView} className="bg-brand-purple dark:bg-darkBg-tertiary">
       <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-2">
         <ChatMessage msg={{ role: "assistant", content: "Olá! Como posso ajudar você hoje?\n Shift + Enter para quebrar a linha." }} />
         {messages.map((msg, pos) => (
-          <ChatMessage key={pos} msg={msg} user={user} onShowCanva={handleShowCanva} loading={loading && msg.content === ""} />
+          <ChatMessage key={pos} msg={msg} user={user} toggleCanva={toggleCanva} loading={loading && msg.content === ""} />
         ))}
         <div ref={messagesEndRef} />
         {error && <MessageError>{error}</MessageError>}
@@ -243,28 +218,26 @@ const AI = () => {
         </Paper>
       )}
       <ChatInput
-        inputText={inputText} setInputText={setInputText}
+        userPrompt={userPrompt} setUserPrompt={setUserPrompt}
         onAddImage={handleAddImageUrl} imageCount={imageUrls.length}
-        web={web} setWeb={setWeb}
-        stream={stream} setStream={setStream}
+        web={web} toggleWeb={() => setWeb(!web)}
+        stream={stream} toggleStream={() => setStream(!stream)}
+        toggleSettings={() => setSettingsOpen(!settingsOpen)}
         handleSendMessage={handleSendMessage}
-        toggleSettings={() => setIsSettingsOpen(true)}
         loading={loading}
       />
-
       <AISettings
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
+        settingsOpen={settingsOpen}
+        toggleSettings={() => setSettingsOpen(!settingsOpen)}
         freeModels={freeModels}
         payModels={payModels}
         groqModels={groqModels}
         clearHistory={clearHistory}
-        prompts={prompt}
+        prompts={prompts}
         selectedPrompt={selectedPrompt}
         onSelectPrompt={setSelectedPrompt}
       />
-
-      <Lousa htmlContent={canvaContent} onClose={handleCloseCanva} />
+      <Lousa htmlContent={canvaContent} toggleCanva={toggleCanva} />
     </SideMenu>
   )
 }

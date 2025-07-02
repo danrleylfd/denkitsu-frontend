@@ -30,7 +30,7 @@ const getFileExtension = (lang) => {
   return langMap[lang] || lang
 }
 
-const MessageActions = ({ message, onShowCanva }) => {
+const MessageActions = ({ message, toggleCanva }) => {
   const [loading, setLoading] = useState(false)
   const [loadingType, setLoadingType] = useState(null)
   const { setTasks } = useTasks()
@@ -115,7 +115,7 @@ const MessageActions = ({ message, onShowCanva }) => {
   }
 
   const handlePreview = (code) => {
-    onShowCanva(code)
+    toggleCanva(code)
   }
 
   const hasContextualAction = !!htmlBlockForPreview || !!kanbanableJsonString || !!allCodeToCopy

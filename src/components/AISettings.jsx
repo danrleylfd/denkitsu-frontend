@@ -5,9 +5,9 @@ import Button from "./Button"
 import Input from "./Input"
 import ModelSelect from "./ModelSelect"
 
-const AISettings = ({ isOpen, onClose, freeModels, payModels, groqModels, clearHistory, prompts, selectedPrompt, onSelectPrompt }) => {
+const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqModels, clearHistory, prompts, selectedPrompt, onSelectPrompt }) => {
   const { aiKey, setAIKey, model, setModel, aiProvider, setAIProvider, aiProviderToggle, loading, customPrompt, setCustomPrompt } = useAI()
-  if (!isOpen) return null
+  if (!settingsOpen) return null
   const getModeName = (content) => {
     if (!content) return "Padrão"
     const firstLine = content.trim().split("\n")[0]
@@ -40,11 +40,10 @@ const AISettings = ({ isOpen, onClose, freeModels, payModels, groqModels, clearH
           <h3 className="font-bold text-lightFg-primary dark:text-darkFg-primary">
             Configurações do Denkitsu
           </h3>
-          <Button variant="danger" size="icon" $rounded onClick={onClose}>
+          <Button variant="danger" size="icon" $rounded onClick={toggleSettings}>
             <LuX size={16} />
           </Button>
         </div>
-
         <div className="flex flex-col gap-2">
           <label className="text-lightFg-secondary dark:text-darkFg-secondary">Modo de Operação</label>
           <div className="flex flex-wrap gap-2">
@@ -72,7 +71,6 @@ const AISettings = ({ isOpen, onClose, freeModels, payModels, groqModels, clearH
             })}
           </div>
         </div>
-
         <div className="flex flex-col gap-2">
           <label htmlFor="custom-prompt" className="text-lightFg-secondary dark:text-darkFg-secondary">
             Como Denkitsu deve se comportar? (Modo personalizado pelo usuário)
@@ -85,12 +83,10 @@ const AISettings = ({ isOpen, onClose, freeModels, payModels, groqModels, clearH
             rows={10}
             className="resize-none w-full p-2 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary text-xs focus:outline-none focus:ring-2 focus:ring-primary-base"
             placeholder="Digite seu prompt de sistema aqui..." />
-
           <small className="text-right text-xs text-lightFg-tertiary dark:text-darkFg-tertiary self-end">
             {customPrompt.length} / 7000 caracteres.
           </small>
         </div>
-
         <div className="flex flex-col gap-2">
           <label htmlFor="api-key" className="text-lightFg-secondary dark:text-darkFg-secondary">
             Chave da API ({aiProvider})
@@ -100,7 +96,6 @@ const AISettings = ({ isOpen, onClose, freeModels, payModels, groqModels, clearH
             Sua chave é salva localmente no seu navegador e nunca é enviada para nossos servidores.
           </small>
         </div>
-
         <label htmlFor="model-select" className="text-lightFg-secondary dark:text-darkFg-secondary">
           Modelo
         </label>

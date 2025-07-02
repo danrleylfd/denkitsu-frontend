@@ -17,21 +17,25 @@ export const AIProvider = ({ children }) => {
   const [aiProvider, setAIProvider] = useState(storedAIProvider || "openrouter")
   const [groqModel, setGroqModel] = useState(storedModelGroq || "deepseek-r1-distill-llama-70b")
   const [openRouterModel, setOpenRouterModel] = useState(storedOpenRouterModel || "deepseek/deepseek-r1:free")
-  const [prompt, setPrompt] = useState([])
+  const [freeModels, setFreeModels] = useState([])
+  const [payModels, setPayModels] = useState([])
+  const [groqModels, setGroqModels] = useState([])
+  const [prompts, setPrompts] = useState([])
   const [customPrompt, setCustomPrompt] = useState(storedCustomPrompt || "Responda em português do Brasil (pt-BR).")
   const [groqKey, setGroqKey] = useState(storedGroqKey || "")
   const [openRouterKey, setOpenRouterKey] = useState(storedOpenRouterKey || "")
   const [stream, setStream] = useState(storedStream === null ? true : storedStream)
   const [imageUrls, setImageUrls] = useState([])
   const [web, setWeb] = useState(storedWeb)
+  const [userPrompt, setUserPrompt] = useState("")
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
 
   useEffect(() => {
-    async function loadPrompt() {
-      const promptData = await getPrompt()
-      setPrompt(promptData)
+    async function loadPrompts() {
+      const promptsData = await getPrompt()
+      setPrompts(promptsData)
     }
-    loadPrompt()
+    loadPrompts()
   }, [])
 
   useEffect(() => (localStorage.setItem("@Denkitsu:aiProvider", aiProvider)), [aiProvider])
@@ -41,6 +45,10 @@ export const AIProvider = ({ children }) => {
   useEffect(() => (localStorage.setItem("@Denkitsu:OpenRouterModel", openRouterModel)), [openRouterModel])
 
   useEffect(() => (localStorage.setItem("@Denkitsu:customPrompt", customPrompt)), [customPrompt])
+
+  useEffect(() => (localStorage.setItem("@Denkitsu:Stream", stream)), [stream])
+
+  useEffect(() => (localStorage.setItem("@Denkitsu:Web", web)), [web])
 
   useEffect(() => {
     if (groqKey.trim() === "") return localStorage.removeItem("@Denkitsu:Groq")
@@ -52,35 +60,34 @@ export const AIProvider = ({ children }) => {
     localStorage.setItem("@Denkitsu:OpenRouter", openRouterKey)
   }, [openRouterKey])
 
-  useEffect(() => (localStorage.setItem("@Denkitsu:Stream", stream)), [stream])
-
-  useEffect(() => (localStorage.setItem("@Denkitsu:Web", web)), [web])
-
   useEffect(() => {
-    if (prompt.length === 0) return
+    if (prompts.length === 0) return
     setMessages((prev) => {
       const hasSystemMessage = prev.some((msg) => msg.role === "system")
-      if (!hasSystemMessage) return [prompt[0], { role: "system", content: customPrompt }]
+      if (!hasSystemMessage) return [prompts[0], { role: "system", content: customPrompt }]
       return prev
     })
     localStorage.setItem("@Denkitsu:messages", JSON.stringify(messages))
-  }, [prompt, messages])
+  }, [prompts, messages])
 
   const aiProviderToggle = () => setAIProvider((prev) => (prev === "groq" ? "openrouter" : "groq"))
 
-  const clearHistory = () => setMessages([prompt[0], { role: "system", content: customPrompt }])
+  const clearHistory = () => setMessages([prompts[0], { role: "system", content: customPrompt }])
 
   const values = {
-    prompt, setPrompt,
+    prompts, setPrompts,
     web, setWeb,
     stream, setStream,
     imageUrls, setImageUrls,
     aiProvider, setAIProvider, aiProviderToggle,
     aiKey: aiProvider === "groq" ? groqKey : openRouterKey,
     setAIKey: aiProvider === "groq" ? setGroqKey : setOpenRouterKey,
-    model: aiProvider === "groq" ? groqModel : openRouterModel,
-    setModel: aiProvider === "groq" ? setGroqModel : setOpenRouterModel,
+    model: aiProvider === "groq" ? groqModel : openRouterModel, setModel: aiProvider === "groq" ? setGroqModel : setOpenRouterModel,
+    freeModels, setFreeModels,
+    payModels, setPayModels,
+    groqModels, setGroqModels,
     customPrompt, setCustomPrompt,
+    userPrompt, setUserPrompt,
     messages, setMessages, clearHistory
   }
 
