@@ -3,11 +3,11 @@ import PromptInput from "./PromptInput"
 import Button from "./Button"
 import Paper from "./Paper"
 
-const ChatInput = ({ userPrompt, setUserPrompt, onAddImage, imageCount, web, toggleWeb, stream, toggleStream, handleSendMessage, toggleSettings, loading }) => {
+const ChatInput = ({ userPrompt, setUserPrompt, onAddImage, imageCount, web, toggleWeb, stream, toggleStream, onSendMessage, toggleSettings, loading }) => {
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
-      handleSendMessage()
+      onSendMessage()
     }
   }
   return (
@@ -25,7 +25,7 @@ const ChatInput = ({ userPrompt, setUserPrompt, onAddImage, imageCount, web, tog
         <LuGlobe size={16} />
       </Button>
       <PromptInput userPrompt={userPrompt} setUserPrompt={setUserPrompt} handleKeyDown={handleKeyDown} loading={loading} />
-      <Button size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
+      <Button size="icon" $rounded title="Enviar" onClick={onSendMessage} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
         {!loading && <LuSendHorizontal size={16} />}
       </Button>
     </Paper>
