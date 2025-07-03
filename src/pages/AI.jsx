@@ -20,17 +20,26 @@ const AI = () => {
   const { user } = useAuth()
   const {
     prompts,
-    web, setWeb,
-    stream, setStream,
-    imageUrls, setImageUrls,
+    web,
+    setWeb,
+    stream,
+    setStream,
+    imageUrls,
+    setImageUrls,
     aiProvider,
     aiKey,
     model,
-    freeModels, setFreeModels,
-    payModels, setPayModels,
-    groqModels, setGroqModels,
-    messages, setMessages, clearHistory,
-    userPrompt, setUserPrompt
+    freeModels,
+    setFreeModels,
+    payModels,
+    setPayModels,
+    groqModels,
+    setGroqModels,
+    messages,
+    setMessages,
+    clearHistory,
+    userPrompt,
+    setUserPrompt
   } = useAI()
 
   const [loading, setLoading] = useState(false)
@@ -61,11 +70,11 @@ const AI = () => {
     if (!url) return
     const img = new Image()
     img.src = url
-    img.onload = () => (setImageUrls((prev) => [...prev, url]))
-    img.onerror = () => (alert("A URL fornecida não parece ser uma imagem válida ou não pode ser acessada."))
+    img.onload = () => setImageUrls((prev) => [...prev, url])
+    img.onerror = () => alert("A URL fornecida não parece ser uma imagem válida ou não pode ser acessada.")
   }
 
-  const handleRemoveImageUrl = (indexToRemove) => (setImageUrls((prev) => (prev.filter((_, index) => index !== indexToRemove))))
+  const handleRemoveImageUrl = (indexToRemove) => setImageUrls((prev) => prev.filter((_, index) => index !== indexToRemove))
 
   const handleSendMessage = useCallback(async () => {
     if (!userPrompt.trim() && imageUrls.length === 0) return
@@ -116,15 +125,9 @@ const AI = () => {
         }
         setMessages((prev) => [...prev, streamedAssistantMessage])
         await sendMessageStream(aiKey, aiProvider, model, apiMessages, web, (delta) => {
-          if (delta.content) {
-            streamedAssistantMessage._contentBuffer += delta.content
-          }
-          if (delta.reasoning) {
-            streamedAssistantMessage._reasoningBuffer += delta.reasoning
-          }
-          if (delta.tool_calls?.[0]?.arguments?.reasoning) {
-            streamedAssistantMessage._reasoningBuffer += delta.tool_calls[0].arguments.reasoning
-          }
+          if (delta.content) streamedAssistantMessage._contentBuffer += delta.content
+          if (delta.reasoning) streamedAssistantMessage._reasoningBuffer += delta.reasoning
+          if (delta.tool_calls?.[0]?.arguments?.reasoning) streamedAssistantMessage._reasoningBuffer += delta.tool_calls[0].arguments.reasoning
           let reasoningFromThink = ""
           const finalContent = streamedAssistantMessage._contentBuffer.replace(/<think>(.*?)<\/think>/gs, (match, thought) => {
             reasoningFromThink += thought
@@ -140,14 +143,17 @@ const AI = () => {
           })
         })
       } catch (error) {
-        const { error: defaultErr } = JSON.parse(error.message)
-        const errMsg = error.response?.data?.error?.message || defaultErr.message
+        let errMsg
+        try {
+          const parsedError = JSON.parse(error.message)
+          errMsg = parsedError.error || parsedError.message
+        } catch (parseError) {
+          errMsg = error.message
+        }
         setMessages((prev) => {
           const updated = [...prev]
           const msgIndex = updated.findIndex((msg) => msg.role === "assistant" && msg.content === "")
-          if (msgIndex !== -1) {
-            updated[msgIndex].content = "Falha ao enviar mensagem.\n```diff\n- " + errMsg + "\n+ Tente usar algum modelo de outro provedor ou verifique sua chave de API nas configurações.\n+ Tente desativar a tool Web\n```"
-          }
+          if (msgIndex !== -1) updated[msgIndex].content = "Falha ao enviar mensagem.\n```diff\n- " + errMsg + "\n+ Tente usar algum modelo de outro provedor ou verifique sua chave de API nas configurações.\n+ Tente desativar a tool Web\n```"
           return updated
         })
       } finally {
@@ -173,12 +179,15 @@ const AI = () => {
           return updated
         })
       } catch (error) {
-        const errMsg = error.response?.data?.error?.message || error.message || "Erro desconhecido"
+        const errMsg = error.response?.data?.error?.message || error.message
         setMessages((prev) => {
           const updated = [...prev]
           const msgIndex = updated.findIndex((msg) => msg.id === assistantPlaceholder.id)
           if (msgIndex !== -1) {
-            updated[msgIndex].content = "Falha ao enviar mensagem.\n```diff\n- " + errMsg + "\n+ Tente usar algum modelo de outro provedor ou verifique sua chave de API nas configurações.\n+ Tente desativar a tool Web\n```"
+            updated[msgIndex].content =
+              "Falha ao enviar mensagem.\n```diff\n- " +
+              errMsg +
+              "\n+ Tente usar algum modelo de outro provedor ou verifique sua chave de API nas configurações.\n+ Tente desativar a tool Web\n```"
           }
           return updated
         })
@@ -205,12 +214,7 @@ const AI = () => {
           {imageUrls.map((url, index) => (
             <div key={index} className="flex flex-col gap-2">
               <img src={url} alt={`Preview ${index + 1}`} className="h-16 w-auto rounded-md object-cover" />
-              <Button
-                variant="danger"
-                size="icon"
-                $rounded
-                onClick={() => handleRemoveImageUrl(index)}
-                title="Remover Imagem">
+              <Button variant="danger" size="icon" $rounded onClick={() => handleRemoveImageUrl(index)} title="Remover Imagem">
                 <LuX size={16} />
               </Button>
             </div>
@@ -218,10 +222,14 @@ const AI = () => {
         </Paper>
       )}
       <ChatInput
-        userPrompt={userPrompt} setUserPrompt={setUserPrompt}
-        onAddImage={handleAddImageUrl} imageCount={imageUrls.length}
-        web={web} toggleWeb={() => setWeb(!web)}
-        stream={stream} toggleStream={() => setStream(!stream)}
+        userPrompt={userPrompt}
+        setUserPrompt={setUserPrompt}
+        onAddImage={handleAddImageUrl}
+        imageCount={imageUrls.length}
+        web={web}
+        toggleWeb={() => setWeb(!web)}
+        stream={stream}
+        toggleStream={() => setStream(!stream)}
         toggleSettings={() => setSettingsOpen(!settingsOpen)}
         handleSendMessage={handleSendMessage}
         loading={loading}
