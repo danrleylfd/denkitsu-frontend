@@ -35,7 +35,7 @@ const Redirect = () => {
     fetchLink()
   }, [])
   return (
-    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
+    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
       <h3 className="text-lightFg-primary dark:text-darkFg-primary">
         Redirecionando para {label || "Início"}...
       </h3>

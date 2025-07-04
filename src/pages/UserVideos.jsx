@@ -44,7 +44,7 @@ const UserVideos = () => {
   }, [user._id])
 
   return (
-    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple min-h-screen">
+    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple min-h-screen">
       {loading && <Button $rounded loading={loading} disabled />}
       {error && <MessageError>{error}</MessageError>}
       {!loading && videos.length === 0 && <MessageBase>Nenhum vídeo encontrado.</MessageBase>}

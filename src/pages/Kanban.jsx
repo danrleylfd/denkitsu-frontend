@@ -10,7 +10,7 @@ const ContentView = ({ children }) => (
 
 const Kanban = () => {
   return (
-    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
+    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
       <KanbanBoard />
     </SideMenu>
   )

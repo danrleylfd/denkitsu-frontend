@@ -134,7 +134,7 @@ const Shortcut = () => {
   }
 
   return (
-    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
+    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
       <div
         className="bg-lightBg-secondary dark:bg-darkBg-secondary p-4 rounded-md w-full shadow-[6px_6px_16px_rgba(0,0,0,0.5)] opacity-75 dark:opacity-90">
         <form onSubmit={handleCreateLink} className="flex flex-row items-center gap-2">

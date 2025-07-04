@@ -104,7 +104,7 @@ const Profile = () => {
   }
 
   return (
-    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
+    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
       {loading && !userData && (
         <div className="p-2">
           <Button variant="secondary" $rounded loading={loading} disabled />

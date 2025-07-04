@@ -81,7 +81,7 @@ const Upload = () => {
   }
 
   return (
-    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
+    <SideMenu ContentView={ContentView} className="bg-cover bg-brand-purple">
       <Form title="Upload" onSubmit={handleSubmit}>
         <Input
           name="content"

@@ -230,7 +230,7 @@ const AI = () => {
   const toggleLousa = useCallback((content = null) => (lousaContent ? setLousaContent(content) : setLousaContent(content)), [])
 
   return (
-    <SideMenu ContentView={ContentView} className="bg-brand-purple">
+    <SideMenu ContentView={ContentView} className="bg-brand-purple bg-cover bg-center">
       <ChatHistory toggleLousa={toggleLousa} />
 
       <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />

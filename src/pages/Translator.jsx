@@ -115,7 +115,7 @@ const Tradutor = () => {
   }
 
   return (
-    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
+    <SideMenu ContentView={ContentView} className="bg-cover bg-brand-purple">
       <Paper className="w-full max-w-2xl flex flex-col gap-2 bg-lightBg-primary dark:bg-darkBg-primary">
         <div className="flex items-center gap-2 text-lightFg-primary dark:text-darkFg-primary">
           <LuLanguages size={24} />

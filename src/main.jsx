@@ -6,20 +6,23 @@ import { AuthProvider } from "./contexts/AuthContext"
 import { AIProvider } from "./contexts/AIContext.jsx"
 import { TasksProvider } from "./contexts/TasksContext"
 import { DndProvider } from "./contexts/DndContext"
+import { BackgroundProvider } from "./contexts/BackgroundContext"
 import "./styles/global.css"
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ThemeProvider>
-      <AuthProvider>
-        <AIProvider>
-          <TasksProvider>
-            <DndProvider>
-              <App />
-            </DndProvider>
-          </TasksProvider>
-        </AIProvider>
-      </AuthProvider>
-    </ThemeProvider>
+    <BackgroundProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <AIProvider>
+            <TasksProvider>
+              <DndProvider>
+                <App />
+              </DndProvider>
+            </TasksProvider>
+          </AIProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </BackgroundProvider>
   </React.StrictMode>
 )

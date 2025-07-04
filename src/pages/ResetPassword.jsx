@@ -53,7 +53,7 @@ const ResetPassword = () => {
     }
   }
   return (
-    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
+    <SideMenu ContentView={ContentView} className="bg-cover bg-brand-purple">
       <Form title="Redefinir Senha" onSubmit={handleResetPassword}>
         <Input
           name="token"

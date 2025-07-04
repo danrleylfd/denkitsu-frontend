@@ -93,7 +93,7 @@ const Weather = () => {
   }, [])
 
   return (
-    <SideMenu ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
+    <SideMenu ContentView={ContentView} className="bg-cover bg-brand-purple">
       <div
         className="relative w-full max-w-xl rounded-lg shadow-[6px_6px_16px_rgba(0,0,0,0.5)] bg-lightBg-primary p-4 opacity-75 dark:bg-darkBg-primary dark:opacity-90">
         {/* <div className="flex items-center gap-2 pb-2"> */}

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import { LuSearchSlash, LuBrain } from "react-icons/lu"
 
 import { useAuth } from "../contexts/AuthContext"
+
 import { useAI } from "../contexts/AIContext"
 import { getNewsPaginate } from "../services/news"
 import { generateNews } from "../services/aiChat"
@@ -96,7 +97,7 @@ const News = () => {
   }
 
   return (
-    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-[url('/background.jpg')] bg-brand-purple">
+    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
       {error && <Paper>{error}</Paper>}
       <Paper>
         <Input
