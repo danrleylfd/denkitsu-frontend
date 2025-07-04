@@ -11,7 +11,7 @@ const ChatInput = ({ userPrompt, setUserPrompt, onAddImage, imageCount, web, tog
     }
   }
   return (
-    <Paper className="bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-none flex items-center gap-2">
+    <Paper className="bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 w-[95%] mb-2 mx-auto">
       <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Stream" onClick={toggleStream} disabled={loading}>
         <LuBinary size={16} />
       </Button>
