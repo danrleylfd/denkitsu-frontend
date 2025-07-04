@@ -1,11 +1,11 @@
-import { memo, useEffect, useRef } from "react"
+import { memo, useRef, useEffect } from "react"
 
 import ChatMessage from "./ChatMessage"
 
 import { useAuth } from "../contexts/AuthContext"
 import { useAI } from "../contexts/AIContext"
 
-const ChatHistory = () => {
+const ChatHistory = ({ toggleLousa }) => {
   const { messages, loading } = useAI()
   const { user } = useAuth()
   const initialMessage = { role: "assistant", content: "Olá! Como posso ajudar você hoje?\n Shift + Enter para quebrar a linha." }
@@ -22,6 +22,7 @@ const ChatHistory = () => {
           key={pos}
           msg={msg}
           user={user}
+          toggleLousa={toggleLousa}
           loading={loading && !msg.content}
         />
       ))}

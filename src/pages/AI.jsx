@@ -38,7 +38,7 @@ const AI = () => {
   } = useAI()
 
   const [loading, setLoading] = useState(false)
-  const [canvaContent, setCanvaContent] = useState(null)
+  const [lousaContent, setLousaContent] = useState(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [selectedPrompt, setSelectedPrompt] = useState("")
 
@@ -227,11 +227,11 @@ const AI = () => {
     }
   }
 
-  const toggleCanva = useCallback((htmlCode = null) => (canvaContent ? setCanvaContent(htmlCode) : setCanvaContent(htmlCode)), [])
+  const toggleLousa = useCallback((content = null) => (lousaContent ? setLousaContent(content) : setLousaContent(content)), [])
 
   return (
     <SideMenu ContentView={ContentView} className="bg-brand-purple">
-      <ChatHistory />
+      <ChatHistory toggleLousa={toggleLousa} />
 
       <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
 
@@ -261,7 +261,7 @@ const AI = () => {
         onSelectPrompt={setSelectedPrompt}
       />
 
-      <Lousa htmlContent={canvaContent} toggleCanva={toggleCanva} />
+      <Lousa content={lousaContent} toggleLousa={toggleLousa} />
     </SideMenu>
   )
 }
