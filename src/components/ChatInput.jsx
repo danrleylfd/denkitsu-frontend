@@ -13,12 +13,6 @@ const ChatInput = ({ userPrompt, setUserPrompt, onAddImage, imageCount, web, tog
   }
   return (
     <Paper className="bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 max-w-[95%] mb-2 mx-auto">
-      <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Stream" onClick={toggleStream} disabled={loading}>
-        <LuBinary size={16} />
-      </Button>
-      <Button variant="danger" size="icon" $rounded title="Apagar Conversa" onClick={clearHistory} disabled={loading}>
-        <MdClearAll size={16} />
-      </Button>
       <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettings} disabled={loading}>
         <LuSettings size={16} />
       </Button>
@@ -29,6 +23,12 @@ const ChatInput = ({ userPrompt, setUserPrompt, onAddImage, imageCount, web, tog
         <LuGlobe size={16} />
       </Button>
       <PromptInput userPrompt={userPrompt} setUserPrompt={setUserPrompt} handleKeyDown={handleKeyDown} loading={loading} />
+      <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Stream" onClick={toggleStream} disabled={loading}>
+        <LuBinary size={16} />
+      </Button>
+      <Button variant="danger" size="icon" $rounded title="Apagar Conversa" onClick={clearHistory} disabled={loading}>
+        <MdClearAll size={16} />
+      </Button>
       <Button size="icon" $rounded title="Enviar" onClick={onSendMessage} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
         {!loading && <LuSendHorizontal size={16} />}
       </Button>
