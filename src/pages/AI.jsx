@@ -246,6 +246,7 @@ const AI = () => {
         toggleStream={() => setStream(!stream)}
         toggleSettings={() => setSettingsOpen(!settingsOpen)}
         onSendMessage={onSendMessage}
+        clearHistory={clearHistory}
         loading={loading}
       />
 
@@ -255,7 +256,6 @@ const AI = () => {
         freeModels={freeModels}
         payModels={payModels}
         groqModels={groqModels}
-        clearHistory={clearHistory}
         prompts={prompts}
         selectedPrompt={selectedPrompt}
         onSelectPrompt={setSelectedPrompt}

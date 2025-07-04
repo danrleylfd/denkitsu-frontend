@@ -1,11 +1,10 @@
 import { LuX, LuBrain } from "react-icons/lu"
-import { MdClearAll } from "react-icons/md"
 import { useAI } from "../contexts/AIContext"
 import Button from "./Button"
 import Input from "./Input"
 import ModelSelect from "./ModelSelect"
 
-const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqModels, clearHistory, prompts, selectedPrompt, onSelectPrompt }) => {
+const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqModels, prompts, selectedPrompt, onSelectPrompt }) => {
   const { aiKey, setAIKey, model, setModel, aiProvider, setAIProvider, aiProviderToggle, loading, customPrompt, setCustomPrompt } = useAI()
   if (!settingsOpen) return null
   const getModeName = (content) => {
@@ -117,9 +116,6 @@ const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqM
             onClick={aiProviderToggle}
             title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
             <LuBrain size={16} />
-          </Button>
-          <Button variant="danger" size="icon" $rounded title="Apagar Conversa" onClick={clearHistory} disabled={loading}>
-            <MdClearAll size={16} />
           </Button>
         </div>
       </div>
