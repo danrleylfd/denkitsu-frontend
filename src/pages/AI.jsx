@@ -108,7 +108,7 @@ const AI = () => {
     return history
   }
 
-  const prepareApiMessages = (messages) => (
+  const prepareApiMessages = (messages) =>
     messages.map(({ role, content }) =>
       Array.isArray(content)
         ? {
@@ -117,7 +117,6 @@ const AI = () => {
           }
         : { role, content }
     )
-  )
 
   const createAssistantPlaceholder = () => ({
     id: Date.now() + 1,
@@ -182,29 +181,29 @@ const AI = () => {
   }
 
   const handleNonStreamingResponse = (data, placeholder, setMessages) => {
-  const response = data?.choices[0]?.message
-  if (!response) return
-  let content = response.content || ""
-  let reasoning = response.reasoning || ""
-  let reasoningFromThink = ""
-  content = content.replace(/<think>(.*?)<\/think>/gs, (_, thought) => {
-    reasoningFromThink += thought
-    return ""
-  })
-  if (reasoningFromThink) reasoning += reasoningFromThink
-  const finalMessage = {
-    id: placeholder.id,
-    role: "assistant",
-    content: content,
-    reasoning: reasoning
+    const response = data?.choices[0]?.message
+    if (!response) return
+    let content = response.content || ""
+    let reasoning = response.reasoning || ""
+    let reasoningFromThink = ""
+    content = content.replace(/<think>(.*?)<\/think>/gs, (_, thought) => {
+      reasoningFromThink += thought
+      return ""
+    })
+    if (reasoningFromThink) reasoning += reasoningFromThink
+    const finalMessage = {
+      id: placeholder.id,
+      role: "assistant",
+      content: content,
+      reasoning: reasoning
+    }
+    setMessages((prev) => {
+      const updated = [...prev]
+      const index = updated.findIndex((msg) => msg.id === placeholder.id)
+      if (index !== -1) updated[index] = finalMessage
+      return updated
+    })
   }
-  setMessages((prev) => {
-    const updated = [...prev]
-    const index = updated.findIndex((msg) => msg.id === placeholder.id)
-    if (index !== -1) updated[index] = finalMessage
-    return updated
-  })
-}
 
   const handleNonStreamingError = (error, placeholder, setMessages) => {
     const errMsg = parseErrorMessage(error)
@@ -229,39 +228,79 @@ const AI = () => {
 
   const toggleLousa = useCallback((content = null) => (lousaContent ? setLousaContent(content) : setLousaContent(content)), [])
 
+  function temMensagensDoUsuario(messages) {
+    const mensagensDoUsuario = messages.filter((mensagem) => mensagem.role === "user")
+    return mensagensDoUsuario.length > 0
+  }
+
   return (
     <SideMenu ContentView={ContentView} className="bg-brand-purple bg-cover bg-center">
-      <ChatHistory toggleLousa={toggleLousa} />
+      {!temMensagensDoUsuario(messages) && (
+        <div
+          style={{
+            flexGrow: 1,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+          }}>
+          <ChatInput
+            userPrompt={userPrompt}
+            setUserPrompt={setUserPrompt}
+            onAddImage={onAddImage}
+            imageCount={imageUrls.length}
+            web={web}
+            toggleWeb={() => setWeb(!web)}
+            stream={stream}
+            toggleStream={() => setStream(!stream)}
+            toggleSettings={() => setSettingsOpen(!settingsOpen)}
+            onSendMessage={onSendMessage}
+            clearHistory={clearHistory}
+            loading={loading}
+          />
+          <AISettings
+            settingsOpen={settingsOpen}
+            toggleSettings={() => setSettingsOpen(!settingsOpen)}
+            freeModels={freeModels}
+            payModels={payModels}
+            groqModels={groqModels}
+            prompts={prompts}
+            selectedPrompt={selectedPrompt}
+            onSelectPrompt={setSelectedPrompt}
+          />
+        </div>
+      )}
 
-      <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
-
-      <ChatInput
-        userPrompt={userPrompt}
-        setUserPrompt={setUserPrompt}
-        onAddImage={onAddImage}
-        imageCount={imageUrls.length}
-        web={web}
-        toggleWeb={() => setWeb(!web)}
-        stream={stream}
-        toggleStream={() => setStream(!stream)}
-        toggleSettings={() => setSettingsOpen(!settingsOpen)}
-        onSendMessage={onSendMessage}
-        clearHistory={clearHistory}
-        loading={loading}
-      />
-
-      <AISettings
-        settingsOpen={settingsOpen}
-        toggleSettings={() => setSettingsOpen(!settingsOpen)}
-        freeModels={freeModels}
-        payModels={payModels}
-        groqModels={groqModels}
-        prompts={prompts}
-        selectedPrompt={selectedPrompt}
-        onSelectPrompt={setSelectedPrompt}
-      />
-
-      <Lousa content={lousaContent} toggleLousa={toggleLousa} />
+      {temMensagensDoUsuario(messages) && (
+        <>
+          <ChatHistory toggleLousa={toggleLousa} />
+          <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
+          <ChatInput
+            userPrompt={userPrompt}
+            setUserPrompt={setUserPrompt}
+            onAddImage={onAddImage}
+            imageCount={imageUrls.length}
+            web={web}
+            toggleWeb={() => setWeb(!web)}
+            stream={stream}
+            toggleStream={() => setStream(!stream)}
+            toggleSettings={() => setSettingsOpen(!settingsOpen)}
+            onSendMessage={onSendMessage}
+            clearHistory={clearHistory}
+            loading={loading}
+          />
+          <AISettings
+            settingsOpen={settingsOpen}
+            toggleSettings={() => setSettingsOpen(!settingsOpen)}
+            freeModels={freeModels}
+            payModels={payModels}
+            groqModels={groqModels}
+            prompts={prompts}
+            selectedPrompt={selectedPrompt}
+            onSelectPrompt={setSelectedPrompt}
+          />
+          <Lousa content={lousaContent} toggleLousa={toggleLousa} />
+        </>
+      )}
     </SideMenu>
   )
 }
