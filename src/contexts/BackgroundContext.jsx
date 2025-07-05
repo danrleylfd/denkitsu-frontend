@@ -14,7 +14,7 @@ export const BackgroundProvider = ({ children }) => {
       return
     }
     try {
-      const response = await fetch(`${unsplashApiUrl}?query=dark-abstract-wallpaper&orientation=landscape&client_id=G0_VOjkauHvBWnVTKcMVKGlpumo7trpktjRD-y7YHMQ`)
+      const response = await fetch(`${unsplashApiUrl}?query=drop-wallpaper&orientation=landscape&client_id=G0_VOjkauHvBWnVTKcMVKGlpumo7trpktjRD-y7YHMQ`)
       if (!response.ok) {
         throw new Error(`Erro na API do Unsplash: ${response.statusText}`)
       }
