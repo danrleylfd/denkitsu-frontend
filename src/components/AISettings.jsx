@@ -10,7 +10,7 @@ const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqM
   const getModeName = (content) => {
     if (!content) return "Padrão"
     const firstLine = content.trim().split("\n")[0]
-    return firstLine.replace("## Modo ", "").trim()
+    return firstLine.replace("## Agente ", "").trim()
   }
 
   const gradientColors = [
@@ -76,7 +76,7 @@ const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqM
           </Button>
         </div>
         <div className="flex flex-col gap-2">
-          <label className="text-lightFg-secondary dark:text-darkFg-secondary">Modo de Operação</label>
+          <label className="text-lightFg-secondary dark:text-darkFg-secondary">Agentes de Operação</label>
           <div className="flex flex-wrap gap-2">
             <Button
               variant={!selectedPrompt ? "primary" : "secondary"}
@@ -104,7 +104,7 @@ const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqM
         </div>
         <div className="flex flex-col gap-2">
           <label htmlFor="custom-prompt" className="text-lightFg-secondary dark:text-darkFg-secondary">
-            Como Denkitsu deve se comportar? (Modo personalizado pelo usuário)
+            Como Denkitsu deve se comportar? (Agente personalizado pelo usuário)
           </label>
           <textarea
             id="custom-prompt"
