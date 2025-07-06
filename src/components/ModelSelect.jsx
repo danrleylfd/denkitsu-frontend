@@ -16,7 +16,7 @@ const ModelSelect = ({ setAIProvider, model, setModel, loading, freeModels, payM
       value={model}
       onChange={handleChange}
       disabled={loading}
-      className="bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary text-sm py-2 max-w-[20rem] rounded-md">
+      className="bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary text-sm py-2 w-full rounded-md">
       <option className="text-primary-base" disabled value="">
         Selecionar Modelo
       </option>

@@ -1,10 +1,14 @@
-import { LuSettings, LuSendHorizontal, LuImagePlus, LuGlobe, LuBinary } from "react-icons/lu"
+import { LuSettings, LuSendHorizontal, LuImagePlus, LuGlobe, LuGlobeLock, LuBinary, LuBrain } from "react-icons/lu"
 import { MdClearAll } from "react-icons/md"
+
+import { useAI } from "../contexts/AIContext"
+
 import PromptInput from "./PromptInput"
 import Button from "./Button"
 import Paper from "./Paper"
 
 const ChatInput = ({ userPrompt, setUserPrompt, onAddImage, imageCount, web, toggleWeb, stream, toggleStream, onSendMessage, clearHistory, toggleSettings, loading }) => {
+  const { aiProvider, aiProviderToggle } = useAI()
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
@@ -16,11 +20,14 @@ const ChatInput = ({ userPrompt, setUserPrompt, onAddImage, imageCount, web, tog
       <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettings} disabled={loading}>
         <LuSettings size={16} />
       </Button>
+      <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
+        <LuBrain size={16} />
+      </Button>
       <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={loading}>
         <LuImagePlus size={16} />
       </Button>
-      <Button variant={web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Web" onClick={toggleWeb} disabled={loading}>
-        <LuGlobe size={16} />
+      <Button variant={aiProvider === "openrouter" && !web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Web" onClick={toggleWeb} disabled={aiProvider === "groq" || loading}>
+        {aiProvider === "openrouter" ? <LuGlobe size={16} /> : <LuGlobeLock size={16} />}
       </Button>
       <PromptInput userPrompt={userPrompt} setUserPrompt={setUserPrompt} handleKeyDown={handleKeyDown} loading={loading} />
       <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Stream" onClick={toggleStream} disabled={loading}>

@@ -1,10 +1,12 @@
-import { LuX, LuBrain } from "react-icons/lu"
+import { useState } from "react"
+import { LuX, LuBrain, LuEye, LuEyeClosed } from "react-icons/lu"
 import { useAI } from "../contexts/AIContext"
 import Button from "./Button"
 import Input from "./Input"
 import ModelSelect from "./ModelSelect"
 
 const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqModels, prompts, selectedPrompt, onSelectPrompt }) => {
+  const [showAIKey, setShowAIKey] = useState(false)
   const { aiKey, setAIKey, model, setModel, aiProvider, setAIProvider, aiProviderToggle, loading, customPrompt, setCustomPrompt } = useAI()
   if (!settingsOpen) return null
   const getModeName = (content) => {
@@ -43,19 +45,39 @@ const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqM
             <LuX size={16} />
           </Button>
         </div>
-        <div className="flex flex-col gap-2">
-          <label htmlFor="api-key" className="text-lightFg-secondary dark:text-darkFg-secondary">
-            Chave da API ({aiProvider})
-          </label>
-          <Input id="api-key" type="password" placeholder="Sua chave de API" value={aiKey} onChange={(e) => setAIKey(e.target.value)} />
+        <label htmlFor="api-key" className="text-lightFg-secondary dark:text-darkFg-secondary">
+          Chave da API ({aiProvider})
+        </label>
+        <div className="flex gap-2">
+          <Button
+            variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"}
+            size="icon"
+            $rounded
+            onClick={aiProviderToggle}
+            title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
+            <LuBrain size={16} />
+          </Button>
+          <Input id="api-key" type={showAIKey ? "text" : "password"} autoComplete="new-password" placeholder="Sua chave de API" value={aiKey} onChange={(e) => setAIKey(e.target.value)}>
+            <Button type="button" variant="outline" size="icon" $rounded onClick={() => setShowAIKey(!showAIKey)} disabled={loading}>
+              {showAIKey ? <LuEye size={16} /> : <LuEyeClosed size={16} />}
+            </Button>
+          </Input>
+        </div>
           <small className="text-xs text-lightFg-tertiary dark:text-darkFg-tertiary">
             Sua chave é salva localmente no seu navegador e nunca é enviada para nossos servidores.
           </small>
-        </div>
         <label htmlFor="model-select" className="text-lightFg-secondary dark:text-darkFg-secondary">
           Modelo
         </label>
         <div className="flex items-end gap-2">
+          <Button
+            variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"}
+            size="icon"
+            $rounded
+            onClick={aiProviderToggle}
+            title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
+            <LuBrain size={16} />
+          </Button>
           <ModelSelect
             aiProvider={aiProvider}
             setAIProvider={setAIProvider}
@@ -66,14 +88,6 @@ const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqM
             payModels={payModels}
             groqModels={groqModels}
           />
-          <Button
-            variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"}
-            size="icon"
-            $rounded
-            onClick={aiProviderToggle}
-            title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
-            <LuBrain size={16} />
-          </Button>
         </div>
         <div className="flex flex-col gap-2">
           <label className="text-lightFg-secondary dark:text-darkFg-secondary">Agentes de AI</label>
