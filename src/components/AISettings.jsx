@@ -44,6 +44,38 @@ const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqM
           </Button>
         </div>
         <div className="flex flex-col gap-2">
+          <label htmlFor="api-key" className="text-lightFg-secondary dark:text-darkFg-secondary">
+            Chave da API ({aiProvider})
+          </label>
+          <Input id="api-key" type="password" placeholder="Sua chave de API" value={aiKey} onChange={(e) => setAIKey(e.target.value)} />
+          <small className="text-xs text-lightFg-tertiary dark:text-darkFg-tertiary">
+            Sua chave é salva localmente no seu navegador e nunca é enviada para nossos servidores.
+          </small>
+        </div>
+        <label htmlFor="model-select" className="text-lightFg-secondary dark:text-darkFg-secondary">
+          Modelo
+        </label>
+        <div className="flex items-end gap-2">
+          <ModelSelect
+            aiProvider={aiProvider}
+            setAIProvider={setAIProvider}
+            model={model}
+            setModel={setModel}
+            loading={loading}
+            freeModels={freeModels}
+            payModels={payModels}
+            groqModels={groqModels}
+          />
+          <Button
+            variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"}
+            size="icon"
+            $rounded
+            onClick={aiProviderToggle}
+            title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
+            <LuBrain size={16} />
+          </Button>
+        </div>
+        <div className="flex flex-col gap-2">
           <label className="text-lightFg-secondary dark:text-darkFg-secondary">Modo de Operação</label>
           <div className="flex flex-wrap gap-2">
             <Button
@@ -85,38 +117,6 @@ const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqM
           <small className="text-right text-xs text-lightFg-tertiary dark:text-darkFg-tertiary self-end">
             {customPrompt.length} / 7000 caracteres.
           </small>
-        </div>
-        <div className="flex flex-col gap-2">
-          <label htmlFor="api-key" className="text-lightFg-secondary dark:text-darkFg-secondary">
-            Chave da API ({aiProvider})
-          </label>
-          <Input id="api-key" type="password" placeholder="Sua chave de API" value={aiKey} onChange={(e) => setAIKey(e.target.value)} />
-          <small className="text-xs text-lightFg-tertiary dark:text-darkFg-tertiary">
-            Sua chave é salva localmente no seu navegador e nunca é enviada para nossos servidores.
-          </small>
-        </div>
-        <label htmlFor="model-select" className="text-lightFg-secondary dark:text-darkFg-secondary">
-          Modelo
-        </label>
-        <div className="flex items-end gap-2">
-          <ModelSelect
-            aiProvider={aiProvider}
-            setAIProvider={setAIProvider}
-            model={model}
-            setModel={setModel}
-            loading={loading}
-            freeModels={freeModels}
-            payModels={payModels}
-            groqModels={groqModels}
-          />
-          <Button
-            variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"}
-            size="icon"
-            $rounded
-            onClick={aiProviderToggle}
-            title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
-            <LuBrain size={16} />
-          </Button>
         </div>
       </div>
     </div>
