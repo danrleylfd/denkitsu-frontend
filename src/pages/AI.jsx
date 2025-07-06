@@ -236,13 +236,7 @@ const AI = () => {
   return (
     <SideMenu ContentView={ContentView} className="bg-brand-purple bg-cover bg-center">
       {!temMensagensDoUsuario(messages) && (
-        <div
-          style={{
-            flexGrow: 1,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center"
-          }}>
+        <div className="flex grow justify-center items-center flex-col">
           <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
           <ChatInput
             userPrompt={userPrompt}
