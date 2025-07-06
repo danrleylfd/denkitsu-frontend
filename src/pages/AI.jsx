@@ -239,6 +239,7 @@ const AI = () => {
         <div className="flex grow justify-center items-center flex-col">
           <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
           <ChatInput
+            empty={true}
             userPrompt={userPrompt}
             setUserPrompt={setUserPrompt}
             onAddImage={onAddImage}

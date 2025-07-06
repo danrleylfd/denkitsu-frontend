@@ -1,4 +1,4 @@
-const PromptInput = ({ textareaRef, userPrompt, setUserPrompt, handleKeyDown, loading }) => (
+const PromptInput = ({ textareaRef, userPrompt, setUserPrompt, handleKeyDown, loading, empty }) => (
   <textarea
     id="prompt-input"
     ref={textareaRef}
@@ -8,7 +8,7 @@ const PromptInput = ({ textareaRef, userPrompt, setUserPrompt, handleKeyDown, lo
     placeholder={!loading ? "Escreva seu prompt" : "Pensando..."}
     disabled={loading}
     rows={1}
-    className="flex-1 resize-y min-h-[1.25rem] max-h-[7.5rem] max-w-full overflow-y-hidden p-2 rounded-md font-mono text-sm bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary"
+    className={"flex-1 resize-y min-h-[1.25rem] max-h-[7.5rem] max-w-full overflow-y-auto p-2 rounded-md font-mono text-sm bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary " + (empty ? "h-[7.5rem]" : "")}
   />
 )
 
