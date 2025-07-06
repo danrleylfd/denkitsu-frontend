@@ -243,6 +243,7 @@ const AI = () => {
             justifyContent: "center",
             alignItems: "center"
           }}>
+          <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
           <ChatInput
             userPrompt={userPrompt}
             setUserPrompt={setUserPrompt}
