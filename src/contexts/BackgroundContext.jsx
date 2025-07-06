@@ -26,8 +26,6 @@ export const BackgroundProvider = ({ children }) => {
       })
     } catch (err) {
       setBackground({ url: "/background.jpg" })
-    } finally {
-      setLoading(false)
     }
   }, [])
 
