@@ -4,15 +4,12 @@ import { useMemo } from "react"
 import { LuChevronsUpDown } from "react-icons/lu"
 
 const PromptSelector = ({ prompts, selectedPrompt, onSelectPrompt, disabled, className = "" }) => {
-  // Extrai o nome do modo a partir do conteúdo do prompt. Ex: "## Modo Desenvolvedor" -> "Modo Desenvolvedor"
   const getModeName = (content) => {
     const firstLine = content.trim().split("\n")[0]
     return firstLine.replace("## ", "").trim()
   }
 
-  // Memoriza a lista de prompts para evitar reprocessamento desnecessário
   const availablePrompts = useMemo(() => {
-    // Pula o prompt[0] que é a instrução inicial
     return prompts.slice(1).map((prompt) => ({
       name: getModeName(prompt.content),
       content: prompt.content
