@@ -158,7 +158,6 @@ const AI = () => {
 
   const handleStreamingError = (error, setMessages) => {
     const errMsg = parseErrorMessage(error)
-    console.log(errMsg)
     const errorContent = `Falha ao enviar mensagem.\n\`\`\`diff\n- ${errMsg}\n+ Tente usar outro modelo ou verifique sua chave de API em configurações\n+ Tente desativar a tool Web\n\`\`\``
     setMessages((prev) => {
       const updated = [...prev]
