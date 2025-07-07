@@ -26,7 +26,7 @@ export const AIProvider = ({ children }) => {
   const [openRouterKey, setOpenRouterKey] = useState(storedOpenRouterKey || "")
   const [stream, setStream] = useState(storedStream === null ? true : storedStream)
   const [imageUrls, setImageUrls] = useState([])
-  const [web, setWeb] = useState(storedWeb)
+  const [web, setWeb] = useState(storedWeb === null ? false : storedWeb)
   const [userPrompt, setUserPrompt] = useState("")
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
 
