@@ -24,7 +24,7 @@ export const AIProvider = ({ children }) => {
   const [customPrompt, setCustomPrompt] = useState(storedCustomPrompt || "Responda em português do Brasil (pt-BR).")
   const [groqKey, setGroqKey] = useState(storedGroqKey || "")
   const [openRouterKey, setOpenRouterKey] = useState(storedOpenRouterKey || "")
-  const [stream, setStream] = useState(storedStream === null ? true : storedStream)
+  const [stream, setStream] = useState(storedStream === null ? false : storedStream)
   const [imageUrls, setImageUrls] = useState([])
   const [web, setWeb] = useState(storedWeb === null ? false : storedWeb)
   const [userPrompt, setUserPrompt] = useState("")
