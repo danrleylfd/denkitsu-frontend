@@ -220,7 +220,7 @@ const AI = () => {
   const parseErrorMessage = (error) => {
     try {
       const parsed = JSON.parse(error.message)
-      return parsed.error || parsed.message
+      return parsed.error.message || parsed.message
     } catch {
       return error.response?.data?.error?.message || error.message
     }
