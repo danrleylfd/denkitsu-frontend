@@ -157,13 +157,12 @@ const AI = () => {
   }
 
   const handleStreamingError = (error, setMessages) => {
-    const errorContent = `Falha ao enviar mensagem. [...]`
+    const errMsg = parseErrorMessage(error)
+    const errorContent = `Falha ao enviar mensagem.\n\`\`\`diff\n- ${errMsg}\n+ Tente usar outro modelo ou verifique sua chave de API\n+ Tente desativar a tool Web\n\`\`\``
     setMessages((prev) => {
       const updated = [...prev]
       const index = updated.findIndex((msg) => msg.role === "assistant" && msg.content === "")
-      if (index !== -1) {
-        updated[index] = { ...updated[index], content: errorContent }
-      }
+      if (index !== -1) updated[index] = { ...updated[index], content: errorContent }
       return updated
     })
   }
@@ -207,13 +206,12 @@ const AI = () => {
   }
 
   const handleNonStreamingError = (error, placeholder, setMessages) => {
-    const errorContent = `Falha ao enviar mensagem. [...]`
+    const errMsg = parseErrorMessage(error)
+    const errorContent = `Falha ao enviar mensagem.\n\`\`\`diff\n- ${errMsg}\n+ Tente usar outro modelo ou verifique sua chave de API\n+ Tente desativar a tool Web\n\`\`\``
     setMessages((prev) => {
       const updated = [...prev]
       const index = updated.findIndex((msg) => msg.id === placeholder.id)
-      if (index !== -1) {
-        updated[index] = { ...updated[index], content: errorContent }
-      }
+      if (index !== -1) updated[index] = { ...updated[index], content: errorContent }
       return updated
     })
   }
