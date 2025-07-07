@@ -26,7 +26,7 @@ const ChatInput = ({ userPrompt, setUserPrompt, onAddImage, imageCount, web, tog
       <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={loading}>
         <LuImagePlus size={16} />
       </Button>
-      <Button variant={aiProvider === "openrouter" ? web ? "secondary" : "outline" } size="icon" $rounded title="Pesquisar na Web" onClick={toggleWeb} disabled={aiProvider === "groq" || loading}>
+      <Button variant={aiProvider === "openrouter" && web ? "secondary" : "outline" } size="icon" $rounded title="Pesquisar na Web" onClick={toggleWeb} disabled={aiProvider === "groq" || loading}>
         {aiProvider === "openrouter" ? <LuGlobe size={16} /> : <LuGlobeLock size={16} />}
       </Button>
       <PromptInput userPrompt={userPrompt} setUserPrompt={setUserPrompt} handleKeyDown={handleKeyDown} loading={loading} />
