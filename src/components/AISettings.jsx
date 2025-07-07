@@ -64,7 +64,7 @@ const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqM
           </Input>
         </div>
           <small className="text-xs text-lightFg-tertiary dark:text-darkFg-tertiary">
-            Sua chave é salva localmente no seu navegador e nunca é enviada para nossos servidores.
+            Sua chave é salva localmente no seu navegador e nunca será salva em nossos servidores.
           </small>
         <label htmlFor="model-select" className="text-lightFg-secondary dark:text-darkFg-secondary">
           Modelo
