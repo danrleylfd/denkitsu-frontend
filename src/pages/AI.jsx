@@ -50,7 +50,7 @@ const AI = () => {
       setGroqModels(loadedGroq || [])
     }
     loadModels()
-  }, [aiKey])
+  }, [])
 
   const onAddImage = () => {
     if (imageUrls.length >= 3) return alert("Você pode adicionar no máximo 3 imagens.")
