@@ -14,7 +14,7 @@ export const AIProvider = ({ children }) => {
   const storedWeb = JSON.parse(localStorage.getItem("@Denkitsu:Web"))
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
 
-  const [aiProvider, setAIProvider] = useState(storedAIProvider || "openrouter")
+  const [aiProvider, setAIProvider] = useState(storedAIProvider || "groq")
   const [groqModel, setGroqModel] = useState(storedModelGroq || "deepseek-r1-distill-llama-70b")
   const [openRouterModel, setOpenRouterModel] = useState(storedOpenRouterModel || "deepseek/deepseek-r1:free")
   const [freeModels, setFreeModels] = useState([])
