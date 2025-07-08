@@ -147,13 +147,15 @@ const generateFileTree = (filePaths, rootName) => {
 const OptionsPanel = ({ options, setOptions }) => {
   const handleCheckboxChange = (e) => {
     const { id, checked } = e.target
-    setOptions((prev) => ({ ...prev, [id]: checked }))
+    setOptions((prev) => {
+      const newOptions = { ...prev, [id]: checked }
+      if (id === "ignore_markdown" && !checked) {
+        newOptions.keep_readme = false
+      }
+      return newOptions
+    })
   }
-  useEffect(() => {
-    if (!options.ignore_markdown) {
-      setOptions((prev) => ({ ...prev, keep_readme: false }))
-    }
-  }, [options.ignore_markdown, setOptions])
+
   const ptLabels = {
     use_gitignore: "Respeitar .gitignore",
     ignore_dot_folders: "Ignorar pastas c/ '.' (ex: .vscode)",
