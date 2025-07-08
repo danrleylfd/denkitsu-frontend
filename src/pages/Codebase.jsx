@@ -158,15 +158,15 @@ const OptionsPanel = ({ options, setOptions }) => {
 
   const ptLabels = {
     use_gitignore: "Respeitar .*ignore*",
-    ignore_dot_folders: "Ignorar pastas c/ '.' (ex: .git)",
-    ignore_config_dot_files: "Ignorar arq. config (ex: .prettierrc)",
+    ignore_dot_folders: "Ignorar pastas ocultas (ex: .git)",
+    ignore_config_dot_files: "Ignorar arq. ocultos (ex: .prettierrc)",
     ignore_env_files: "Ignorar arq. de ambiente (.env*)",
-    ignore_vendor_folders: "Ignorar pastas de dependências (ex: node_modules)",
-    ignore_build_folders: "Ignorar pastas de deploy",
-    ignore_license: "Ignorar arquivos de licença",
-    ignore_logs: "Ignorar arquivos de log (ex: *log*)",
+    ignore_vendor_folders: "Ignorar dependências (ex: node_modules)",
+    ignore_build_folders: "Ignorar deploy",
+    ignore_license: "Ignorar licenças",
+    ignore_logs: "Ignorar logs (ex: *log*)",
     ignore_lock_files: "Ignorar arquivos de (ex: *lock*)",
-    ignore_markdown: "Ignorar arq. *.md",
+    ignore_markdown: "Ignorar arq. markdown",
     keep_readme: "Exceto README.md",
     remove_blank_lines: "Remover linhas em branco extras"
   }
