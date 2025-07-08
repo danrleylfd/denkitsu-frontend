@@ -161,7 +161,7 @@ const OptionsPanel = ({ options, setOptions }) => {
     ignore_dot_folders: "Ignorar pastas ocultas (ex: .git)",
     ignore_config_dot_files: "Ignorar arq. ocultos (ex: .prettierrc)",
     ignore_env_files: "Ignorar arq. de ambiente (.env*)",
-    ignore_vendor_folders: "Ignorar dependências (ex: node_modules)",
+    ignore_vendor_folders: "Ignorar deps (ex: node_modules)",
     ignore_build_folders: "Ignorar deploy",
     ignore_license: "Ignorar licenças",
     ignore_logs: "Ignorar logs (ex: *log*)",
