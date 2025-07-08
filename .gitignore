@@ -3,9 +3,9 @@ node_modules
 *lock*
 *log*
 
-.github
-.vercel
-.trae
+.github/**
+.vercel/**
+.trae/**
 
 dist
 dist-ssr
