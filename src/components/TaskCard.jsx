@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { LuTrash2, LuPenTool, LuCheck, LuX, LuGripVertical } from "react-icons/lu"
+import { Pencil, Trash, Check, X, GripVertical } from "lucide-react"
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { useTasks } from "../contexts/TasksContext"
@@ -48,15 +48,14 @@ const TaskCard = ({ task, showControls = true }) => {
           onKeyDown={handleKeyDown}
           autoFocus
           className="bg-transparent text-lightFg-primary dark:text-darkFg-primary w-full focus:outline-none"
-
         />
 
         <div className="flex items-center justify-end gap-2">
           <button onClick={handleCancel} className="text-primary-base hover:text-primary-light active:text-primary-dark p-1 transition-colors">
-            <LuX size={18} />
+            <X size={18} />
           </button>
           <button onClick={handleSave} className="text-success-base hover:text-success-light active:text-success-dark p-1 transition-colors">
-            <LuCheck size={18} />
+            <Check size={18} />
           </button>
         </div>
       </div>
@@ -69,7 +68,7 @@ const TaskCard = ({ task, showControls = true }) => {
       style={style}
       className="bg-lightBg-secondary dark:bg-darkBg-secondary p-3 rounded-lg shadow-[6px_6px_16px_rgba(0,0,0,0.5)] text-sm flex items-center gap-2">
       <button {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing p-1 -ml-1">
-        <LuGripVertical className="text-lightFg-tertiary dark:text-darkFg-tertiary" size={16} />
+        <GripVertical className="text-lightFg-tertiary dark:text-darkFg-tertiary" size={16} />
       </button>
       <span className="flex-1 text-lightFg-secondary dark:text-darkFg-secondary  break-all">
         {task.content}
@@ -79,12 +78,12 @@ const TaskCard = ({ task, showControls = true }) => {
           <button
             onClick={() => setEditingId(task.id)}
             className="text-primary-base hover:text-primary-light active:text-primary-dark p-1 transition-colors">
-            <LuPenTool size={16} />
+            <Pencil size={16} />
           </button>
           <button
             onClick={() => deleteTask(task.id)}
             className="text-danger-base hover:text-danger-light active:text-danger-dark p-1 transition-colors">
-            <LuTrash2 size={16} />
+            <Trash size={16} />
           </button>
         </div>
       )}

@@ -1,7 +1,5 @@
-// src/components/PromptSelector.jsx
-
 import { useMemo } from "react"
-import { LuChevronsUpDown } from "react-icons/lu"
+import { ChevronsUpDown } from "lucide-react"
 
 const PromptSelector = ({ prompts, selectedPrompt, onSelectPrompt, disabled, className = "" }) => {
   const getModeName = (content) => {
@@ -41,7 +39,7 @@ const PromptSelector = ({ prompts, selectedPrompt, onSelectPrompt, disabled, cla
         ))}
       </select>
       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-lightFg-tertiary dark:text-darkFg-tertiary">
-        <LuChevronsUpDown size={16} />
+        <ChevronsUpDown size={16} />
       </div>
     </div>
   )

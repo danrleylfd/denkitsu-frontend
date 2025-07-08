@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { LuX, LuBrain, LuEye, LuEyeClosed } from "react-icons/lu"
+import { X, Brain, Eye, EyeClosed } from "lucide-react"
 import { useAI } from "../contexts/AIContext"
 import Button from "./Button"
 import Input from "./Input"
@@ -42,7 +42,7 @@ const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqM
             Configurações do Denkitsu
           </h3>
           <Button variant="danger" size="icon" $rounded onClick={toggleSettings}>
-            <LuX size={16} />
+            <X size={16} />
           </Button>
         </div>
         <label htmlFor="api-key" className="text-lightFg-secondary dark:text-darkFg-secondary">
@@ -55,11 +55,11 @@ const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqM
             $rounded
             onClick={aiProviderToggle}
             title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
-            <LuBrain size={16} />
+            <Brain size={16} />
           </Button>
           <Input id="api-key" type={showAIKey ? "text" : "password"} autoComplete="new-password" placeholder="Sua chave de API" value={aiKey} onChange={(e) => setAIKey(e.target.value)}>
             <Button type="button" variant="outline" size="icon" $rounded onClick={() => setShowAIKey(!showAIKey)} disabled={loading}>
-              {showAIKey ? <LuEye size={16} /> : <LuEyeClosed size={16} />}
+              {showAIKey ? <Eye size={16} /> : <EyeClosed size={16} />}
             </Button>
           </Input>
         </div>
@@ -76,7 +76,7 @@ const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqM
             $rounded
             onClick={aiProviderToggle}
             title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
-            <LuBrain size={16} />
+            <Brain size={16} />
           </Button>
           <ModelSelect
             aiProvider={aiProvider}

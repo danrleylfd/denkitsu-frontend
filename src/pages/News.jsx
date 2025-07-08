@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react"
-import { LuSearchSlash, LuBrain } from "react-icons/lu"
+import { SearchSlash, Brain } from "lucide-react"
 
 import { useAuth } from "../contexts/AuthContext"
 
@@ -112,7 +112,7 @@ const News = () => {
             loading={loading}
             disabled={searchTerm.length < 1}
             title="Pesquisar e Gerar">
-            {!loading && <LuSearchSlash size={16} />}
+            {!loading && <SearchSlash size={16} />}
           </Button>
           <Button
             variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"}
@@ -120,7 +120,7 @@ const News = () => {
             $rounded
             onClick={aiProviderToggle}
             title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
-            <LuBrain size={16} />
+            <Brain size={16} />
           </Button>
         </Input>
       </Paper>

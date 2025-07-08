@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react"
-import { LuCode, LuCopy, LuKanban, LuNewspaper, LuPresentation, LuDownload } from "react-icons/lu"
+import { Code, Copy, Kanban, Newspaper, Presentation, Download } from "lucide-react"
 
 import { useTasks } from "../contexts/TasksContext"
 import { publishNews } from "../services/news"
@@ -130,7 +130,7 @@ const MessageActions = ({ message, toggleLousa }) => {
           onClick={() => handleCopy(message.reasoning, "reasoning")}
           loading={loadingType === "reasoning" && loading}
           title="Copiar Linha de Raciocínio">
-          {loadingType !== "reasoning" && <LuCopy size={16} />}
+          {loadingType !== "reasoning" && <Copy size={16} />}
         </Button>
       )}
       <Button
@@ -140,7 +140,7 @@ const MessageActions = ({ message, toggleLousa }) => {
         onClick={() => handleCopy(message.content, "content")}
         loading={loadingType === "content" && loading}
         title="Copiar Resposta">
-        {loadingType !== "content" && <LuCopy size={16} />}
+        {loadingType !== "content" && <Copy size={16} />}
       </Button>
 
       {allCodeToCopy && (
@@ -151,7 +151,7 @@ const MessageActions = ({ message, toggleLousa }) => {
           onClick={() => handleCopy(allCodeToCopy, "code")}
           loading={loadingType === "code" && loading}
           title="Copiar Código">
-          {loadingType !== "code" && <LuCode size={16} />}
+          {loadingType !== "code" && <Code size={16} />}
         </Button>
       )}
 
@@ -163,7 +163,7 @@ const MessageActions = ({ message, toggleLousa }) => {
           onClick={() => handlePreview(htmlBlockForPreview.code)}
           loading={loadingType === "preview" && loading}
           title="Desenhar na Lousa">
-          {loadingType !== "preview" && <LuPresentation size={16} />}
+          {loadingType !== "preview" && <Presentation size={16} />}
         </Button>
       )}
 
@@ -174,7 +174,7 @@ const MessageActions = ({ message, toggleLousa }) => {
           $rounded
           onClick={() => handleDownload(codeBlocks[0].code, codeBlocks[0].lang)}
           title={`Salvar como .${getFileExtension(codeBlocks[0].lang)}`}>
-          {loadingType !== "download" && <LuDownload size={16} />}
+          {loadingType !== "download" && <Download size={16} />}
         </Button>
       )}
 
@@ -186,13 +186,13 @@ const MessageActions = ({ message, toggleLousa }) => {
           onClick={() => handleAddToKanban(kanbanableJsonString)}
           loading={loadingType === "kanban" && loading}
           title="Adicionar ao Kanban">
-          {loadingType !== "kanban" && <LuKanban size={16} />}
+          {loadingType !== "kanban" && <Kanban size={16} />}
         </Button>
       )}
 
       {!hasContextualAction && (
         <Button variant="success" size="icon" $rounded onClick={handlePublish} loading={loadingType === "news" && loading} title="Publicar Artigo">
-          {loadingType !== "news" && <LuNewspaper size={16} />}
+          {loadingType !== "news" && <Newspaper size={16} />}
         </Button>
       )}
     </div>

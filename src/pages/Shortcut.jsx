@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
-import { MdContentCopy, MdAdd, MdEdit, MdDelete, MdCancel, MdCheck } from "react-icons/md"
+import { Copy, Plus, Pencil, Trash, X, Check } from "lucide-react"
 
 import { useAuth } from "../contexts/AuthContext"
 import { getLinkersByUser, createLinker, deleteLinker, updateLinker } from "../services/linker"
@@ -141,7 +141,7 @@ const Shortcut = () => {
           <Input placeholder="Apelido" value={newLabel} onChange={(e) => setNewLabel(e.target.value.trim())} disabled={formLoading} />
           <Input placeholder="Link Original" value={newLink} onChange={(e) => setNewLink(e.target.value.trim())} disabled={formLoading} />
           <Button type="submit" size="icon" $rounded title="Encurtar" loading={formLoading} disabled={!newLabel || !newLink}>
-            {!formLoading && <MdAdd size={16} />}
+            {!formLoading && <Plus size={16} />}
           </Button>
           {formError && <MessageError>{formError}</MessageError>}
         </form>
@@ -162,7 +162,7 @@ const Shortcut = () => {
                   <Input value={editLink} onChange={(e) => setEditLink(e.target.value.trim())} disabled={editLoading} />
                   <div className="flex gap-2">
                     <Button variant="secondary" size="icon" $rounded title="Cancelar" onClick={cancelEditing} disabled={editLoading}>
-                      <MdCancel size={16} />
+                      <X size={16} />
                     </Button>
                     <Button
                       type="submit"
@@ -172,7 +172,7 @@ const Shortcut = () => {
                       title="Salvar"
                       loading={editLoading}
                       disabled={!editLabel || !editLink}>
-                      {!editLoading && <MdCheck size={16} />}
+                      {!editLoading && <Check size={16} />}
                     </Button>
                   </div>
                   {editError && (
@@ -195,13 +195,13 @@ const Shortcut = () => {
                       $rounded
                       title="Copiar"
                       onClick={() => copyToClipboard(`${window.origin}/access/${linker.label}`)}>
-                      <MdContentCopy size={16} />
+                      <Copy size={16} />
                     </Button>
                     <Button variant="warning" size="icon" $rounded title="Editar" onClick={() => startEditing(linker)}>
-                      <MdEdit size={16} />
+                      <Pencil size={16} />
                     </Button>
                     <Button variant="danger" size="icon" $rounded title="Deletar" onClick={() => handleDeleteLink(linker.label)}>
-                      <MdDelete size={16} />
+                      <Trash size={16} />
                     </Button>
                   </div>
                 </>

@@ -1,26 +1,26 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import {
-  LuMenu,
-  LuX,
-  LuCloud,
-  LuNewspaper,
-  LuBotMessageSquare,
-  LuLogIn,
-  LuLogOut,
-  LuLock,
-  LuClock,
-  LuKanban,
-  LuPlay,
-  LuUpload,
-  LuLink,
-  LuPersonStanding,
-  LuSun,
-  LuMoon,
-  LuLanguages,
-  LuCode
-} from "react-icons/lu"
-import { MdHomeFilled } from "react-icons/md"
+  Menu,
+  Home,
+  X,
+  Cloud,
+  Newspaper,
+  BotMessageSquare,
+  LogIn,
+  LogOut,
+  Lock,
+  Clock,
+  Kanban,
+  Play,
+  Upload,
+  Link2,
+  PersonStanding,
+  Sun,
+  Moon,
+  Languages,
+  Code
+} from "lucide-react"
 import { useTheme } from "../contexts/ThemeContext"
 import { useAuth } from "../contexts/AuthContext"
 import { useBackground } from "../contexts/BackgroundContext"
@@ -46,32 +46,32 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
   }, [isOpen])
 
   const menuItems = [
-    // { icon: MdHomeFilled, label: "Início", to: "/" },
-    { icon: LuNewspaper, label: "Notícias", to: "/news" },
-    { icon: LuCloud, label: "Clima", to: "/clima" },
-    { icon: LuClock, label: "Pomodoro", to: "/pomodoro" },
-    { icon: LuLanguages, label: "Tradutor", to: "/translator" },
-    { icon: LuCode, label: "Codebase", to: "/codebase" }
+    // { icon: Home, label: "Início", to: "/" },
+    { icon: Newspaper, label: "Notícias", to: "/news" },
+    { icon: Cloud, label: "Clima", to: "/clima" },
+    { icon: Clock, label: "Pomodoro", to: "/pomodoro" },
+    { icon: Languages, label: "Tradutor", to: "/translator" },
+    { icon: Code, label: "Codebase", to: "/codebase" }
   ]
 
   signed &&
     menuItems.push(
-      { icon: LuKanban, label: "Kanban", to: "/kanban" },
-      { icon: LuBotMessageSquare, label: "AI", to: "/chat" },
-      { icon: LuLink, label: "Atalho", to: "/atalho" },
-      { icon: LuPlay, label: "Meus Vídeos", to: "/my-videos" },
-      { icon: LuUpload, label: "Upload", to: "/upload" },
-      { icon: LuPlay, label: "Vídeos Populares", to: "/popular" },
-      { icon: LuPlay, label: "Vídeos Recentes", to: "/recents" },
-      { icon: LuPersonStanding, label: "Perfil", to: "/profile" },
-      { icon: LuLogOut, label: "Sair", to: "/auth/signout" }
+      { icon: Kanban, label: "Kanban", to: "/kanban" },
+      { icon: BotMessageSquare, label: "AI", to: "/chat" },
+      { icon: Link2, label: "Atalho", to: "/atalho" },
+      { icon: Play, label: "Meus Vídeos", to: "/my-videos" },
+      { icon: Upload, label: "Upload", to: "/upload" },
+      { icon: Play, label: "Vídeos Populares", to: "/popular" },
+      { icon: Play, label: "Vídeos Recentes", to: "/recents" },
+      { icon: PersonStanding, label: "Perfil", to: "/profile" },
+      { icon: LogOut, label: "Sair", to: "/auth/signout" }
     )
   !signed &&
     menuItems.push(
-      { icon: LuLogIn, label: "Entrar", to: "/signin" },
-      { icon: LuLogIn, label: "Cadastrar", to: "/signup" },
-      { icon: LuLock, label: "Esqueceu a senha?", to: "/forgot_password" },
-      { icon: LuLock, label: "Redefinir senha", to: "/reset_password" }
+      { icon: LogIn, label: "Entrar", to: "/signin" },
+      { icon: LogIn, label: "Cadastrar", to: "/signup" },
+      { icon: Lock, label: "Esqueceu a senha?", to: "/forgot_password" },
+      { icon: Lock, label: "Redefinir senha", to: "/reset_password" }
     )
 
   const menuItemClass = [
@@ -94,7 +94,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
           <div className="w-0 h-0 p-0 m-0"></div>
           <button onClick={toggleMenu} className={menuItemClass} title={!isOpen ? "Menu" : ""}>
             <div className="w-6 h-6 flex items-center justify-center">
-              {isOpen ? <LuX size={16} /> : <LuMenu size={16} />}
+              {isOpen ? <X size={16} /> : <Menu size={16} />}
             </div>
             {isOpen && (
               <span className="ml-3 select-none">
@@ -104,7 +104,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
           </button>
           <button onClick={toggleTheme} className={menuItemClass} title={!isOpen ? "Alternar Tema" : ""}>
             <div className="w-6 h-6 flex items-center justify-center">
-              {theme === "dark" ? <LuMoon size={16} /> : <LuSun size={16} />}
+              {theme === "dark" ? <Moon size={16} /> : <Sun size={16} />}
             </div>
             {isOpen && (
               <span className="ml-3 select-none">

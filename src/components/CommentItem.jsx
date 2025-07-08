@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react"
-import { MdReply, MdOutlineClose, MdEdit, MdDelete } from "react-icons/md"
-
+import { Pencil, Trash, MessageCircleReply, X } from "lucide-react"
 import { useAuth } from "../contexts/AuthContext"
 import { deleteComment, getRepliesForComment } from "../services/video"
 
@@ -76,16 +75,16 @@ const CommentItem = ({ comment, videoId, onCommentDeleted, onReplyAdded, disable
             title={showReplyForm ? "Cancelar" : "Responder"}
             onClick={() => setShowReplyForm(!showReplyForm)}
             disabled={disabled}>
-            {showReplyForm ? <MdOutlineClose size={16} /> : <MdReply size={16} />}
+            {showReplyForm ? <X size={16} /> : <MessageCircleReply size={16} />}
           </Button>
         )}
         {isAuthor && (
           <>
             <Button variant="warning" size="icon" $rounded title="Editar" onClick={() => {}} disabled>
-              <MdEdit size={16} />
+              <Pencil size={16} />
             </Button>
             <Button type="submit" variant="danger" size="icon" $rounded title="Deletar" onClick={handleDelete} disabled={disabled}>
-              <MdDelete size={16} />
+              <Trash size={16} />
             </Button>
           </>
         )}

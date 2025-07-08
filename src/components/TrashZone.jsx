@@ -1,4 +1,4 @@
-import { LuTrash2 } from "react-icons/lu"
+import { Trash } from "lucide-react"
 import { useDroppable } from "@dnd-kit/core"
 import { useDnd } from "../contexts/DndContext"
 
@@ -14,7 +14,7 @@ const TrashZone = () => {
   return (
     <div ref={setNodeRef} className={`${baseClasses} ${draggingClasses}`}>
       <div className={`${contentBaseClasses} ${contentOverClasses}`}>
-        <LuTrash2 size={24} className="mr-3" />
+        <Trash size={24} className="mr-3" />
         <span>Arraste a tarefa aqui para excluir</span>
       </div>
     </div>

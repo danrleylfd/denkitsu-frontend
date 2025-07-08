@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { LuTimer, LuSettings, LuPlay, LuPause, LuRefreshCw } from "react-icons/lu"
+import { Timer, Settings, Play, Pause, RefreshCw } from "lucide-react"
 
 import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
@@ -16,7 +16,6 @@ const Pomodoro = () => {
   const [isActive, setIsActive] = useState(false)
   const [mode, setMode] = useState("work")
   const [cycles, setCycles] = useState(0)
-
   useEffect(() => {
     const savedState = localStorage.getItem("pomodoroState")
     if (savedState) {
@@ -75,7 +74,7 @@ const Pomodoro = () => {
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center">
             <span className="w-8 h-8 text-zinc-700 dark:text-zinc-100 mr-2 flex items-center justify-center">
-              <LuTimer size={24} />
+              <Timer size={24} />
             </span>
             <div className="flex flex-col">
               <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
@@ -100,16 +99,16 @@ const Pomodoro = () => {
         </div>
         <div className="flex justify-center mb-8 gap-4">
           <Button variant="secondary" size="icon" $rounded title={isActive ? "Pause" : "Play"} onClick={toggleTimer}>
-            {isActive ? <LuPause size={16} /> : <LuPlay size={16} />}
+            {isActive ? <Pause size={16} /> : <Play size={16} />}
           </Button>
           <Button variant="secondary" size="icon" $rounded title="Reiniciar" onClick={resetTimer}>
-            <LuRefreshCw size={16} />
+            <RefreshCw size={16} />
           </Button>
         </div>
         <div className="bg-zinc-100 dark:bg-zinc-800 rounded-lg p-4">
           <div className="flex items-center text-sm text-zinc-700 dark:text-zinc-300">
             <span className="w-4 h-4 mr-2 flex items-center justify-center">
-              <LuSettings size={16} />
+              <Settings size={16} />
             </span>
             <span>Trabalho: 25 minutos • Intervalo: 5 minutos</span>
           </div>

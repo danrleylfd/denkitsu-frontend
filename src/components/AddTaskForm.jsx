@@ -1,4 +1,4 @@
-import { LuPlus, LuSparkles, LuBrain } from "react-icons/lu"
+import { Plus, Sparkle, Brain } from "lucide-react"
 import { useAI } from "../contexts/AIContext"
 import { useTasks } from "../contexts/TasksContext"
 
@@ -29,10 +29,10 @@ const AddTaskForm = () => {
         onKeyDown={(e) => e.key === "Enter" && addTask()}
         disabled={loading}>
         <Button variant="outline" size="icon" $rounded onClick={addTask} title="Adicionar" disabled={!newTask || loading}>
-          <LuPlus size={16} />
+          <Plus size={16} />
         </Button>
         <Button variant="outline" size="icon" $rounded onClick={generateTasksWithAI} title="Gerar Passos" loading={loading} disabled={!newTask}>
-          {!loading && <LuSparkles size={16} />}
+          {!loading && <Sparkle size={16} />}
         </Button>
         <Button
           variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"}
@@ -40,7 +40,7 @@ const AddTaskForm = () => {
           $rounded
           onClick={aiProviderToggle}
           title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
-          <LuBrain size={16} />
+          <Brain size={16} />
         </Button>
       </Input>
     </Paper>

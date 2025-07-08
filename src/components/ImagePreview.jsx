@@ -1,4 +1,4 @@
-import { LuX } from "react-icons/lu"
+import { X } from "lucide-react"
 
 import Paper from "./Paper"
 import Button from "./Button"
@@ -16,7 +16,7 @@ const ImagePreview = ({ imageUrls, onRemoveImage }) => {
             $rounded
             onClick={() => onRemoveImage(index)}
             title="Remover Imagem">
-            <LuX size={16} />
+            <X size={16} />
           </Button>
         </div>
       ))}

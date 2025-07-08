@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
-import { MdEdit, MdDelete, MdCancel, MdCheck } from "react-icons/md"
+import { Pencil, Trash, X, Check } from "lucide-react"
 
 import { useAuth } from "../contexts/AuthContext"
 import { useAI } from "../contexts/AIContext"
@@ -19,7 +19,6 @@ const ContentView = ({ children }) => (
 
 const Profile = () => {
   const { userId } = useParams()
-  const { aiKey, setAIKey } = useAI()
   const { user, signOut, updateUser } = useAuth()
   const userID = userId || user._id
   const [userData, setUserData] = useState(null)
@@ -123,14 +122,13 @@ const Profile = () => {
             <form className="flex-1 flex flex-col gap-0 items-center" onSubmit={(e) => e.preventDefault()}>
               <Input id="name" value={name} onChange={(e) => setName(e.target.value)} disabled={loading} />
               <Input id="avatarUrl" value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} disabled={loading} />
-              <Input id="aiKey" value={aiKey} onChange={(e) => setAIKey(e.target.value)} disabled={loading} />
               {error && <MessageError>{error}</MessageError>}
               <div className="flex w-full gap-2 justify-between">
                 <Button variant="secondary" size="icon" $rounded title="Cancelar" onClick={handleEditToggle} loading={loading}>
-                  <MdCancel size={16} />
+                  <X size={16} />
                 </Button>
                 <Button variant="success" size="icon" $rounded title="Salvar" onClick={handleSaveChanges} loading={loading}>
-                  <MdCheck size={16} />
+                  <Check size={16} />
                 </Button>
               </div>
             </form>
@@ -152,10 +150,10 @@ const Profile = () => {
                 <div className="flex-1 flex flex-col gap-0 items-center">
                   <div className="flex w-full gap-2 justify-between">
                     <Button variant="warning" size="icon" $rounded title="Editar" onClick={handleEditToggle}>
-                      <MdEdit size={16} />
+                      <Pencil size={16} />
                     </Button>
                     <Button variant="danger" size="icon" $rounded title="Deletar Conta" onClick={handleDeleteAccount} loading={loading}>
-                      <MdDelete size={16} />
+                      <Trash size={16} />
                     </Button>
                   </div>
                   {message && <MessageSuccess>{message}</MessageSuccess>}

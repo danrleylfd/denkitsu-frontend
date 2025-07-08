@@ -1,4 +1,4 @@
-import { LuThumbsUp, LuMessageCircle, LuShare2 } from "react-icons/lu"
+import { ThumbsUp, MessageCircle, Share2 } from "lucide-react"
 
 import Input from "./Input"
 import Button from "./Button"
@@ -17,15 +17,15 @@ const VideoCard = ({ video }) => {
         </PurpleLink>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="icon" $rounded>
-            <LuThumbsUp size={16} />
+            <ThumbsUp size={16} />
           </Button>
           <Input type="text" placeholder="Escreva um comentário...">
             <Button variant="outline" size="icon" $rounded>
-              <LuMessageCircle size={16} />
+              <MessageCircle size={16} />
             </Button>
           </Input>
           <Button variant="outline" size="icon" $rounded>
-            <LuShare2 size={16} />
+            <Share2 size={16} />
           </Button>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react"
-import { LuPlay, LuPause, LuVolume2, LuVolumeX, LuExpand, LuRefreshCw } from "react-icons/lu"
+import { Play, Pause, Volume2, VolumeX, Expand, RefreshCw } from "lucide-react"
 
 const Player = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poster = "https://peach.blender.org/wp-content/uploads/title_anouncement.jpg?x11217" }) => {
   const videoRef = useRef(null)
@@ -102,22 +102,21 @@ const Player = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poster = "
           value={currentTime}
           onChange={handleSeek}
           className="relative z-10 mb-2 h-1 w-full accent-primary-base"
-
         />
 
         <div className="relative z-10 flex items-center gap-4">
           <button onClick={togglePlay} className="transition-transform hover:scale-110">
-            {playing ? <LuPause size={20} /> : <LuPlay size={20} />}
+            {playing ? <Pause size={20} /> : <Play size={20} />}
           </button>
           <button onClick={toggleRepeat} className={`transition-transform hover:scale-110 ${repeat ? "text-primary-base" : "text-darkFg-primary"}`}>
-            <LuRefreshCw size={20} />
+            <RefreshCw size={20} />
           </button>
           <div
             className="group relative flex items-center gap-2"
             onMouseEnter={() => setShowVolumeSlider(true)}
             onMouseLeave={() => setShowVolumeSlider(false)}>
             <button onClick={toggleMute} className="transition-transform hover:scale-110">
-              {muted || volume === 0 ? <LuVolumeX size={20} /> : <LuVolume2 size={20} />}
+              {muted || volume === 0 ? <VolumeX size={20} /> : <Volume2 size={20} />}
             </button>
             <div className="absolute left-full top-1/2 ml-2 -translate-y-1/2 overflow-hidden">
               <input
@@ -136,7 +135,7 @@ const Player = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poster = "
           </div>
           <div className="flex-1" />
           <button onClick={handleFullscreen} className="transition-transform hover:scale-110">
-            <LuExpand size={20} />
+            <Expand size={20} />
           </button>
         </div>
       </div>

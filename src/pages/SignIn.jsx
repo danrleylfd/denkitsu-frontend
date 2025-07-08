@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { LuEye, LuEyeClosed } from "react-icons/lu"
+import { Eye, EyeClosed } from "lucide-react"
 
 import { useAuth } from "../contexts/AuthContext"
 
@@ -49,9 +49,7 @@ const SignIn = () => {
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="email"
           disabled={loading}
-
         />
-
         <Input
           name="password"
           type={showPassword ? "text" : "password"}
@@ -61,10 +59,9 @@ const SignIn = () => {
           autoComplete="current-password"
           disabled={loading}>
           <Button type="button" variant="outline" size="icon" $rounded onClick={() => setShowPassword(!showPassword)} disabled={loading}>
-            {showPassword ? <LuEye size={16} /> : <LuEyeClosed size={16} />}
+            {showPassword ? <Eye size={16} /> : <EyeClosed size={16} />}
           </Button>
         </Input>
-
         <Button type="submit" $rounded loading={loading} disabled={loading || !email || !password}>
           {!loading && "Entrar"}
         </Button>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
-import { LuEye, LuEyeClosed } from "react-icons/lu"
+import { Eye, EyeClosed } from "lucide-react"
 
 import api from "../services"
 
@@ -63,7 +63,6 @@ const ResetPassword = () => {
           onChange={(e) => setToken(e.target.value)}
           autoComplete="token"
           disabled={loading}
-
         />
         <Input
           name="email"
@@ -73,7 +72,6 @@ const ResetPassword = () => {
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="email"
           disabled={loading}
-
         />
         <Input
           name="password"
@@ -84,7 +82,7 @@ const ResetPassword = () => {
           autoComplete="new-password"
           disabled={loading}>
           <Button type="button" variant="outline" size="icon" $rounded onClick={() => setShowPassword(!showPassword)} disabled={loading}>
-            {showPassword ? <LuEye size={16} /> : <LuEyeClosed size={16} />}
+            {showPassword ? <Eye size={16} /> : <EyeClosed size={16} />}
           </Button>
         </Input>
         <Input
@@ -95,7 +93,6 @@ const ResetPassword = () => {
           onChange={(e) => setConfirmPassword(e.target.value)}
           autoComplete="new-password"
           disabled={loading}
-
         />
         <Button type="submit" $rounded loading={loading}>
           {!loading && "Redefinir Senha"}

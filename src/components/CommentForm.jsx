@@ -1,6 +1,5 @@
 import { useState } from "react"
-import { MdComment } from "react-icons/md"
-
+import { MessageCircle } from "lucide-react"
 import Input from "./Input"
 import Button from "./Button"
 
@@ -33,7 +32,7 @@ const CommentForm = ({ onSubmit, placeholder = "Digite seu comentário", actionL
           title={actionLabel}
           loading={loading}
           disabled={disabled || loading || !content.trim()}>
-          {!loading && <MdComment size={16} />}
+          {!loading && <MessageCircle size={16} />}
         </Button>
       </Input>
     </form>

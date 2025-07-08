@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react"
 import { useParams } from "react-router-dom"
-import { MdThumbUp, MdThumbDown, MdComment, MdShare, MdEdit, MdDelete } from "react-icons/md"
-
+import { ThumbsUp, ThumbsDown, MessageCircle, Share2, Pencil, Trash } from "lucide-react"
 import { useAuth } from "../contexts/AuthContext"
 import { getVideoById, deleteVideoById, likeVideo, unlikeVideo, shareVideo, addComment, replyToComment, getCommentsForVideo } from "../services/video"
 
@@ -198,26 +197,26 @@ const VideoDetail = () => {
               title={isLiked ? "Descurtir" : "Curtir"}
               onClick={handleLikeToggle}
               disabled={loading}>
-              {isLiked ? <MdThumbDown size={16} /> : <MdThumbUp size={16} />}
+              {isLiked ? <ThumbsDown size={16} /> : <ThumbsUp size={16} />}
             </Button>
             <Button type="button" size="icon" $rounded title="Compartilhar" onClick={handleShare} disabled={loading}>
-              <MdShare size={16} />
+              <Share2 size={16} />
             </Button>
             <Button variant="secondary" $rounded disabled>
-              {likeCount} <MdThumbUp /> / {commentCount} <MdComment /> / {shareCount} <MdShare />
+              {likeCount} <ThumbsUp size={16} /> / {commentCount} <MessageCircle size={16} /> / {shareCount} <Share2 size={16} />
             </Button>
             {video.user._id === user?._id && (
               <>
                 <Button type="button" variant="warning" size="icon" $rounded title="Editar" disabled={true}>
-                  <MdEdit size={16} />
+                  <Pencil size={16} />
                 </Button>
                 <Button type="button" variant="danger" size="icon" $rounded title="Deletar" onClick={handleDeleteVideo}>
-                  <MdDelete size={16} />
+                  <Trash size={16} />
                 </Button>
               </>
             )}
           </div>
-          <MdComment className="text-lightFg-primary dark:text-darkFg-primary" size={16} />
+          <MessageCircle className="text-lightFg-primary dark:text-darkFg-primary" size={16} />
           <CommentForm onSubmit={handleAddComment} />
           <div className="flex flex-col gap-2">
             {loading && comments.length === 0 && <Button variant="outline" $rounded loading={loading} disabled />}
@@ -230,7 +229,6 @@ const VideoDetail = () => {
                 disabled={loading}
                 onCommentDeleted={handleDeleteComment}
                 onReplyAdded={handleAddReply}
-
               />
             ))}
           </div>

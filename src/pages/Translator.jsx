@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react"
-import { LuLanguages, LuCopy, LuLoader, LuArrowRightLeft, LuArrowUpDown } from "react-icons/lu" // CORRIGIDO: LuLoader2
+import { Languages, Copy, Loader, ArrowRightLeft, ArrowUpDown } from "lucide-react"
 
 import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
@@ -118,7 +118,7 @@ const Tradutor = () => {
     <SideMenu ContentView={ContentView} className="bg-cover bg-brand-purple">
       <Paper className="w-full max-w-2xl flex flex-col gap-2 bg-lightBg-primary dark:bg-darkBg-primary">
         <div className="flex items-center gap-2 text-lightFg-primary dark:text-darkFg-primary">
-          <LuLanguages size={24} />
+          <Languages size={24} />
           <h2 className="text-xl font-bold">Tradutor</h2>
         </div>
         {isApiAvailable ? (
@@ -132,13 +132,13 @@ const Tradutor = () => {
                 ))}
               </select>
               <Button variant="secondary" size="icon" $rounded onClick={swapLanguages} disabled={loading}>
-                <LuArrowRightLeft size={16} />
+                <ArrowRightLeft size={16} />
               </Button>
               <Button size="icon" onClick={handleTranslate} disabled={loading || !inputText.trim()} $rounded>
-                {loading ? <LuLoader className="animate-spin" size={16} /> : <LuLanguages size={16} />}
+                {loading ? <Loader className="animate-spin" size={16} /> : <Languages size={16} />}
               </Button>
               <Button variant="secondary" size="icon" $rounded onClick={swapText} disabled={loading}>
-                <LuArrowUpDown size={16} />
+                <ArrowUpDown size={16} />
               </Button>
               <select value={targetLang} onChange={(e) => setTargetLang(e.target.value)} className="p-2 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary">
                 {supportedLanguages.map(lang => (
@@ -163,7 +163,7 @@ const Tradutor = () => {
               />
               {outputText && (
                 <Button variant="secondary" size="icon" $rounded onClick={handleCopy} title="Copiar">
-                  <LuCopy size={16} />
+                  <Copy size={16} />
                 </Button>
               )}
             </div>

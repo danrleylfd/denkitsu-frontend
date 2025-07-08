@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react"
-import { MdRefresh, MdSearch } from "react-icons/md"
+import { SearchIcon, RefreshCcwIcon } from "lucide-react"
 
 import { getWeatherByLocation, getWeatherByCoordinates } from "../services/weather"
 
@@ -104,10 +104,10 @@ const Weather = () => {
           onKeyDown={handleKeyPress}
           placeholder="Buscar por cidade...">
           <Button variant="outline" size="icon" $rounded onClick={buscarPorCidade}>
-            <MdSearch size={16} />
+            <SearchIcon size={16} />
           </Button>
           <Button variant="outline" size="icon" $rounded onClick={buscarPorCoordenadas}>
-            <MdRefresh size={16} />
+            <RefreshCcwIcon size={16} />
           </Button>
         </Input>
         {/* </div> */}

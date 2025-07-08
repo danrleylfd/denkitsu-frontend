@@ -1,7 +1,6 @@
 import { useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
-import { MdImage, MdUpload } from "react-icons/md"
-import { LuSparkles, LuBrain } from "react-icons/lu"
+import { ImagePlus, UploadIcon, Sparkle, Brain } from "lucide-react"
 
 import { useAI } from "../contexts/AIContext"
 
@@ -99,7 +98,7 @@ const Upload = () => {
             onClick={handleGenerateContent}
             loading={loading}
             disabled={!content}>
-            {!loading && <LuSparkles size={16} />}
+            {!loading && <Sparkle size={16} />}
           </Button>
           <Button
             variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"}
@@ -107,7 +106,7 @@ const Upload = () => {
             $rounded
             onClick={aiProviderToggle}
             title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
-            <LuBrain size={16} />
+            <Brain size={16} />
           </Button>
         </Input>
 
@@ -126,7 +125,7 @@ const Upload = () => {
               title="Escolher arquivo de imagem"
               onClick={() => thumbnailRef.current?.click()}
               loading={loading}>
-              {!loading && <MdImage size={16} />}
+              {!loading && <ImagePlus size={16} />}
             </Button>
           </Input>
           <Input ref={thumbnailRef} type="file" accept="image/*" onChange={handleThumbnailChange} disabled={loading} containerClassName="hidden" />
@@ -143,7 +142,7 @@ const Upload = () => {
         />
 
         <Button type="submit" $rounded title="Publicar" loading={loading} disabled={!content || !thumbnail || !fileUrl}>
-          {!loading && <MdUpload />}
+          {!loading && <UploadIcon size={16} />}
           {!loading && "Publicar"}
         </Button>
 
