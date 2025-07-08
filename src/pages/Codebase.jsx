@@ -157,7 +157,7 @@ const OptionsPanel = ({ options, setOptions }) => {
   }
 
   const ptLabels = {
-    use_gitignore: "Respeitar .*ignore*",
+    use_gitignore: "Respeitar .gitignore",
     ignore_dot_folders: "Ignorar pastas ocultas (ex: .git)",
     ignore_config_dot_files: "Ignorar arq. ocultos (ex: .prettierrc)",
     ignore_env_files: "Ignorar arq. de ambiente (.env*)",
@@ -438,12 +438,12 @@ const Codebase = () => {
       `}</style>
       {isProcessing && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="glass-panel p-8 flex items-center gap-4">
+          <div className="glass-panel p-4 flex items-center gap-2">
             <span className="text-lg font-medium text-slate-200">{statusText}</span>
           </div>
         </div>
       )}
-      <main className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow">
+      <main className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-2 flex-grow">
         {view === "drop" && <OptionsPanel options={options} setOptions={setOptions} />}
         <div className={view === "drop" ? "lg:col-span-2" : "lg:col-span-3"}>
           {view === "drop" ? <DropZone onDrop={handleDrop} /> : <ResultView result={result} onReset={handleReset} />}
