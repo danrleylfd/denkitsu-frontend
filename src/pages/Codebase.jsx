@@ -170,7 +170,7 @@ const OptionsPanel = ({ options, setOptions }) => {
   }
   return (
     <aside className="glass-panel">
-      <h2 className="text-lg font-semibold mb-4 text-slate-100">Opções de Exclusão e Formatação</h2>
+      <h2 className="text-lg font-semibold mb-4 text-slate-100">Codebase Generator</h2>
       <div className="space-y-3 text-sm">
         {Object.keys(options).map((key) => {
           if (typeof options[key] !== "boolean") return null
@@ -189,7 +189,7 @@ const OptionsPanel = ({ options, setOptions }) => {
         <hr className="border-slate-200/20" />
         <div>
           <label htmlFor="custom_patterns" className="text-sm font-medium text-slate-200">
-            Regras personalizadas (separadas por vírgula):
+            Suas Regras (separe por vírgula):
           </label>
           <input
             type="text"
