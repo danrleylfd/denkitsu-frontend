@@ -46,7 +46,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
   }, [isOpen])
 
   const menuItems = [
-    { icon: MdHomeFilled, label: "Início", to: "/" },
+    // { icon: MdHomeFilled, label: "Início", to: "/" },
     { icon: LuNewspaper, label: "Notícias", to: "/news" },
     { icon: LuCloud, label: "Clima", to: "/clima" },
     { icon: LuClock, label: "Pomodoro", to: "/pomodoro" },
