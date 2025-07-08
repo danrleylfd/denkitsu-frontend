@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
-import { FileCode2, Upload, Copy, Download, ArrowLeft } from "lucide-react"
+import { Upload, Copy, Download, ArrowLeft } from "lucide-react"
 
 import SideMenu from "../components/SideMenu"
 const fnmatch = (pattern, string) => {
@@ -279,15 +279,15 @@ const ResultView = ({ result, onReset }) => {
         <h3 className="font-semibold text-slate-100">Codebase Gerada</h3>
         <div className="flex items-center gap-2">
           <button onClick={handleCopy} className="fluent-button bg-blue-500/80 hover:bg-blue-500">
-            <Copy className="w-4 h-4" />
+            <Copy size={16} />
             <span>{copyStatus}</span>
           </button>
           <button onClick={handleDownload} className="fluent-button bg-slate-500/80 hover:bg-slate-500">
-            <Download className="w-4 h-4" />
+            <Download size={16} />
             <span>Descarregar .txt</span>
           </button>
           <button onClick={onReset} className="fluent-button bg-red-500/80 hover:bg-red-500">
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft size={16} />
             <span>Voltar</span>
           </button>
         </div>
@@ -437,17 +437,10 @@ const Codebase = () => {
       {isProcessing && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="glass-panel p-8 flex items-center gap-4">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
             <span className="text-lg font-medium text-slate-200">{statusText}</span>
           </div>
         </div>
       )}
-      <header className="w-full max-w-7xl mx-auto mb-6 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-          <FileCode2 />
-          <span>Gerador de Codebase para IA</span>
-        </h1>
-      </header>
       <main className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow">
         {view === "drop" && <OptionsPanel options={options} setOptions={setOptions} />}
         <div className={view === "drop" ? "lg:col-span-2" : "lg:col-span-3"}>
