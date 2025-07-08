@@ -54,25 +54,34 @@ const TasksProvider = ({ children }) => {
     setLoading(true)
     setError(null)
     const extractCodeFromMarkdown = (markdown) => {
+      if (typeof markdown !== "string") return null
       const codeRegex = /^```(\w*)\n([\s\S]+?)\n^```/gm
       const matches = [...markdown.matchAll(codeRegex)]
-      return matches.map((match) => match[2].trim()).join("\n\n")
+      return matches.length > 0 ? matches.map((match) => match[2].trim()).join("\n\n") : null
     }
     try {
-      const userPrompt = { role: "user", content: `Modo Secretário, Objetivo: "${goal}` }
+      const userPrompt = { role: "user", content: `Modo Secretário, Objetivo: "${goal}"` }
       const { data } = await sendMessage(aiKey, aiProvider, model, [prompts[0], prompts[5], userPrompt])
-      const content = data?.choices?.[0]?.message?.content.replace(/<think>[\s\S]*?<\/think>/g, "")
-      console.log(content)
-      const codeToCopy = () => extractCodeFromMarkdown(content)
-      if (data.error) throw new Error(data.error.message)
-      const messageContent = codeToCopy() || content
-      if (!messageContent) throw new Error("Serviço temporariamente indisponível.")
-
-      const newTasks = JSON.parse(messageContent).map((content, index) => ({
+      const rawContent = data?.choices?.[0]?.message?.content
+      if (typeof rawContent !== "string" || !rawContent.trim()) {
+        throw new Error("A resposta da IA veio vazia ou em formato inválido.")
+      }
+      const content = rawContent.replace(/<think>[\s\S]*?<\/think>/g, "")
+      const codeBlock = extractCodeFromMarkdown(content)
+      const finalContentToParse = codeBlock || content
+      let newTasksData
+      try {
+        newTasksData = JSON.parse(finalContentToParse)
+      } catch (e) {
+        throw new Error("A IA não retornou uma lista de tarefas válida. Tente reformular seu objetivo.")
+      }
+      if (!Array.isArray(newTasksData)) {
+        throw new Error("A IA não retornou um array de tarefas.")
+      }
+      const newTasks = newTasksData.map((taskContent, index) => ({
         id: `task-${Date.now()}-${index}`,
-        content
+        content: taskContent
       }))
-
       setTasks((prev) => ({ ...prev, todo: [...prev.todo, ...newTasks] }))
       setNewTask("")
     } catch (err) {
