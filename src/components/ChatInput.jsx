@@ -7,7 +7,7 @@ import Button from "./Button"
 import Paper from "./Paper"
 
 const ChatInput = ({ userPrompt, setUserPrompt, onAddImage, imageCount, web, toggleWeb, stream, toggleStream, onSendMessage, clearHistory, toggleSettings, loading }) => {
-  const { aiProvider, aiProviderToggle, aiKey } = useAI()
+  const { aiKey, aiProvider, aiProviderToggle } = useAI()
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()

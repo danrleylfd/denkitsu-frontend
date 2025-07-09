@@ -21,7 +21,7 @@ const ContentView = ({ children }) => (
 )
 
 const Upload = () => {
-  const { aiKey, model, aiProvider, aiProviderToggle, prompts } = useAI()
+  const { aiKey, model, aiProvider, prompts, aiProviderToggle  } = useAI()
   const [content, setContent] = useState("")
   const [thumbnail, setThumbnail] = useState("")
   const [fileUrl, setFileUrl] = useState("")

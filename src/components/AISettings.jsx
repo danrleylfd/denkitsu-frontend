@@ -7,7 +7,7 @@ import ModelSelect from "./ModelSelect"
 
 const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqModels, prompts, selectedPrompt, onSelectPrompt }) => {
   const [showAIKey, setShowAIKey] = useState(false)
-  const { aiKey, setAIKey, model, setModel, aiProvider, setAIProvider, aiProviderToggle, loading, customPrompt, setCustomPrompt } = useAI()
+  const { aiKey, model, aiProvider, customPrompt, loading, setAIKey, setModel, setAIProvider, aiProviderToggle, setCustomPrompt } = useAI()
   if (!settingsOpen) return null
   const getModeName = (content) => {
     if (!content) return "Padrão"

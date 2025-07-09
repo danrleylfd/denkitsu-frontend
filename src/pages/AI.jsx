@@ -16,25 +16,25 @@ const AI = () => {
   const {
     prompts,
     web,
-    setWeb,
     stream,
-    setStream,
     imageUrls,
-    setImageUrls,
     aiProvider,
     aiKey,
     model,
     freeModels,
     setFreeModels,
     payModels,
-    setPayModels,
     groqModels,
-    setGroqModels,
-    messages,
-    setMessages,
-    clearHistory,
     userPrompt,
-    setUserPrompt
+    messages,
+    setWeb,
+    setStream,
+    setImageUrls,
+    setPayModels,
+    setGroqModels,
+    setUserPrompt,
+    setMessages,
+    clearHistory
   } = useAI()
 
   const [loading, setLoading] = useState(false)
