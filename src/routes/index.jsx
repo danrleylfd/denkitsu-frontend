@@ -25,6 +25,7 @@ import Pomodoro from "../pages/Pomodoro"
 import Weather from "../pages/Weather"
 import Translator from "../pages/Translator"
 import Codebase from "../pages/Codebase"
+import Editor from "../pages/Editor"
 
 const AppRoutes = () => {
   const { signed, loading } = useAuth()
@@ -35,6 +36,7 @@ const AppRoutes = () => {
         {signed ? (
           <>
             <Route path="/" element={<News />} />
+            <Route path="/editor-qwe" element={<Editor />} />
             <Route path="/news" element={<News />} />
             <Route path="/kanban" element={<Kanban />} />
             <Route path="/pomodoro" element={<Pomodoro />} />
@@ -58,6 +60,7 @@ const AppRoutes = () => {
           <>
             <Route path="/" element={<News />} />
             <Route path="/news" element={<News />} />
+            <Route path="/editor-qwe" element={<Editor />} />
             <Route path="/todo" element={<Kanban />} />
             <Route path="/pomodoro" element={<Pomodoro />} />
             <Route path="/clima" element={<Weather />} />

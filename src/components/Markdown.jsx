@@ -133,6 +133,11 @@ const Markdown = ({ content, think }) => {
                 {children}
               </code>
             ),
+            li: ({ node, children, ...props }) => (
+              <li {...props} className="text-lightFg-primary dark:text-darkFg-primary">
+                {children}
+              </li>
+            ),
             table: ({ node, children, ...props }) => (
               <table className="w-full my-4 border-collapse border border-lightBorder dark:border-darkBorder rounded" {...props}>
                 {children}
