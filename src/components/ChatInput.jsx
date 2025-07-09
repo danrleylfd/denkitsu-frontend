@@ -6,7 +6,7 @@ import PromptInput from "./PromptInput"
 import Button from "./Button"
 import Paper from "./Paper"
 
-const ChatInput = ({ userPrompt, setUserPrompt, onAddImage, imageCount, web, toggleWeb, stream, toggleStream, onSendMessage, clearHistory, toggleSettings, loading }) => {
+const ChatInput = ({ userPrompt, setUserPrompt, onAddImage, imageCount, web, toggleWeb, stream, toggleStream, onSendMessage, clearHistory, toggleSettings, loading, aiKey }) => {
   const { aiProvider, aiProviderToggle } = useAI()
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -25,9 +25,11 @@ const ChatInput = ({ userPrompt, setUserPrompt, onAddImage, imageCount, web, tog
       <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={loading}>
         <ImagePlus size={16} />
       </Button>
-      <Button variant={aiProvider === "openrouter" && web ? "outline" : "secondary" } size="icon" $rounded title="Pesquisar na Web" onClick={toggleWeb} disabled={aiProvider === "groq" || loading}>
-        {aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
-      </Button>
+      {aiKey.length > 0 && (
+        <Button variant={aiProvider === "openrouter" && web ? "outline" : "secondary" } size="icon" $rounded title="Pesquisar na Web" onClick={toggleWeb} disabled={aiProvider === "groq" || loading}>
+          {aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
+        </Button>
+      )}
       <PromptInput userPrompt={userPrompt} setUserPrompt={setUserPrompt} handleKeyDown={handleKeyDown} loading={loading} />
       <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Stream" onClick={toggleStream} disabled={loading}>
         <Binary size={16} />
