@@ -126,7 +126,7 @@ const AI = () => {
     } catch (error) {
       const err = JSON.parse(error.message)
       showNotification(err.message)
-      handleError(error, placeholder.id)
+      handleError(placeholder.id)
     } finally {
       setLoading(false)
     }
