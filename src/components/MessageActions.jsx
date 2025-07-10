@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react"
 import { Code, Copy, Kanban, Newspaper, Presentation, Download } from "lucide-react"
 
+import { useAI } from "../contexts/AIContext"
 import { useTasks } from "../contexts/TasksContext"
 import { publishNews } from "../services/news"
 
@@ -31,6 +32,7 @@ const getFileExtension = (lang) => {
 }
 
 const MessageActions = ({ message, toggleLousa }) => {
+  const { loading: aiLoading } = useAI()
   const [loading, setLoading] = useState(false)
   const [loadingType, setLoadingType] = useState(null)
   const { setTasks } = useTasks()
@@ -129,7 +131,8 @@ const MessageActions = ({ message, toggleLousa }) => {
           $rounded
           onClick={() => handleCopy(message.reasoning, "reasoning")}
           loading={loadingType === "reasoning" && loading}
-          title="Copiar Linha de Raciocínio">
+          title="Copiar Linha de Raciocínio"
+          disabled={aiLoading}>
           {loadingType !== "reasoning" && <Copy size={16} />}
         </Button>
       )}
@@ -138,8 +141,9 @@ const MessageActions = ({ message, toggleLousa }) => {
         size="icon"
         $rounded
         onClick={() => handleCopy(message.content, "content")}
+        title="Copiar Resposta"
         loading={loadingType === "content" && loading}
-        title="Copiar Resposta">
+        disabled={aiLoading}>
         {loadingType !== "content" && <Copy size={16} />}
       </Button>
 
@@ -149,8 +153,9 @@ const MessageActions = ({ message, toggleLousa }) => {
           size="icon"
           $rounded
           onClick={() => handleCopy(allCodeToCopy, "code")}
+          title="Copiar Código"
           loading={loadingType === "code" && loading}
-          title="Copiar Código">
+          disabled={aiLoading}>
           {loadingType !== "code" && <Code size={16} />}
         </Button>
       )}
@@ -161,8 +166,9 @@ const MessageActions = ({ message, toggleLousa }) => {
           size="icon"
           $rounded
           onClick={() => handlePreview(htmlBlockForPreview.code)}
+          title="Desenhar na Lousa"
           loading={loadingType === "preview" && loading}
-          title="Desenhar na Lousa">
+          disabled={aiLoading}>
           {loadingType !== "preview" && <Presentation size={16} />}
         </Button>
       )}
@@ -173,7 +179,8 @@ const MessageActions = ({ message, toggleLousa }) => {
           size="icon"
           $rounded
           onClick={() => handleDownload(codeBlocks[0].code, codeBlocks[0].lang)}
-          title={`Salvar como .${getFileExtension(codeBlocks[0].lang)}`}>
+          title={`Salvar como .${getFileExtension(codeBlocks[0].lang)}`}
+          disabled={aiLoading}>
           {loadingType !== "download" && <Download size={16} />}
         </Button>
       )}
@@ -184,14 +191,15 @@ const MessageActions = ({ message, toggleLousa }) => {
           size="icon"
           $rounded
           onClick={() => handleAddToKanban(kanbanableJsonString)}
+          title="Adicionar ao Kanban"
           loading={loadingType === "kanban" && loading}
-          title="Adicionar ao Kanban">
+          disabled={aiLoading}>
           {loadingType !== "kanban" && <Kanban size={16} />}
         </Button>
       )}
 
       {!hasContextualAction && (
-        <Button variant="success" size="icon" $rounded onClick={handlePublish} loading={loadingType === "news" && loading} title="Publicar Artigo">
+        <Button variant="success" size="icon" $rounded onClick={handlePublish} title="Publicar Artigo" loading={loadingType === "news" && loading} disabled={aiLoading}>
           {loadingType !== "news" && <Newspaper size={16} />}
         </Button>
       )}
