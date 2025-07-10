@@ -41,7 +41,6 @@ const AI = () => {
   const [lousaContent, setLousaContent] = useState(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [selectedPrompt, setSelectedPrompt] = useState("")
-  const [error, setError] = useState(null)
 
   useEffect(() => {
     async function loadModels() {
@@ -51,7 +50,13 @@ const AI = () => {
         if (aiKey) setPayModels(loadedPay || [])
         setGroqModels(loadedGroq || [])
       } catch (error) {
-        setError(error.message)
+        let errorData
+        try {
+          errorData = JSON.parse(error.message)
+        } catch {
+          errorData = { code: "UNKNOWN_ERROR", message: "Falha ao carregar modelos. Tente novamente." }
+        }
+        setMessages((prev) => [...prev, { id: Date.now(), role: "assistant", content: errorData.message }])
       }
     }
     loadModels()
@@ -77,7 +82,6 @@ const AI = () => {
     setUserPrompt("")
     setImageUrls([])
     setLoading(true)
-    setError(null)
     const apiMessages = prepareApiMessages(messagesToSend)
     stream ? await handleStreamingRequest(apiMessages, setMessages) : await handleNonStreamingRequest(apiMessages, setMessages)
   }, [userPrompt, imageUrls, messages, model, aiKey, aiProvider, web, stream, selectedPrompt, prompts])
@@ -169,7 +173,6 @@ const AI = () => {
     } catch {
       errorData = { code: "UNKNOWN_ERROR", message: "Falha ao conectar com o serviço. Tente novamente." }
     }
-    setError(errorData.message)
     setMessages((prev) => {
       const updated = [...prev]
       const index = updated.findIndex((msg) => msg.role === "assistant" && msg.content === "")
@@ -223,7 +226,6 @@ const AI = () => {
     } catch {
       errorData = { code: "UNKNOWN_ERROR", message: "Falha ao conectar com o serviço. Tente novamente." }
     }
-    setError(errorData.message)
     setMessages((prev) => {
       const updated = [...prev]
       const index = updated.findIndex((msg) => msg.id === placeholder.id)
@@ -232,20 +234,10 @@ const AI = () => {
     })
   }
 
-  const toggleLousa = useCallback((content = null) => (lousaContent ? setLousaContent(content) : setLousaContent(content)), [])
-
   const temMensagensDoUsuario = (messages) => messages.filter((mensagem) => mensagem.role === "user").length > 0
 
   return (
     <SideMenu ContentView={ContentView} className="bg-brand-purple bg-cover bg-center">
-      {error && (
-        <div className="fixed top-4 right-4 bg-red-500 text-white p-4 rounded shadow-lg z-50">
-          <p>{error}</p>
-          <button className="mt-2 text-sm underline" onClick={() => setError(null)}>
-            Fechar
-          </button>
-        </div>
-      )}
       {!temMensagensDoUsuario(messages) && (
         <div className="flex grow justify-center items-center flex-col">
           <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />

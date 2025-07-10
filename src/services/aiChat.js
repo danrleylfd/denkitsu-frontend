@@ -5,7 +5,6 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, web, onDelt
   const permission = aiProvider === "groq" ? false : web
   const plugins = permission ? [{ id: "web" }] : undefined
   const payload = {
-    // aiKey,
     model,
     messages,
     plugins,
@@ -21,8 +20,12 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, web, onDelt
     body: JSON.stringify(payload)
   })
   if (!response.ok) {
-    const error = await response.text()
-    throw new Error(error)
+    try {
+      const errorData = await response.json()
+      throw new Error(JSON.stringify({ code: errorData.code || "UNKNOWN_ERROR", message: errorData.message || "Falha ao conectar com o serviço. Tente novamente." }))
+    } catch {
+      throw new Error(JSON.stringify({ code: "REQUEST_FAILED", message: "Falha ao conectar com o serviço. Tente novamente." }))
+    }
   }
   const reader = response.body.getReader()
   const decoder = new TextDecoder("utf-8")
@@ -71,48 +74,40 @@ const getPrompt = async () => {
     const { data } = await api.get("/ai/prompt")
     return data
   } catch (error) {
-    console.error(error.message)
+    console.error(error.response?.data?.message || error.message)
+    throw new Error(error.response?.data?.message || "Falha ao obter prompts.")
   }
 }
 
 const getModels = async () => {
   try {
-    // const { data } = await axios.get("https://openrouter.ai/api/v1/models")
     const { data } = await api.get("/ai/models")
-    if (!data) throw new Error("Falha ao obter resposta da API")
-    if (data.error) throw new Error(data.error?.message)
-    const freeModels = data.models
+    if (!data) throw new Error("Falha ao obter modelos.")
+    if (data.error) throw new Error(data.error?.message || "Erro ao consultar modelos.")
+    const freeModels = data
       .filter((item) => item.id && item.id.includes(":free"))
-      .map((item, index) => {
-        if (!item.id) {
-          console.error(`Erro no item ${index}: id ou name ausente`, item)
-          return null
-        }
-        return { id: item.id, aiProvider: item.aiProvider }
-      })
-      .filter((item) => item !== null)
+      .map((item) => ({ id: item.id, aiProvider: item.aiProvider }))
       .sort((a, b) => a.id.localeCompare(b.id))
-    const payModels = data.models
+    const payModels = data
       .filter((item) => item.id && !item.id.includes(":free") && item.aiProvider !== "groq")
-      .map((item, index) => {
-        if (!item.id) {
-          console.error(`Erro no item ${index}: id ou name ausente`, item)
-          return null
-        }
-        return { id: item.id, aiProvider: item.aiProvider }
-      })
-      .filter((item) => item !== null)
+      .map((item) => ({ id: item.id, aiProvider: item.aiProvider }))
       .sort((a, b) => a.id.localeCompare(b.id))
-    const groqModels = data.models.filter((item) => item.aiProvider === "groq")
+    const groqModels = data.filter((item) => item.aiProvider === "groq")
     return { freeModels, payModels, groqModels }
   } catch (error) {
-    console.error(error.response?.data?.error?.message || error.message)
+    console.error(error.message)
+    throw new Error(error.message || "Falha ao obter modelos.")
   }
 }
 
 const generateNews = async (searchTerm, aiProvider) => {
-  const { data } = await api.post("/news/generate", { searchTerm, aiProvider: aiProvider })
-  return data
+  try {
+    const { data } = await api.post("/news/generate", { searchTerm, aiProvider })
+    return data
+  } catch (error) {
+    console.error(error.response?.data?.message || error.message)
+    throw new Error(error.response?.data?.message || "Falha ao gerar notícias.")
+  }
 }
 
 export { sendMessageStream, sendMessage, getModels, getPrompt, generateNews }
