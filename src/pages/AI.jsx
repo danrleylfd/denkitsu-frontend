@@ -107,9 +107,9 @@ const AI = () => {
       _contentBuffer: "",
       _reasoningBuffer: ""
     }
+    setMessages(prev => [...prev, placeholder])
     try {
       await sendMessageStream(aiKey, aiProvider, model, apiMessages, web, delta => {
-        if (delta.content.length === 0) setMessages(prev => [...prev, placeholder])
         if (delta.content) placeholder._contentBuffer += delta.content
         if (delta.reasoning) placeholder._reasoningBuffer += delta.reasoning
         if (delta.tool_calls?.[0]?.arguments?.reasoning) placeholder._reasoningBuffer += delta.tool_calls[0].arguments.reasoning
