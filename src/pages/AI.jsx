@@ -116,12 +116,14 @@ const AI = () => {
         const { content, reasoning } = cleanContent(placeholder._contentBuffer)
         placeholder.content = content
         placeholder.reasoning = (placeholder._reasoningBuffer + reasoning).trim()
-        setMessages((prev) => prev.map(msg => (msg.id === placeholder.id ? { ...placeholder } : msg)))
+        setMessages(prev =>
+          prev.map(msg => (msg.id === placeholder.id ? { ...placeholder } : msg))
+        )
       })
     } catch (error) {
       const err = JSON.parse(error.message)
       showNotification(err.message)
-      setMessages((prev) => prev.filter(msg => msg.id !== placeholder.id))
+      setMessages(prev => prev.filter(msg => msg.id !== placeholder.id))
     } finally {
       setLoading(false)
     }
