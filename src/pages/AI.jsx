@@ -43,23 +43,23 @@ const AI = () => {
   const [selectedPrompt, setSelectedPrompt] = useState("")
 
   useEffect(() => {
-    async function loadModels() {
+    ;(async () => {
       try {
         const { freeModels: loadedFree, payModels: loadedPay, groqModels: loadedGroq } = await getModels()
         setFreeModels(loadedFree || [])
         if (aiKey) setPayModels(loadedPay || [])
         setGroqModels(loadedGroq || [])
       } catch (error) {
-        let errorData
-        try {
-          errorData = JSON.parse(error.message)
-        } catch {
-          errorData = { code: "MODELS_FAILED", message: "Falha ao carregar modelos. Tente novamente." }
-        }
-        setMessages((prev) => [...prev, { id: Date.now(), role: "assistant", content: errorData.message, reasoning: "" }])
+        const { message } = (() => {
+          try {
+            return JSON.parse(error.message)
+          } catch {
+            return { message: "Falha ao carregar modelos. Tente novamente." }
+          }
+        })()
+        setMessages(prev => [...prev, { id: Date.now(), role: "assistant", content: message, reasoning: "" }])
       }
-    }
-    loadModels()
+    })()
   }, [])
 
   const onAddImage = () => {
@@ -68,179 +68,122 @@ const AI = () => {
     if (!url) return
     const img = new Image()
     img.src = url
-    img.onload = () => setImageUrls((prev) => [...prev, url])
+    img.onload = () => setImageUrls(prev => [...prev, url])
     img.onerror = () => alert("A URL fornecida não parece ser uma imagem válida ou não pode ser acessada.")
   }
 
-  const onRemoveImage = (indexToRemove) => setImageUrls((prev) => prev.filter((_, index) => index !== indexToRemove))
+  const onRemoveImage = index => setImageUrls(prev => prev.filter((_, i) => i !== index))
 
   const onSendMessage = useCallback(async () => {
     if (!userPrompt.trim() && imageUrls.length === 0) return
-    const newUserMessage = buildUserMessage(userPrompt, imageUrls)
-    const messagesToSend = prepareMessageHistory(messages, selectedPrompt, prompts, newUserMessage)
-    setMessages(messagesToSend)
+    const newMessage = {
+      role: "user",
+      content: [
+        ...(userPrompt.trim() ? [{ type: "text", content: userPrompt.trim() }] : []),
+        ...imageUrls.map(url => ({ type: "image_url", image_url: { url } }))
+      ]
+    }
+
+    const history = [...messages]
+    if (selectedPrompt) {
+      const prompt = prompts.find(p => p.content.includes(selectedPrompt))
+      if (prompt && !messages.some(m => m.content === prompt.content)) history.push(prompt)
+    }
+    history.push(newMessage)
+    setMessages(history)
     setUserPrompt("")
     setImageUrls([])
     setLoading(true)
-    const apiMessages = prepareApiMessages(messagesToSend)
-    stream ? await handleStreamingRequest(apiMessages, setMessages) : await handleNonStreamingRequest(apiMessages, setMessages)
-  }, [userPrompt, imageUrls, messages, model, aiKey, aiProvider, web, stream, selectedPrompt, prompts])
 
-  const buildUserMessage = (prompt, urls) => {
-    const content = []
-    if (prompt.trim()) content.push({ type: "text", content: prompt.trim() })
-    if (urls.length > 0) urls.forEach((url) => content.push({ type: "image_url", image_url: { url } }))
-    return {
-      role: "user",
-      content: content.length === 1 ? content[0].content : content
-    }
-  }
-
-  const cleanStreamingContent = (content) => {
-    let output = content
-    let reasoningFromThink = ""
-    output = output.replace(/<think>(.*?)<\/think>/gs, (_, thought) => {
-      reasoningFromThink += thought
-      return ""
-    })
-    output = output.replace(/<think[^>]*>/gi, "")
-    output = output.replace(/<\/?think>/gi, "")
-    return { cleanedContent: output, reasoningFromThink }
-  }
-
-  const prepareMessageHistory = (messages, selected, prompts, newMessage) => {
-    const history = [...messages]
-    if (selected) {
-      const modePrompt = prompts.find((p) => p.content.includes(selected))
-      if (modePrompt && !messages.some((msg) => msg.content === modePrompt.content)) history.push(modePrompt)
-    }
-    history.push(newMessage)
-    return history
-  }
-
-  const prepareApiMessages = (messages) =>
-    messages.map(({ role, content }) =>
+    const apiMessages = history.map(({ role, content }) =>
       Array.isArray(content)
-        ? {
-            role,
-            content: content.map((item) => (item.type === "text" ? { type: "text", text: item.content } : item))
-          }
+        ? { role, content: content.map(item => (item.type === "text" ? { type: "text", text: item.content } : item)) }
         : { role, content }
     )
 
-  const createAssistantPlaceholder = () => ({
-    id: Date.now() + 1,
-    role: "assistant",
-    content: "",
-    reasoning: "",
-    _contentBuffer: "",
-    _reasoningBuffer: ""
-  })
-
-  const handleStreamingRequest = async (apiMessages, setMessages) => {
-    const placeholder = createAssistantPlaceholder()
-    setMessages((prev) => [...prev, placeholder])
-    try {
-      await sendMessageStream(aiKey, aiProvider, model, apiMessages, web, (delta) => processStreamingDelta(delta, placeholder, setMessages))
-    } catch (error) {
-      handleStreamingError(error, setMessages)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const processStreamingDelta = (delta, message, setMessages) => {
-    if (delta.content) message._contentBuffer += delta.content
-    if (delta.reasoning) message._reasoningBuffer += delta.reasoning
-    if (delta.tool_calls?.[0]?.arguments?.reasoning) {
-      message._reasoningBuffer += delta.tool_calls[0].arguments.reasoning
-    }
-    const { cleanedContent, reasoningFromThink } = cleanStreamingContent(message._contentBuffer)
-    message.content = cleanedContent
-    message.reasoning = (message._reasoningBuffer + reasoningFromThink).trim()
-    setMessages((prev) => {
-      const updated = [...prev]
-      const index = updated.findIndex((m) => m.id === message.id)
-      if (index !== -1) updated[index] = { ...message }
-      return updated
-    })
-  }
-
-  const handleStreamingError = (error, setMessages) => {
-    let errorData
-    try {
-      errorData = JSON.parse(error.message)
-    } catch {
-      errorData = { code: "UNKNOWN_ERROR", message: "Falha ao conectar com o serviço. Tente novamente." }
-    }
-    setMessages((prev) => {
-      const updated = [...prev]
-      const index = updated.findIndex((msg) => msg.role === "assistant" && msg.content === "")
-      if (index !== -1) updated[index] = { ...updated[index], content: errorData.message, reasoning: "" }
-      return updated
-    })
-  }
-
-  const handleNonStreamingRequest = async (apiMessages, setMessages) => {
-    const placeholder = createAssistantPlaceholder()
-    setMessages((prev) => [...prev, placeholder])
-    try {
-      const data = await sendMessage(aiKey, aiProvider, model, apiMessages, web)
-      handleNonStreamingResponse(data, placeholder, setMessages)
-    } catch (error) {
-      handleNonStreamingError(error, placeholder, setMessages)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleNonStreamingResponse = (data, placeholder, setMessages) => {
-    const response = data?.choices[0]?.message
-    if (!response) return
-    let content = response.content || ""
-    let reasoning = response.reasoning || ""
-    let reasoningFromThink = ""
-    content = content.replace(/<think>(.*?)<\/think>/gs, (_, thought) => {
-      reasoningFromThink += thought
-      return ""
-    })
-    if (reasoningFromThink) reasoning += reasoningFromThink
-    const finalMessage = {
-      id: placeholder.id,
+    const placeholder = {
+      id: Date.now(),
       role: "assistant",
-      content: content,
-      reasoning: reasoning
+      content: "",
+      reasoning: "",
+      _contentBuffer: "",
+      _reasoningBuffer: ""
     }
-    setMessages((prev) => {
-      const updated = [...prev]
-      const index = updated.findIndex((msg) => msg.id === placeholder.id)
-      if (index !== -1) updated[index] = finalMessage
-      return updated
-    })
-  }
 
-  const handleNonStreamingError = (error, placeholder, setMessages) => {
-    let errorData
-    try {
-      errorData = JSON.parse(error.message)
-    } catch {
-      errorData = { code: "UNKNOWN_ERROR", message: "Falha ao conectar com o serviço. Tente novamente." }
+    setMessages(prev => [...prev, placeholder])
+
+    const handleError = (error, updateId = placeholder.id) => {
+      const { message } = (() => {
+        try {
+          return JSON.parse(error.message)
+        } catch {
+          return { message: "Falha ao conectar com o serviço. Tente novamente." }
+        }
+      })()
+      setMessages(prev =>
+        prev.map(msg => (msg.id === updateId ? { ...msg, content: message, reasoning: "" } : msg))
+      )
     }
-    setMessages((prev) => {
-      const updated = [...prev]
-      const index = updated.findIndex((msg) => msg.id === placeholder.id)
-      if (index !== -1) updated[index] = { ...updated[index], content: errorData.message, reasoning: "" }
-      return updated
-    })
-  }
 
-  const toggleLousa = useCallback((content = null) => (lousaContent ? setLousaContent(content) : setLousaContent(content)), [])
+    const cleanContent = raw => {
+      let reasoning = ""
+      const content = raw.replace(/<think>(.*?)<\/think>/gs, (_, r) => {
+        reasoning += r
+        return ""
+      })
+      return { content, reasoning }
+    }
 
-  const temMensagensDoUsuario = (messages) => messages.filter((mensagem) => mensagem.role === "user").length > 0
+    if (stream) {
+      try {
+        await sendMessageStream(aiKey, aiProvider, model, apiMessages, web, delta => {
+          if (delta.content) placeholder._contentBuffer += delta.content
+          if (delta.reasoning) placeholder._reasoningBuffer += delta.reasoning
+          if (delta.tool_calls?.[0]?.arguments?.reasoning) {
+            placeholder._reasoningBuffer += delta.tool_calls[0].arguments.reasoning
+          }
+
+          const { content, reasoning } = cleanContent(placeholder._contentBuffer)
+          placeholder.content = content
+          placeholder.reasoning = (placeholder._reasoningBuffer + reasoning).trim()
+
+          setMessages(prev =>
+            prev.map(msg => (msg.id === placeholder.id ? { ...placeholder } : msg))
+          )
+        })
+      } catch (error) {
+        handleError(error)
+      } finally {
+        setLoading(false)
+      }
+    } else {
+      try {
+        const data = await sendMessage(aiKey, aiProvider, model, apiMessages, web)
+        const res = data?.choices?.[0]?.message
+        if (!res) return
+        const { content, reasoning } = cleanContent(res.content || "")
+        setMessages(prev =>
+          prev.map(msg =>
+            msg.id === placeholder.id
+              ? { ...msg, content, reasoning: (res.reasoning || "") + reasoning }
+              : msg
+          )
+        )
+      } catch (error) {
+        handleError(error)
+      } finally {
+        setLoading(false)
+      }
+    }
+  }, [userPrompt, imageUrls, messages, model, aiKey, aiProvider, web, stream, selectedPrompt, prompts])
+
+  const toggleLousa = useCallback(content => setLousaContent(content), [])
+
+  const temMensagensDoUsuario = messages.some(msg => msg.role === "user")
 
   return (
     <SideMenu ContentView={ContentView} className="bg-brand-purple bg-cover bg-center">
-      {!temMensagensDoUsuario(messages) && (
+      {!temMensagensDoUsuario ? (
         <div className="flex grow justify-center items-center flex-col">
           <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
           <ChatInput
@@ -268,8 +211,7 @@ const AI = () => {
             onSelectPrompt={setSelectedPrompt}
           />
         </div>
-      )}
-      {temMensagensDoUsuario(messages) && (
+      ) : (
         <>
           <ChatHistory toggleLousa={toggleLousa} messages={messages} />
           <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
