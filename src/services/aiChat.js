@@ -84,15 +84,15 @@ const getModels = async () => {
     const { data } = await api.get("/ai/models")
     if (!data) throw new Error("Falha ao obter modelos.")
     if (data.error) throw new Error(data.error?.message || "Erro ao consultar modelos.")
-    const freeModels = data
+    const freeModels = data.models
       .filter((item) => item.id && item.id.includes(":free"))
       .map((item) => ({ id: item.id, aiProvider: item.aiProvider }))
       .sort((a, b) => a.id.localeCompare(b.id))
-    const payModels = data
+    const payModels = data.models
       .filter((item) => item.id && !item.id.includes(":free") && item.aiProvider !== "groq")
       .map((item) => ({ id: item.id, aiProvider: item.aiProvider }))
       .sort((a, b) => a.id.localeCompare(b.id))
-    const groqModels = data.filter((item) => item.aiProvider === "groq")
+    const groqModels = data.models.filter((item) => item.aiProvider === "groq")
     return { freeModels, payModels, groqModels }
   } catch (error) {
     console.error(error.message)
