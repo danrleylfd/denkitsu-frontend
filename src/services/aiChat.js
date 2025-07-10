@@ -58,7 +58,7 @@ const sendMessage = async (aiKey, aiProvider, model, messages, web) => {
     messages: [...messages]
   }
   try {
-    const { data } = await api.post("/ai/chat/messages", payload)
+    const { data } = await api.post("/ai/chat/completions", payload)
     return data
   } catch (error) {
     const errorData = error.response?.data || { code: "UNKNOWN_ERROR", message: "Falha ao conectar com o serviço. Tente novamente." }
