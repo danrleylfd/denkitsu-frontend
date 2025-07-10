@@ -98,9 +98,6 @@ const AI = () => {
     return { content, reasoning }
   }
 
-  const handleError = (msgId = null) => {
-    if (msgId) setMessages(prev => prev.filter(msg => msg.id !== msgId))
-  }
   if (stream) {
     const placeholder = {
       id: Date.now(),
@@ -112,21 +109,19 @@ const AI = () => {
     }
     try {
       await sendMessageStream(aiKey, aiProvider, model, apiMessages, web, delta => {
-        setMessages(prev => [...prev, placeholder])
+        if (delta.content.length === 0) setMessages(prev => [...prev, placeholder])
         if (delta.content) placeholder._contentBuffer += delta.content
         if (delta.reasoning) placeholder._reasoningBuffer += delta.reasoning
         if (delta.tool_calls?.[0]?.arguments?.reasoning) placeholder._reasoningBuffer += delta.tool_calls[0].arguments.reasoning
         const { content, reasoning } = cleanContent(placeholder._contentBuffer)
         placeholder.content = content
         placeholder.reasoning = (placeholder._reasoningBuffer + reasoning).trim()
-        setMessages(prev =>
-          prev.map(msg => (msg.id === placeholder.id ? { ...placeholder } : msg))
-        )
+        setMessages((prev) => prev.map(msg => (msg.id === placeholder.id ? { ...placeholder } : msg)))
       })
     } catch (error) {
       const err = JSON.parse(error.message)
       showNotification(err.message)
-      handleError(placeholder.id)
+      setMessages(prev => prev.filter(msg => msg.id !== placeholder.id))
     } finally {
       setLoading(false)
     }
@@ -148,7 +143,6 @@ const AI = () => {
     } catch (error) {
       const err = JSON.parse(error.message)
       showNotification(err.message)
-      handleError(error)
     } finally {
       setLoading(false)
     }
