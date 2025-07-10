@@ -15,27 +15,15 @@ const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-sc
 
 const AI = () => {
   const {
-    prompts,
-    web,
-    stream,
-    imageUrls,
-    aiProvider,
-    aiKey,
-    model,
-    freeModels,
-    setFreeModels,
-    payModels,
-    groqModels,
-    userPrompt,
-    messages,
-    setWeb,
-    setStream,
-    setImageUrls,
-    setPayModels,
-    setGroqModels,
-    setUserPrompt,
-    setMessages,
-    clearHistory
+    prompts, aiProvider, aiKey, model,
+    web, setWeb,
+    stream, setStream,
+    imageUrls, setImageUrls,
+    freeModels, setFreeModels,
+    payModels, setPayModels,
+    groqModels, setGroqModels,
+    userPrompt, setUserPrompt,
+    messages, setMessages, clearHistory,
   } = useAI()
   const { showNotification } = useNotification()
   const [loading, setLoading] = useState(false)
@@ -65,7 +53,7 @@ const AI = () => {
   }, [])
 
   const onAddImage = () => {
-    if (imageUrls.length >= 3) return alert("Você pode adicionar no máximo 3 imagens.")
+    if (imageUrls.length >= 3) return showNotification("Você pode adicionar no máximo 3 imagens.", "info")
     const url = window.prompt("Cole a URL da imagem:")
     if (!url) return
     const img = new Image()
@@ -110,23 +98,6 @@ const AI = () => {
     return { content, reasoning }
   }
 
-  const handleError = (error, updateId = null) => {
-    const { message } = (() => {
-      try {
-        return JSON.parse(error.message)
-      } catch {
-        showNotification("Falha ao conectar com o serviço. Tente novamente.")
-        return { message: "Falha ao conectar com o serviço. Tente novamente." }
-      }
-    })()
-    if (updateId) {
-      setMessages(prev =>
-        prev.map(msg => (msg.id === updateId ? { ...msg, content: message, reasoning: "" } : msg))
-      )
-    } else {
-      setMessages(prev => [...prev, { id: Date.now(), role: "assistant", content: message, reasoning: "" }])
-    }
-  }
   if (stream) {
     const placeholder = {
       id: Date.now(),
@@ -136,23 +107,21 @@ const AI = () => {
       _contentBuffer: "",
       _reasoningBuffer: ""
     }
-    setMessages(prev => [...prev, placeholder])
     try {
       await sendMessageStream(aiKey, aiProvider, model, apiMessages, web, delta => {
+        setMessages(prev => [...prev, placeholder])
         if (delta.content) placeholder._contentBuffer += delta.content
         if (delta.reasoning) placeholder._reasoningBuffer += delta.reasoning
         if (delta.tool_calls?.[0]?.arguments?.reasoning) placeholder._reasoningBuffer += delta.tool_calls[0].arguments.reasoning
         const { content, reasoning } = cleanContent(placeholder._contentBuffer)
         placeholder.content = content
         placeholder.reasoning = (placeholder._reasoningBuffer + reasoning).trim()
-        setMessages(prev =>
-          prev.map(msg => (msg.id === placeholder.id ? { ...placeholder } : msg))
-        )
+        setMessages((prev) => prev.map(msg => (msg.id === placeholder.id ? { ...placeholder } : msg)))
       })
     } catch (error) {
       const err = JSON.parse(error.message)
       showNotification(err.message)
-      handleError(error, placeholder.id)
+      setMessages((prev) => prev.filter(msg => msg.id !== placeholder.id))
     } finally {
       setLoading(false)
     }
@@ -174,7 +143,6 @@ const AI = () => {
     } catch (error) {
       const err = JSON.parse(error.message)
       showNotification(err.message)
-      handleError(error)
     } finally {
       setLoading(false)
     }
