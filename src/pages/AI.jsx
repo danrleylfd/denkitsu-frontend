@@ -98,6 +98,9 @@ const AI = () => {
     return { content, reasoning }
   }
 
+  const handleError = (msgId = null) => {
+    if (msgId) setMessages(prev => prev.filter(msg => msg.id !== msgId))
+  }
   if (stream) {
     const placeholder = {
       id: Date.now(),
@@ -123,7 +126,7 @@ const AI = () => {
     } catch (error) {
       const err = JSON.parse(error.message)
       showNotification(err.message)
-      setMessages(prev => prev.filter(msg => msg.id !== placeholder.id))
+      handleError(error, placeholder.id)
     } finally {
       setLoading(false)
     }
@@ -145,6 +148,7 @@ const AI = () => {
     } catch (error) {
       const err = JSON.parse(error.message)
       showNotification(err.message)
+      handleError(error)
     } finally {
       setLoading(false)
     }
