@@ -56,7 +56,7 @@ const AI = () => {
         } catch {
           errorData = { code: "MODELS_FAILED", message: "Falha ao carregar modelos. Tente novamente." }
         }
-        setMessages((prev) => [...prev, { id: Date.now(), role: "assistant", content: errorData.message }])
+        setMessages((prev) => [...prev, { id: Date.now(), role: "assistant", content: errorData.message, reasoning: "" }])
       }
     }
     loadModels()
@@ -209,7 +209,7 @@ const AI = () => {
       id: placeholder.id,
       role: "assistant",
       content: content,
-      reasoning: reasoning.trim()
+      reasoning: reasoning
     }
     setMessages((prev) => {
       const updated = [...prev]
