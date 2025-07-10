@@ -23,8 +23,9 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, web, onDelt
     try {
       const errorData = await response.json()
       throw new Error(JSON.stringify({ code: errorData.code || "UNKNOWN_ERROR", message: errorData.message || "Falha ao conectar com o serviço. Tente novamente." }))
-    } catch {
-      throw new Error(JSON.stringify({ code: "REQUEST_FAILED", message: "Falha ao conectar com o serviço. Tente novamente." }))
+    } catch (error) {
+      const errorData = error.response?.data || { code: "UNKNOWN_ERROR", message: "Falha ao conectar com o serviço. Tente novamente." }
+      throw new Error(JSON.stringify(errorData))
     }
   }
   const reader = response.body.getReader()
