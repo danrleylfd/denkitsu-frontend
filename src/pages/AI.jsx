@@ -54,7 +54,7 @@ const AI = () => {
         try {
           errorData = JSON.parse(error.message)
         } catch {
-          errorData = { code: "UNKNOWN_ERROR", message: "Falha ao carregar modelos. Tente novamente." }
+          errorData = { code: "MODELS_FAILED", message: "Falha ao carregar modelos. Tente novamente." }
         }
         setMessages((prev) => [...prev, { id: Date.now(), role: "assistant", content: errorData.message }])
       }
@@ -176,7 +176,7 @@ const AI = () => {
     setMessages((prev) => {
       const updated = [...prev]
       const index = updated.findIndex((msg) => msg.role === "assistant" && msg.content === "")
-      if (index !== -1) updated[index] = { ...updated[index], content: errorData.message }
+      if (index !== -1) updated[index] = { ...updated[index], content: errorData.message, reasoning: "" }
       return updated
     })
   }
@@ -209,7 +209,7 @@ const AI = () => {
       id: placeholder.id,
       role: "assistant",
       content: content,
-      reasoning: reasoning
+      reasoning: reasoning.trim()
     }
     setMessages((prev) => {
       const updated = [...prev]
@@ -229,10 +229,12 @@ const AI = () => {
     setMessages((prev) => {
       const updated = [...prev]
       const index = updated.findIndex((msg) => msg.id === placeholder.id)
-      if (index !== -1) updated[index] = { ...updated[index], content: errorData.message }
+      if (index !== -1) updated[index] = { ...updated[index], content: errorData.message, reasoning: "" }
       return updated
     })
   }
+
+  const toggleLousa = useCallback((content = null) => (lousaContent ? setLousaContent(content) : setLousaContent(content)), [])
 
   const temMensagensDoUsuario = (messages) => messages.filter((mensagem) => mensagem.role === "user").length > 0
 
@@ -269,7 +271,7 @@ const AI = () => {
       )}
       {temMensagensDoUsuario(messages) && (
         <>
-          <ChatHistory toggleLousa={toggleLousa} />
+          <ChatHistory toggleLousa={toggleLousa} messages={messages} />
           <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
           <ChatInput
             userPrompt={userPrompt}
