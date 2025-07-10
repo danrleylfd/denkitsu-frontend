@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react"
 
+import { useNotification } from "../contexts/NotificationContext"
 import { useAI } from "../contexts/AIContext"
 import { sendMessageStream, sendMessage, getModels } from "../services/aiChat"
 
@@ -36,7 +37,7 @@ const AI = () => {
     setMessages,
     clearHistory
   } = useAI()
-
+  const { showNotification } = useNotification()
   const [loading, setLoading] = useState(false)
   const [lousaContent, setLousaContent] = useState(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
@@ -54,6 +55,7 @@ const AI = () => {
           try {
             return JSON.parse(error.message)
           } catch {
+            showNotification("Falha ao carregar modelos. Tente novamente.")
             return { message: "Falha ao carregar modelos. Tente novamente." }
           }
         })()
@@ -69,14 +71,13 @@ const AI = () => {
     const img = new Image()
     img.src = url
     img.onload = () => setImageUrls(prev => [...prev, url])
-    img.onerror = () => alert("A URL fornecida não parece ser uma imagem válida ou não pode ser acessada.")
+    img.onerror = () => showNotification("A URL fornecida não parece ser uma imagem válida ou não pode ser acessada.", "error") //alert("A URL fornecida não parece ser uma imagem válida ou não pode ser acessada.")
   }
 
   const onRemoveImage = index => setImageUrls(prev => prev.filter((_, i) => i !== index))
 
   const onSendMessage = useCallback(async () => {
   if (!userPrompt.trim() && imageUrls.length === 0) return
-
   const newMessage = {
     role: "user",
     content: [
@@ -84,7 +85,6 @@ const AI = () => {
       ...imageUrls.map(url => ({ type: "image_url", image_url: { url } }))
     ]
   }
-
   const history = [...messages]
   if (selectedPrompt) {
     const prompt = prompts.find(p => p.content.includes(selectedPrompt))
@@ -95,7 +95,6 @@ const AI = () => {
   setUserPrompt("")
   setImageUrls([])
   setLoading(true)
-
   const apiMessages = history.map(({ role, content }) =>
     Array.isArray(content)
       ? { role, content: content.map(item => (item.type === "text" ? { type: "text", text: item.content } : item)) }
@@ -116,10 +115,10 @@ const AI = () => {
       try {
         return JSON.parse(error.message)
       } catch {
+        showNotification("Falha ao conectar com o serviço. Tente novamente.")
         return { message: "Falha ao conectar com o serviço. Tente novamente." }
       }
     })()
-
     if (updateId) {
       setMessages(prev =>
         prev.map(msg => (msg.id === updateId ? { ...msg, content: message, reasoning: "" } : msg))
@@ -128,7 +127,6 @@ const AI = () => {
       setMessages(prev => [...prev, { id: Date.now(), role: "assistant", content: message, reasoning: "" }])
     }
   }
-
   if (stream) {
     const placeholder = {
       id: Date.now(),
@@ -138,25 +136,22 @@ const AI = () => {
       _contentBuffer: "",
       _reasoningBuffer: ""
     }
-
     setMessages(prev => [...prev, placeholder])
-
     try {
       await sendMessageStream(aiKey, aiProvider, model, apiMessages, web, delta => {
         if (delta.content) placeholder._contentBuffer += delta.content
         if (delta.reasoning) placeholder._reasoningBuffer += delta.reasoning
-        if (delta.tool_calls?.[0]?.arguments?.reasoning)
-          placeholder._reasoningBuffer += delta.tool_calls[0].arguments.reasoning
-
+        if (delta.tool_calls?.[0]?.arguments?.reasoning) placeholder._reasoningBuffer += delta.tool_calls[0].arguments.reasoning
         const { content, reasoning } = cleanContent(placeholder._contentBuffer)
         placeholder.content = content
         placeholder.reasoning = (placeholder._reasoningBuffer + reasoning).trim()
-
         setMessages(prev =>
           prev.map(msg => (msg.id === placeholder.id ? { ...placeholder } : msg))
         )
       })
     } catch (error) {
+      const err = JSON.parse(error.message)
+      showNotification(err.message)
       handleError(error, placeholder.id)
     } finally {
       setLoading(false)
@@ -177,6 +172,8 @@ const AI = () => {
         }
       ])
     } catch (error) {
+      const err = JSON.parse(error.message)
+      showNotification(err.message)
       handleError(error)
     } finally {
       setLoading(false)

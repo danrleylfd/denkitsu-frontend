@@ -20,12 +20,11 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, web, onDelt
     body: JSON.stringify(payload)
   })
   if (!response.ok) {
-    try {
-      const errorData = await response.json()
-      throw new Error(JSON.stringify({ code: errorData.code || "UNKNOWN_ERROR", message: errorData.message || "Falha ao conectar com o serviço. Tente novamente." }))
-    } catch {
-      throw new Error(JSON.stringify({ code: "REQUEST_FAILED", message: "Falha ao conectar com o serviço. Tente novamente." }))
-    }
+    const errorData = await response.json()
+    if (errorData.error.code === 401) throw new Error(JSON.stringify({ code: errorData.error.code, message: "Chave de API inválida. Verifique suas credenciais." }))
+    if (errorData.error.code === 429) throw new Error(JSON.stringify({ code: errorData.error.code, message: "Limite de requisições excedido. Tente novamente mais tarde." }))
+    if (errorData.error.code === 502) throw new Error(JSON.stringify({ code: errorData.error.code, message: "Falha na comunicação com o serviço de IA. Tente novamente." }))
+    throw new Error(JSON.stringify({ code: errorData.error.code || "UNKNOWN_ERROR", message: errorData.error.message || "Falha ao conectar com o serviço. Tente novamente." }))
   }
   const reader = response.body.getReader()
   const decoder = new TextDecoder("utf-8")
