@@ -57,7 +57,13 @@ const sendMessage = async (aiKey, aiProvider, model, messages, web) => {
     plugins,
     messages: [...messages]
   }
-  return await api.post("/ai/chat/completions", payload)
+  try {
+    const { data } = await api.post("/ai/chat/messages", payload)
+    return data
+  } catch (error) {
+    const errorData = error.response?.data || { code: "UNKNOWN_ERROR", message: "Falha ao conectar com o serviço. Tente novamente." }
+    throw new Error(JSON.stringify(errorData))
+  }
 }
 
 const getPrompt = async () => {

@@ -41,13 +41,18 @@ const AI = () => {
   const [lousaContent, setLousaContent] = useState(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [selectedPrompt, setSelectedPrompt] = useState("")
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     async function loadModels() {
-      const { freeModels: loadedFree, payModels: loadedPay, groqModels: loadedGroq } = await getModels()
-      setFreeModels(loadedFree || [])
-      if (aiKey) setPayModels(loadedPay || [])
-      setGroqModels(loadedGroq || [])
+      try {
+        const { freeModels: loadedFree, payModels: loadedPay, groqModels: loadedGroq } = await getModels()
+        setFreeModels(loadedFree || [])
+        if (aiKey) setPayModels(loadedPay || [])
+        setGroqModels(loadedGroq || [])
+      } catch (error) {
+        setError(error.message)
+      }
     }
     loadModels()
   }, [])
@@ -72,6 +77,7 @@ const AI = () => {
     setUserPrompt("")
     setImageUrls([])
     setLoading(true)
+    setError(null)
     const apiMessages = prepareApiMessages(messagesToSend)
     stream ? await handleStreamingRequest(apiMessages, setMessages) : await handleNonStreamingRequest(apiMessages, setMessages)
   }, [userPrompt, imageUrls, messages, model, aiKey, aiProvider, web, stream, selectedPrompt, prompts])
@@ -157,12 +163,17 @@ const AI = () => {
   }
 
   const handleStreamingError = (error, setMessages) => {
-    const errMsg = parseErrorMessage(error)
-    const errorContent = `Falha ao enviar mensagem.\n\`\`\`diff\n- ${errMsg}\n+ Tente usar outro modelo ou verifique sua chave de API em configurações\n+ Tente desativar a tool Web\n\`\`\``
+    let errorData
+    try {
+      errorData = JSON.parse(error.message)
+    } catch {
+      errorData = { code: "UNKNOWN_ERROR", message: "Falha ao conectar com o serviço. Tente novamente." }
+    }
+    setError(errorData.message)
     setMessages((prev) => {
       const updated = [...prev]
       const index = updated.findIndex((msg) => msg.role === "assistant" && msg.content === "")
-      if (index !== -1) updated[index] = { ...updated[index], content: errorContent }
+      if (index !== -1) updated[index] = { ...updated[index], content: errorData.message }
       return updated
     })
   }
@@ -171,7 +182,7 @@ const AI = () => {
     const placeholder = createAssistantPlaceholder()
     setMessages((prev) => [...prev, placeholder])
     try {
-      const { data } = await sendMessage(aiKey, aiProvider, model, apiMessages, web)
+      const data = await sendMessage(aiKey, aiProvider, model, apiMessages, web)
       handleNonStreamingResponse(data, placeholder, setMessages)
     } catch (error) {
       handleNonStreamingError(error, placeholder, setMessages)
@@ -206,34 +217,35 @@ const AI = () => {
   }
 
   const handleNonStreamingError = (error, placeholder, setMessages) => {
-    const errMsg = parseErrorMessage(error)
-    const errorContent = `Falha ao enviar mensagem.\n\`\`\`diff\n- ${errMsg}\n+ Tente usar outro modelo ou verifique sua chave de API em configurações\n+ Tente desativar a tool Web\n\`\`\``
+    let errorData
+    try {
+      errorData = JSON.parse(error.message)
+    } catch {
+      errorData = { code: "UNKNOWN_ERROR", message: "Falha ao conectar com o serviço. Tente novamente." }
+    }
+    setError(errorData.message)
     setMessages((prev) => {
       const updated = [...prev]
       const index = updated.findIndex((msg) => msg.id === placeholder.id)
-      if (index !== -1) updated[index] = { ...updated[index], content: errorContent }
+      if (index !== -1) updated[index] = { ...updated[index], content: errorData.message }
       return updated
     })
   }
 
-  const parseErrorMessage = (error) => {
-    try {
-      const parsed = JSON.parse(error.message)
-      return parsed.error.message || parsed.message
-    } catch {
-      return error.response?.data?.error?.message || error.message
-    }
-  }
-
   const toggleLousa = useCallback((content = null) => (lousaContent ? setLousaContent(content) : setLousaContent(content)), [])
 
-  function temMensagensDoUsuario(messages) {
-    const mensagensDoUsuario = messages.filter((mensagem) => mensagem.role === "user")
-    return mensagensDoUsuario.length > 0
-  }
+  const temMensagensDoUsuario = (messages) => messages.filter((mensagem) => mensagem.role === "user").length > 0
 
   return (
     <SideMenu ContentView={ContentView} className="bg-brand-purple bg-cover bg-center">
+      {error && (
+        <div className="fixed top-4 right-4 bg-red-500 text-white p-4 rounded shadow-lg z-50">
+          <p>{error}</p>
+          <button className="mt-2 text-sm underline" onClick={() => setError(null)}>
+            Fechar
+          </button>
+        </div>
+      )}
       {!temMensagensDoUsuario(messages) && (
         <div className="flex grow justify-center items-center flex-col">
           <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
@@ -263,7 +275,6 @@ const AI = () => {
           />
         </div>
       )}
-
       {temMensagensDoUsuario(messages) && (
         <>
           <ChatHistory toggleLousa={toggleLousa} />
