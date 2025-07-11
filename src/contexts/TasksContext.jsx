@@ -1,7 +1,10 @@
 import { createContext, useState, useEffect, useCallback, useContext } from "react"
+
 import { INITIAL_TASKS } from "../constants"
 import { sendMessage } from "../services/aiChat"
+
 import { useAI } from "./AIContext"
+import { useNotification } from "./NotificationContext"
 
 const TasksContext = createContext({})
 
@@ -19,16 +22,17 @@ const TasksProvider = ({ children }) => {
 
   const [newTask, setNewTask] = useState("")
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
   const [editingId, setEditingId] = useState(null)
 
   const { aiKey, model, aiProvider, prompts } = useAI()
+  const { notifyError } = useNotification()
 
   useEffect(() => {
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
     } catch (error) {
-      console.error("Failed to save tasks to localStorage", error)
+      console.error(error)
+      notifyError("Falha ao salvar as tarefas no localStorage.")
     }
   }, [tasks])
 
@@ -52,7 +56,6 @@ const TasksProvider = ({ children }) => {
     const goal = newTask.trim()
     if (!goal) return
     setLoading(true)
-    setError(null)
     const extractCodeFromMarkdown = (markdown) => {
       if (typeof markdown !== "string") return null
       const codeRegex = /^```(\w*)\n([\s\S]+?)\n^```/gm
@@ -63,9 +66,7 @@ const TasksProvider = ({ children }) => {
       const userPrompt = { role: "user", content: `Modo Secretário, Objetivo: "${goal}"` }
       const { data } = await sendMessage(aiKey, aiProvider, model, [prompts[0], prompts[5], userPrompt])
       const rawContent = data?.choices?.[0]?.message?.content
-      if (typeof rawContent !== "string" || !rawContent.trim()) {
-        throw new Error("A resposta da IA veio vazia ou em formato inválido.")
-      }
+      if (typeof rawContent !== "string" || !rawContent.trim()) return notifyError("A resposta da IA veio vazia ou em formato inválido.")
       const content = rawContent.replace(/<think>[\s\S]*?<\/think>/g, "")
       const codeBlock = extractCodeFromMarkdown(content)
       const finalContentToParse = codeBlock || content
@@ -73,11 +74,10 @@ const TasksProvider = ({ children }) => {
       try {
         newTasksData = JSON.parse(finalContentToParse)
       } catch (e) {
-        throw new Error("A IA não retornou uma lista de tarefas válida. Tente reformular seu objetivo.")
+        console.error(e)
+        return notifyError("A IA não retornou uma lista de tarefas válida. Tente novamente.")
       }
-      if (!Array.isArray(newTasksData)) {
-        throw new Error("A IA não retornou um array de tarefas.")
-      }
+      if (!Array.isArray(newTasksData)) return notifyError("A IA não retornou uma lista de tarefas válida. Tente novamente.")
       const newTasks = newTasksData.map((taskContent, index) => ({
         id: `task-${Date.now()}-${index}`,
         content: taskContent
@@ -85,7 +85,8 @@ const TasksProvider = ({ children }) => {
       setTasks((prev) => ({ ...prev, todo: [...prev.todo, ...newTasks] }))
       setNewTask("")
     } catch (err) {
-      setError(err.message || "Falha ao gerar tarefas. Verifique o formato da resposta da IA.")
+      console.error(err)
+      notifyError("Falha ao gerar tarefas. Verifique o formato da resposta da IA.")
     } finally {
       setLoading(false)
     }
@@ -129,7 +130,6 @@ const TasksProvider = ({ children }) => {
     newTask,
     setNewTask,
     loading,
-    error,
     editingId,
     setEditingId,
     findTaskContainer,

@@ -8,18 +8,13 @@ import Button from "./Button"
 
 const AddTaskForm = () => {
   const { aiProvider, aiProviderToggle } = useAI()
-  const { newTask, setNewTask, addTask, generateTasksWithAI, loading, error } = useTasks()
+  const { newTask, setNewTask, addTask, generateTasksWithAI, loading } = useTasks()
   return (
     <Paper className="bg-lightBg-primary dark:bg-darkBg-primary">
       <h1 className="text-center text-lightFg-primary dark:text-darkFg-primary">
         Kanban
       </h1>
-      {error && (
-        <p className="text-center text-danger-light">
-          {error}
-        </p>
-      )}
-      <p className="text-center text-lightFg-secondary dark:text-darkFg-secondary ">
+      <p className="text-center text-lightFg-secondary dark:text-darkFg-secondary">
         Descreva um objetivo e deixe a IA gerar o passo a passo para você.
       </p>
       <Input
