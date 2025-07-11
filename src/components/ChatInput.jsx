@@ -30,10 +30,10 @@ const ChatInput = ({ userPrompt, setUserPrompt, onAddImage, imageCount, stream, 
           {aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
         </Button>
       )}
-      <Button variant={aiProvider === "openrouter" && newsTool ? "outline" : "secondary"} size="icon" $rounded title="Buscar Notícias" onClick={toggleNews} disabled={aiProvider === "groq" || loading}>
+      <Button variant={newsTool ? "outline" : "secondary"} size="icon" $rounded title="Buscar Notícias" onClick={toggleNews} disabled={loading}>
         <Newspaper size={16} />
       </Button>
-      <Button variant={aiProvider === "openrouter" && weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Previsão do clima" onClick={toggleWeather} disabled={aiProvider === "groq" || loading}>
+      <Button variant={weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Previsão do clima" onClick={toggleWeather} disabled={loading}>
         <Cloud size={16} />
       </Button>
       <PromptInput userPrompt={userPrompt} setUserPrompt={setUserPrompt} handleKeyDown={handleKeyDown} loading={loading} />
