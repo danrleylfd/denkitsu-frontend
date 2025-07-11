@@ -15,10 +15,9 @@ const BackgroundProvider = ({ children }) => {
     }
     try {
       const response = await fetch(`${unsplashApiUrl}?query=drop-wallpaper&orientation=landscape&client_id=G0_VOjkauHvBWnVTKcMVKGlpumo7trpktjRD-y7YHMQ`)
-      if (!response.ok) {
-        throw new Error(`Erro na API do Unsplash: ${response.statusText}`)
-      }
+      if (!response.ok) throw new Error(`Erro na API do Unsplash: ${response.statusText}`)
       const data = await response.json()
+      console.log(data.urls.full)
       setBackground({
         url: data.urls.full,
         authorName: data.user.name,
@@ -26,8 +25,6 @@ const BackgroundProvider = ({ children }) => {
       })
     } catch (err) {
       setBackground({ url: "/background.jpg" })
-    } finally {
-      console.log(background, background?.url)
     }
   }, [])
 
