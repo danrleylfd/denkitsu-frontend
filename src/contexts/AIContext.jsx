@@ -13,6 +13,7 @@ const AIProvider = ({ children }) => {
   const storedStream = JSON.parse(localStorage.getItem("@Denkitsu:Stream"))
   const storedWeb = JSON.parse(localStorage.getItem("@Denkitsu:Web"))
   const storedNewsTool = JSON.parse(localStorage.getItem("@Denkitsu:NewsTool"))
+  const storedWeatherTool = JSON.parse(localStorage.getItem("@Denkitsu:WeatherTool"))
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
 
   const [aiProvider, setAIProvider] = useState(storedAIProvider || "groq")
@@ -29,6 +30,7 @@ const AIProvider = ({ children }) => {
   const [imageUrls, setImageUrls] = useState([])
   const [web, setWeb] = useState(storedWeb === null ? false : storedWeb)
   const [newsTool, setNewsTool] = useState(storedNewsTool === null ? false : storedNewsTool)
+  const [weatherTool, setWeatherTool] = useState(storedWeatherTool === null? false : storedWeatherTool)
   const [userPrompt, setUserPrompt] = useState("")
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
 
@@ -53,6 +55,8 @@ const AIProvider = ({ children }) => {
   useEffect(() => (localStorage.setItem("@Denkitsu:Web", web)), [web])
 
   useEffect(() => (localStorage.setItem("@Denkitsu:NewsTool", newsTool)), [newsTool])
+
+  useEffect(() => (localStorage.setItem("@Denkitsu:WeatherTool", weatherTool)), [weatherTool])
 
   useEffect(() => {
     if (groqKey.trim() === "") return localStorage.removeItem("@Denkitsu:Groq")
@@ -82,6 +86,7 @@ const AIProvider = ({ children }) => {
     prompts, setPrompts,
     web, setWeb, toggleWeb: () => setWeb(!web),
     newsTool, setNewsTool, toggleNews: () => setNewsTool(!newsTool),
+    weatherTool, setWeatherTool, toggleWeather: () => setWeatherTool(!weatherTool),
     stream, setStream,
     imageUrls, setImageUrls,
     aiProvider, setAIProvider, aiProviderToggle,

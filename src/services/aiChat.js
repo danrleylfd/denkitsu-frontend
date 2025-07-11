@@ -49,10 +49,10 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, web, onDelt
   }
 }
 
-const sendMessage = async (aiKey, aiProvider, model, messages, web, newsTool) => {
+const sendMessage = async (aiKey, aiProvider, model, messages, web, newsTool, weatherTool) => {
   const permission = aiProvider === "groq" ? false : web
   const plugins = permission ? [{ id: "web" }] : undefined
-  const use_tools = newsTool ? ["newsTool"] : undefined
+  const use_tools = newsTool && weatherTool ? ["searchNews", "getWeather"] : newsTool ? ["searchNews"] : weatherTool ? ["getWeather"] : undefined
   const payload = {
     aiKey,
     aiProvider,
