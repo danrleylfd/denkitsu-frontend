@@ -16,7 +16,7 @@ const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-sc
 const AI = () => {
   const {
     prompts, aiProvider, aiKey, model,
-    web, setWeb,
+    web, newsTool,
     stream, setStream,
     imageUrls, setImageUrls,
     freeModels, setFreeModels,
@@ -129,7 +129,7 @@ const AI = () => {
     }
   } else {
     try {
-      const data = await sendMessage(aiKey, aiProvider, model, apiMessages, web)
+      const data = await sendMessage(aiKey, aiProvider, model, apiMessages, web, newsTool)
       const res = data?.choices?.[0]?.message
       if (!res) return
       const { content, reasoning } = cleanContent(res.content || "")
