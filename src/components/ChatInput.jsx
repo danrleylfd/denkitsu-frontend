@@ -1,4 +1,4 @@
-import { Settings, SendHorizontal, ImagePlus, Globe, GlobeLock, Binary, Brain, MessageCirclePlus } from "lucide-react"
+import { Settings, SendHorizontal, ImagePlus, Globe, GlobeLock, Newspaper, Binary, Brain, MessageCirclePlus } from "lucide-react"
 
 import { useAI } from "../contexts/AIContext"
 
@@ -6,8 +6,8 @@ import PromptInput from "./PromptInput"
 import Button from "./Button"
 import Paper from "./Paper"
 
-const ChatInput = ({ userPrompt, setUserPrompt, onAddImage, imageCount, web, toggleWeb, stream, toggleStream, onSendMessage, clearHistory, toggleSettings, loading }) => {
-  const { aiKey, aiProvider, aiProviderToggle } = useAI()
+const ChatInput = ({ userPrompt, setUserPrompt, onAddImage, imageCount, stream, toggleStream, onSendMessage, clearHistory, toggleSettings, loading }) => {
+  const { aiKey, aiProvider, aiProviderToggle, web, toggleWeb, newsTool, toggleNews } = useAI()
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
@@ -26,9 +26,14 @@ const ChatInput = ({ userPrompt, setUserPrompt, onAddImage, imageCount, web, tog
         <ImagePlus size={16} />
       </Button>
       {aiKey.length > 0 && (
-        <Button variant={aiProvider === "openrouter" && web ? "outline" : "secondary" } size="icon" $rounded title="Pesquisar na Web" onClick={toggleWeb} disabled={aiProvider === "groq" || loading}>
-          {aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
-        </Button>
+        <>
+          <Button variant={aiProvider === "openrouter" && web ? "outline" : "secondary" } size="icon" $rounded title="Pesquisar na Web" onClick={toggleWeb} disabled={aiProvider === "groq" || loading}>
+            {aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
+          </Button>
+          <Button variant={aiProvider === "openrouter" && newsTool ? "outline" : "secondary"} size="icon" $rounded title="Buscar Notícias" onClick={toggleNews} disabled={aiProvider === "groq" || loading}>
+            <Newspaper size={16} />
+          </Button>
+        </>
       )}
       <PromptInput userPrompt={userPrompt} setUserPrompt={setUserPrompt} handleKeyDown={handleKeyDown} loading={loading} />
       {aiKey.length > 0 && (

@@ -166,8 +166,6 @@ const AI = () => {
             setUserPrompt={setUserPrompt}
             onAddImage={onAddImage}
             imageCount={imageUrls.length}
-            web={web}
-            toggleWeb={() => setWeb(!web)}
             stream={stream}
             toggleStream={() => setStream(!stream)}
             toggleSettings={() => setSettingsOpen(!settingsOpen)}
@@ -195,8 +193,6 @@ const AI = () => {
             setUserPrompt={setUserPrompt}
             onAddImage={onAddImage}
             imageCount={imageUrls.length}
-            web={web}
-            toggleWeb={() => setWeb(!web)}
             stream={stream}
             toggleStream={() => setStream(!stream)}
             toggleSettings={() => setSettingsOpen(!settingsOpen)}

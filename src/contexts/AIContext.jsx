@@ -12,6 +12,7 @@ const AIProvider = ({ children }) => {
   const storedOpenRouterKey = localStorage.getItem("@Denkitsu:OpenRouter")
   const storedStream = JSON.parse(localStorage.getItem("@Denkitsu:Stream"))
   const storedWeb = JSON.parse(localStorage.getItem("@Denkitsu:Web"))
+  const storedNewsTool = JSON.parse(localStorage.getItem("@Denkitsu:NewsTool"))
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
 
   const [aiProvider, setAIProvider] = useState(storedAIProvider || "groq")
@@ -27,6 +28,7 @@ const AIProvider = ({ children }) => {
   const [stream, setStream] = useState(storedStream === null ? false : storedStream)
   const [imageUrls, setImageUrls] = useState([])
   const [web, setWeb] = useState(storedWeb === null ? false : storedWeb)
+  const [newsTool, setNewsTool] = useState(storedNewsTool === null ? false : storedNewsTool)
   const [userPrompt, setUserPrompt] = useState("")
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
 
@@ -49,6 +51,8 @@ const AIProvider = ({ children }) => {
   useEffect(() => (localStorage.setItem("@Denkitsu:Stream", stream)), [stream])
 
   useEffect(() => (localStorage.setItem("@Denkitsu:Web", web)), [web])
+
+  useEffect(() => (localStorage.setItem("@Denkitsu:NewsTool", newsTool)), [newsTool])
 
   useEffect(() => {
     if (groqKey.trim() === "") return localStorage.removeItem("@Denkitsu:Groq")
@@ -76,7 +80,8 @@ const AIProvider = ({ children }) => {
 
   const values = {
     prompts, setPrompts,
-    web, setWeb,
+    web, setWeb, toggleWeb: () => setWeb(!web),
+    newsTool, setNewsTool, toggleNews: () => setNewsTool(!newsTool),
     stream, setStream,
     imageUrls, setImageUrls,
     aiProvider, setAIProvider, aiProviderToggle,
