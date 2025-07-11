@@ -2,7 +2,7 @@ import { createContext, useState, useContext } from "react"
 import { X } from "lucide-react"
 export const NotificationContext = createContext()
 
-export const NotificationProvider = ({ children }) => {
+const NotificationProvider = ({ children }) => {
   const [notification, setNotification] = useState(null)
 
   const notify = (message, type = "error") => {
@@ -44,6 +44,9 @@ export const NotificationProvider = ({ children }) => {
   )
 }
 
-export const useNotification = () => {
+const useNotification = () => {
   return useContext(NotificationContext)
 }
+
+export { useNotification }
+export default NotificationProvider

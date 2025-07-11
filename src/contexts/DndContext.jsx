@@ -115,4 +115,5 @@ const useDnd = () => {
   return context
 }
 
-export { DndProvider, useDnd }
+export { useDnd }
+export default DndProvider

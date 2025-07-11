@@ -3,7 +3,7 @@ import { getPrompt } from "../services/aiChat"
 
 const AIContext = createContext()
 
-export const AIProvider = ({ children }) => {
+const AIProvider = ({ children }) => {
   const storedAIProvider = localStorage.getItem("@Denkitsu:aiProvider")
   const storedModelGroq = localStorage.getItem("@Denkitsu:GroqModel")
   const storedOpenRouterModel = localStorage.getItem("@Denkitsu:OpenRouterModel")
@@ -98,8 +98,11 @@ export const AIProvider = ({ children }) => {
   )
 }
 
-export const useAI = () => {
+const useAI = () => {
   const context = useContext(AIContext)
   if (!context) throw new Error("useAI deve ser usado dentro de um <AIProvider>")
   return context
 }
+
+export { useAI }
+export default AIProvider

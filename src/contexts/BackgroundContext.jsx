@@ -5,7 +5,7 @@ const BackgroundContext = createContext(null)
 const unsplashApiUrl = "https://api.unsplash.com/photos/random"
 const unsplashAccessKey = "G0_VOjkauHvBWnVTKcMVKGlpumo7trpktjRD-y7YHMQ"
 
-export const BackgroundProvider = ({ children }) => {
+const BackgroundProvider = ({ children }) => {
   const [background, setBackground] = useState(null)
 
   const fetchNewBackground = useCallback(async () => {
@@ -47,10 +47,13 @@ export const BackgroundProvider = ({ children }) => {
   )
 }
 
-export const useBackground = () => {
+const useBackground = () => {
   const context = useContext(BackgroundContext)
   if (!context) {
     throw new Error("useBackground deve ser usado dentro de um BackgroundProvider")
   }
   return context
 }
+
+export { useBackground }
+export default BackgroundProvider

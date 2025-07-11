@@ -153,4 +153,5 @@ const useTasks = () => {
   return context
 }
 
-export { TasksProvider, useTasks }
+export { useTasks }
+export default TasksProvider

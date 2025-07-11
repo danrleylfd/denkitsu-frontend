@@ -2,7 +2,7 @@ import { createContext, useState, useEffect, useContext } from "react"
 
 const ThemeContext = createContext()
 
-export const ThemeProvider = ({ children }) => {
+const ThemeProvider = ({ children }) => {
   const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
   let themeStorage = localStorage.getItem("@Denkitsu:theme")
   const [theme, setTheme] = useState(themeStorage || (mediaQuery.matches ? "dark" : "light"))
@@ -28,8 +28,11 @@ export const ThemeProvider = ({ children }) => {
   )
 }
 
-export const useTheme = () => {
+const useTheme = () => {
   const context = useContext(ThemeContext)
   if (!context) throw new Error("useTheme deve ser usado dentro de um <ThemeProvider>")
   return context
 }
+
+export { useTheme }
+export default ThemeProvider
