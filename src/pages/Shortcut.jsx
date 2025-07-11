@@ -4,10 +4,11 @@ import { Copy, Plus, Pencil, Trash, X, Check } from "lucide-react"
 import { useAuth } from "../contexts/AuthContext"
 import { getLinkersByUser, createLinker, deleteLinker, updateLinker } from "../services/linker"
 
+import { useNotification } from "../contexts/NotificationContext"
+
 import SideMenu from "../components/SideMenu"
 import Input from "../components/Input"
 import Button from "../components/Button"
-import { MessageBase, MessageWarning, MessageError } from "../components/Notifications"
 import PurpleLink from "../components/PurpleLink"
 
 const ContentView = ({ children }) => (
@@ -19,6 +20,7 @@ const ContentView = ({ children }) => (
 
 const Shortcut = () => {
   const { signed } = useAuth()
+  const { notifyInfo, notifyError } = useNotification()
   const [linkers, setLinkers] = useState([])
   const [newLabel, setNewLabel] = useState("")
   const [newLink, setNewLink] = useState("")
@@ -28,21 +30,16 @@ const Shortcut = () => {
   const [loading, setLoading] = useState(true)
   const [formLoading, setFormLoading] = useState(false)
   const [editLoading, setEditLoading] = useState(false)
-  const [error, setError] = useState(null)
-  const [formError, setFormError] = useState("")
-  const [editError, setEditError] = useState("")
-  const [message, setMessage] = useState("")
 
   const fetchLinkers = useCallback(async () => {
     if (!signed) return
     try {
       setLoading(true)
-      setError(null)
       const data = await getLinkersByUser()
       setLinkers(data || [])
     } catch (err) {
-      setError("Falha ao carregar links encurtados.")
       console.error(err)
+      notifyError("Falha ao carregar links encurtados.")
     } finally {
       setLoading(false)
     }
@@ -54,10 +51,8 @@ const Shortcut = () => {
 
   const handleCreateLink = async (e) => {
     e.preventDefault()
-    setFormError("")
-    setMessage("")
     if (!newLabel || !newLink) {
-      setFormError("Por favor, preencha o Rótulo e o Link de destino.")
+      notifyError("Por favor, preencha o Rótulo e o Link de destino.")
       return
     }
     setFormLoading(true)
@@ -66,9 +61,10 @@ const Shortcut = () => {
       setLinkers([created, ...linkers])
       setNewLabel("")
       setNewLink("")
-      setMessage("Link criado com sucesso!")
+      notifyInfo("Link criado com sucesso!")
     } catch (err) {
-      setFormError(err.response?.data?.message || "Falha ao criar link. Verifique se o rótulo já existe.")
+      console.error(err)
+      notifyError("Falha ao criar link. Verifique se o rótulo já existe.")
     } finally {
       setFormLoading(false)
     }
@@ -77,12 +73,11 @@ const Shortcut = () => {
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text).then(
       () => {
-        setMessage(`Link ${text} copiado!`)
-        setTimeout(() => setMessage(""), 3000)
+        notifyInfo(`Link ${text} copiado!`)
       },
       (err) => {
         console.error("Could not copy text: ", err)
-        setError("Falha ao copiar link.")
+        notifyError("Falha ao copiar link.")
       }
     )
   }
@@ -90,19 +85,15 @@ const Shortcut = () => {
   const handleUpdateLink = async (e) => {
     e.preventDefault()
     if (!editingLinker) return
-    setEditError("")
-    if (!editLabel || !editLink) {
-      setEditError("Rótulo e Link não podem estar vazios.")
-      return
-    }
     setEditLoading(true)
     try {
       const updated = await updateLinker(editingLinker.label, editLabel, editLink)
       setLinkers(linkers.map((l) => (l._id === updated._id ? updated : l)))
-      setMessage("Link atualizado com sucesso!")
+      notifyInfo("Link atualizado com sucesso!")
       cancelEditing()
     } catch (err) {
-      setEditError(err.response?.data?.message || "Falha ao atualizar link. Verifique se o novo rótulo já existe.")
+      console.error(err)
+      notifyError("Falha ao atualizar link. Verifique se o novo rótulo já existe.")
     } finally {
       setEditLoading(false)
     }
@@ -113,9 +104,10 @@ const Shortcut = () => {
     try {
       await deleteLinker(labelToDelete)
       setLinkers(linkers.filter((linker) => linker.label !== labelToDelete))
-      setMessage("Link excluído com sucesso!")
+      notifyInfo("Link excluído com sucesso!")
     } catch (err) {
-      setError(err.response?.data?.message || "Falha ao excluir link.")
+      console.error(err)
+      notifyError("Falha ao excluir link.")
     }
   }
 
@@ -123,14 +115,12 @@ const Shortcut = () => {
     setEditingLinker(linker)
     setEditLabel(linker.label)
     setEditLink(linker.link)
-    setEditError("")
   }
 
   const cancelEditing = () => {
     setEditingLinker(null)
     setEditLabel("")
     setEditLink("")
-    setEditError("")
   }
 
   return (
@@ -143,13 +133,9 @@ const Shortcut = () => {
           <Button type="submit" size="icon" $rounded title="Encurtar" loading={formLoading} disabled={!newLabel || !newLink}>
             {!formLoading && <Plus size={16} />}
           </Button>
-          {formError && <MessageError>{formError}</MessageError>}
         </form>
       </div>
       {loading && <Button variant="outline" $rounded loading={loading} disabled />}
-      {message && <MessageBase>{message}</MessageBase>}
-      {error && <MessageError>{error}</MessageError>}
-      {!loading && linkers.length === 0 && <MessageWarning>Você ainda não criou nenhum atalho.</MessageWarning>}
       {!loading && linkers.length > 0 && (
         <div className="flex flex-col gap-2 m-0 p-0 w-full">
           {linkers.map((linker) => (
@@ -175,11 +161,6 @@ const Shortcut = () => {
                       {!editLoading && <Check size={16} />}
                     </Button>
                   </div>
-                  {editError && (
-                    <MessageError className="text-left mt-1">
-                      {editError}
-                    </MessageError>
-                  )}
                 </form>
               ) : (
                 <>

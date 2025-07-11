@@ -4,6 +4,8 @@ import { Pencil, Trash, X, Check } from "lucide-react"
 
 import { useAuth } from "../contexts/AuthContext"
 import { useAI } from "../contexts/AIContext"
+import { useNotification } from "../contexts/NotificationContext"
+
 import { getUserAccount, editUserAccount, deleteUserAccount } from "../services/account"
 
 import SideMenu from "../components/SideMenu"
@@ -20,28 +22,26 @@ const ContentView = ({ children }) => (
 const Profile = () => {
   const { userId } = useParams()
   const { user, signOut, updateUser } = useAuth()
+  const { notifyWarning, notifyError } = useNotification()
   const userID = userId || user._id
   const [userData, setUserData] = useState(null)
   const [isEditing, setIsEditing] = useState(false)
   const [name, setName] = useState("")
   const [avatarUrl, setAvatarUrl] = useState("")
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [message, setMessage] = useState("")
   const navigate = useNavigate()
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         setLoading(true)
-        setError(null)
         const data = await getUserAccount(userID)
         setUserData(data)
         setName(data.name)
         setAvatarUrl(data.avatarUrl)
       } catch (err) {
-        setError("Falha ao carregar dados do perfil.")
         console.error(err)
+        notifyError("Falha ao carregar dados do perfil.")
       } finally {
         setLoading(false)
       }
@@ -51,8 +51,6 @@ const Profile = () => {
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing)
-    setError(null)
-    setMessage("")
     if (isEditing && userData) {
       setName(userData.name)
       setAvatarUrl(userData.avatarUrl)
@@ -61,12 +59,10 @@ const Profile = () => {
 
   const handleSaveChanges = async (e) => {
     e.preventDefault()
-    setError(null)
-    setMessage("")
     setLoading(true)
     try {
       if (!name || !avatarUrl) {
-        setError("Nome e URL do avatar são obrigatórios.")
+        notifyWarning("Nome e URL do avatar são obrigatórios.")
         return
       }
       const updatedUser = await editUserAccount({ name, avatarUrl: user.name !== name ? avatarUrl.replace(user.name, name) : avatarUrl })
@@ -74,9 +70,8 @@ const Profile = () => {
       updateUser(updatedUser)
       setIsEditing(false)
     } catch (err) {
-      setError(err.response?.data?.error || "Falha ao atualizar perfil.")
+      notifyError(err.response?.data?.error || "Falha ao atualizar perfil.")
     } finally {
-      setTimeout(() => setMessage(""), 1500)
       setLoading(false)
     }
   }
@@ -89,14 +84,14 @@ const Profile = () => {
     const confirmDeleteTwo = window.confirm("Tem certeza que deseja excluir sua conta?")
     if (!confirmDeleteTwo) return
     setLoading(true)
-    setError(null)
     try {
       await deleteUserAccount()
       signOut()
       navigate("/")
       alert("Conta excluída com sucesso.")
     } catch (err) {
-      setError(err.response?.data?.error || "Falha ao excluir conta.")
+      console.log(err)
+      notifyError(err.response?.data?.error || "Falha ao excluir conta.")
     } finally {
       setLoading(false)
     }
@@ -109,8 +104,7 @@ const Profile = () => {
           <Button variant="secondary" $rounded loading={loading} disabled />
         </div>
       )}
-      {error && <MessageError>{error}</MessageError>}
-      {!loading && !error && (
+      {!loading && (
         <div
           className="flex w-max h-max my-40 min-w-96 mx-auto p-4 gap-2 items-center bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-[8rem_0.5rem_0.5rem_8rem] shadow-[6px_6px_16px_rgba(0,0,0,0.5)] opacity-75 dark:opacity-90">
           <img
@@ -122,7 +116,6 @@ const Profile = () => {
             <form className="flex-1 flex flex-col gap-0 items-center" onSubmit={(e) => e.preventDefault()}>
               <Input id="name" value={name} onChange={(e) => setName(e.target.value)} disabled={loading} />
               <Input id="avatarUrl" value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} disabled={loading} />
-              {error && <MessageError>{error}</MessageError>}
               <div className="flex w-full gap-2 justify-between">
                 <Button variant="secondary" size="icon" $rounded title="Cancelar" onClick={handleEditToggle} loading={loading}>
                   <X size={16} />
@@ -156,8 +149,6 @@ const Profile = () => {
                       <Trash size={16} />
                     </Button>
                   </div>
-                  {message && <MessageSuccess>{message}</MessageSuccess>}
-                  {error && !isEditing && <MessageError>{error}</MessageError>}
                 </div>
               )}
             </div>

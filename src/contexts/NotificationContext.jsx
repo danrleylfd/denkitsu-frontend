@@ -5,15 +5,20 @@ export const NotificationContext = createContext()
 export const NotificationProvider = ({ children }) => {
   const [notification, setNotification] = useState(null)
 
-  const showNotification = (message, type = "error") => {
+  const notify = (message, type = "error") => {
     setNotification({ message, type })
     setTimeout(() => {
       setNotification(null)
     }, type === "error" ? 7000 : 5000)
   }
 
+  const notifyInfo = (message) => notify(message, "info")
+  const notifySuccess = (message) => notify(message, "success")
+  const notifyWarning = (message) => notify(message, "warning")
+  const notifyError = (message) => notify(message, "error")
+
   return (
-    <NotificationContext.Provider value={{ showNotification }}>
+    <NotificationContext.Provider value={{ notifyInfo, notifySuccess, notifyWarning, notifyError }}>
       {children}
       {notification && (
         <div

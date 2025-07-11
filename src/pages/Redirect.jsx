@@ -2,6 +2,8 @@ import { useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 
 import { useAuth } from "../contexts/AuthContext"
+import { useNotification } from "../contexts/NotificationContext"
+
 import { getLinkByLabel } from "../services/linker"
 
 import SideMenu from "../components/SideMenu"
@@ -16,6 +18,7 @@ const ContentView = ({ children }) => (
 const Redirect = () => {
   const { label } = useParams()
   const { signOut } = useAuth()
+  const { notifyError } = useNotification()
   const navigate = useNavigate()
   useEffect(() => {
     const fetchLink = async () => {
@@ -29,6 +32,7 @@ const Redirect = () => {
         else navigate("/")
       } catch (error) {
         console.error("Erro ao redirecionar:", error)
+        // notifyError(`Falha ao redirecionar para ${label}.`)
         navigate("/")
       }
     }

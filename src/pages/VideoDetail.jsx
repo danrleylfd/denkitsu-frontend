@@ -1,7 +1,10 @@
 import { useState, useEffect, useCallback } from "react"
 import { useParams } from "react-router-dom"
 import { ThumbsUp, ThumbsDown, MessageCircle, Share2, Pencil, Trash } from "lucide-react"
+
 import { useAuth } from "../contexts/AuthContext"
+import { useNotification } from "../contexts/NotificationContext"
+
 import { getVideoById, deleteVideoById, likeVideo, unlikeVideo, shareVideo, addComment, replyToComment, getCommentsForVideo } from "../services/video"
 
 import SideMenu from "../components/SideMenu"
@@ -9,7 +12,7 @@ import Player from "../components/Player"
 import Button from "../components/Button"
 import CommentForm from "../components/CommentForm"
 import CommentItem from "../components/CommentItem"
-import { MessageSuccess, MessageError } from "../components/Notifications"
+import { MessageSuccess } from "../components/Notifications"
 import PurpleLink from "../components/PurpleLink"
 
 const ContentView = ({ children, ...props }) => (
@@ -23,10 +26,10 @@ const ContentView = ({ children, ...props }) => (
 const VideoDetail = () => {
   const { videoId } = useParams()
   const { signed, user } = useAuth()
+  const { notifySuccess, notifyWarning, notifyError } = useNotification()
   const [video, setVideo] = useState(null)
   const [comments, setComments] = useState([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
   const [isLiked, setIsLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(0)
   const [shareCount, setShareCount] = useState(0)
@@ -35,7 +38,6 @@ const VideoDetail = () => {
   const fetchVideoAndComments = useCallback(async () => {
     try {
       setLoading(true)
-      setError(null)
       const videoData = await getVideoById(videoId)
       setVideo(videoData)
       setLikeCount(videoData.likes?.length || 0)
@@ -52,8 +54,8 @@ const VideoDetail = () => {
         setIsLiked(false)
       }
     } catch (err) {
-      setError("Falha ao carregar detalhes do vídeo ou comentários.")
       console.error(err)
+      notifyError("Falha ao carregar detalhes do vídeo ou comentários.")
       setVideo(null)
       setComments([])
     } finally {
@@ -68,10 +70,7 @@ const VideoDetail = () => {
   }, [videoId, fetchVideoAndComments])
 
   const handleDeleteVideo = async () => {
-    if (!signed) {
-      alert("Você precisa estar logado para excluir um vídeo.")
-      return
-    }
+    if (!signed) return notifyWarning("Você precisa estar logado para excluir um vídeo.")
     const confirmDelete = window.confirm(
       "Tem certeza que deseja excluir este vídeo? Você perderá todas as curtidas, comentários e compartilhamentes relacionados a este vídeo."
     )
@@ -79,12 +78,12 @@ const VideoDetail = () => {
     setLoading(true)
     try {
       await deleteVideoById(videoId)
-      alert("Vídeo excluído com sucesso!")
+      notifySuccess("Vídeo excluído com sucesso!")
       setLoading(false)
       window.location.href = "/my-videos"
     } catch (error) {
       console.error("Erro ao excluir vídeo:", error)
-      alert("Falha ao excluir vídeo.")
+      notifyError("Falha ao excluir vídeo.")
       setLoading(false)
     }
   }
@@ -101,7 +100,7 @@ const VideoDetail = () => {
       setLoading(false)
     } catch (err) {
       console.error("Erro ao curtir/descurtir:", err)
-      alert("Ocorreu um erro ao processar sua curtida.")
+      notifyError("Ocorreu um erro ao processar sua curtida.")
       setIsLiked(originalIsLiked)
       setLikeCount(originalLikeCount)
       setLoading(false)
@@ -109,10 +108,7 @@ const VideoDetail = () => {
   }
 
   const handleShare = async () => {
-    if (!signed) {
-      alert("Você precisa estar logado para compartilhar vídeos.")
-      return
-    }
+    if (!signed) return notifyWarning("Você precisa estar logado para compartilhar vídeos.")
     setLoading(true)
     const originalShareCount = shareCount
     setShareCount(originalShareCount + 1)
@@ -121,17 +117,14 @@ const VideoDetail = () => {
       setLoading(false)
     } catch (err) {
       console.error("Erro ao compartilhar:", err)
-      alert("Ocorreu um erro ao compartilhar o vídeo.")
+      notifyError("Ocorreu um erro ao compartilhar o vídeo.")
       setShareCount(originalShareCount)
       setLoading(false)
     }
   }
 
   const handleAddComment = async (content) => {
-    if (!signed) {
-      alert("Você precisa estar logado para comentar.")
-      return
-    }
+    if (!signed) notifyWarning("Você precisa estar logado para comentar.")
     setLoading(true)
     try {
       const newComment = await addComment(videoId, content)
@@ -140,7 +133,7 @@ const VideoDetail = () => {
       setLoading(false)
     } catch (error) {
       console.error("Erro ao adicionar comentário:", error)
-      alert("Falha ao adicionar comentário.")
+      notifyError("Falha ao adicionar comentário.")
       setLoading(false)
       throw error
     }
@@ -152,17 +145,14 @@ const VideoDetail = () => {
   }
 
   const handleAddReply = async (commentId, replyContent) => {
-    if (!signed) {
-      alert("Você precisa estar logado para responder.")
-      return
-    }
+    if (!signed) notifyWarning("Você precisa estar logado para responder.")
     try {
       const reply = await replyToComment(commentId, replyContent)
       fetchVideoAndComments()
       return reply
     } catch (error) {
       console.error("Erro ao adicionar resposta:", error)
-      alert("Falha ao adicionar resposta.")
+      notifyError("Falha ao adicionar resposta.")
       throw error
     }
   }
@@ -170,8 +160,7 @@ const VideoDetail = () => {
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-lightBg-primary dark:bg-darkBg-primary min-h-screen">
       {loading && <Button variant="outline" style={{ marginTop: ".5rem" }} $rounded loading={loading} disabled />}
-      {error && <MessageError>{error}</MessageError>}
-      {!error && video && (
+      {video && (
         <div className="flex flex-col py-2 gap-2 w-full sm:max-w-lg md:max-w-2xl">
           <Player src={video.fileUrl} poster={video.thumbnail} />
           <h5 className="text-lightFg-primary dark:text-darkFg-primary">
@@ -220,7 +209,6 @@ const VideoDetail = () => {
           <CommentForm onSubmit={handleAddComment} />
           <div className="flex flex-col gap-2">
             {loading && comments.length === 0 && <Button variant="outline" $rounded loading={loading} disabled />}
-            {!loading && comments.length === 0 && <MessageSuccess>Nenhum comentário ainda. Seja o primeiro!</MessageSuccess>}
             {comments.map((comment) => (
               <CommentItem
                 key={comment._id}

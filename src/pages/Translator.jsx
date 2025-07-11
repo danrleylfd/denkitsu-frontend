@@ -1,104 +1,100 @@
 import { useState, useCallback, useEffect } from "react"
 import { Languages, Copy, Loader, ArrowRightLeft, ArrowUpDown } from "lucide-react"
 
+import { useNotification } from "../contexts/NotificationContext"
+
 import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
 import Paper from "../components/Paper"
-import { MessageError } from "../components/Notifications"
 
-const ContentView = ({ children }) => (
-  <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-screen">
-    {children}
-  </main>
-)
+const ContentView = ({ children }) => <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-screen">{children}</main>
 
 const supportedLanguages = [
-  { code: 'af', name: 'Africâner' },
-  { code: 'de', name: 'Alemão' },
-  { code: 'ar', name: 'Árabe' },
-  { code: 'bn', name: 'Bengali' },
-  { code: 'ca', name: 'Catalão' },
-  { code: 'zh', name: 'Chinês (Simplificado)' },
-  { code: 'ko', name: 'Coreano' },
-  { code: 'da', name: 'Dinamarquês' },
-  { code: 'sk', name: 'Eslovaco' },
-  { code: 'sl', name: 'Esloveno' },
-  { code: 'es', name: 'Espanhol' },
-  { code: 'fi', name: 'Finlandês' },
-  { code: 'fr', name: 'Francês' },
-  { code: 'el', name: 'Grego' },
-  { code: 'he', name: 'Hebraico' },
-  { code: 'hi', name: 'Hindi' },
-  { code: 'nl', name: 'Holandês' },
-  { code: 'hu', name: 'Húngaro' },
-  { code: 'id', name: 'Indonésio' },
-  { code: 'en', name: 'Inglês' },
-  { code: 'it', name: 'Italiano' },
-  { code: 'ja', name: 'Japonês' },
-  { code: 'ms', name: 'Malaio' },
-  { code: 'no', name: 'Norueguês' },
-  { code: 'fa', name: 'Persa' },
-  { code: 'pl', name: 'Polonês' },
-  { code: 'pt', name: 'Português' },
-  { code: 'ro', name: 'Romeno' },
-  { code: 'ru', name: 'Russo' },
-  { code: 'sv', name: 'Sueco' },
-  { code: 'th', name: 'Tailandês' },
-  { code: 'cs', name: 'Tcheco' },
-  { code: 'tr', name: 'Turco' },
-  { code: 'uk', name: 'Ucraniano' },
-  { code: 'vi', name: 'Vietnamita' }
+  { code: "af", name: "Africâner" },
+  { code: "de", name: "Alemão" },
+  { code: "ar", name: "Árabe" },
+  { code: "bn", name: "Bengali" },
+  { code: "ca", name: "Catalão" },
+  { code: "zh", name: "Chinês (Simplificado)" },
+  { code: "ko", name: "Coreano" },
+  { code: "da", name: "Dinamarquês" },
+  { code: "sk", name: "Eslovaco" },
+  { code: "sl", name: "Esloveno" },
+  { code: "es", name: "Espanhol" },
+  { code: "fi", name: "Finlandês" },
+  { code: "fr", name: "Francês" },
+  { code: "el", name: "Grego" },
+  { code: "he", name: "Hebraico" },
+  { code: "hi", name: "Hindi" },
+  { code: "nl", name: "Holandês" },
+  { code: "hu", name: "Húngaro" },
+  { code: "id", name: "Indonésio" },
+  { code: "en", name: "Inglês" },
+  { code: "it", name: "Italiano" },
+  { code: "ja", name: "Japonês" },
+  { code: "ms", name: "Malaio" },
+  { code: "no", name: "Norueguês" },
+  { code: "fa", name: "Persa" },
+  { code: "pl", name: "Polonês" },
+  { code: "pt", name: "Português" },
+  { code: "ro", name: "Romeno" },
+  { code: "ru", name: "Russo" },
+  { code: "sv", name: "Sueco" },
+  { code: "th", name: "Tailandês" },
+  { code: "cs", name: "Tcheco" },
+  { code: "tr", name: "Turco" },
+  { code: "uk", name: "Ucraniano" },
+  { code: "vi", name: "Vietnamita" }
 ].sort((a, b) => a.name.localeCompare(b.name))
 
 const Tradutor = () => {
+  const { notifyWarning, notifyError } = useNotification()
   const [inputText, setInputText] = useState("")
   const [outputText, setOutputText] = useState("")
   const [sourceLang, setSourceLang] = useState("en")
   const [targetLang, setTargetLang] = useState("pt")
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
   const [isApiAvailable, setIsApiAvailable] = useState(false)
 
   useEffect(() => {
-    if ('Translator' in self) {
+    if ("Translator" in self) {
       setIsApiAvailable(true)
-      const browserLang = navigator.language.split('-')[0]
+      const browserLang = navigator.language.split("-")[0]
       if (browserLang) setTargetLang(browserLang)
     } else {
-      setError("A API de tradução não está disponível neste navegador.")
+      notifyError("A API de tradução não está disponível neste navegador.")
     }
   }, [])
   const handleTranslate = useCallback(async () => {
     if (!inputText.trim() || !sourceLang) {
-        setError("Por favor, digite um texto e selecione o idioma de origem.")
-        return
+      notifyWarning("Por favor, digite um texto e selecione o idioma de origem.")
+      return
     }
     setLoading(true)
-    setError(null)
     setOutputText("")
     try {
       if (sourceLang === targetLang) {
         setOutputText(inputText)
         return
       }
-      const availability = await Translator.availability({ sourceLanguage: sourceLang, targetLanguage: targetLang });
+      const availability = await Translator.availability({ sourceLanguage: sourceLang, targetLanguage: targetLang })
       if (availability.state === "not_supported") {
-        throw new Error(`A tradução de '${sourceLang}' para '${targetLang}' não é suportada.`);
+        throw new Error(`A tradução de '${sourceLang}' para '${targetLang}' não é suportada.`)
       }
       if (availability.state === "needs_download") {
-        setError("O pacote de tradução precisa ser baixado. Tente novamente em alguns instantes.");
-        return;
+        notifyError("O pacote de tradução precisa ser baixado. Tente novamente em alguns instantes.")
+        return
       }
-      const translator = await Translator.create({ sourceLanguage: sourceLang, targetLanguage: targetLang });
+      const translator = await Translator.create({ sourceLanguage: sourceLang, targetLanguage: targetLang })
       const result = await translator.translate(inputText)
       setOutputText(result)
     } catch (err) {
-      setError(err.message || "Ocorreu um erro desconhecido.");
+      console.error(err)
+      notifyError("Ocorreu um erro desconhecido.")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  }, [inputText, sourceLang, targetLang]);
-
+  }, [inputText, sourceLang, targetLang])
 
   const handleCopy = () => {
     navigator.clipboard.writeText(outputText)
@@ -124,8 +120,11 @@ const Tradutor = () => {
         {isApiAvailable ? (
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between gap-2">
-              <select value={sourceLang} onChange={(e) => setSourceLang(e.target.value)} className="p-2 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary">
-                {supportedLanguages.map(lang => (
+              <select
+                value={sourceLang}
+                onChange={(e) => setSourceLang(e.target.value)}
+                className="p-2 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary">
+                {supportedLanguages.map((lang) => (
                   <option key={lang.code} value={lang.code}>
                     {lang.name}
                   </option>
@@ -140,8 +139,11 @@ const Tradutor = () => {
               <Button variant="secondary" size="icon" $rounded onClick={swapText} disabled={loading}>
                 <ArrowUpDown size={16} />
               </Button>
-              <select value={targetLang} onChange={(e) => setTargetLang(e.target.value)} className="p-2 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary">
-                {supportedLanguages.map(lang => (
+              <select
+                value={targetLang}
+                onChange={(e) => setTargetLang(e.target.value)}
+                className="p-2 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary">
+                {supportedLanguages.map((lang) => (
                   <option key={lang.code} value={lang.code}>
                     {lang.name}
                   </option>
@@ -169,7 +171,6 @@ const Tradutor = () => {
             </div>
           </div>
         ) : null}
-        {error && <MessageError>{error}</MessageError>}
       </Paper>
     </SideMenu>
   )

@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import { SearchIcon, RefreshCcwIcon } from "lucide-react"
 
+import {  useNotification } from "../contexts/NotificationContext"
+
 import { getWeatherByLocation, getWeatherByCoordinates } from "../services/weather"
 
 import SideMenu from "../components/SideMenu"
@@ -14,16 +16,13 @@ const ContentView = ({ children }) => (
 )
 
 const Spinner = () => (
-  <div
-    className="h-12 w-12 animate-spin rounded-full border-4 border-primary-base/20 border-t-primary-base dark:border-warning-light/20 dark:border-t-warning-light"
-
-  />
+  <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary-base/20 border-t-primary-base dark:border-warning-light/20 dark:border-t-warning-light" />
 )
 
 const Weather = () => {
+  const { notifyError } = useNotification()
   const [weatherData, setWeatherData] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
   const [cityInput, setCityInput] = useState("")
   const isMounted = useRef(true)
 
@@ -36,17 +35,11 @@ const Weather = () => {
   const buscarPorCidade = useCallback(async () => {
     if (!cityInput.trim() || !isMounted.current) return
     setLoading(true)
-    setError(null)
     try {
       const data = await getWeatherByLocation(cityInput.trim())
-      if (isMounted.current) {
-        setWeatherData(data)
-        setError(null)
-      }
+      if (isMounted.current) setWeatherData(data)
     } catch (err) {
-      if (isMounted.current) {
-        setError("Não foi possível encontrar o clima para esta cidade")
-      }
+      if (isMounted.current) notifyError("Não foi possível encontrar o clima para esta cidade")
     } finally {
       if (isMounted.current) setLoading(false)
     }
@@ -54,12 +47,11 @@ const Weather = () => {
 
   const buscarPorCoordenadas = useCallback(() => {
     if (!navigator.geolocation) {
-      setError("Geolocalização não suportada pelo seu navegador")
+      notifyError("Geolocalização não suportada pelo seu navegador")
       setLoading(false)
       return
     }
     setLoading(true)
-    setError(null)
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         try {
@@ -67,17 +59,16 @@ const Weather = () => {
           const data = await getWeatherByCoordinates(latitude, longitude)
           if (isMounted.current) {
             setWeatherData(data)
-            setError(null)
           }
         } catch (err) {
-          if (isMounted.current) setError("Erro ao obter clima pela sua localização")
+          if (isMounted.current) notifyError("Erro ao obter clima pela sua localização")
         } finally {
           if (isMounted.current) setLoading(false)
         }
       },
       (err) => {
         if (isMounted.current) {
-          setError("Permissão de localização negada ou erro ao obter localização")
+          notifyError("Permissão de localização negada ou erro ao obter localização")
           setLoading(false)
         }
       }
@@ -96,7 +87,6 @@ const Weather = () => {
     <SideMenu ContentView={ContentView} className="bg-cover bg-brand-purple">
       <div
         className="relative w-full max-w-xl rounded-lg shadow-[6px_6px_16px_rgba(0,0,0,0.5)] bg-lightBg-primary p-4 opacity-75 dark:bg-darkBg-primary dark:opacity-90">
-        {/* <div className="flex items-center gap-2 pb-2"> */}
         <Input
           type="text"
           value={cityInput}
@@ -110,7 +100,6 @@ const Weather = () => {
             <RefreshCcwIcon size={16} />
           </Button>
         </Input>
-        {/* </div> */}
 
         {loading && (
           <div className="flex h-52 items-center justify-center">
@@ -118,13 +107,7 @@ const Weather = () => {
           </div>
         )}
 
-        {error && !loading && (
-          <div className="flex h-52 items-center justify-center p-4 text-center text-danger-base dark:text-danger-light">
-            {error}
-          </div>
-        )}
-
-        {!loading && !error && weatherData && (
+        {!loading && weatherData && (
           <div className="flex flex-col gap-2 md:flex-row">
             <div className="flex flex-1 flex-col justify-between pb-2 md:pb-0 md:pr-2">
               <div>
@@ -142,7 +125,6 @@ const Weather = () => {
                 className="h-28 w-28 -my-2 drop-shadow-[0_0_10px_rgba(130,87,229,0.3)] dark:drop-shadow-[0_0_10px_rgba(251,169,76,0.3)]"
                 src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@4x.png`}
                 alt={weatherData.weather[0].description}
-
               />
             </div>
 

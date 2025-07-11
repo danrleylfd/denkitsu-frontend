@@ -2,8 +2,9 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import { SearchSlash, Brain } from "lucide-react"
 
 import { useAuth } from "../contexts/AuthContext"
-
 import { useAI } from "../contexts/AIContext"
+import { useNotification } from "../contexts/NotificationContext"
+
 import { getNewsPaginate } from "../services/news"
 import { generateNews } from "../services/aiChat"
 
@@ -21,14 +22,13 @@ const ContentView = ({ children }) => (
 )
 
 const News = () => {
-  const { user } = useAuth()
   const { aiProvider, aiProviderToggle } = useAI()
+  const { notifyError } = useNotification()
   const [searchTerm, setSearchTerm] = useState("")
   const [news, setNews] = useState([])
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
-  const [error, setError] = useState(null)
   const isMounted = useRef(true)
   const isLoadingRef = useRef(false)
 
@@ -43,7 +43,6 @@ const News = () => {
     async (currentPage) => {
       if (isLoadingRef.current || loading || !hasMore || !isMounted.current) return
       isLoadingRef.current = true
-      setError(null)
       setLoading(true)
       try {
         const articles = await getNewsPaginate(currentPage)
@@ -53,8 +52,7 @@ const News = () => {
         articles.pagination.hasNextPage && setPage(articles.pagination.currentPage + 1)
       } catch (error) {
         if (!isMounted.current) return
-        setError("Não foi possível carregar as notícias")
-        setTimeout(() => isMounted.current && setError(null), 3000)
+        notifyError("Não foi possível carregar as notícias")
       } finally {
         isMounted.current && setLoading(false)
         isLoadingRef.current = false
@@ -89,8 +87,8 @@ const News = () => {
       const article = await generateNews(searchTerm, aiProvider)
       setNews([article, ...news])
     } catch (error) {
-      setError("Não foi possível gerar as notícias")
-      setTimeout(() => isMounted.current && setError(null), 3000)
+      console.error(error)
+      notifyError("Não foi possível gerar as notícias")
     } finally {
       setLoading(false)
     }
@@ -98,7 +96,6 @@ const News = () => {
 
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
-      {error && <Paper>{error}</Paper>}
       <Paper>
         <Input
           placeholder="Pesquise um tópico e deixe a IA gerar a notícia mais recente sobre..."

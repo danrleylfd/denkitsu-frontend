@@ -25,7 +25,7 @@ const AI = () => {
     userPrompt, setUserPrompt,
     messages, setMessages, clearHistory,
   } = useAI()
-  const { showNotification } = useNotification()
+  const { notifyWarning, notifyError } = useNotification()
   const [loading, setLoading] = useState(false)
   const [lousaContent, setLousaContent] = useState(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
@@ -42,8 +42,9 @@ const AI = () => {
         const { message } = (() => {
           try {
             return JSON.parse(error.message)
-          } catch {
-            showNotification("Falha ao carregar modelos. Tente novamente.")
+          } catch (err) {
+            console.error(err)
+            notifyError("Falha ao carregar modelos. Tente novamente.")
             return { message: "Falha ao carregar modelos. Tente novamente." }
           }
         })()
@@ -53,13 +54,13 @@ const AI = () => {
   }, [])
 
   const onAddImage = () => {
-    if (imageUrls.length >= 3) return showNotification("Você pode adicionar no máximo 3 imagens.", "info")
+    if (imageUrls.length >= 3) return notifyWarning("Você pode adicionar no máximo 3 imagens.")
     const url = window.prompt("Cole a URL da imagem:")
     if (!url) return
     const img = new Image()
     img.src = url
     img.onload = () => setImageUrls(prev => [...prev, url])
-    img.onerror = () => showNotification("A URL fornecida não parece ser uma imagem válida ou não pode ser acessada.", "error") //alert("A URL fornecida não parece ser uma imagem válida ou não pode ser acessada.")
+    img.onerror = () => notifyError("A URL fornecida não parece ser uma imagem válida ou não pode ser acessada.")
   }
 
   const onRemoveImage = index => setImageUrls(prev => prev.filter((_, i) => i !== index))
@@ -120,7 +121,8 @@ const AI = () => {
       })
     } catch (error) {
       const err = JSON.parse(error.message)
-      showNotification(err.message)
+      console.error(err)
+      notifyError(err.message)
       setMessages(prev => prev.filter(msg => msg.id !== placeholder.id))
     } finally {
       setLoading(false)
@@ -142,7 +144,8 @@ const AI = () => {
       ])
     } catch (error) {
       const err = JSON.parse(error.message)
-      showNotification(err.message)
+      console.error(err)
+      notifyError(err.message)
     } finally {
       setLoading(false)
     }

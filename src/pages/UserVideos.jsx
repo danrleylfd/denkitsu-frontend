@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react"
 
 import { useAuth } from "../contexts/AuthContext"
+import { useNotification } from "../contexts/NotificationContext"
+
 import { getVideosByUser } from "../services/video"
 
 import SideMenu from "../components/SideMenu"
 import VideoFeed from "../components/VideoFeed"
 import Button from "../components/Button"
-import { MessageBase, MessageError } from "../components/Notifications"
 
 const ContentView = ({ children, ...props }) => (
   <main
@@ -18,24 +19,25 @@ const ContentView = ({ children, ...props }) => (
 
 const UserVideos = () => {
   const { user } = useAuth()
+  const { notifyInfo, notifyError } = useNotification()
   const [videos, setVideos] = useState([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
   useEffect(() => {
     if (!user?._id) return
     const fetchVideos = async () => {
       try {
         setLoading(true)
-        setError(null)
         const data = await getVideosByUser(user._id)
+        if (data?.length === 0) notifyInfo("Você ainda não possui vídeos.")
         setVideos(data || [])
       } catch (err) {
-        if (err.response?.status === 404) {
+        console.error(err)
+        if (err.response?.status === 404){
           setVideos([])
+          notifyInfo("Você ainda não possui vídeos.")
           return
         }
-        setError("Falha ao carregar vídeos. Tente novamente mais tarde.")
-        console.error(err)
+        notifyError("Falha ao carregar vídeos. Tente novamente mais tarde.")
       } finally {
         setLoading(false)
       }
@@ -46,9 +48,7 @@ const UserVideos = () => {
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple min-h-screen">
       {loading && <Button $rounded loading={loading} disabled />}
-      {error && <MessageError>{error}</MessageError>}
-      {!loading && videos.length === 0 && <MessageBase>Nenhum vídeo encontrado.</MessageBase>}
-      {!loading && !error && videos.length > 0 && <VideoFeed videos={videos} />}
+      {!loading && videos.length > 0 && <VideoFeed videos={videos} />}
     </SideMenu>
   )
 }

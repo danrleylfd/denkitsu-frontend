@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { Eye, EyeClosed } from "lucide-react"
 
 import { useAuth } from "../contexts/AuthContext"
+import { useNotification } from "../contexts/NotificationContext"
 
 import SideMenu from "../components/SideMenu"
 import Form from "../components/Form"
@@ -17,23 +18,23 @@ const ContentView = ({ children }) => (
 )
 
 const SignIn = () => {
+  const { signIn } = useAuth()
+  const { notifyError } = useNotification()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
-  const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
-  const { signIn } = useAuth()
   const navigate = useNavigate()
   const handleSignIn = async () => {
-    setError(null)
-    if (!email || !password) return setError("Por favor, preencha todos os campos.")
+    if (!email || !password) return notifyError("Por favor, preencha todos os campos.")
 
     setLoading(true)
     try {
       await signIn({ email, password })
       navigate("/")
     } catch (err) {
-      setError(err.response?.data?.error || "Falha ao entrar. Verifique suas credenciais.")
+      console.error(err.response?.data?.error || err)
+      notifyError("Falha ao entrar. Verifique suas credenciais.")
     } finally {
       setLoading(false)
     }
@@ -65,7 +66,6 @@ const SignIn = () => {
         <Button type="submit" $rounded loading={loading} disabled={loading || !email || !password}>
           {!loading && "Entrar"}
         </Button>
-        {error && <MessageError>{error}</MessageError>}
       </Form>
     </SideMenu>
   )

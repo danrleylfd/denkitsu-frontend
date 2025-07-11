@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { ImagePlus, UploadIcon, Sparkle, Brain } from "lucide-react"
 
 import { useAI } from "../contexts/AIContext"
+import { useNotification } from "../contexts/NotificationContext"
 
 import { sendMessage } from "../services/aiChat"
 import { createVideo } from "../services/video"
@@ -12,7 +13,6 @@ import SideMenu from "../components/SideMenu"
 import Form from "../components/Form"
 import Input from "../components/Input"
 import Button from "../components/Button"
-import { MessageError } from "../components/Notifications"
 
 const ContentView = ({ children }) => (
   <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-screen">
@@ -22,10 +22,10 @@ const ContentView = ({ children }) => (
 
 const Upload = () => {
   const { aiKey, model, aiProvider, prompts, aiProviderToggle  } = useAI()
+  const { notifyWarning, notifyError } = useNotification()
   const [content, setContent] = useState("")
   const [thumbnail, setThumbnail] = useState("")
   const [fileUrl, setFileUrl] = useState("")
-  const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
   const thumbnailRef = useRef(null)
   const navigate = useNavigate()
@@ -35,12 +35,12 @@ const Upload = () => {
     try {
       const userPrompt = { role: "user", content: `Modo Blogueiro, Tema: ${content}` }
       const data = await sendMessage(aiKey, aiProvider, model, [prompts[0], prompts[4], userPrompt])
-      if (data.error) return setError(data.error.message)
+      if (data.error) return notifyError(data.error.message)
       const message = data?.choices?.[0]?.message
-      if (!message) return setError("Serviço temporariamente indisponível.")
+      if (!message) return notifyError("Serviço temporariamente indisponível.")
       setContent(message.content)
     } catch (err) {
-      setError(err.message)
+      notifyError(err.message)
     } finally {
       setLoading(false)
     }
@@ -49,14 +49,12 @@ const Upload = () => {
   const handleThumbnailChange = async (e) => {
     const file = e.target.files[0]
     if (!file) return
-
     setLoading(true)
-    setError(null)
     try {
       const resizedBase64 = await resizeImage(file)
       setThumbnail(resizedBase64)
     } catch (err) {
-      setError(err.message)
+      notifyError(err.message)
       setThumbnail("")
     } finally {
       setLoading(false)
@@ -65,15 +63,14 @@ const Upload = () => {
   }
 
   const handleSubmit = async () => {
-    setError(null)
-    if (!content || !thumbnail || !fileUrl) return setError("Por favor, preencha todos os campos.")
+    if (!content || !thumbnail || !fileUrl) return notifyWarning("Por favor, preencha todos os campos.")
 
     setLoading(true)
     try {
       await createVideo({ content, thumbnail, fileUrl })
       navigate("/my-videos")
     } catch (err) {
-      setError(err.message)
+      notifyError(err.message)
     } finally {
       setLoading(false)
     }
@@ -145,8 +142,6 @@ const Upload = () => {
           {!loading && <UploadIcon size={16} />}
           {!loading && "Publicar"}
         </Button>
-
-        {error && <MessageError>{error}</MessageError>}
       </Form>
     </SideMenu>
   )

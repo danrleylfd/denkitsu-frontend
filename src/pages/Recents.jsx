@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react"
 
+import { useNotification } from "../contexts/NotificationContext"
+
 import { getRecentVideos } from "../services/video"
 
 import SideMenu from "../components/SideMenu"
 import VideoFeed from "../components/VideoFeed"
 import Button from "../components/Button"
-import { MessageBase, MessageError } from "../components/Notifications"
 
 const ContentView = ({ children, ...props }) => (
   <main
@@ -16,24 +17,25 @@ const ContentView = ({ children, ...props }) => (
 )
 
 const Recents = () => {
+  const { notifyInfo, notifyError } = useNotification()
   const [videos, setVideos] = useState([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
 
   useEffect(() => {
     const fetchVideos = async () => {
       try {
         setLoading(true)
-        setError(null)
         const [recentData] = await Promise.all([getRecentVideos()])
+        if(recentData?.length === 0) notifyInfo("Nenhum vídeo encontrado.")
         setVideos(recentData || [])
       } catch (err) {
+        console.error(err)
         if (err.response.status === 404) {
           setVideos([])
+          notifyInfo("Nenhum vídeo encontrado.")
           return
         }
-        setError("Falha ao carregar vídeos. Tente novamente mais tarde.")
-        console.error(err)
+        notifyError("Falha ao carregar vídeos. Tente novamente mais tarde.")
       } finally {
         setLoading(false)
       }
@@ -45,9 +47,7 @@ const Recents = () => {
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple min-h-screen">
       {loading && <Button $rounded loading={loading} disabled />}
-      {error && <MessageError>{error}</MessageError>}
-      {!loading && videos.length === 0 && <MessageBase>Nenhum vídeo encontrado.</MessageBase>}
-      {!loading && !error && videos.length > 0 && <VideoFeed videos={videos} />}
+      {!loading && videos.length > 0 && <VideoFeed videos={videos} />}
     </SideMenu>
   )
 }

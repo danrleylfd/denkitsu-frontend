@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom"
 import { Eye, EyeClosed } from "lucide-react"
 
 import { useAuth } from "../contexts/AuthContext"
+import { useNotification } from "../contexts/NotificationContext"
 
 import SideMenu from "../components/SideMenu"
 import Form from "../components/Form"
 import Input from "../components/Input"
 import Button from "../components/Button"
-import { MessageError } from "../components/Notifications"
 
 const ContentView = ({ children }) => (
   <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-screen">
@@ -17,26 +17,26 @@ const ContentView = ({ children }) => (
 )
 
 const SignUp = () => {
+  const { signUp } = useAuth()
+  const { notifyWarning, notifyError } = useNotification()
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
-  const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
-  const { signUp } = useAuth()
   const navigate = useNavigate()
   const handleSignUp = async () => {
-    setError(null)
-    if (!name || !email || !password || !confirmPassword) return setError("Por favor, preencha todos os campos.")
-    if (password !== confirmPassword) return setError("As senhas não coincidem.")
-    if (password.length < 8) return setError("A senha deve ter pelo menos 8 caracteres.")
+    if (!name || !email || !password || !confirmPassword) return notifyWarning("Por favor, preencha todos os campos.")
+    if (password !== confirmPassword) return notifyWarning("As senhas não coincidem.")
+    if (password.length < 8) return notifyWarning("A senha deve ter pelo menos 8 caracteres.")
     setLoading(true)
     try {
       await signUp({ name, email, password })
       navigate("/signin")
     } catch (err) {
-      setError(err.response?.data?.error || "Falha ao cadastrar. Verifique os dados informados.")
+      console.error(err.response?.data?.error || err)
+      notifyError("Falha ao cadastrar. Verifique os dados informados.")
     } finally {
       setLoading(false)
     }
@@ -86,7 +86,6 @@ const SignUp = () => {
         <Button type="submit" $rounded loading={loading} disabled={loading}>
           {!loading && "Cadastrar"}
         </Button>
-        {error && <MessageError>{error}</MessageError>}
       </Form>
     </SideMenu>
   )
