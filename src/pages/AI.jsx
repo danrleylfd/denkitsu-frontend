@@ -16,8 +16,7 @@ const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-sc
 const AI = () => {
   const {
     prompts, aiProvider, aiKey, model,
-    web, newsTool, weatherTool,
-    stream, setStream,
+    stream, web, newsTool, weatherTool,
     imageUrls, setImageUrls,
     freeModels, setFreeModels,
     payModels, setPayModels,
@@ -150,7 +149,7 @@ const AI = () => {
       setLoading(false)
     }
   }
-}, [userPrompt, imageUrls, messages, model, aiKey, aiProvider, web, stream, selectedPrompt, prompts])
+}, [userPrompt, imageUrls, messages, model, aiKey, aiProvider, stream, web, selectedPrompt, prompts])
 
   const toggleLousa = useCallback(content => setLousaContent(content), [])
 
@@ -166,8 +165,6 @@ const AI = () => {
             setUserPrompt={setUserPrompt}
             onAddImage={onAddImage}
             imageCount={imageUrls.length}
-            stream={stream}
-            toggleStream={() => setStream(!stream)}
             toggleSettings={() => setSettingsOpen(!settingsOpen)}
             onSendMessage={onSendMessage}
             clearHistory={clearHistory}
@@ -179,7 +176,6 @@ const AI = () => {
             freeModels={freeModels}
             payModels={payModels}
             groqModels={groqModels}
-            prompts={prompts}
             selectedPrompt={selectedPrompt}
             onSelectPrompt={setSelectedPrompt}
           />
@@ -193,8 +189,6 @@ const AI = () => {
             setUserPrompt={setUserPrompt}
             onAddImage={onAddImage}
             imageCount={imageUrls.length}
-            stream={stream}
-            toggleStream={() => setStream(!stream)}
             toggleSettings={() => setSettingsOpen(!settingsOpen)}
             onSendMessage={onSendMessage}
             clearHistory={clearHistory}
@@ -206,7 +200,6 @@ const AI = () => {
             freeModels={freeModels}
             payModels={payModels}
             groqModels={groqModels}
-            prompts={prompts}
             selectedPrompt={selectedPrompt}
             onSelectPrompt={setSelectedPrompt}
           />

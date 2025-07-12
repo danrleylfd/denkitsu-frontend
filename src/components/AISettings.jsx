@@ -5,14 +5,14 @@ import Button from "./Button"
 import Input from "./Input"
 import ModelSelect from "./ModelSelect"
 
-const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqModels, prompts, selectedPrompt, onSelectPrompt }) => {
+const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqModels, selectedPrompt, onSelectPrompt }) => {
   const [showAIKey, setShowAIKey] = useState(false)
-  const { aiKey, model, aiProvider, customPrompt, loading, setAIKey, setModel, setAIProvider, aiProviderToggle, setCustomPrompt } = useAI()
+  const { aiKey, model, aiProvider, prompts, customPrompt, loading, setAIKey, setModel, setAIProvider, aiProviderToggle, setCustomPrompt } = useAI()
   if (!settingsOpen) return null
   const getModeName = (content) => {
     if (!content) return "Padrão"
     const firstLine = content.trim().split("\n")[0]
-    return firstLine.replace("## Agente ", "").trim()
+    return firstLine.replace("## Modo ", "").trim()
   }
 
   const gradientColors = [

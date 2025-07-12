@@ -84,10 +84,10 @@ const AIProvider = ({ children }) => {
 
   const values = {
     prompts, setPrompts,
+    stream, setStream, toggleStream: () => setStream(!stream),
     web, setWeb, toggleWeb: () => setWeb(!web),
     newsTool, setNewsTool, toggleNews: () => setNewsTool(!newsTool),
     weatherTool, setWeatherTool, toggleWeather: () => setWeatherTool(!weatherTool),
-    stream, setStream,
     imageUrls, setImageUrls,
     aiProvider, setAIProvider, aiProviderToggle,
     aiKey: aiProvider === "groq" ? groqKey : openRouterKey,

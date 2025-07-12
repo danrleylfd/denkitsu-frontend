@@ -110,8 +110,8 @@ const Editor = () => {
     }
     const userPrompt = { role: "user", content: `${instruction}\n\n---\n\n${selectedText}` }
     try {
-      const agentPrompt = prompts.find(p => p.content.includes("Agente Redator"))
-      if (!agentPrompt) { throw new Error("O 'Agente Redator' não foi encontrado.") }
+      const agentPrompt = prompts.find(p => p.content.includes("Modo Redator"))
+      if (!agentPrompt) { throw new Error("O 'Modo Redator' não foi encontrado.") }
       const { data } = await sendMessage(aiKey, aiProvider, model, [prompts[0], agentPrompt, userPrompt])
       const resultText = data?.choices?.[0]?.message?.content
       if (resultText) {
