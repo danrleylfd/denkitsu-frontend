@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from "react"
 import { Play, Pause, Volume2, VolumeX, Expand, RefreshCw } from "lucide-react"
 
-const Player = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poster = "https://peach.blender.org/wp-content/uploads/title_anouncement.jpg?x11217" }) => {
+const VideoPlayer = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poster = "https://peach.blender.org/wp-content/uploads/title_anouncement.jpg?x11217" }) => {
   const videoRef = useRef(null)
   const [playing, setPlaying] = useState(false)
   const [repeat, setRepeat] = useState(false)
@@ -143,4 +143,4 @@ const Player = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poster = "
   )
 }
 
-export default Player
+export default VideoPlayer

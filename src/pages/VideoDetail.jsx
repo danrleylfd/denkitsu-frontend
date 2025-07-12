@@ -8,7 +8,7 @@ import { useNotification } from "../contexts/NotificationContext"
 import { getVideoById, deleteVideoById, likeVideo, unlikeVideo, shareVideo, addComment, replyToComment, getCommentsForVideo } from "../services/video"
 
 import SideMenu from "../components/SideMenu"
-import Player from "../components/Player"
+import VideoPlayer from "../components/Video/Player"
 import Button from "../components/Button"
 import CommentForm from "../components/CommentForm"
 import CommentItem from "../components/CommentItem"
@@ -162,7 +162,7 @@ const VideoDetail = () => {
       {loading && <Button variant="outline" style={{ marginTop: ".5rem" }} $rounded loading={loading} disabled />}
       {video && (
         <div className="flex flex-col py-2 gap-2 w-full sm:max-w-lg md:max-w-2xl">
-          <Player src={video.fileUrl} poster={video.thumbnail} />
+          <VideoPlayer src={video.fileUrl} poster={video.thumbnail} />
           <h5 className="text-lightFg-primary dark:text-darkFg-primary">
             {video.content}
           </h5>

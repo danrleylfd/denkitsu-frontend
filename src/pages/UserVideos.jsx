@@ -6,7 +6,7 @@ import { useNotification } from "../contexts/NotificationContext"
 import { getVideosByUser } from "../services/video"
 
 import SideMenu from "../components/SideMenu"
-import VideoFeed from "../components/VideoFeed"
+import VideoFeed from "../components/Video/Feed"
 import Button from "../components/Button"
 
 const ContentView = ({ children, ...props }) => (
