@@ -1,10 +1,11 @@
 import { useState, useMemo } from "react"
 import { Code, Copy, Kanban, Newspaper, Presentation, Download } from "lucide-react"
 
-import { useTasks } from "../contexts/TasksContext"
-import { publishNews } from "../services/news"
+import { useTasks } from "../../contexts/TasksContext"
 
-import Button from "./Button"
+import { publishNews } from "../../services/news"
+
+import Button from "../Button"
 
 const isValidJsonStringArray = (str) => {
   if (typeof str !== "string" || !str.trim().startsWith("[") || !str.trim().endsWith("]")) {
@@ -30,7 +31,7 @@ const getFileExtension = (lang) => {
   return langMap[lang] || lang
 }
 
-const MessageActions = ({ message, toggleLousa }) => {
+const AIReactions = ({ message, toggleLousa }) => {
   const [loading, setLoading] = useState(false)
   const [loadingType, setLoadingType] = useState(null)
   const { setTasks } = useTasks()
@@ -199,4 +200,4 @@ const MessageActions = ({ message, toggleLousa }) => {
   )
 }
 
-export default MessageActions
+export default AIReactions
