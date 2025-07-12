@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import { SearchSlash, Brain } from "lucide-react"
 
-import { useAuth } from "../contexts/AuthContext"
 import { useAI } from "../contexts/AIContext"
 import { useNotification } from "../contexts/NotificationContext"
 
