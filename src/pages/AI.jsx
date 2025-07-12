@@ -5,11 +5,11 @@ import { useAI } from "../contexts/AIContext"
 import { sendMessageStream, sendMessage, getModels } from "../services/aiChat"
 
 import SideMenu from "../components/SideMenu"
-import Lousa from "../components/Lousa"
-import AISettings from "../components/AISettings"
-import ChatInput from "../components/ChatInput"
-import ImagePreview from "../components/ImagePreview"
-import ChatHistory from "../components/ChatHistory"
+import AIBar from "../components/AI/Bar"
+import ImagePreview from "../components/AI/ImagePreview"
+import AISettings from "../components/AI/Settings"
+import AIHistory from "../components/AI/History"
+import Lousa from "../components/AI/Lousa"
 
 const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-screen mx-auto">{children}</main>
 
@@ -160,7 +160,7 @@ const AI = () => {
       {!temMensagensDoUsuario ? (
         <div className="flex grow justify-center items-center flex-col">
           <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
-          <ChatInput
+          <AIBar
             userPrompt={userPrompt}
             setUserPrompt={setUserPrompt}
             onAddImage={onAddImage}
@@ -182,9 +182,9 @@ const AI = () => {
         </div>
       ) : (
         <>
-          <ChatHistory toggleLousa={toggleLousa} messages={messages} />
+          <AIHistory toggleLousa={toggleLousa} messages={messages} />
           <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
-          <ChatInput
+          <AIBar
             userPrompt={userPrompt}
             setUserPrompt={setUserPrompt}
             onAddImage={onAddImage}

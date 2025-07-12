@@ -4,11 +4,7 @@ import { Timer, Settings, Play, Pause, RefreshCw } from "lucide-react"
 import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
 
-const ContentView = ({ children }) => (
-  <main className="flex justify-center items-center p-2 gap-2 min-h-screen w-full">
-    {children}
-  </main>
-)
+const ContentView = ({ children }) => <main className="flex justify-center items-center p-2 gap-2 min-h-screen w-full">{children}</main>
 
 const Pomodoro = () => {
   const [minutes, setMinutes] = useState(25)
@@ -69,20 +65,15 @@ const Pomodoro = () => {
 
   return (
     <SideMenu ContentView={ContentView} className="bg-cover bg-brand-purple">
-      <div
-        className="bg-white dark:bg-zinc-900 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] p-4 rounded-lg w-full max-w-96 transition-colors opacity-75 dark:opacity-90">
+      <div className="bg-white dark:bg-zinc-900 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] p-4 rounded-lg w-full max-w-96 transition-colors opacity-75 dark:opacity-90">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center">
             <span className="w-8 h-8 text-zinc-700 dark:text-zinc-100 mr-2 flex items-center justify-center">
               <Timer size={24} />
             </span>
             <div className="flex flex-col">
-              <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-                Pomodoro
-              </h1>
-              <h2 className="text-xl font-bold text-zinc-700 dark:text-zinc-300">
-                by Denkitsu
-              </h2>
+              <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Pomodoro</h1>
+              <h2 className="text-xl font-bold text-zinc-700 dark:text-zinc-300">by Denkitsu</h2>
             </div>
           </div>
         </div>
@@ -90,12 +81,8 @@ const Pomodoro = () => {
           <div className="text-6xl font-bold text-zinc-900 dark:text-zinc-100 mb-4">
             {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
           </div>
-          <div className="text-lg font-medium text-zinc-700 dark:text-zinc-300 mb-2">
-            {mode === "work" ? "Sessão de Trabalho" : "Hora do Intervalo"}
-          </div>
-          <div className="text-sm text-zinc-600 dark:text-zinc-400">
-            Ciclos Completados: {cycles}
-          </div>
+          <div className="text-lg font-medium text-zinc-700 dark:text-zinc-300 mb-2">{mode === "work" ? "Sessão de Trabalho" : "Hora do Intervalo"}</div>
+          <div className="text-sm text-zinc-600 dark:text-zinc-400">Ciclos Completados: {cycles}</div>
         </div>
         <div className="flex justify-center mb-8 gap-4">
           <Button variant="secondary" size="icon" $rounded title={isActive ? "Pause" : "Play"} onClick={toggleTimer}>

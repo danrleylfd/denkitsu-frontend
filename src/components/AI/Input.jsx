@@ -1,4 +1,4 @@
-const PromptInput = ({ textareaRef, userPrompt, setUserPrompt, handleKeyDown, loading }) => (
+const AIInput = ({ textareaRef, userPrompt, setUserPrompt, handleKeyDown, loading }) => (
   <textarea
     id="prompt-input"
     ref={textareaRef}
@@ -12,4 +12,4 @@ const PromptInput = ({ textareaRef, userPrompt, setUserPrompt, handleKeyDown, lo
   />
 )
 
-export default PromptInput
+export default AIInput

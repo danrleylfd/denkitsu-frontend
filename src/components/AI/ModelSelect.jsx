@@ -1,4 +1,4 @@
-const ModelSelect = ({ setAIProvider, model, setModel, loading, freeModels, payModels, groqModels }) => {
+const AIModelSelect = ({ setAIProvider, model, setModel, loading, freeModels, payModels, groqModels }) => {
   const findProviderByModel = (model) => {
     if (freeModels.find((m) => m.id === model)) return "openrouter"
     if (payModels.find((m) => m.id === model)) return "openrouter"
@@ -48,4 +48,4 @@ const ModelSelect = ({ setAIProvider, model, setModel, loading, freeModels, payM
   )
 }
 
-export default ModelSelect
+export default AIModelSelect

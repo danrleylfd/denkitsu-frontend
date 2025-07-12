@@ -1,10 +1,11 @@
 import { memo } from "react"
-import Markdown from "./Markdown"
-import MessageActions from "./MessageActions"
-import Button from "./Button"
-import PurpleLink from "./PurpleLink"
 
-const ChatMessage = ({ msg, user, toggleLousa, loading }) => {
+import Markdown from "../Markdown"
+import MessageActions from "../MessageActions"
+import Button from "../Button"
+import PurpleLink from "../PurpleLink"
+
+const AIMessage = ({ msg, user, toggleLousa, loading }) => {
   const isSystem = msg.role === "system"
   if (isSystem) return null
   const isAssistant = msg.role === "assistant"
@@ -37,4 +38,4 @@ const ChatMessage = ({ msg, user, toggleLousa, loading }) => {
   )
 }
 
-export default memo(ChatMessage)
+export default memo(AIMessage)

@@ -1,13 +1,13 @@
 import { memo, useRef, useEffect } from "react"
 
-import ChatMessage from "./ChatMessage"
+import AIMessage from "./Message"
 
-import { useAuth } from "../contexts/AuthContext"
-import { useAI } from "../contexts/AIContext"
+import { useAuth } from "../../contexts/AuthContext"
+import { useAI } from "../../contexts/AIContext"
 
-const ChatHistory = ({ toggleLousa }) => {
-  const { messages, loading } = useAI()
+const AIHistory = ({ toggleLousa }) => {
   const { user } = useAuth()
+  const { messages, loading } = useAI()
   // const initialMessage = { role: "assistant", content: "Olá! Como posso ajudar você hoje?\n Shift + Enter para quebrar a linha." }
   const messagesEndRef = useRef(null)
   // Descomente a linha abaixo para rolar automaticamente para o final da conversa quando novas mensagens chegarem
@@ -15,10 +15,10 @@ const ChatHistory = ({ toggleLousa }) => {
   return (
     <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-2">
 
-      {/* <ChatMessage msg={initialMessage} /> */}
+      {/* <AIMessage msg={initialMessage} /> */}
 
       {messages.map((msg, pos) => (
-        <ChatMessage
+        <AIMessage
           key={pos}
           msg={msg}
           user={user}
@@ -33,4 +33,4 @@ const ChatHistory = ({ toggleLousa }) => {
   )
 }
 
-export default memo(ChatHistory)
+export default memo(AIHistory)

@@ -1,12 +1,12 @@
 import { Settings, SendHorizontal, ImagePlus, Globe, GlobeLock, Newspaper, Cloud, Binary, Brain, MessageCirclePlus } from "lucide-react"
 
-import { useAI } from "../contexts/AIContext"
+import { useAI } from "../../contexts/AIContext"
 
-import PromptInput from "./PromptInput"
-import Button from "./Button"
-import Paper from "./Paper"
+import Paper from "../Paper"
+import AIInput from "./Input"
+import Button from "../Button"
 
-const ChatInput = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessage, clearHistory, toggleSettings, loading }) => {
+const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessage, clearHistory, toggleSettings, loading }) => {
   const { aiProvider, aiProviderToggle, aiKey, stream, toggleStream, web, toggleWeb, newsTool, toggleNews, weatherTool, toggleWeather } = useAI()
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -38,7 +38,7 @@ const ChatInput = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMe
           </Button>
         </>
       )}
-      <PromptInput userPrompt={userPrompt} setUserPrompt={setUserPrompt} handleKeyDown={handleKeyDown} loading={loading} />
+      <AIInput userPrompt={userPrompt} setUserPrompt={setUserPrompt} handleKeyDown={handleKeyDown} loading={loading} />
       {aiKey.length > 0 && (
         <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Stream" onClick={toggleStream} disabled={loading}>
           <Binary size={16} />
@@ -54,4 +54,4 @@ const ChatInput = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMe
   )
 }
 
-export default ChatInput
+export default AIBar
