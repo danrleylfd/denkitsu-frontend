@@ -12,7 +12,6 @@ import VideoPlayer from "../components/Video/Player"
 import Button from "../components/Button"
 import CommentForm from "../components/CommentForm"
 import CommentItem from "../components/CommentItem"
-import { MessageSuccess } from "../components/Notifications"
 import PurpleLink from "../components/Embeds/PurpleLink"
 
 const ContentView = ({ children, ...props }) => (

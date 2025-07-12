@@ -9,7 +9,6 @@ import SideMenu from "../components/SideMenu"
 import Form from "../components/Form"
 import Input from "../components/Input"
 import Button from "../components/Button"
-import { MessageError } from "../components/Notifications"
 
 const ContentView = ({ children }) => (
   <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-screen">

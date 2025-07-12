@@ -38,7 +38,13 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
           </Button>
         </>
       )}
-      <AIInput userPrompt={userPrompt} setUserPrompt={setUserPrompt} handleKeyDown={handleKeyDown} loading={loading} />
+      <AIInput
+        id="prompt-input"
+        value={userPrompt}
+        onChange={(e) => setUserPrompt(e.target.value)}
+        onKeyDown={handleKeyDown}
+        loading={loading}
+      />
       {aiKey.length > 0 && (
         <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Stream" onClick={toggleStream} disabled={loading}>
           <Binary size={16} />

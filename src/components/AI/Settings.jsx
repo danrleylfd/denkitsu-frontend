@@ -5,6 +5,7 @@ import { useAI } from "../../contexts/AIContext"
 
 import AIModelSelect from "./ModelSelect"
 import Input from "../Input"
+import AIInput from "./Input"
 import Button from "../Button"
 
 const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqModels, selectedPrompt, onSelectPrompt }) => {
@@ -113,16 +114,16 @@ const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqM
           <label htmlFor="custom-prompt" className="text-lightFg-secondary dark:text-darkFg-secondary">
             Como Denkitsu deve se comportar?
           </label>
-          <textarea
+          <AIInput
             id="custom-prompt"
             value={customPrompt}
             onChange={(e) => setCustomPrompt(e.target.value)}
-            maxLength="7000"
+            maxLength={6144}
             rows={10}
             className="resize-none w-full p-2 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary text-xs focus:outline-none focus:ring-2 focus:ring-primary-base"
             placeholder="Digite seu prompt de sistema aqui..."
           />
-          <small className="text-right text-xs text-lightFg-tertiary dark:text-darkFg-tertiary self-end">{customPrompt.length} / 7000 caracteres.</small>
+          <small className="text-right text-xs text-lightFg-tertiary dark:text-darkFg-tertiary self-end">{customPrompt.length} / 6144 caracteres.</small>
         </div>
       </div>
     </div>

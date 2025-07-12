@@ -11,7 +11,6 @@ import { getUserAccount, editUserAccount, deleteUserAccount } from "../services/
 import SideMenu from "../components/SideMenu"
 import Input from "../components/Input"
 import Button from "../components/Button"
-import { MessageSuccess, MessageError } from "../components/Notifications"
 
 const ContentView = ({ children }) => (
   <main className="flex justify-center items-center p-2 gap-2 min-h-screen w-full">
