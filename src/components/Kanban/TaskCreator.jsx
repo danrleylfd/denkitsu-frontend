@@ -1,22 +1,19 @@
 import { Plus, Sparkle, Brain } from "lucide-react"
-import { useAI } from "../contexts/AIContext"
-import { useTasks } from "../contexts/TasksContext"
 
-import Paper from "./Paper"
-import Input from "./Input"
-import Button from "./Button"
+import { useAI } from "../../contexts/AIContext"
+import { useTasks } from "../../contexts/TasksContext"
 
-const AddTaskForm = () => {
+import Paper from "../Paper"
+import Input from "../Input"
+import Button from "../Button"
+
+const TaskCreator = () => {
   const { aiProvider, aiProviderToggle } = useAI()
   const { newTask, setNewTask, addTask, generateTasksWithAI, loading } = useTasks()
   return (
     <Paper className="bg-lightBg-primary dark:bg-darkBg-primary">
-      <h1 className="text-center text-lightFg-primary dark:text-darkFg-primary">
-        Kanban
-      </h1>
-      <p className="text-center text-lightFg-secondary dark:text-darkFg-secondary">
-        Descreva um objetivo e deixe a IA gerar o passo a passo para você.
-      </p>
+      <h1 className="text-center text-lightFg-primary dark:text-darkFg-primary">Kanban</h1>
+      <p className="text-center text-lightFg-secondary dark:text-darkFg-secondary">Descreva um objetivo e deixe a IA gerar o passo a passo para você.</p>
       <Input
         placeholder="Adicionar tarefa ou descrever um objetivo..."
         value={newTask}
@@ -42,4 +39,4 @@ const AddTaskForm = () => {
   )
 }
 
-export default AddTaskForm
+export default TaskCreator

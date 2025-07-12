@@ -1,5 +1,5 @@
 import SideMenu from "../components/SideMenu"
-import KanbanBoard from "../components/KanbanBoard"
+import KanbanBoard from "../components/Kanban/Board"
 
 const ContentView = ({ children }) => (
   <main

@@ -1,13 +1,14 @@
 import { DndContext, DragOverlay } from "@dnd-kit/core"
 
-import { useDnd } from "../contexts/DndContext"
-import { useTasks } from "../contexts/TasksContext"
+import { useDnd } from "../../contexts/DndContext"
+import { useTasks } from "../../contexts/TasksContext"
 
-import { COLUMN_TITLES } from "../constants"
-import Column from "./Column"
+import { COLUMN_TITLES } from "../../constants"
+
+import KanbanColumn from "./Column"
+import TaskCreator from "./TaskCreator"
 import TaskCard from "./TaskCard"
-import TrashZone from "./TrashZone"
-import AddTaskForm from "./AddTaskForm"
+import TrashDropZone from "./TrashDropZone"
 
 const KanbanBoard = () => {
   const { sensors, collisionDetectionStrategy, handleDragStart, handleDragOver, handleDragEnd, activeTask } = useDnd()
@@ -19,7 +20,7 @@ const KanbanBoard = () => {
 
   return (
     <div className="w-full flex flex-col py-2 gap-2">
-      <AddTaskForm />
+      <TaskCreator />
       <DndContext
         sensors={sensors}
         collisionDetection={collisionDetectionStrategy}
@@ -28,11 +29,11 @@ const KanbanBoard = () => {
         onDragEnd={handleDragEnd}>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 w-full">
           {Object.keys(COLUMN_TITLES).map((columnKey) => (
-            <Column key={columnKey} id={columnKey} />
+            <KanbanColumn key={columnKey} id={columnKey} />
           ))}
         </div>
         <DragOverlay>{activeTask ? <TaskCard task={activeTask} showControls={false} /> : null}</DragOverlay>
-        <TrashZone />
+        <TrashDropZone />
       </DndContext>
     </div>
   )

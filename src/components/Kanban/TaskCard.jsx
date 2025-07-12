@@ -2,7 +2,8 @@ import { useState } from "react"
 import { Pencil, Trash, Check, X, GripVertical } from "lucide-react"
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
-import { useTasks } from "../contexts/TasksContext"
+
+import { useTasks } from "../../contexts/TasksContext"
 
 const TaskCard = ({ task, showControls = true }) => {
   const { updateTask, deleteTask, editingId, setEditingId } = useTasks()

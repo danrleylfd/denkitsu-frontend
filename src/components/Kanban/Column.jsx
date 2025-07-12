@@ -1,20 +1,19 @@
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { useDroppable } from "@dnd-kit/core"
-import TaskCard from "./TaskCard"
-import { COLUMN_TITLES } from "../constants"
-import { useTasks } from "../contexts/TasksContext"
 
-const Column = ({ id }) => {
+import { useTasks } from "../../contexts/TasksContext"
+
+import { COLUMN_TITLES } from "../../constants"
+
+import TaskCard from "./TaskCard"
+
+const KanbanColumn = ({ id }) => {
   const { tasks } = useTasks()
   const { setNodeRef } = useDroppable({ id })
   const columnTasks = tasks[id] || []
-
   return (
-    <div
-      className="bg-lightBg-primary dark:bg-darkBg-primary p-2 rounded-xl shadow-[6px_6px_16px_rgba(0,0,0,0.5)] flex flex-col gap-2 min-h-[250px] max-h-max opacity-75 dark:opacity-90">
-      <h3 className="px-1 text-lightFg-primary dark:text-darkFg-primary">
-        {COLUMN_TITLES[id]}
-      </h3>
+    <div className="bg-lightBg-primary dark:bg-darkBg-primary p-2 rounded-xl shadow-[6px_6px_16px_rgba(0,0,0,0.5)] flex flex-col gap-2 min-h-[250px] max-h-max opacity-75 dark:opacity-90">
+      <h3 className="px-1 text-lightFg-primary dark:text-darkFg-primary">{COLUMN_TITLES[id]}</h3>
       <div ref={setNodeRef} className="flex flex-col gap-2">
         <SortableContext items={columnTasks.map((t) => t.id)} strategy={verticalListSortingStrategy}>
           {columnTasks.map((task) => (
@@ -26,4 +25,4 @@ const Column = ({ id }) => {
   )
 }
 
-export default Column
+export default KanbanColumn

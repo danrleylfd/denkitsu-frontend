@@ -1,8 +1,9 @@
 import { Trash } from "lucide-react"
 import { useDroppable } from "@dnd-kit/core"
-import { useDnd } from "../contexts/DndContext"
 
-const TrashZone = () => {
+import { useDnd } from "../../contexts/DndContext"
+
+const TrashDropZone = () => {
   const { activeTask, isOverTrash } = useDnd()
   const { setNodeRef } = useDroppable({ id: "trash" })
 
@@ -21,4 +22,4 @@ const TrashZone = () => {
   )
 }
 
-export default TrashZone
+export default TrashDropZone
