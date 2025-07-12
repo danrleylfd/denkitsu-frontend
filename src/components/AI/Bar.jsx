@@ -43,7 +43,8 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
         value={userPrompt}
         onChange={(e) => setUserPrompt(e.target.value)}
         onKeyDown={handleKeyDown}
-        loading={loading}
+        disabled={loading}
+        className="resize-y"
       />
       {aiKey.length > 0 && (
         <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Stream" onClick={toggleStream} disabled={loading}>
