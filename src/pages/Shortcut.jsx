@@ -9,7 +9,7 @@ import { useNotification } from "../contexts/NotificationContext"
 import SideMenu from "../components/SideMenu"
 import Input from "../components/Input"
 import Button from "../components/Button"
-import PurpleLink from "../components/PurpleLink"
+import PurpleLink from "../components/Embeds/PurpleLink"
 
 const ContentView = ({ children }) => (
   <main

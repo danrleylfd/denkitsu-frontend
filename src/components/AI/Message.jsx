@@ -3,7 +3,7 @@ import { memo } from "react"
 import AIReactions from "./Reactions"
 import Markdown from "../Markdown"
 import Button from "../Button"
-import PurpleLink from "../PurpleLink"
+import PurpleLink from "../Embeds/PurpleLink"
 
 const AIMessage = ({ msg, user, toggleLousa, loading }) => {
   const isSystem = msg.role === "system"

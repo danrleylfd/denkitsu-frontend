@@ -5,7 +5,7 @@ import { deleteComment, getRepliesForComment } from "../services/video"
 
 import CommentForm from "./CommentForm"
 import Button from "./Button"
-import PurpleLink from "./PurpleLink"
+import PurpleLink from "./Embeds/PurpleLink"
 
 const CommentItem = ({ comment, videoId, onCommentDeleted, onReplyAdded, disabled }) => {
   const { user, signed } = useAuth()

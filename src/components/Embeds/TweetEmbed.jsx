@@ -1,5 +1,5 @@
 import { Tweet } from "react-tweet"
-import { useTheme } from "../contexts/ThemeContext"
+import { useTheme } from "../../contexts/ThemeContext"
 
 const TweetContainer = ({ children }) => (
   <div className="flex justify-center my-2 w-full [&>div]:w-full max-w-lg">

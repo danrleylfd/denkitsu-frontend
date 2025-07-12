@@ -7,8 +7,8 @@ import remarkGfm from "remark-gfm"
 import "highlight.js/styles/atom-one-dark.css"
 
 import Button from "./Button"
-import YoutubeEmbed from "./YoutubeEmbed"
-import TweetEmbed from "./TweetEmbed"
+import YoutubeEmbed from "./Embeds/YoutubeEmbed"
+import TweetEmbed from "./Embeds/TweetEmbed"
 
 const getYouTubeVideoId = (url) => {
   const regex = /(?:https?:\/\/)?(?:www\.)?(?:m\.)?(?:youtube\.com|music\.youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|shorts\/|browse\/)?([\w-]{11})(?:\S+)?/

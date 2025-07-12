@@ -2,7 +2,7 @@ import { ThumbsUp, MessageCircle, Share2 } from "lucide-react"
 
 import Input from "./Input"
 import Button from "./Button"
-import PurpleLink from "./PurpleLink"
+import PurpleLink from "./Embeds/PurpleLink"
 
 const VideoCard = ({ video }) => {
   if (!video) return
