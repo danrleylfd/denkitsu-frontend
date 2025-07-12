@@ -120,8 +120,8 @@ const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqM
             onChange={(e) => setCustomPrompt(e.target.value)}
             maxLength={6144}
             rows={10}
-            className="resize-none w-full p-2 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary text-xs focus:outline-none focus:ring-2 focus:ring-primary-base"
-            placeholder="Digite seu prompt de sistema aqui..."
+            className="resize-none"
+            placeholder="Escreva seu prompt de sistema"
           />
           <small className="text-right text-xs text-lightFg-tertiary dark:text-darkFg-tertiary self-end">{customPrompt.length} / 6144 caracteres.</small>
         </div>
