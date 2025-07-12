@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react"
 
-import { useNotification } from "../contexts/NotificationContext"
+import { useNotification } from "../../contexts/NotificationContext"
 
-import { getPopularVideos } from "../services/video"
+import { getPopularVideos } from "../../services/video"
 
-import SideMenu from "../components/SideMenu"
-import VideoFeed from "../components/Video/Feed"
-import Button from "../components/Button"
+import SideMenu from "../../components/SideMenu"
+import VideoFeed from "../../components/Video/Feed"
+import Button from "../../components/Button"
 
 const ContentView = ({ children, ...props }) => (
   <main

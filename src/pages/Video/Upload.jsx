@@ -2,17 +2,17 @@ import { useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { ImagePlus, UploadIcon, Sparkle, Brain } from "lucide-react"
 
-import { useAI } from "../contexts/AIContext"
-import { useNotification } from "../contexts/NotificationContext"
+import { useAI } from "../../contexts/AIContext"
+import { useNotification } from "../../contexts/NotificationContext"
 
-import { sendMessage } from "../services/aiChat"
-import { createVideo } from "../services/video"
-import { resizeImage } from "../utils/image"
+import { sendMessage } from "../../services/aiChat"
+import { createVideo } from "../../services/video"
+import { resizeImage } from "../../utils/image"
 
-import SideMenu from "../components/SideMenu"
-import Form from "../components/Form"
-import Input from "../components/Input"
-import Button from "../components/Button"
+import SideMenu from "../../components/SideMenu"
+import Form from "../../components/Form"
+import Input from "../../components/Input"
+import Button from "../../components/Button"
 
 const ContentView = ({ children }) => (
   <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-screen">

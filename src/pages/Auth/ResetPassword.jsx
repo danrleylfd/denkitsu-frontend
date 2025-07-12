@@ -1,14 +1,15 @@
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { Eye, EyeClosed } from "lucide-react"
 
-import { useAuth } from "../contexts/AuthContext"
-import { useNotification } from "../contexts/NotificationContext"
+import { useNotification } from "../../contexts/NotificationContext"
 
-import SideMenu from "../components/SideMenu"
-import Form from "../components/Form"
-import Input from "../components/Input"
-import Button from "../components/Button"
+import api from "../../services"
+
+import Form from "../../components/Form"
+import SideMenu from "../../components/SideMenu"
+import Input from "../../components/Input"
+import Button from "../../components/Button"
 
 const ContentView = ({ children }) => (
   <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-screen">
@@ -16,41 +17,50 @@ const ContentView = ({ children }) => (
   </main>
 )
 
-const SignUp = () => {
-  const { signUp } = useAuth()
-  const { notifyWarning, notifyError } = useNotification()
-  const [name, setName] = useState("")
+const ResetPassword = () => {
+  const { notifyInfo, notifyWarning, notifyError } = useNotification()
+  const [token, setToken] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
-  const handleSignUp = async () => {
-    if (!name || !email || !password || !confirmPassword) return notifyWarning("Por favor, preencha todos os campos.")
+  const [searchParams] = useSearchParams()
+
+  useEffect(() => {
+    const urlToken = searchParams.get("token")
+    const urlEmail = searchParams.get("email")
+    if (urlToken) setToken(urlToken)
+    if (urlEmail) setEmail(urlEmail)
+  }, [searchParams])
+
+  const handleResetPassword = async () => {
+    if (!token || !email || !password || !confirmPassword) return notifyWarning("Por favor, preencha todos os campos.")
     if (password !== confirmPassword) return notifyWarning("As senhas não coincidem.")
     if (password.length < 8) return notifyWarning("A senha deve ter pelo menos 8 caracteres.")
     setLoading(true)
     try {
-      await signUp({ name, email, password })
-      navigate("/signin")
+      await api.post("/auth/reset_password", { token, email, password })
+      notifyInfo("Senha redefinida com sucesso! Você será redirecionado para o login.")
+      setTimeout(() => navigate("/"), 3000)
     } catch (err) {
       console.error(err.response?.data?.error || err)
-      notifyError("Falha ao cadastrar. Verifique os dados informados.")
+      notifyError("Falha ao redefinir a senha. Verifique o token e o email informados.")
     } finally {
       setLoading(false)
     }
   }
   return (
     <SideMenu ContentView={ContentView} className="bg-cover bg-brand-purple">
-      <Form title="Cadastrar" onSubmit={handleSignUp}>
+      <Form title="Redefinir Senha" onSubmit={handleResetPassword}>
         <Input
-          name="name"
+          name="token"
           type="text"
-          placeholder="Nome"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          autoComplete="name"
+          placeholder="Token de Recuperação"
+          value={token}
+          onChange={(e) => setToken(e.target.value)}
+          autoComplete="token"
           disabled={loading}
         />
         <Input
@@ -65,7 +75,7 @@ const SignUp = () => {
         <Input
           name="password"
           type={showPassword ? "text" : "password"}
-          placeholder="Senha (mín. 8 caracteres)"
+          placeholder="Nova Senha"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           autoComplete="new-password"
@@ -77,18 +87,18 @@ const SignUp = () => {
         <Input
           name="confirmPassword"
           type={showPassword ? "text" : "password"}
-          placeholder="Confirmar Senha"
+          placeholder="Confirmar Nova Senha"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           autoComplete="new-password"
           disabled={loading}
         />
-        <Button type="submit" $rounded loading={loading} disabled={loading}>
-          {!loading && "Cadastrar"}
+        <Button type="submit" $rounded loading={loading}>
+          {!loading && "Redefinir Senha"}
         </Button>
       </Form>
     </SideMenu>
   )
 }
 
-export default SignUp
+export default ResetPassword

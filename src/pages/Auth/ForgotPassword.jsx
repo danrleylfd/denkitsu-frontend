@@ -1,13 +1,13 @@
 import { useState } from "react"
 
-import api from "../services"
+import api from "../../services"
 
-import { useNotification } from "../contexts/NotificationContext"
+import { useNotification } from "../../contexts/NotificationContext"
 
-import SideMenu from "../components/SideMenu"
-import Form from "../components/Form"
-import Button from "../components/Button"
-import Input from "../components/Input"
+import SideMenu from "../../components/SideMenu"
+import Form from "../../components/Form"
+import Button from "../../components/Button"
+import Input from "../../components/Input"
 
 const ContentView = ({ children }) => (
   <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-screen">

@@ -2,17 +2,17 @@ import { useState, useEffect, useCallback } from "react"
 import { useParams } from "react-router-dom"
 import { ThumbsUp, ThumbsDown, MessageCircle, Share2, Pencil, Trash } from "lucide-react"
 
-import { useAuth } from "../contexts/AuthContext"
-import { useNotification } from "../contexts/NotificationContext"
+import { useAuth } from "../../contexts/AuthContext"
+import { useNotification } from "../../contexts/NotificationContext"
 
-import { getVideoById, deleteVideoById, likeVideo, unlikeVideo, shareVideo, addComment, replyToComment, getCommentsForVideo } from "../services/video"
+import { getVideoById, deleteVideoById, likeVideo, unlikeVideo, shareVideo, addComment, replyToComment, getCommentsForVideo } from "../../services/video"
 
-import SideMenu from "../components/SideMenu"
-import VideoPlayer from "../components/Video/Player"
-import Button from "../components/Button"
-import CommentForm from "../components/CommentForm"
-import CommentItem from "../components/CommentItem"
-import PurpleLink from "../components/Embeds/PurpleLink"
+import SideMenu from "../../components/SideMenu"
+import VideoPlayer from "../../components/Video/Player"
+import Button from "../../components/Button"
+import CommentForm from "../../components/CommentForm"
+import CommentItem from "../../components/CommentItem"
+import PurpleLink from "../../components/Embeds/PurpleLink"
 
 const ContentView = ({ children, ...props }) => (
   <main
