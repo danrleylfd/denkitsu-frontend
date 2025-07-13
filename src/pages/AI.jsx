@@ -159,6 +159,7 @@ const AI = () => {
     <SideMenu ContentView={ContentView} className="bg-brand-purple bg-cover bg-center">
       {!temMensagensDoUsuario ? (
         <div className="flex grow justify-center items-center flex-col">
+          <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
           <AIBar
             userPrompt={userPrompt}
             setUserPrompt={setUserPrompt}
@@ -169,7 +170,6 @@ const AI = () => {
             clearHistory={clearHistory}
             loading={loading}
           />
-          <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
           <AISettings
             settingsOpen={settingsOpen}
             toggleSettings={() => setSettingsOpen(!settingsOpen)}
