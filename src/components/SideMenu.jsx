@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom"
 import {
   Menu, X, Sun, Moon, Home, Newspaper, Cloud, Languages, Clock, Code, Bot, Kanban, Link2,
   PersonStanding, LogIn, UserPlus, Lock, KeyRound, LogOut,
-  Upload, Video, TrendingUp, Play, Edit,
+  Upload, Video, TrendingUp, Play, Edit2,
 } from "lucide-react"
 import { useTheme } from "../contexts/ThemeContext"
 import { useAuth } from "../contexts/AuthContext"
@@ -73,7 +73,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
   const aiItems = [
     { icon: Bot, label: "Denkitsu AI", to: "/chat" },
     { icon: Code, label: "Codebase", to: "/codebase" },
-    { icon: Edit, label: "Editor", to: "/editor"},
+    { icon: Edit2, label: "Editor", to: "/editor"},
     { icon: Kanban, label: "Kanban", to: "/kanban" },
   ]
 
