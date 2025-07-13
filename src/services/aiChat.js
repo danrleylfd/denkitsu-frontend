@@ -1,4 +1,3 @@
-import axios from "axios"
 import api from "./"
 
 const sendMessageStream = async (aiKey, aiProvider, model, messages, web, onDelta) => {

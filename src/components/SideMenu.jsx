@@ -6,7 +6,7 @@ import {
   X,
   Cloud,
   Newspaper,
-  BotMessageSquare,
+  Bot,
   LogIn,
   LogOut,
   Lock,
@@ -57,14 +57,12 @@ const IconGroup = ({ items, title, isOpen }) => {
   }
 
   return (
-    <div className="px-4">
-      <div className="flex flex-wrap gap-2">
-        {items.map(({ icon: Icon, label, to }, index) => (
-          <Link key={index} to={to} className={iconClass} title={label}>
-            <Icon size={16} />
-          </Link>
-        ))}
-      </div>
+    <div className="flex justify-center items-center gap-4">
+      {items.map(({ icon: Icon, label, to }, index) => (
+        <Link key={index} to={to} className={iconClass} title={label}>
+          <Icon size={16} />
+        </Link>
+      ))}
     </div>
   )
 }
@@ -83,7 +81,6 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
   }, [isOpen])
 
   const menuItems = [
-    { icon: Home, label: "Início", to: "/" },
     { icon: Newspaper, label: "Notícias", to: "/news" },
     { icon: Cloud, label: "Clima", to: "/clima" },
     { icon: Languages, label: "Tradutor", to: "/translator" },
@@ -92,7 +89,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
   ]
 
   const signedMenuItems = [
-    { icon: BotMessageSquare, label: "Denkitsu AI", to: "/chat" },
+    { icon: Bot, label: "Denkitsu AI", to: "/chat" },
     { icon: Kanban, label: "Kanban", to: "/kanban" },
     { icon: Link2, label: "Atalho", to: "/atalho" },
     { icon: PersonStanding, label: "Perfil", to: "/profile" },
@@ -132,21 +129,28 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
           isOpen ? "w-48" : "w-14"
         } bg-lightBg-secondary dark:bg-darkBg-secondary border-border ${fixed && "fixed"}`}>
         <nav className="flex flex-col gap-1">
-          <div className="w-0 h-0 p-0 m-0"></div>
           <button onClick={toggleMenu} className={menuItemClass} title={!isOpen ? "Menu" : ""}>
             <div className="w-6 h-6 flex items-center justify-center">{isOpen ? <X size={16} /> : <Menu size={16} />}</div>
-            {isOpen && <span className="ml-3 select-none">Menu</span>}
+            {isOpen && <span className="ml-1 select-none">Menu</span>}
           </button>
           <button onClick={toggleTheme} className={menuItemClass} title={!isOpen ? "Alternar Tema" : ""}>
             <div className="w-6 h-6 flex items-center justify-center">{theme === "dark" ? <Moon size={16} /> : <Sun size={16} />}</div>
-            {isOpen && <span className="ml-3 select-none">Alternar Tema</span>}
+            {isOpen && <span className="ml-1 select-none">Alternar Tema</span>}
           </button>
+          {isOpen && (
+            <Link to="/" className={menuItemClass} title="Início">
+              <div className="w-6 h-6 flex items-center justify-center">
+                <Home size={16} />
+              </div>
+              <span className="ml-1 select-none">Início</span>
+            </Link>
+          )}
           {currentMenuItems.map(({ icon: Icon, label, to }, index) => (
             <Link key={index} to={to} className={menuItemClass} title={!isOpen ? label : ""}>
               <div className="w-6 h-6 flex items-center justify-center">
                 <Icon size={16} />
               </div>
-              {isOpen && <span className="ml-3 select-none">{label}</span>}
+              {isOpen && <span className="ml-1 select-none">{label}</span>}
             </Link>
           ))}
           {signed && <IconGroup items={videoItems} title="Vídeos" isOpen={isOpen} />}

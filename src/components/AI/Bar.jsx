@@ -1,4 +1,4 @@
-import { Settings, SendHorizontal, ImagePlus, Globe, GlobeLock, Newspaper, Cloud, Binary, Brain, MessageCirclePlus } from "lucide-react"
+import { Settings, SendHorizontal, ImagePlus, Globe, GlobeLock, Newspaper, Shredder, Cloud, CloudOff, AudioWaveform, Brain, MessageCirclePlus, ImageOff } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 
@@ -16,14 +16,14 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
   }
   return (
     <Paper className="bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 max-w-[95%] mb-2 mx-auto">
-      <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettings} disabled={loading}>
-        <Settings size={16} />
-      </Button>
       <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"} disabled={loading}>
         <Brain size={16} />
       </Button>
-      <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={loading}>
-        <ImagePlus size={16} />
+      <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettings} disabled={loading}>
+        <Settings size={16} />
+      </Button>
+      <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={aiProvider === "groq" || loading}>
+        {aiProvider === "openrouter" ? <ImagePlus size={16} /> : <ImageOff size={16} />}
       </Button>
       {aiKey.length > 0 && (
         <>
@@ -31,10 +31,10 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
             {aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
           </Button>
           <Button variant={aiProvider === "openrouter" && !stream && newsTool ? "outline" : "secondary"} size="icon" $rounded title="Buscar Notícias" onClick={toggleNews} disabled={aiProvider === "groq" || stream || loading}>
-            <Newspaper size={16} />
+            {aiProvider === "openrouter" && !stream ? <Newspaper size={16} /> : <Shredder size={16} />}
           </Button>
           <Button variant={aiProvider === "openrouter" && !stream && weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Previsão do clima" onClick={toggleWeather} disabled={aiProvider === "groq" || stream || loading}>
-            <Cloud size={16} />
+            {(aiProvider === "openrouter" && !stream) ? <Cloud size={16} /> : <CloudOff size={16} />}
           </Button>
         </>
       )}
@@ -46,11 +46,9 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
         disabled={loading}
         className="resize-y"
       />
-      {aiKey.length > 0 && (
-        <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Stream" onClick={toggleStream} disabled={loading}>
-          <Binary size={16} />
-        </Button>
-      )}
+      <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={newsTool || weatherTool || loading}>
+        <AudioWaveform size={16} />
+      </Button>
       <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
         <MessageCirclePlus size={16} />
       </Button>
