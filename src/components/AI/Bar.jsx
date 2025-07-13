@@ -15,7 +15,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
     }
   }
   return (
-    <Paper className="bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 max-w-[95%] mb-2 mx-auto">
+    <Paper className="bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 max-w-[95%] mt-2 mx-auto">
       <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"} disabled={loading}>
         <Brain size={16} />
       </Button>
