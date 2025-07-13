@@ -36,7 +36,7 @@ const AppRoutes = () => {
         {signed ? (
           <>
             <Route path="/" element={<News />} />
-            <Route path="/editor-qwe" element={<Editor />} />
+            <Route path="/editor" element={<Editor />} />
             <Route path="/news" element={<News />} />
             <Route path="/kanban" element={<Kanban />} />
             <Route path="/pomodoro" element={<Pomodoro />} />

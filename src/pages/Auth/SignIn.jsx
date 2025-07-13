@@ -39,7 +39,7 @@ const SignIn = () => {
     }
   }
   return (
-    <SideMenu ContentView={ContentView} className="bg-cover bg-brand-purple">
+    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
       <Form title="Entrar" onSubmit={handleSignIn}>
         <Input
           name="email"

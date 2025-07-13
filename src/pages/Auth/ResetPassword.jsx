@@ -52,7 +52,7 @@ const ResetPassword = () => {
     }
   }
   return (
-    <SideMenu ContentView={ContentView} className="bg-cover bg-brand-purple">
+    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
       <Form title="Redefinir Senha" onSubmit={handleResetPassword}>
         <Input
           name="token"

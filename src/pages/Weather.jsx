@@ -96,7 +96,7 @@ const Weather = () => {
           <Button variant="outline" size="icon" $rounded onClick={buscarPorCidade}>
             <SearchIcon size={16} />
           </Button>
-          <Button variant="outline" size="icon" $rounded onClick={buscarPorCoordenadas}>
+          <Button variant="secondary" size="icon" $rounded onClick={buscarPorCoordenadas}>
             <RefreshCcwIcon size={16} />
           </Button>
         </Input>
