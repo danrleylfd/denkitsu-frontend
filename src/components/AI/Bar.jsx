@@ -30,10 +30,10 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
           <Button variant={aiProvider === "openrouter" && web ? "outline" : "secondary" } size="icon" $rounded title="Pesquisar na Web" onClick={toggleWeb} disabled={aiProvider === "groq" || loading}>
             {aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
           </Button>
-          <Button variant={!stream && newsTool ? "outline" : "secondary"} size="icon" $rounded title="Buscar Notícias" onClick={toggleNews} disabled={loading}>
+          <Button variant={stream === false && newsTool ? "outline" : "secondary"} size="icon" $rounded title="Buscar Notícias" onClick={toggleNews} disabled={stream === false && loading}>
             <Newspaper size={16} />
           </Button>
-          <Button variant={!stream && weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Previsão do clima" onClick={toggleWeather} disabled={!stream || loading}>
+          <Button variant={stream === false && weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Previsão do clima" onClick={toggleWeather} disabled={stream === false || loading}>
             <Cloud size={16} />
           </Button>
         </>
