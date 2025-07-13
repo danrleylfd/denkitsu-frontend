@@ -1,30 +1,9 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import {
-  Menu,
-  Home,
-  X,
-  Cloud,
-  Newspaper,
-  Bot,
-  LogIn,
-  LogOut,
-  Lock,
-  Clock,
-  Kanban,
-  Play,
-  Upload,
-  Link2,
-  PersonStanding,
-  Sun,
-  Moon,
-  Languages,
-  Code,
-  UserPlus,
-  KeyRound,
-  Video,
-  TrendingUp,
-  History
+  Menu, X, Sun, Moon, Home, Newspaper, Cloud, Languages, Clock, Code, Bot, Kanban, Link2,
+  PersonStanding, LogIn, UserPlus, Lock, KeyRound, LogOut,
+  Upload, Video, TrendingUp, Play
 } from "lucide-react"
 import { useTheme } from "../contexts/ThemeContext"
 import { useAuth } from "../contexts/AuthContext"
@@ -57,7 +36,7 @@ const IconGroup = ({ items, title, isOpen }) => {
   }
 
   return (
-    <div className="flex justify-center items-center gap-4">
+    <div className="flex justify-center items-center gap-3">
       {items.map(({ icon: Icon, label, to }, index) => (
         <Link key={index} to={to} className={iconClass} title={label}>
           <Icon size={16} />
@@ -100,7 +79,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
     { icon: Video, label: "Meus Vídeos", to: "/my-videos" },
     { icon: Upload, label: "Upload", to: "/upload" },
     { icon: TrendingUp, label: "Vídeos Populares", to: "/popular" },
-    { icon: History, label: "Vídeos Recentes", to: "/recents" }
+    { icon: Play, label: "Vídeos Recentes", to: "/recents" }
   ]
 
   const authItems = [
@@ -129,6 +108,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
           isOpen ? "w-48" : "w-14"
         } bg-lightBg-secondary dark:bg-darkBg-secondary border-border ${fixed && "fixed"}`}>
         <nav className="flex flex-col gap-1">
+          <div className="w-0 h-0 p-0 m-0"></div>
           <button onClick={toggleMenu} className={menuItemClass} title={!isOpen ? "Menu" : ""}>
             <div className="w-6 h-6 flex items-center justify-center">{isOpen ? <X size={16} /> : <Menu size={16} />}</div>
             {isOpen && <span className="ml-1 select-none">Menu</span>}
