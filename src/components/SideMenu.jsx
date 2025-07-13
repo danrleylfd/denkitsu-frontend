@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import {
   Menu, X, Sun, Moon, Home, Newspaper, Cloud, Languages, Clock, Code, Bot, Kanban, Link2,
   PersonStanding, LogIn, UserPlus, Lock, KeyRound, LogOut,
-  Upload, Video, TrendingUp, Play, Edit2,
+  Upload, Video, TrendingUp, Play, Edit,
 } from "lucide-react"
 import { useTheme } from "../contexts/ThemeContext"
 import { useAuth } from "../contexts/AuthContext"
@@ -17,12 +17,12 @@ const MainContent = ({ children }) => (
 
 const IconGroup = ({ items, title, isOpen }) => {
   const iconClass = [
-    "flex items-center justify-center h-7 rounded-lg",
+    "flex items-center justify-center h-6 rounded-xl",
     "bg-transparent hover:bg-lightBg-primary dark:hover:bg-darkBg-primary",
     "text-lightFg-primary dark:text-darkFg-primary hover:text-primary-light dark:hover:text-primary-light active:text-primary-dark dark:active:text-primary-dark",
     "cursor-pointer transition-all duration-200",
-    isOpen && "w-8",
-    !isOpen && "px-4",
+    isOpen && "w-8 py-4",
+    !isOpen && "p-4",
   ].join(" ")
 
   if (!isOpen) {
@@ -49,6 +49,7 @@ const IconGroup = ({ items, title, isOpen }) => {
 }
 
 const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => {
+  // const { pathname } = useLocation()
   const { bgUrl } = useBackground()
   const { theme, toggleTheme } = useTheme()
   const { signed } = useAuth()
@@ -62,23 +63,18 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
   }, [isOpen])
 
   const menuItems = [
-    { icon: Home, label: "Início", to: "/"},
+    { icon: Clock, label: "Pomodoro", to: "/pomodoro" },
     { icon: Newspaper, label: "Notícias", to: "/news" },
     { icon: Cloud, label: "Clima", to: "/clima" },
-    { icon: Clock, label: "Pomodoro", to: "/pomodoro" },
     { icon: Languages, label: "Tradutor", to: "/translator" },
+    { icon: Link2, label: "Atalho", to: "/atalho" },
   ]
 
-  const AIMenuItems = [
+  const aiItems = [
     { icon: Bot, label: "Denkitsu AI", to: "/chat" },
     { icon: Code, label: "Codebase", to: "/codebase" },
-    { icon: Edit2, label: "Editor", to: "/editor"},
+    { icon: Edit, label: "Editor", to: "/editor"},
     { icon: Kanban, label: "Kanban", to: "/kanban" },
-  ]
-
-  const signedItems = [
-    { icon: PersonStanding, label: "Perfil", to: "/profile" },
-    { icon: LogOut, label: "Sair", to: "/auth/signout" },
   ]
 
   const videoItems = [
@@ -95,7 +91,12 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
     { icon: KeyRound, label: "Redefinir senha", to: "/reset_password" },
   ]
 
-  const currentMenuItems = signed ? [...menuItems, { icon: Link2, label: "Atalho", to: "/atalho" },] : menuItems
+  const signedItems = [
+    { icon: PersonStanding, label: "Perfil", to: "/profile" },
+    // { icon: LogOut, label: "Sair", to: "/auth/signout" },
+  ]
+
+  const currentMenuItems = signed ? [...menuItems, ...signedItems] : menuItems
 
   const menuItemClass = [
     "flex items-center px-4 py-1 mx-1 rounded-xl",
@@ -114,7 +115,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
           isOpen ? "w-48" : "w-14"
         } bg-lightBg-secondary dark:bg-darkBg-secondary border-border ${fixed && "fixed"}`}>
         <nav className="flex flex-col gap-1">
-          {/* <div className="w-0 h-0 p-0 m-0"/> */}
+          <div className="w-0 h-0 p-0 m-0" />
           <button onClick={toggleMenu} className={menuItemClass} title={!isOpen ? "Menu" : ""}>
             <div className="w-6 h-6 flex items-center justify-center">{isOpen ? <X size={16} /> : <Menu size={16} />}</div>
             {isOpen && <span className="ml-1 select-none">Menu</span>}
@@ -123,14 +124,15 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
             <div className="w-6 h-6 flex items-center justify-center">{theme === "dark" ? <Moon size={16} /> : <Sun size={16} />}</div>
             {isOpen && <span className="ml-1 select-none">Alternar Tema</span>}
           </button>
-          {/* {isOpen && (
+          {isOpen && (
             <Link to="/" className={menuItemClass} title="Início">
               <div className="w-6 h-6 flex items-center justify-center">
                 <Home size={16} />
               </div>
               <span className="ml-1 select-none">Início</span>
             </Link>
-          )} */}
+          )}
+          {signed && <IconGroup items={aiItems} title="Denkitsu AI" isOpen={isOpen} />}
           {currentMenuItems.map(({ icon: Icon, label, to }, index) => (
             <Link key={index} to={to} className={menuItemClass} title={!isOpen ? label : ""}>
               <div className="w-6 h-6 flex items-center justify-center">
@@ -139,9 +141,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
               {isOpen && <span className="ml-1 select-none">{label}</span>}
             </Link>
           ))}
-          {signed && <IconGroup items={AIMenuItems} title="Denkitsu AI" isOpen={isOpen} />}
           {signed && <IconGroup items={videoItems} title="Vídeos" isOpen={isOpen} />}
-          {signed && <IconGroup items={signedItems} title="Meu Perfil" isOpen={isOpen} />}
           {!signed && <IconGroup items={authItems} title="Autenticação" isOpen={isOpen} />}
         </nav>
       </aside>

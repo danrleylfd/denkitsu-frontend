@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
-import { Pencil, Trash, X, Check } from "lucide-react"
+import { LogOut, Pencil, Trash, X, Check } from "lucide-react"
 
 import { useAuth } from "../contexts/AuthContext"
 import { useAI } from "../contexts/AIContext"
@@ -109,8 +109,8 @@ const Profile = () => {
           <img
             src={avatarUrl || userData.avatarUrl}
             alt={name || userData.name}
-            className="w-24 h-24 rounded-full object-cover border-4 border-violet-500" />
-
+            className="w-24 h-24 rounded-full object-cover border-4 border-violet-500"
+          />
           {userID === user._id && isEditing ? (
             <form className="flex-1 flex flex-col gap-0 items-center" onSubmit={(e) => e.preventDefault()}>
               <Input id="name" value={name} onChange={(e) => setName(e.target.value)} disabled={loading} />
@@ -152,6 +152,9 @@ const Profile = () => {
               )}
             </div>
           )}
+          <Button variant="danger" size="icon" $rounded title="Sair" onClick={signOut}>
+            <LogOut size={16} />
+          </Button>
         </div>
       )}
     </SideMenu>
