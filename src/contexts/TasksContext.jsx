@@ -24,7 +24,7 @@ const TasksProvider = ({ children }) => {
   const [loading, setLoading] = useState(false)
   const [editingId, setEditingId] = useState(null)
 
-  const { aiKey, model, aiProvider, prompts } = useAI()
+  const { aiKey, model, aiProvider } = useAI()
   const { notifyError } = useNotification()
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const TasksProvider = ({ children }) => {
       console.error(error)
       notifyError("Falha ao salvar as tarefas no localStorage.")
     }
-  }, [tasks])
+  }, [tasks, notifyError])
 
   const findTaskContainer = useCallback(
     (taskId) => {
@@ -63,8 +63,8 @@ const TasksProvider = ({ children }) => {
       return matches.length > 0 ? matches.map((match) => match[2].trim()).join("\n\n") : null
     }
     try {
-      const userPrompt = { role: "user", content: `Modo Secretário, Objetivo: "${goal}"` }
-      const { data } = await sendMessage(aiKey, aiProvider, model, [prompts[0], prompts[5], userPrompt])
+      const userPrompt = { role: "user", content: `Objetivo: "${goal}"` }
+      const { data } = await sendMessage(aiKey, aiProvider, model, [userPrompt], false, false, false, "Secretário")
       const rawContent = data?.choices?.[0]?.message?.content
       if (typeof rawContent !== "string" || !rawContent.trim()) return notifyError("A resposta da IA veio vazia ou em formato inválido.")
       const content = rawContent.replace(/<think>[\s\S]*?<\/think>/g, "")
@@ -90,7 +90,7 @@ const TasksProvider = ({ children }) => {
     } finally {
       setLoading(false)
     }
-  }, [newTask, aiKey])
+  }, [newTask, aiKey, aiProvider, model, notifyError])
 
   const deleteTask = useCallback(
     (taskId) => {

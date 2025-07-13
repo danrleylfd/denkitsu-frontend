@@ -20,7 +20,7 @@ const Editor = () => {
   )
   const [activeTab, setActiveTab] = useState("editor")
   const [loadingAi, setLoadingAi] = useState(false)
-  const { aiKey, model, aiProvider, prompts } = useAI()
+  const { aiKey, model, aiProvider } = useAI()
 
   const textAreaRef = useRef(null)
 
@@ -103,16 +103,14 @@ const Editor = () => {
     setLoadingAi(true)
     let instruction = ""
     switch (actionType) {
-      case "improve": instruction = "Modo Redator, melhore o seguinte texto..."; break
+      case "improve": instruction = "Melhore o seguinte texto..."; break
       case "correct": instruction = "Corrija a gramática e a ortografia do seguinte texto..."; break
       case "translate": instruction = "Traduza o seguinte texto para o Inglês..."; break
       default: setLoadingAi(false); return
     }
     const userPrompt = { role: "user", content: `${instruction}\n\n---\n\n${selectedText}` }
     try {
-      const agentPrompt = prompts.find(p => p.content.includes("Modo Redator"))
-      if (!agentPrompt) { throw new Error("O 'Modo Redator' não foi encontrado.") }
-      const { data } = await sendMessage(aiKey, aiProvider, model, [prompts[0], agentPrompt, userPrompt])
+      const { data } = await sendMessage(aiKey, aiProvider, model, [userPrompt], false, false, false, "Redator")
       const resultText = data?.choices?.[0]?.message?.content
       if (resultText) {
         setText(currentText => currentText.replace(selectedText, resultText.trim()))

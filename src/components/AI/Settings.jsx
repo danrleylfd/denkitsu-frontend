@@ -8,22 +8,19 @@ import Input from "../Input"
 import AIInput from "./Input"
 import Button from "../Button"
 
+const AVALIABLE_MODES = ["Desenvolvedor", "Lousa", "Redator", "Blogueiro", "Secretário", "Moderador", "Prompter"]
+
 const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqModels, selectedPrompt, onSelectPrompt }) => {
   const [showAIKey, setShowAIKey] = useState(false)
-  const { aiKey, model, aiProvider, prompts, customPrompt, loading, setAIKey, setModel, setAIProvider, aiProviderToggle, setCustomPrompt } = useAI()
+  const { aiKey, model, aiProvider, customPrompt, loading, setAIKey, setModel, setAIProvider, aiProviderToggle, setCustomPrompt } = useAI()
+
   if (!settingsOpen) return null
-  const getModeName = (content) => {
-    if (!content) return "Padrão"
-    const firstLine = content.trim().split("\n")[0]
-    return firstLine.replace("## Modo ", "").trim()
-  }
 
   const gradientColors = ["gradient-green", "gradient-yellow", "gradient-blue", "gradient-red", "gradient-pink", "gradient-orange", "gradient-purple"]
 
   const modeColorMap = new Map()
-  prompts.slice(1).forEach((prompt, index) => {
-    const name = getModeName(prompt.content)
-    modeColorMap.set(name, gradientColors[index % gradientColors.length])
+  AVALIABLE_MODES.forEach((modeName, index) => {
+    modeColorMap.set(modeName, gradientColors[index % gradientColors.length])
   })
 
   return (
@@ -93,16 +90,15 @@ const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqM
             <Button variant={!selectedPrompt ? "primary" : "secondary"} size="xs" $rounded onClick={() => onSelectPrompt("")} disabled={loading}>
               Padrão
             </Button>
-            {prompts.slice(1).map((prompt) => {
-              const modeName = getModeName(prompt.content)
+            {AVALIABLE_MODES.map((modeName) => {
               const selectedColor = modeColorMap.get(modeName) || "gradient-blue"
               return (
                 <Button
                   key={modeName}
-                  variant={selectedPrompt === prompt.content ? selectedColor : "secondary"}
+                  variant={selectedPrompt === `## Modo ${modeName}` ? selectedColor : "secondary"}
                   size="xs"
                   $rounded
-                  onClick={() => onSelectPrompt(prompt.content)}
+                  onClick={() => onSelectPrompt(`## Modo ${modeName}`)}
                   disabled={loading}>
                   {modeName}
                 </Button>

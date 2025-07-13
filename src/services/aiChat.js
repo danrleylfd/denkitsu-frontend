@@ -1,6 +1,6 @@
 import api from "./"
 
-const sendMessageStream = async (aiKey, aiProvider, model, messages, web, onDelta) => {
+const sendMessageStream = async (aiKey, aiProvider, model, messages, web, mode, onDelta) => {
   const permission = aiProvider === "groq" ? false : web
   const plugins = permission ? [{ id: "web" }] : undefined
   const payload = {
@@ -9,7 +9,8 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, web, onDelt
     model,
     messages,
     plugins,
-    stream: true
+    stream: true,
+    mode
   }
   const response = await fetch(`${api.defaults.baseURL}/ai/chat/completions`, {
     method: "POST",
@@ -48,7 +49,7 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, web, onDelt
   }
 }
 
-const sendMessage = async (aiKey, aiProvider, model, messages, web, newsTool, weatherTool) => {
+const sendMessage = async (aiKey, aiProvider, model, messages, web, newsTool, weatherTool, mode) => {
   const permission = aiProvider === "groq" ? false : web
   const plugins = permission ? [{ id: "web" }] : undefined
   const use_tools = newsTool && weatherTool ? ["searchNews", "getWeather"] : newsTool ? ["searchNews"] : weatherTool ? ["getWeather"] : undefined
@@ -58,7 +59,8 @@ const sendMessage = async (aiKey, aiProvider, model, messages, web, newsTool, we
     model,
     plugins,
     use_tools,
-    messages: [...messages]
+    messages: [...messages],
+    mode
   }
   try {
     const { data } = await api.post("/ai/chat/completions", payload)

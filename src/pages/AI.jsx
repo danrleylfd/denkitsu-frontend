@@ -15,7 +15,7 @@ const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-sc
 
 const AI = () => {
   const {
-    prompts, aiProvider, aiKey, model,
+    aiProvider, aiKey, model,
     stream, web, newsTool, weatherTool,
     imageUrls, setImageUrls,
     freeModels, setFreeModels,
@@ -50,7 +50,7 @@ const AI = () => {
         setMessages(prev => [...prev, { id: Date.now(), role: "assistant", content: message, reasoning: "" }])
       }
     })()
-  }, [])
+  }, [aiKey, setFreeModels, setPayModels, setGroqModels, setMessages, notifyError])
 
   const onAddImage = () => {
     if (imageUrls.length >= 3) return notifyWarning("Você pode adicionar no máximo 3 imagens.")
@@ -73,12 +73,7 @@ const AI = () => {
       ...imageUrls.map(url => ({ type: "image_url", image_url: { url } }))
     ]
   }
-  const history = [...messages]
-  if (selectedPrompt) {
-    const prompt = prompts.find(p => p.content.includes(selectedPrompt))
-    if (prompt && !messages.some(m => m.content === prompt.content)) history.push(prompt)
-  }
-  history.push(newMessage)
+  const history = [...messages, newMessage]
   setMessages(history)
   setUserPrompt("")
   setImageUrls([])
@@ -109,7 +104,7 @@ const AI = () => {
     }
     setMessages(prev => [...prev, placeholder])
     try {
-      await sendMessageStream(aiKey, aiProvider, model, apiMessages, web, delta => {
+      await sendMessageStream(aiKey, aiProvider, model, apiMessages, web, selectedPrompt, delta => {
         if (delta.content) placeholder._contentBuffer += delta.content
         if (delta.reasoning) placeholder._reasoningBuffer += delta.reasoning
         if (delta.tool_calls?.[0]?.arguments?.reasoning) placeholder._reasoningBuffer += delta.tool_calls[0].arguments.reasoning
@@ -128,7 +123,7 @@ const AI = () => {
     }
   } else {
     try {
-      const data = await sendMessage(aiKey, aiProvider, model, apiMessages, web, newsTool, weatherTool)
+      const data = await sendMessage(aiKey, aiProvider, model, apiMessages, web, newsTool, weatherTool, selectedPrompt)
       const res = data?.choices?.[0]?.message
       if (!res) return
       const { content, reasoning } = cleanContent(res.content || "")
@@ -149,7 +144,7 @@ const AI = () => {
       setLoading(false)
     }
   }
-}, [userPrompt, imageUrls, messages, model, aiKey, aiProvider, stream, web, selectedPrompt, prompts])
+}, [userPrompt, imageUrls, messages, model, aiKey, aiProvider, stream, web, newsTool, weatherTool, selectedPrompt, setMessages, setUserPrompt, setImageUrls, setLoading, notifyError])
 
   const toggleLousa = useCallback(content => setLousaContent(content), [])
 

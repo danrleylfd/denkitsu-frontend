@@ -21,7 +21,7 @@ const ContentView = ({ children }) => (
 )
 
 const Upload = () => {
-  const { aiKey, model, aiProvider, prompts, aiProviderToggle  } = useAI()
+  const { aiKey, model, aiProvider, aiProviderToggle  } = useAI()
   const { notifyWarning, notifyError } = useNotification()
   const [content, setContent] = useState("")
   const [thumbnail, setThumbnail] = useState("")
@@ -33,8 +33,8 @@ const Upload = () => {
   const handleGenerateContent = async () => {
     setLoading(true)
     try {
-      const userPrompt = { role: "user", content: `Modo Blogueiro, Tema: ${content}` }
-      const data = await sendMessage(aiKey, aiProvider, model, [prompts[0], prompts[4], userPrompt])
+      const userPrompt = { role: "user", content: `Tema: ${content}` }
+      const data = await sendMessage(aiKey, aiProvider, model, [userPrompt], false, false, false, "Blogueiro")
       if (data.error) return notifyError(data.error.message)
       const message = data?.choices?.[0]?.message
       if (!message) return notifyError("Serviço temporariamente indisponível.")

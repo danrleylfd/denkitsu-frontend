@@ -1,5 +1,4 @@
-import { createContext, useState, useEffect, useCallback, useMemo, useContext } from "react"
-import { getPrompt } from "../services/aiChat"
+import { createContext, useState, useEffect, useContext } from "react"
 
 const AIContext = createContext()
 
@@ -22,7 +21,6 @@ const AIProvider = ({ children }) => {
   const [freeModels, setFreeModels] = useState([])
   const [payModels, setPayModels] = useState([])
   const [groqModels, setGroqModels] = useState([])
-  const [prompts, setPrompts] = useState([])
   const [customPrompt, setCustomPrompt] = useState(storedCustomPrompt || "Responda em português do Brasil (pt-BR).")
   const [groqKey, setGroqKey] = useState(storedGroqKey || "")
   const [openRouterKey, setOpenRouterKey] = useState(storedOpenRouterKey || "")
@@ -33,14 +31,6 @@ const AIProvider = ({ children }) => {
   const [weatherTool, setWeatherTool] = useState(storedWeatherTool === null? false : storedWeatherTool)
   const [userPrompt, setUserPrompt] = useState("")
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
-
-  useEffect(() => {
-    async function loadPrompts() {
-      const promptsData = await getPrompt()
-      setPrompts(promptsData)
-    }
-    loadPrompts()
-  }, [])
 
   useEffect(() => (localStorage.setItem("@Denkitsu:aiProvider", aiProvider)), [aiProvider])
 
@@ -69,21 +59,19 @@ const AIProvider = ({ children }) => {
   }, [openRouterKey])
 
   useEffect(() => {
-    if (prompts.length === 0) return
     setMessages((prev) => {
       const hasSystemMessage = prev.some((msg) => msg.role === "system")
-      if (!hasSystemMessage) return [prompts[0], { role: "system", content: customPrompt }]
+      if (!hasSystemMessage) return [{ role: "system", content: customPrompt }]
       return prev
     })
     localStorage.setItem("@Denkitsu:messages", JSON.stringify(messages))
-  }, [prompts, messages])
+  }, [messages, customPrompt])
 
   const aiProviderToggle = () => setAIProvider((prev) => (prev === "groq" ? "openrouter" : "groq"))
 
-  const clearHistory = () => setMessages([prompts[0], { role: "system", content: customPrompt }])
+  const clearHistory = () => setMessages([{ role: "system", content: customPrompt }])
 
   const values = {
-    prompts, setPrompts,
     stream, setStream, toggleStream: () => setStream(!stream),
     web, setWeb, toggleWeb: () => setWeb(!web),
     newsTool, setNewsTool, toggleNews: () => setNewsTool(!newsTool),
