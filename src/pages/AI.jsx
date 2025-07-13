@@ -182,7 +182,6 @@ const AI = () => {
         </div>
       ) : (
         <>
-          <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
           <AIBar
             userPrompt={userPrompt}
             setUserPrompt={setUserPrompt}
@@ -193,6 +192,7 @@ const AI = () => {
             clearHistory={clearHistory}
             loading={loading}
           />
+          <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
           <AIHistory toggleLousa={toggleLousa} messages={messages} />
           <AISettings
             settingsOpen={settingsOpen}
