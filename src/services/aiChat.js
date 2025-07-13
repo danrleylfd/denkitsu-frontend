@@ -5,17 +5,17 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, web, onDelt
   const permission = aiProvider === "groq" ? false : web
   const plugins = permission ? [{ id: "web" }] : undefined
   const payload = {
+    aiProvider,
+    aiKey,
     model,
     messages,
     plugins,
     stream: true
   }
-  const apiURL = aiProvider === "groq" ? "https://api.groq.com/openai/v1/chat/completions" : "https://openrouter.ai/api/v1/chat/completions"
-  const response = await fetch(apiURL, {
+  const response = await fetch(`${api.defaults.baseURL}/ai/chat/completions`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      ...(aiKey && { Authorization: `Bearer ${aiKey}` })
     },
     body: JSON.stringify(payload)
   })
