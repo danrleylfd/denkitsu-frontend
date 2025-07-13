@@ -26,10 +26,12 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
         <ImagePlus size={16} />
       </Button>
       {aiKey.length > 0 && (
+        <Button variant={aiProvider === "openrouter" && web ? "outline" : "secondary" } size="icon" $rounded title="Pesquisar na Web" onClick={toggleWeb} disabled={aiProvider === "groq" || loading}>
+          {aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
+        </Button>
+      )}
+      {!stream && aiKey.length > 0 && (
         <>
-          <Button variant={aiProvider === "openrouter" && web ? "outline" : "secondary" } size="icon" $rounded title="Pesquisar na Web" onClick={toggleWeb} disabled={aiProvider === "groq" || loading}>
-            {aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
-          </Button>
           <Button variant={newsTool ? "outline" : "secondary"} size="icon" $rounded title="Buscar Notícias" onClick={toggleNews} disabled={loading}>
             <Newspaper size={16} />
           </Button>
