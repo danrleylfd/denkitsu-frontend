@@ -110,7 +110,7 @@ const Editor = () => {
     }
     const userPrompt = { role: "user", content: `${instruction}\n\n---\n\n${selectedText}` }
     try {
-      const { data } = await sendMessage(aiKey, aiProvider, model, [userPrompt], false, false, false, "Redator")
+      const { data } = await sendMessage(aiKey, aiProvider, model, [userPrompt], false, false, false, false, "Redator")
       const resultText = data?.choices?.[0]?.message?.content
       if (resultText) {
         setText(currentText => currentText.replace(selectedText, resultText.trim()))

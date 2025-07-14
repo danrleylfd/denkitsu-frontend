@@ -16,7 +16,7 @@ const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-sc
 const AI = () => {
   const {
     aiProvider, aiKey, model,
-    stream, web, newsTool, weatherTool,
+    stream, web, newsTool, weatherTool, wikiTool,
     imageUrls, setImageUrls,
     freeModels, setFreeModels,
     payModels, setPayModels,
@@ -123,7 +123,7 @@ const AI = () => {
     }
   } else {
     try {
-      const data = await sendMessage(aiKey, aiProvider, model, apiMessages, web, newsTool, weatherTool, selectedPrompt)
+      const data = await sendMessage(aiKey, aiProvider, model, apiMessages, web, newsTool, weatherTool, wikiTool, selectedPrompt)
       const res = data?.choices?.[0]?.message
       if (!res) return
       const { content, reasoning } = cleanContent(res.content || "")
@@ -144,7 +144,7 @@ const AI = () => {
       setLoading(false)
     }
   }
-}, [userPrompt, imageUrls, messages, model, aiKey, aiProvider, stream, web, newsTool, weatherTool, selectedPrompt, setMessages, setUserPrompt, setImageUrls, setLoading, notifyError])
+}, [userPrompt, imageUrls, messages, model, aiKey, aiProvider, stream, web, newsTool, weatherTool, wikiTool, selectedPrompt, setMessages, setUserPrompt, setImageUrls, setLoading, notifyError])
 
   const toggleLousa = useCallback(content => setLousaContent(content), [])
 
