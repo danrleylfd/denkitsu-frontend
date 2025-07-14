@@ -1,4 +1,4 @@
-import { Settings, SendHorizontal, ImagePlus, Globe, GlobeLock, Newspaper, Shredder, Cloud, CloudOff, AudioWaveform, Brain, MessageCirclePlus, ImageOff } from "lucide-react"
+import { Settings, SendHorizontal, ImagePlus, Globe, GlobeLock, Newspaper, Shredder, Cloud, CloudOff, AudioWaveform, Brain, MessageCirclePlus, ImageOff, BookOpen } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 
@@ -7,7 +7,7 @@ import AIInput from "./Input"
 import Button from "../Button"
 
 const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessage, clearHistory, toggleSettings, loading }) => {
-  const { aiProvider, aiProviderToggle, aiKey, stream, toggleStream, web, toggleWeb, newsTool, toggleNews, weatherTool, toggleWeather } = useAI()
+  const { aiProvider, aiProviderToggle, aiKey, stream, toggleStream, web, toggleWeb, newsTool, toggleNews, weatherTool, toggleWeather, wikiTool, toggleWiki } = useAI()
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
@@ -35,6 +35,9 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
           </Button>
           <Button variant={aiProvider === "openrouter" && !stream && weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Previsão do clima" onClick={toggleWeather} disabled={aiProvider === "groq" || stream || loading}>
             {(aiProvider === "openrouter" && !stream) ? <Cloud size={16} /> : <CloudOff size={16} />}
+          </Button>
+          <Button variant={aiProvider === "openrouter" && !stream && wikiTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Wikipedia" onClick={toggleWiki} disabled={aiProvider === "groq" || stream || loading}>
+            {(aiProvider === "openrouter" && !stream) ? <BookOpen size={16} /> : <Shredder size={16} />}
           </Button>
         </>
       )}
