@@ -1,4 +1,4 @@
-import { Settings, SendHorizontal, ImagePlus, Globe, GlobeLock, Newspaper, Shredder, Cloud, CloudOff, AudioWaveform, Brain, MessageCirclePlus, ImageOff, BookOpen, BookAlert } from "lucide-react"
+import { Settings, SendHorizontal, ImagePlus, ImageOff, Globe, GlobeLock, Newspaper, Shredder, Cloud, CloudOff, AudioLines, Brain, MessageCirclePlus, BookOpen, BookAlert } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 
@@ -31,7 +31,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
             {aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
           </Button>
           <Button variant={aiProvider === "openrouter" && !stream && wikiTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Wikipédia" onClick={toggleWiki} disabled={aiProvider === "groq" || stream || loading}>
-            {(aiProvider === "openrouter" && !stream) ? <BookOpen size={16} /> : <BookAlertBookAlert size={16} />}
+            {(aiProvider === "openrouter" && !stream) ? <BookOpen size={16} /> : <BookAlert size={16} />}
           </Button>
           <Button variant={aiProvider === "openrouter" && !stream && newsTool ? "outline" : "secondary"} size="icon" $rounded title="Buscar Notícias" onClick={toggleNews} disabled={aiProvider === "groq" || stream || loading}>
             {aiProvider === "openrouter" && !stream ? <Newspaper size={16} /> : <Shredder size={16} />}
@@ -50,7 +50,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
         className="resize-y"
       />
       <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={newsTool || weatherTool || loading}>
-        <AudioWaveform size={16} />
+        <AudioLines size={16} />
       </Button>
       <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
         <MessageCirclePlus size={16} />
