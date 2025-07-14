@@ -34,7 +34,7 @@ const Upload = () => {
     setLoading(true)
     try {
       const userPrompt = { role: "user", content: `Tema: ${content}` }
-      const data = await sendMessage(aiKey, aiProvider, model, [userPrompt], false, false, false, false, "Blogueiro")
+      const data = await sendMessage(aiKey, aiProvider, model, [userPrompt], "Blogueiro")
       if (data.error) return notifyError(data.error.message)
       const message = data?.choices?.[0]?.message
       if (!message) return notifyError("Serviço temporariamente indisponível.")

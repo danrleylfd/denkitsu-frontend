@@ -49,7 +49,7 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, web, mode, 
   }
 }
 
-const sendMessage = async (aiKey, aiProvider, model, messages, web, newsTool, weatherTool, wikiTool, mode) => {
+const sendMessage = async (aiKey, aiProvider, model, messages, mode = "", web = false, newsTool = false, weatherTool = false, wikiTool = false, browseTool = false) => {
   const permission = aiProvider === "groq" ? false : web
   const plugins = permission ? [{ id: "web" }] : undefined
 
@@ -57,6 +57,7 @@ const sendMessage = async (aiKey, aiProvider, model, messages, web, newsTool, we
   if (newsTool) activeTools.push("searchNews")
   if (weatherTool) activeTools.push("getWeather")
   if (wikiTool) activeTools.push("searchWikipedia")
+  if (browseTool) activeTools.push("browseUrl")
   const use_tools = activeTools.length > 0 ? activeTools : undefined
 
   const payload = {

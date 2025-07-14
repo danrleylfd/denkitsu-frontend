@@ -13,6 +13,7 @@ const AIProvider = ({ children }) => {
   const storedWeb = JSON.parse(localStorage.getItem("@Denkitsu:Web"))
   const storedNewsTool = JSON.parse(localStorage.getItem("@Denkitsu:NewsTool"))
   const storedWeatherTool = JSON.parse(localStorage.getItem("@Denkitsu:WeatherTool"))
+  const storedBrowseTool = JSON.parse(localStorage.getItem("@Denkitsu:BrowseTool"))
   const storedWikiTool = JSON.parse(localStorage.getItem("@Denkitsu:WikiTool"))
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
 
@@ -31,6 +32,7 @@ const AIProvider = ({ children }) => {
   const [newsTool, setNewsTool] = useState(storedNewsTool === null ? false : storedNewsTool)
   const [weatherTool, setWeatherTool] = useState(storedWeatherTool === null? false : storedWeatherTool)
   const [wikiTool, setWikiTool] = useState(storedWikiTool === null? false : storedWikiTool)
+  const [browseTool, setBrowseTool] = useState(storedBrowseTool === null ? false : storedBrowseTool)
   const [userPrompt, setUserPrompt] = useState("")
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
 
@@ -51,6 +53,8 @@ const AIProvider = ({ children }) => {
   useEffect(() => (localStorage.setItem("@Denkitsu:WeatherTool", weatherTool)), [weatherTool])
 
   useEffect(() => (localStorage.setItem("@Denkitsu:WikiTool", wikiTool)), [wikiTool])
+
+  useEffect(() => (localStorage.setItem("@Denkitsu:BrowseTool", browseTool)), [browseTool])
 
   useEffect(() => {
     if (groqKey.trim() === "") return localStorage.removeItem("@Denkitsu:Groq")
@@ -81,6 +85,8 @@ const AIProvider = ({ children }) => {
     newsTool, setNewsTool, toggleNews: () => setNewsTool(!newsTool),
     weatherTool, setWeatherTool, toggleWeather: () => setWeatherTool(!weatherTool),
     wikiTool, setWikiTool, toggleWiki: () => setWikiTool(!wikiTool),
+    browseTool, setBrowseTool, toggleBrowse: () => setBrowseTool(!browseTool),
+
     imageUrls, setImageUrls,
     aiProvider, setAIProvider, aiProviderToggle,
     aiKey: aiProvider === "groq" ? groqKey : openRouterKey,
