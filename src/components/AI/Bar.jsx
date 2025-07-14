@@ -1,4 +1,4 @@
-import { Settings, SendHorizontal, ImagePlus, Globe, GlobeLock, Newspaper, Shredder, Cloud, CloudOff, AudioWaveform, Brain, MessageCirclePlus, ImageOff, BookOpen } from "lucide-react"
+import { Settings, SendHorizontal, ImagePlus, Globe, GlobeLock, Newspaper, Shredder, Cloud, CloudOff, AudioWaveform, Brain, MessageCirclePlus, ImageOff, BookOpen, BookAlert } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 
@@ -30,14 +30,14 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
           <Button variant={aiProvider === "openrouter" && web ? "outline" : "secondary" } size="icon" $rounded title="Pesquisar na Web" onClick={toggleWeb} disabled={aiProvider === "groq" || loading}>
             {aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
           </Button>
+          <Button variant={aiProvider === "openrouter" && !stream && wikiTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Wikipédia" onClick={toggleWiki} disabled={aiProvider === "groq" || stream || loading}>
+            {(aiProvider === "openrouter" && !stream) ? <BookOpen size={16} /> : <BookAlertBookAlert size={16} />}
+          </Button>
           <Button variant={aiProvider === "openrouter" && !stream && newsTool ? "outline" : "secondary"} size="icon" $rounded title="Buscar Notícias" onClick={toggleNews} disabled={aiProvider === "groq" || stream || loading}>
             {aiProvider === "openrouter" && !stream ? <Newspaper size={16} /> : <Shredder size={16} />}
           </Button>
-          <Button variant={aiProvider === "openrouter" && !stream && weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Previsão do clima" onClick={toggleWeather} disabled={aiProvider === "groq" || stream || loading}>
+          <Button variant={aiProvider === "openrouter" && !stream && weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Prever Clima" onClick={toggleWeather} disabled={aiProvider === "groq" || stream || loading}>
             {(aiProvider === "openrouter" && !stream) ? <Cloud size={16} /> : <CloudOff size={16} />}
-          </Button>
-          <Button variant={aiProvider === "openrouter" && !stream && wikiTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Wikipedia" onClick={toggleWiki} disabled={aiProvider === "groq" || stream || loading}>
-            {(aiProvider === "openrouter" && !stream) ? <BookOpen size={16} /> : <Shredder size={16} />}
           </Button>
         </>
       )}
