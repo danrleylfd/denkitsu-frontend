@@ -72,6 +72,7 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem("@Denkitsu:refreshToken")
     sessionStorage.removeItem("@Denkitsu:token")
     localStorage.removeItem("@Denkitsu:user")
+    localStorage.removeItem("@Denkitsu:messages")
     setUser(null)
     delete api.defaults.headers.Authorization
   }
