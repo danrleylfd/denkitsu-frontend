@@ -66,6 +66,7 @@ const AppRoutes = () => {
             <Route path="/clima" element={<Weather />} />
             <Route path="/translator" element={<Translator />} />
             <Route path="/codebase" element={<Codebase />} />
+            <Route path="/chat" element={<AI />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/forgot_password" element={<ForgotPassword />} />

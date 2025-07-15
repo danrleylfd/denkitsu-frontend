@@ -85,6 +85,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
   ]
 
   const authItems = [
+    { icon: Bot, label: "Denkitsu AI", to: "/chat" },
     { icon: LogIn, label: "Entrar", to: "/signin" },
     { icon: UserPlus, label: "Cadastrar", to: "/signup" },
     { icon: Lock, label: "Esqueceu a senha?", to: "/forgot_password" },

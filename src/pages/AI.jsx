@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from "react"
 
-import { useNotification } from "../contexts/NotificationContext"
 import { useAI } from "../contexts/AIContext"
+import { useNotification } from "../contexts/NotificationContext"
+
 import { sendMessageStream, sendMessage, getModels } from "../services/aiChat"
 
 import SideMenu from "../components/SideMenu"
