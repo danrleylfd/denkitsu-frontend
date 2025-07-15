@@ -17,7 +17,7 @@ const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-sc
 const AI = () => {
   const {
     aiProvider, aiKey, model,
-    stream, web, newsTool, weatherTool, wikiTool, browseTool,
+    stream, web, newsTool, weatherTool, wikiTool, browseTool, genshinTool,
     imageUrls, setImageUrls,
     freeModels, setFreeModels,
     payModels, setPayModels,
@@ -124,7 +124,7 @@ const AI = () => {
     }
   } else {
     try {
-      const data = await sendMessage(aiKey, aiProvider, model, apiMessages, selectedPrompt, web, newsTool, weatherTool, wikiTool, browseTool)
+      const data = await sendMessage(aiKey, aiProvider, model, apiMessages, selectedPrompt, web, newsTool, weatherTool, wikiTool, browseTool, genshinTool)
       const res = data?.choices?.[0]?.message
       if (!res) return
       const { content, reasoning } = cleanContent(res.content || "")

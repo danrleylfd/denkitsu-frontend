@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import {
   LogIn, UserPlus,
   Settings, SendHorizontal, ImagePlus, ImageOff, Globe, GlobeLock, Newspaper, Shredder, Cloud, CloudOff,
-  AudioLines, Brain, MessageCirclePlus, BookOpen, BookAlert, Link2, Link2Off, Wrench, // 1. Importar novo ícone
+  AudioLines, Brain, MessageCirclePlus, BookOpen, BookAlert, Link2, Link2Off, Wrench, Gamepad, Gamepad2,
   Lock
 } from "lucide-react"
 
@@ -16,7 +16,7 @@ import Button from "../Button"
 
 const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessage, clearHistory, toggleSettings, loading }) => {
   const { signed } = useAuth()
-  const { aiProvider, aiProviderToggle, aiKey, stream, toggleStream, web, toggleWeb, newsTool, toggleNews, weatherTool, toggleWeather, wikiTool, toggleWiki, browseTool, toggleBrowse } = useAI()
+  const { aiProvider, aiProviderToggle, aiKey, stream, toggleStream, web, toggleWeb, newsTool, toggleNews, weatherTool, toggleWeather, wikiTool, toggleWiki, browseTool, toggleBrowse, genshinTool, toggleGenshin } = useAI()
 
   const [isToolsOpen, setIsToolsOpen] = useState(false)
 
@@ -108,6 +108,9 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
               <Button variant={aiProvider === "openrouter" && !stream && weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Prever Clima" onClick={toggleWeather} disabled={aiProvider === "groq" || stream || loading}>
                 {(aiProvider === "openrouter" && !stream) ? <Cloud size={16} /> : <CloudOff size={16} />}
               </Button>
+              <Button variant={aiProvider === "openrouter" && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Genshin Impact" onClick={toggleGenshin} disabled={aiProvider === "groq" || stream || loading}>
+                {(aiProvider === "openrouter" && !stream) ? <Gamepad size={16} /> : <Gamepad2 size={16} />}
+              </Button>
             </div>
           )}
         </div>
@@ -121,7 +124,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
         disabled={loading}
         className="resize-y"
       />
-      <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={newsTool || weatherTool || wikiTool || browseTool || loading}>
+      <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={newsTool || weatherTool || wikiTool || browseTool || genshinTool || loading}>
         <AudioLines size={16} />
       </Button>
       <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>

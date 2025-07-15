@@ -15,6 +15,7 @@ const AIProvider = ({ children }) => {
   const storedWeatherTool = JSON.parse(localStorage.getItem("@Denkitsu:WeatherTool"))
   const storedBrowseTool = JSON.parse(localStorage.getItem("@Denkitsu:BrowseTool"))
   const storedWikiTool = JSON.parse(localStorage.getItem("@Denkitsu:WikiTool"))
+  const storedGenshinTool = JSON.parse(localStorage.getItem("@Denkitsu:GenshinTool"))
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
 
   const [aiProvider, setAIProvider] = useState(storedAIProvider || "groq")
@@ -33,6 +34,7 @@ const AIProvider = ({ children }) => {
   const [weatherTool, setWeatherTool] = useState(storedWeatherTool === null? false : storedWeatherTool)
   const [wikiTool, setWikiTool] = useState(storedWikiTool === null? false : storedWikiTool)
   const [browseTool, setBrowseTool] = useState(storedBrowseTool === null ? false : storedBrowseTool)
+  const [genshinTool, setGenshinTool] = useState(storedGenshinTool === null? false : storedGenshinTool)
   const [userPrompt, setUserPrompt] = useState("")
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
 
@@ -55,6 +57,8 @@ const AIProvider = ({ children }) => {
   useEffect(() => (localStorage.setItem("@Denkitsu:WikiTool", wikiTool)), [wikiTool])
 
   useEffect(() => (localStorage.setItem("@Denkitsu:BrowseTool", browseTool)), [browseTool])
+
+  useEffect(() => (localStorage.setItem("@Denkitsu:GenshinTool", genshinTool)), [genshinTool])
 
   useEffect(() => {
     if (groqKey.trim() === "") return localStorage.removeItem("@Denkitsu:Groq")
@@ -86,6 +90,7 @@ const AIProvider = ({ children }) => {
     weatherTool, setWeatherTool, toggleWeather: () => setWeatherTool(!weatherTool),
     wikiTool, setWikiTool, toggleWiki: () => setWikiTool(!wikiTool),
     browseTool, setBrowseTool, toggleBrowse: () => setBrowseTool(!browseTool),
+    genshinTool, setGenshinTool, toggleGenshin: () => setGenshinTool(!genshinTool),
 
     imageUrls, setImageUrls,
     aiProvider, setAIProvider, aiProviderToggle,
