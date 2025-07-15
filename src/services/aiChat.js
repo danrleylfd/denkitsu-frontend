@@ -58,7 +58,7 @@ const sendMessage = async (aiKey, aiProvider, model, messages, mode = "", web = 
   if (weatherTool) activeTools.push("getWeather")
   if (wikiTool) activeTools.push("searchWikipedia")
   if (browseTool) activeTools.push("browseUrl")
-  if (genshinTool) activeTools.push("getGenshinInfo")
+  if (genshinTool) activeTools.push("getPlayerBuild")
   const use_tools = activeTools.length > 0 ? activeTools : undefined
 
   const payload = {
