@@ -25,6 +25,7 @@ import Pomodoro from "../pages/Pomodoro"
 import Weather from "../pages/Weather"
 import Translator from "../pages/Translator"
 import Codebase from "../pages/Codebase"
+import CodebaseBeta from "../pages/CodebaseBeta"
 import Editor from "../pages/Editor"
 
 const AppRoutes = () => {
@@ -43,6 +44,7 @@ const AppRoutes = () => {
             <Route path="/clima" element={<Weather />} />
             <Route path="/translator" element={<Translator />} />
             <Route path="/codebase" element={<Codebase />} />
+            <Route path="/codebeta" element={<CodebaseBeta />} />
             <Route path="/upload" element={<Upload />} />
             <Route path="/recents" element={<Recents />} />
             <Route path="/popular" element={<Popular />} />
@@ -60,12 +62,13 @@ const AppRoutes = () => {
           <>
             <Route path="/" element={<News />} />
             <Route path="/news" element={<News />} />
-            <Route path="/editor-qwe" element={<Editor />} />
+            <Route path="/editor" element={<Editor />} />
             <Route path="/todo" element={<Kanban />} />
             <Route path="/pomodoro" element={<Pomodoro />} />
             <Route path="/clima" element={<Weather />} />
             <Route path="/translator" element={<Translator />} />
             <Route path="/codebase" element={<Codebase />} />
+            <Route path="/codebeta" element={<CodebaseBeta />} />
             <Route path="/chat" element={<AI />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
