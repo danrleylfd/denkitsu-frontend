@@ -14,7 +14,7 @@ import api from "../services"
 const OUTPUT_HEADER_PROJECT = "PROJETO:"
 const OUTPUT_HEADER_TREE = "ESTRUTURA DE FICHEIROS:"
 const OUTPUT_HEADER_CONTENT = "CONTEÚDO DOS FICHEIROS:"
-const SEPARATOR = "---"
+const SEPARATOR = "=================================="
 const RECENTS_KEY = "codebase_recents"
 const MAX_RECENTS = 5
 const DB_NAME = "CodebaseDB"
@@ -264,7 +264,6 @@ const Codebase = () => {
 
       if (!files || files.length === 0) {
         notifyWarning("Nenhum arquivo de texto válido foi encontrado no repositório.")
-        setIsProcessing(false)
         return
       }
 
@@ -286,7 +285,6 @@ const Codebase = () => {
       const rootEntry = entries.find(e => e.isDirectory)
       if (!rootEntry) {
         notifyError("Por favor, arraste uma pasta, não arquivos individuais.")
-        setIsProcessing(false)
         return
       }
       const files = []
@@ -322,11 +320,12 @@ const Codebase = () => {
       notifyError("Seu navegador não suporta a seleção de diretórios. Tente arrastar a pasta.")
       return
     }
+    setIsProcessing(true)
+    setStatusText("Lendo estrutura de pastas...")
     try {
       const dirHandle = await window.showDirectoryPicker()
       await setHandle(dirHandle.name, dirHandle)
-      setIsProcessing(true)
-      setStatusText("Lendo estrutura de pastas...")
+
       const files = []
       const traverseHandles = async (directoryHandle, path = "") => {
         for await (const [name, handle] of directoryHandle.entries()) {
@@ -350,6 +349,7 @@ const Codebase = () => {
         console.error("Erro ao selecionar diretório:", error)
         notifyError("Não foi possível acessar o diretório.")
       }
+    } finally {
       setIsProcessing(false)
     }
   }, [handleFileProcessing, notifyError])
@@ -381,11 +381,10 @@ const Codebase = () => {
         const response = await api.post('/github/generate-codebase', payload, { responseType: 'text' })
         codebaseString = response.data
       } else {
-        // Lógica para gerar codebase localmente
         const fileTree = generateFileTree(filesToInclude.map(f => f.path), projectName)
         const outputParts = [
           `${OUTPUT_HEADER_PROJECT} ${projectName}`, SEPARATOR,
-          `${OUTPUT_HEADER_TREE}\n${fileTree}\n---`,
+          `${OUTPUT_HEADER_TREE}\n${fileTree}`, SEPARATOR,
           OUTPUT_HEADER_CONTENT, SEPARATOR,
           ...filesToInclude.map(({ path, content }) => `---[ ${path} ]---\n${processContent(content)}`)
         ]
@@ -452,6 +451,7 @@ const Codebase = () => {
       } catch (error) {
         console.error("Erro ao carregar pasta recente:", error)
         notifyError(error.message || "Não foi possível carregar a pasta.")
+      } finally {
         setIsProcessing(false)
       }
     } else {
