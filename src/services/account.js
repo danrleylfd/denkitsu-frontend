@@ -30,4 +30,14 @@ const deleteUserAccount = async () => {
   }
 }
 
-export { getUserAccount, editUserAccount, deleteUserAccount }
+const unlinkGithubAccount = async () => {
+  try {
+    const response = await api.delete("/account/github/unlink")
+    return response.data.user
+  } catch (error) {
+    console.error("Error unlinking GitHub account:", error.response?.data || error.message)
+    throw error
+  }
+}
+
+export { getUserAccount, editUserAccount, deleteUserAccount, unlinkGithubAccount }
