@@ -7,6 +7,7 @@ import Button from "../components/Button"
 import Input from "../components/Input"
 import Markdown from "../components/Markdown"
 import { useNotification } from "../contexts/NotificationContext"
+import { useAuth } from "../contexts/AuthContext"
 
 const OUTPUT_HEADER_PROJECT = "PROJETO:"
 const OUTPUT_HEADER_TREE = "ESTRUTURA DE FICHEIROS:"
@@ -213,6 +214,7 @@ const Codebase = () => {
   const [recentItems, setRecentItems] = useState([])
 
   const { notifyError, notifyInfo, notifyWarning } = useNotification()
+  const { githubToken } = useAuth()
 
   useEffect(() => {
     setRecentItems(getRecentItems())
@@ -256,12 +258,24 @@ const Codebase = () => {
     try {
       const [owner, repo] = repoName.split("/")
       if (!owner || !repo) throw new Error("Formato inválido. Use 'owner/repo'.")
-      const treeResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/trees/main?recursive=1`)
+
+      const headers = { Accept: "application/vnd.github.v3+json" }
+      if (githubToken) {
+        headers.Authorization = `Bearer ${githubToken}`
+      }
+
+      const treeResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/trees/main?recursive=1`, { headers })
+
       if (!treeResponse.ok) {
         if (treeResponse.status === 404) throw new Error("Repositório não encontrado.")
+        if (treeResponse.status === 401) throw new Error("Token do GitHub inválido ou expirado.")
         if (treeResponse.status === 403) {
-          const resetTime = new Date(Number(treeResponse.headers.get("x-ratelimit-reset")) * 1000)
-          throw new Error(`Limite de requisições da API do GitHub atingido. Tente novamente após ${resetTime.toLocaleTimeString()}.`)
+            const data = await treeResponse.json()
+            if(data.message.includes("rate limit")) {
+                const resetTime = new Date(Number(treeResponse.headers.get("x-ratelimit-reset")) * 1000)
+                throw new Error(`Limite de requisições da API do GitHub atingido. Tente novamente após ${resetTime.toLocaleTimeString()}.`)
+            }
+             throw new Error("Erro de permissão ao acessar o repositório.")
         }
         throw new Error(`Erro ao buscar a estrutura do repositório: ${treeResponse.statusText}`)
       }
@@ -270,11 +284,12 @@ const Codebase = () => {
         notifyWarning("O repositório é muito grande e a lista de arquivos foi truncada.")
       }
       setStatusText(`Encontrados ${treeData.tree.length} itens. Baixando arquivos...`)
+
       const filePromises = treeData.tree
         .filter(item => item.type === "blob")
         .map(async item => {
           try {
-            const fileResponse = await fetch(item.url, { headers: { Accept: "application/vnd.github.v3.raw" } })
+            const fileResponse = await fetch(item.url, { headers: { ...headers, Accept: "application/vnd.github.v3.raw" } })
             if (!fileResponse.ok) return null
             const content = await fileResponse.text()
             return { path: item.path, content }
@@ -290,7 +305,7 @@ const Codebase = () => {
       notifyError(error.message || "Ocorreu um erro desconhecido.")
       setIsProcessing(false)
     }
-  }, [githubRepo, handleFileProcessing, notifyError, notifyWarning])
+  }, [githubRepo, githubToken, handleFileProcessing, notifyError, notifyWarning])
 
   const handleDrop = useCallback(async (items) => {
     setIsProcessing(true)
