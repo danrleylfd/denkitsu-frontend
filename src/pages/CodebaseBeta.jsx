@@ -14,7 +14,7 @@ import api from "../services"
 const OUTPUT_HEADER_PROJECT = "PROJETO:"
 const OUTPUT_HEADER_TREE = "ESTRUTURA DE FICHEIROS:"
 const OUTPUT_HEADER_CONTENT = "CONTEÚDO DOS FICHEIROS:"
-const SEPARATOR = "=================================="
+const SEPARATOR = "---"
 const RECENTS_KEY = "codebase_recents"
 const MAX_RECENTS = 5
 const DB_NAME = "CodebaseDB"
@@ -220,6 +220,7 @@ const Codebase = () => {
   const [inputMethod, setInputMethod] = useState("local")
   const [viewingFile, setViewingFile] = useState(null)
   const [recentItems, setRecentItems] = useState([])
+  const [projectSource, setProjectSource] = useState(null)
 
   const { notifyError, notifyInfo, notifyWarning } = useNotification()
   const { user } = useAuth()
@@ -229,31 +230,20 @@ const Codebase = () => {
   }, [])
 
   const handleFileProcessing = useCallback((files, name, type, handleAvailable = false) => {
-    setIsProcessing(true)
-    setStatusText("Filtrando arquivos...")
-    try {
-      const filteredFiles = files
-        .filter(file => file && file.path && !shouldIgnoreFile(file.path) && !isBinaryContent(file.content))
-        .map(file => ({ ...file, id: file.path }))
-      if (filteredFiles.length === 0) {
-        notifyWarning("Nenhum arquivo de texto válido foi encontrado para processar.")
-        setIsProcessing(false)
-        return
-      }
-      filteredFiles.sort((a, b) => a.path.localeCompare(b.path))
-      setAllFiles(filteredFiles)
-      setSelectedFiles(new Set(filteredFiles.map(f => f.id)))
-      setProjectName(name)
-      const updatedRecents = addRecentItem({ id: `${type}-${name}`, type, name, timestamp: Date.now(), handleAvailable })
-      setRecentItems(updatedRecents)
-      setStep("select")
-    } catch (error) {
-      console.error("Erro no processamento:", error)
-      notifyError("Ocorreu um erro ao processar os arquivos.")
-    } finally {
-      setIsProcessing(false)
+    const filteredFiles = files.map(file => ({ ...file, id: file.path }))
+    if (filteredFiles.length === 0) {
+      notifyWarning("Nenhum arquivo de texto válido foi encontrado para processar.")
+      return
     }
-  }, [notifyError, notifyWarning])
+    filteredFiles.sort((a, b) => a.path.localeCompare(b.path))
+    setAllFiles(filteredFiles)
+    setSelectedFiles(new Set(filteredFiles.map(f => f.id)))
+    setProjectName(name)
+    setProjectSource(type)
+    const updatedRecents = addRecentItem({ id: `${type}-${name}`, type, name, timestamp: Date.now(), handleAvailable })
+    setRecentItems(updatedRecents)
+    setStep("select")
+  }, [notifyWarning])
 
   const handleFetchFromGithubProxy = useCallback(async (repoNameToFetch) => {
     const repoName = (typeof repoNameToFetch === 'string' && repoNameToFetch) ? repoNameToFetch : githubRepo
@@ -267,9 +257,9 @@ const Codebase = () => {
     }
 
     setIsProcessing(true)
-    setStatusText("Buscando e processando repositório no servidor...")
+    setStatusText("Buscando arquivos do repositório...")
     try {
-      const response = await api.get(`/github/repo-content?repo=${repoName}`)
+      const response = await api.get(`/github/repo-files?repo=${repoName}`)
       const { projectName: name, files } = response.data
 
       if (!files || files.length === 0) {
@@ -283,6 +273,7 @@ const Codebase = () => {
     } catch (error) {
       console.error("Erro ao buscar do backend:", error)
       notifyError(error.response?.data?.error || "Falha ao buscar o repositório.")
+    } finally {
       setIsProcessing(false)
     }
   }, [githubRepo, user, notifyError, notifyWarning, handleFileProcessing])
@@ -303,8 +294,11 @@ const Codebase = () => {
         if (entry.isFile) {
           const file = await new Promise((resolve, reject) => entry.file(resolve, reject))
           const content = await file.text()
-          files.push({ path: currentPath + file.name, content })
+          if (!shouldIgnoreFile(file.name) && !isBinaryContent(content)) {
+            files.push({ path: currentPath + file.name, content })
+          }
         } else if (entry.isDirectory) {
+          if (shouldIgnoreFile(entry.name)) return;
           const dirReader = entry.createReader()
           const dirEntries = await new Promise((resolve, reject) => dirReader.readEntries(resolve, reject))
           for (const subEntry of dirEntries) {
@@ -318,7 +312,8 @@ const Codebase = () => {
     } catch (error) {
       console.error("Erro no drop:", error)
       notifyError("Seu navegador não suporta a leitura de diretórios. Tente um navegador baseado em Chromium.")
-      setIsProcessing(false)
+    } finally {
+        setIsProcessing(false)
     }
   }, [handleFileProcessing, notifyError])
 
@@ -335,11 +330,14 @@ const Codebase = () => {
       const files = []
       const traverseHandles = async (directoryHandle, path = "") => {
         for await (const [name, handle] of directoryHandle.entries()) {
+          if (shouldIgnoreFile(name)) continue;
           const newPath = path ? `${path}/${name}` : name
           if (handle.kind === "file") {
             const file = await handle.getFile()
             const content = await file.text()
-            files.push({ path: newPath, content })
+            if (!isBinaryContent(content)) {
+                files.push({ path: newPath, content })
+            }
           } else if (handle.kind === "directory") {
             await traverseHandles(handle, newPath)
           }
@@ -365,25 +363,43 @@ const Codebase = () => {
     })
   }
 
-  const handleGenerateCodebase = () => {
+  const handleGenerateCodebase = useCallback(async () => {
     if (selectedFiles.size === 0) {
       notifyError("Nenhum arquivo selecionado.")
       return
     }
+
     setIsProcessing(true)
     setStatusText("Gerando codebase...")
+
     const filesToInclude = allFiles.filter(file => selectedFiles.has(file.id))
-    const fileTree = generateFileTree(filesToInclude.map(f => f.path), projectName)
-    const outputParts = [
-      `${OUTPUT_HEADER_PROJECT} ${projectName}`, SEPARATOR,
-      `${OUTPUT_HEADER_TREE}\n${fileTree}\n---`,
-      OUTPUT_HEADER_CONTENT, SEPARATOR,
-      ...filesToInclude.map(({ path, content }) => `---[ ${path} ]---\n${processContent(content)}`)
-    ]
-    setResult(outputParts.join("\n\n"))
-    setStep("result")
-    setIsProcessing(false)
-  }
+
+    try {
+      let codebaseString = ""
+      if (projectSource === 'github') {
+        const payload = { projectName, selectedFiles: filesToInclude }
+        const response = await api.post('/github/generate-codebase', payload, { responseType: 'text' })
+        codebaseString = response.data
+      } else {
+        // Lógica para gerar codebase localmente
+        const fileTree = generateFileTree(filesToInclude.map(f => f.path), projectName)
+        const outputParts = [
+          `${OUTPUT_HEADER_PROJECT} ${projectName}`, SEPARATOR,
+          `${OUTPUT_HEADER_TREE}\n${fileTree}\n---`,
+          OUTPUT_HEADER_CONTENT, SEPARATOR,
+          ...filesToInclude.map(({ path, content }) => `---[ ${path} ]---\n${processContent(content)}`)
+        ]
+        codebaseString = outputParts.join("\n\n")
+      }
+      setResult(codebaseString)
+      setStep("result")
+    } catch (error) {
+        console.error("Erro ao gerar codebase:", error)
+        notifyError(error.response?.data?.error || "Falha ao gerar o codebase.")
+    } finally {
+        setIsProcessing(false)
+    }
+  }, [allFiles, selectedFiles, projectName, projectSource, notifyError])
 
   const handleReset = () => {
     setStep("input")
@@ -418,11 +434,14 @@ const Codebase = () => {
         const files = []
         const traverseHandles = async (directoryHandle, path = "") => {
           for await (const [name, entryHandle] of directoryHandle.entries()) {
+            if (shouldIgnoreFile(name)) continue;
             const newPath = path ? `${path}/${name}` : name
             if (entryHandle.kind === "file") {
               const file = await entryHandle.getFile()
               const content = await file.text()
-              files.push({ path: newPath, content })
+              if (!isBinaryContent(content)) {
+                  files.push({ path: newPath, content })
+              }
             } else if (entryHandle.kind === "directory") {
               await traverseHandles(entryHandle, newPath)
             }
@@ -470,7 +489,7 @@ const Codebase = () => {
                 <Button onClick={() => setSelectedFiles(new Set(allFiles.map(f => f.id)))} variant="outline" size="sm" $squared>Selecionar Tudo</Button>
                 <Button onClick={() => setSelectedFiles(new Set())} variant="outline" size="sm" $squared>Limpar Seleção</Button>
                 <div className="flex-grow" />
-                <Button onClick={handleReset} variant="danger" size="sm" $squared><ArrowLeft size={16} className="mr-2" /> Voltar para Início</Button>
+                <Button onClick={() => setStep("input")} variant="danger" size="sm" $squared><ArrowLeft size={16} className="mr-2" /> Voltar</Button>
                 <Button onClick={handleGenerateCodebase} variant="success" size="sm" $squared><Files size={16} className="mr-2" /> Gerar Codebase</Button>
               </div>
               <div className="flex-1 overflow-y-auto p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md">
