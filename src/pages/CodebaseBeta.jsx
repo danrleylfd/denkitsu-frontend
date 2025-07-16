@@ -14,7 +14,7 @@ import api from "../services"
 const OUTPUT_HEADER_PROJECT = "PROJETO:"
 const OUTPUT_HEADER_TREE = "ESTRUTURA DE FICHEIROS:"
 const OUTPUT_HEADER_CONTENT = "CONTEÚDO DOS FICHEIROS:"
-const SEPARATOR = "=================================="
+const SEPARATOR = "---"
 const RECENTS_KEY = "codebase_recents"
 const MAX_RECENTS = 5
 const DB_NAME = "CodebaseDB"
