@@ -65,12 +65,12 @@ const SignIn = () => {
             {showPassword ? <Eye size={16} /> : <EyeClosed size={16} />}
           </Button>
         </Input>
-        <div className="flex w-full flex-col gap-2 justify-center items-center">
+        <div className="flex w-full gap-2 justify-center items-center">
           <Button type="submit" $rounded loading={loading} disabled={loading || !email || !password}>
             {!loading && "Entrar"}
           </Button>
           <a href={backendGithubAuthUrl}>
-            <Button type="button" variant="secondary" $rounded>
+            <Button type="button" variant="secondary" size="icon" title="Entrar com Github" $rounded>
               <Github size={16} />
             </Button>
           </a>
