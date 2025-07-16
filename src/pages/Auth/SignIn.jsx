@@ -44,11 +44,6 @@ const SignIn = () => {
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
       <Form title="Entrar" onSubmit={handleSignIn}>
-        <a href={backendGithubAuthUrl} className="w-full">
-          <Button type="button" variant="secondary" className="w-full" $rounded>
-            <Github size={16} className="mr-2"/> Entrar com GitHub
-          </Button>
-        </a>
         <Input
           name="email"
           type="email"
@@ -70,9 +65,16 @@ const SignIn = () => {
             {showPassword ? <Eye size={16} /> : <EyeClosed size={16} />}
           </Button>
         </Input>
-        <Button type="submit" $rounded loading={loading} disabled={loading || !email || !password}>
-          {!loading && "Entrar"}
-        </Button>
+        <div className="flex w-full flex-col gap-2 justify-center items-center">
+          <Button type="submit" $rounded loading={loading} disabled={loading || !email || !password}>
+            {!loading && "Entrar"}
+          </Button>
+          <a href={backendGithubAuthUrl}>
+            <Button type="button" variant="secondary" $rounded>
+              <Github size={16} />
+            </Button>
+          </a>
+        </div>
       </Form>
     </SideMenu>
   )
