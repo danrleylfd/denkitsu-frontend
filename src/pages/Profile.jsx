@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
-import { LogOut, Pencil, Trash, X, Check } from "lucide-react"
+import { LogOut, Pencil, Trash, X, Check, Github } from "lucide-react"
 
 import { useAuth } from "../contexts/AuthContext"
-import { useAI } from "../contexts/AIContext"
 import { useNotification } from "../contexts/NotificationContext"
-
 import { getUserAccount, editUserAccount, deleteUserAccount } from "../services/account"
 
 import SideMenu from "../components/SideMenu"
@@ -22,7 +20,7 @@ const Profile = () => {
   const { userId } = useParams()
   const { user, signOut, updateUser } = useAuth()
   const { notifyWarning, notifyError } = useNotification()
-  const userID = userId || user._id
+  const connectedUserId = userId || user._id
   const [userData, setUserData] = useState(null)
   const [isEditing, setIsEditing] = useState(false)
   const [name, setName] = useState("")
@@ -30,29 +28,36 @@ const Profile = () => {
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
 
+  // URL para o endpoint de vinculação no backend
+  const backendGithubConnectUrl = "https://denkitsu.up.railway.app/auth/github/connect"
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         setLoading(true)
-        const data = await getUserAccount(userID)
+        const data = await getUserAccount(connectedUserId)
         setUserData(data)
-        setName(data?.name)
-        setAvatarUrl(data?.avatarUrl)
+        setName(data.name)
+        setAvatarUrl(data.avatarUrl)
       } catch (err) {
         console.error(err)
         notifyError("Falha ao carregar dados do perfil.")
+        navigate("/") // Volta para a home se o perfil não for encontrado
       } finally {
         setLoading(false)
       }
     }
-    fetchUserData()
-  }, [user?._id])
+    if (connectedUserId) {
+        fetchUserData()
+    }
+  }, [connectedUserId, notifyError, navigate])
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing)
-    if (isEditing && userData) {
-      setName(userData?.name)
-      setAvatarUrl(userData?.avatarUrl)
+    if (!isEditing && userData) {
+      // Reseta para os dados atuais ao cancelar
+      setName(userData.name)
+      setAvatarUrl(userData.avatarUrl)
     }
   }
 
@@ -64,9 +69,9 @@ const Profile = () => {
         notifyWarning("Nome e URL do avatar são obrigatórios.")
         return
       }
-      const updatedUser = await editUserAccount({ name, avatarUrl: user.name !== name ? avatarUrl.replace(user.name, name) : avatarUrl })
+      const updatedUser = await editUserAccount({ name, avatarUrl })
       setUserData(updatedUser)
-      updateUser(updatedUser)
+      updateUser(updatedUser) // Atualiza o contexto global
       setIsEditing(false)
     } catch (err) {
       notifyError(err.response?.data?.error || "Falha ao atualizar perfil.")
@@ -76,12 +81,9 @@ const Profile = () => {
   }
 
   const handleDeleteAccount = async () => {
-    const confirmDelete = window.confirm(
-      "Tem certeza que deseja excluir sua conta? Esta ação é irreversível e todos os seus dados (atalhos, vídeos, curtidas, comentários, compartilhamentos, etc.) serão perdidos."
-    )
-    if (!confirmDelete) return
-    const confirmDeleteTwo = window.confirm("Tem certeza que deseja excluir sua conta?")
-    if (!confirmDeleteTwo) return
+    if (!window.confirm("Tem certeza que deseja excluir sua conta? Esta ação é irreversível e todos os seus dados serão perdidos.")) return
+    if (!window.confirm("ÚLTIMO AVISO: Tem certeza absoluta que deseja excluir sua conta?")) return
+
     setLoading(true)
     try {
       await deleteUserAccount()
@@ -98,63 +100,56 @@ const Profile = () => {
 
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
-      {loading && !userData && (
+      {loading ? (
         <div className="p-2">
-          <Button variant="secondary" $rounded loading={loading} disabled />
+          <Button variant="secondary" $rounded loading={true} disabled />
         </div>
-      )}
-      {!loading && (
-        <div
-          className="flex w-max h-max my-40 min-w-96 mx-auto p-4 gap-2 items-center bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-[8rem_0.5rem_0.5rem_8rem] shadow-[6px_6px_16px_rgba(0,0,0,0.5)] opacity-75 dark:opacity-90">
-          <img
-            src={avatarUrl || userData?.avatarUrl}
-            alt={name || userData.name}
-            className="w-24 h-24 rounded-full object-cover border-4 border-violet-500"
-          />
-          {userID === user._id && isEditing ? (
-            <form className="flex-1 flex flex-col gap-0 items-center" onSubmit={(e) => e.preventDefault()}>
-              <Input id="name" value={name} onChange={(e) => setName(e.target.value)} disabled={loading} />
-              <Input id="avatarUrl" value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} disabled={loading} />
-              <div className="flex w-full gap-2 justify-between">
-                <Button variant="secondary" size="icon" $rounded title="Cancelar" onClick={handleEditToggle} loading={loading}>
-                  <X size={16} />
-                </Button>
-                <Button variant="success" size="icon" $rounded title="Salvar" onClick={handleSaveChanges} loading={loading}>
-                  <Check size={16} />
-                </Button>
+      ) : userData && (
+        <div className="flex flex-col w-full max-w-md my-40 mx-auto p-6 gap-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-lg opacity-90 dark:opacity-95">
+          <div className="flex items-center gap-4">
+            <img
+              src={avatarUrl || userData.avatarUrl}
+              alt={name || userData.name}
+              className="w-24 h-24 rounded-full object-cover border-4 border-primary-base"
+            />
+            {isEditing ? (
+              <form className="flex-1 flex flex-col gap-2" onSubmit={handleSaveChanges}>
+                <Input id="name" placeholder="Nome" value={name} onChange={(e) => setName(e.target.value)} disabled={loading} />
+                <Input id="avatarUrl" placeholder="URL do Avatar" value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} disabled={loading} />
+              </form>
+            ) : (
+              <div className="flex-1 flex flex-col gap-1">
+                <h2 className="text-xl font-bold text-lightFg-primary dark:text-darkFg-primary truncate">{userData.name}</h2>
+                <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary truncate">{userData.email || "E-mail não fornecido"}</p>
+                <small className="text-xs text-lightFg-tertiary dark:text-darkFg-tertiary">Membro desde {new Date(userData.createdAt).toLocaleDateString()}</small>
               </div>
-            </form>
-          ) : (
-            <div className="flex-1 flex flex-col gap-2">
-              <h5 className="text-lg font-bold text-lightFg-primary dark:text-darkFg-primary">
-                {userData?.name}
-              </h5>
-              <p className="text-lightFg-secondary dark:text-darkFg-secondary">
-                @{userData?.email?.split("@")[0]}
-              </p>
-              <small className="text-xs text-lightFg-secondary dark:text-darkFg-secondary">
-                Conta criada em {new Date(userData?.createdAt).toLocaleString()}
-              </small>
-              <small className="text-xs text-lightFg-secondary dark:text-darkFg-secondary">
-                Conta editada em {new Date(userData?.updatedAt).toLocaleString()}
-              </small>
-              {userID === user._id && (
-                <div className="flex-1 flex flex-col gap-0 items-center">
-                  <div className="flex w-full gap-2 justify-between">
-                    <Button variant="warning" size="icon" $rounded title="Editar" onClick={handleEditToggle}>
-                      <Pencil size={16} />
-                    </Button>
-                    <Button variant="danger" size="icon" $rounded title="Deletar Conta" onClick={handleDeleteAccount} loading={loading}>
-                      <Trash size={16} />
-                    </Button>
-                  </div>
+            )}
+          </div>
+
+          {user?._id === connectedUserId && (
+            <div className="flex w-full justify-between items-center border-t border-zinc-200 dark:border-zinc-700 pt-4 mt-2">
+              {isEditing ? (
+                <div className="flex gap-2">
+                  <Button variant="secondary" size="icon" $rounded title="Cancelar" onClick={handleEditToggle} disabled={loading}><X size={16} /></Button>
+                  <Button variant="success" size="icon" $rounded title="Salvar" onClick={handleSaveChanges} loading={loading}><Check size={16} /></Button>
                 </div>
+              ) : (
+                <Button variant="warning" size="icon" $rounded title="Editar" onClick={handleEditToggle}><Pencil size={16} /></Button>
               )}
+
+              <div className="flex gap-2">
+                {!userData.githubId && (
+                   <a href={backendGithubConnectUrl} title="Vincular com GitHub">
+                    <Button type="button" variant="secondary" size="icon" $rounded>
+                        <Github size={16}/>
+                    </Button>
+                  </a>
+                )}
+                <Button variant="danger" size="icon" $rounded title="Deletar Conta" onClick={handleDeleteAccount} loading={loading}><Trash size={16} /></Button>
+                <Button variant="danger" size="icon" $rounded title="Sair" onClick={signOut}><LogOut size={16} /></Button>
+              </div>
             </div>
           )}
-          <Button variant="danger" size="icon" $rounded title="Sair" onClick={signOut}>
-            <LogOut size={16} />
-          </Button>
         </div>
       )}
     </SideMenu>
