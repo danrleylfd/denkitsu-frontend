@@ -8,7 +8,9 @@ import Input from "../components/Input"
 import Markdown from "../components/Markdown"
 import { useNotification } from "../contexts/NotificationContext"
 import { useAuth } from "../contexts/AuthContext"
+import api from "../services"
 
+// --- Constantes ---
 const OUTPUT_HEADER_PROJECT = "PROJETO:"
 const OUTPUT_HEADER_TREE = "ESTRUTURA DE FICHEIROS:"
 const OUTPUT_HEADER_CONTENT = "CONTEÚDO DOS FICHEIROS:"
@@ -17,6 +19,8 @@ const RECENTS_KEY = "codebase_recents"
 const MAX_RECENTS = 5
 const DB_NAME = "CodebaseDB"
 const STORE_NAME = "DirectoryHandles"
+
+// --- Funções Auxiliares ---
 
 const openDB = () => {
   return new Promise((resolve, reject) => {
@@ -120,6 +124,8 @@ const generateFileTree = (filePaths, rootName) => {
   return `${rootName}/\n${buildTreeString(tree)}`
 }
 
+// --- Componentes de UI ---
+
 const FileViewer = memo(({ file, onClose }) => {
   if (!file) return null
   const getLanguage = (path) => {
@@ -200,6 +206,8 @@ const ContentView = ({ children }) => (
   </main>
 )
 
+// --- Componente Principal ---
+
 const Codebase = () => {
   const [step, setStep] = useState("input")
   const [isProcessing, setIsProcessing] = useState(false)
@@ -214,7 +222,7 @@ const Codebase = () => {
   const [recentItems, setRecentItems] = useState([])
 
   const { notifyError, notifyInfo, notifyWarning } = useNotification()
-  const { githubToken } = useAuth()
+  const { user } = useAuth()
 
   useEffect(() => {
     setRecentItems(getRecentItems())
@@ -247,65 +255,34 @@ const Codebase = () => {
     }
   }, [notifyError, notifyWarning])
 
-  const handleFetchFromGithub = useCallback(async (repoNameToFetch) => {
-    const repoName = (typeof repoNameToFetch === 'string' && repoNameToFetch) ? repoNameToFetch : githubRepo
+  const handleFetchFromGithubProxy = useCallback(async (repoNameToFetch) => {
+    const repoName = (typeof repoNameToFetch === 'string' && repoNameToFetch) ? repoNameToFetch : githubRepo;
     if (!repoName.trim()) {
-      notifyError("Por favor, insira o nome do repositório no formato 'owner/repo'.")
-      return
+      notifyError("Por favor, insira o nome do repositório.");
+      return;
     }
-    setIsProcessing(true)
-    setStatusText("Buscando repositório no GitHub...")
+    if (!user?.githubId) {
+      notifyError("Você precisa estar logado com o GitHub para usar esta funcionalidade.");
+      return;
+    }
+
+    setIsProcessing(true);
+    setStatusText("Buscando e processando repositório no servidor...");
     try {
-      const [owner, repo] = repoName.split("/")
-      if (!owner || !repo) throw new Error("Formato inválido. Use 'owner/repo'.")
+      const response = await api.get(`/github/repo-content?repo=${repoName}`);
 
-      const headers = { Accept: "application/vnd.github.v3+json" }
-      if (githubToken) {
-        headers.Authorization = `Bearer ${githubToken}`
-      }
+      setResult(response.data);
+      setProjectName(repoName);
+      addRecentItem({ id: `github-${repoName}`, type: 'github', name: repoName, timestamp: Date.now() });
+      setStep("result");
 
-      const treeResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/trees/main?recursive=1`, { headers })
-
-      if (!treeResponse.ok) {
-        if (treeResponse.status === 404) throw new Error("Repositório não encontrado.")
-        if (treeResponse.status === 401) throw new Error("Token do GitHub inválido ou expirado.")
-        if (treeResponse.status === 403) {
-            const data = await treeResponse.json()
-            if(data.message.includes("rate limit")) {
-                const resetTime = new Date(Number(treeResponse.headers.get("x-ratelimit-reset")) * 1000)
-                throw new Error(`Limite de requisições da API do GitHub atingido. Tente novamente após ${resetTime.toLocaleTimeString()}.`)
-            }
-             throw new Error("Erro de permissão ao acessar o repositório.")
-        }
-        throw new Error(`Erro ao buscar a estrutura do repositório: ${treeResponse.statusText}`)
-      }
-      const treeData = await treeResponse.json()
-      if (treeData.truncated) {
-        notifyWarning("O repositório é muito grande e a lista de arquivos foi truncada.")
-      }
-      setStatusText(`Encontrados ${treeData.tree.length} itens. Baixando arquivos...`)
-
-      const filePromises = treeData.tree
-        .filter(item => item.type === "blob")
-        .map(async item => {
-          try {
-            const fileResponse = await fetch(item.url, { headers: { ...headers, Accept: "application/vnd.github.v3.raw" } })
-            if (!fileResponse.ok) return null
-            const content = await fileResponse.text()
-            return { path: item.path, content }
-          } catch (e) {
-            console.warn(`Falha ao baixar ${item.path}`, e)
-            return null
-          }
-        })
-      const files = (await Promise.all(filePromises)).filter(Boolean)
-      handleFileProcessing(files, repoName, 'github', false)
     } catch (error) {
-      console.error("Erro ao buscar do GitHub:", error)
-      notifyError(error.message || "Ocorreu um erro desconhecido.")
-      setIsProcessing(false)
+      console.error("Erro ao buscar do backend:", error);
+      notifyError(error.response?.data?.error || "Falha ao buscar o repositório.");
+    } finally {
+      setIsProcessing(false);
     }
-  }, [githubRepo, githubToken, handleFileProcessing, notifyError, notifyWarning])
+  }, [githubRepo, user, notifyError]);
 
   const handleDrop = useCallback(async (items) => {
     setIsProcessing(true)
@@ -423,7 +400,7 @@ const Codebase = () => {
     if (item.type === 'github') {
       setInputMethod('github')
       setGithubRepo(item.name)
-      await handleFetchFromGithub(item.name)
+      await handleFetchFromGithubProxy(item.name)
     } else if (item.type === 'local' && item.handleAvailable) {
       setIsProcessing(true)
       setStatusText(`Recarregando '${item.name}'...`)
@@ -459,12 +436,12 @@ const Codebase = () => {
       setInputMethod('local')
       notifyInfo(`A pasta '${item.name}' foi adicionada via Drag-and-Drop e não pode ser recarregada. Por favor, arraste-a novamente.`)
     }
-  }, [handleFetchFromGithub, handleFileProcessing, notifyInfo, notifyError])
+  }, [handleFetchFromGithubProxy, handleFileProcessing, notifyInfo, notifyError])
 
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
       <FileViewer file={viewingFile} onClose={() => setViewingFile(null)} />
-      <Paper className="w-full h-full max-w-6xl max-h-[90vh] flex flex-col items-center justify-center bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary">
+      <Paper opaque className="w-full h-full max-w-6xl max-h-[90vh] flex flex-col items-center justify-center bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary">
         {isProcessing ? (
           <div className="flex flex-col items-center justify-center gap-4">
             <Loader2 className="h-12 w-12 animate-spin text-primary-base" />
@@ -478,7 +455,7 @@ const Codebase = () => {
                 <Button variant={inputMethod === "github" ? "primary" : "secondary"} onClick={() => setInputMethod("github")} $squared><Github size={16} className="mr-2" /> GitHub</Button>
               </div>
               <div className="flex-grow">
-                {inputMethod === "local" ? <LocalInputView onDrop={handleDrop} onSelectFolder={handleSelectFolder} /> : <GithubInputView githubRepo={githubRepo} onRepoChange={handleGithubRepoChange} onFetch={handleFetchFromGithub} isProcessing={isProcessing} />}
+                {inputMethod === "local" ? <LocalInputView onDrop={handleDrop} onSelectFolder={handleSelectFolder} /> : <GithubInputView githubRepo={githubRepo} onRepoChange={handleGithubRepoChange} onFetch={handleFetchFromGithubProxy} isProcessing={isProcessing} />}
               </div>
               <RecentItemsList items={recentItems} onClick={handleRecentClick} />
             </div>
@@ -512,9 +489,9 @@ const Codebase = () => {
           "result": (
             <div className="flex flex-col h-full w-full gap-4">
               <div className="flex justify-between items-center flex-wrap gap-2">
-                <h3 className="font-semibold text-xl">Codebase Gerada</h3>
+                <h3 className="font-semibold text-xl">Codebase Gerada para: {projectName}</h3>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <Button onClick={() => { navigator.clipboard.writeText(result); notifyInfo("Copiado para a área de transferência!") }} variant="primary" size="sm" $squared>
+                  <Button onClick={() => { navigator.clipboard.writeText(result); notifyInfo("Copiado!") }} variant="primary" size="sm" $squared>
                     <Copy size={16} className="mr-2" /><span>Copiar Tudo</span>
                   </Button>
                   <Button onClick={() => {
@@ -522,7 +499,7 @@ const Codebase = () => {
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement("a");
                     a.href = url;
-                    a.download = `${projectName}_codebase.txt`;
+                    a.download = `${projectName.replace('/', '_')}_codebase.txt`;
                     a.click();
                     URL.revokeObjectURL(url);
                   }} variant="secondary" size="sm" $squared>
