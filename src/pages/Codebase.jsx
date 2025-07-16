@@ -98,54 +98,64 @@ const clearRecentItems = () => {
 
 const isBinaryContent = (content) => /[\x00-\x08\x0B\x0C\x0E-\x1F]/.test(content)
 
+// Listas de exclusão atualizadas e expandidas
 const IGNORED_EXTENSIONS = new Set([
-  ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".ico", ".pdf", ".doc", ".docx", ".xls", ".xlsx",
-  ".ppt", ".pptx", ".zip", ".tar", ".gz", ".rar", ".7z", ".mp3", ".mp4", ".mov", ".avi",
-  ".woff", ".woff2", ".eot", ".ttf", ".otf", ".DS_Store", ".pyc", ".pyo", ".pyd", ".so",
-  ".o", ".a", ".dll", ".exe"
+  // Imagens e Mídia
+  ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".ico", ".svg", ".webp",
+  ".mp3", ".mp4", ".mov", ".avi", ".webm", ".mkv",
+  // Fontes
+  ".woff", ".woff2", ".eot", ".ttf", ".otf",
+  // Documentos
+  ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx",
+  // Arquivos compactados
+  ".zip", ".tar", ".gz", ".rar", ".7z",
+  // Binários e compilados
+  ".pyc", ".pyo", ".pyd", ".so", ".o", ".a", ".dll", ".exe",
+  ".class", ".jar", ".war", ".ear", ".out",
+  // Logs e temporários
+  ".log", ".tmp", ".swp", ".swo",
+  // Mobile
+  ".apk", ".aab",
 ])
 
-const IGNORED_PATHS = new Set(["node_modules", ".git", "dist", "build", "vendor", "target", "out", "bin", "obj"])
+const IGNORED_PATHS = new Set([
+  // Gerenciadores de Pacotes
+  "node_modules", "vendor", "Pods",
+  // Pastas de Build e Compilação
+  "dist", "build", "target", "out", "bin", "obj",
+  "__pycache__", ".gradle", ".next", ".nuxt", ".svelte-kit",
+  // Pastas de Cache e Testes
+  "coverage", ".pytest_cache", ".cache",
+  // Pastas de IDEs e Sistema
+  ".git", ".vscode", ".idea", "tmp",
+  // Ambientes Virtuais
+  ".venv", "venv", "env",
+])
 
-// NOVA LISTA DE ARQUIVOS ESPECÍFICOS PARA IGNORAR
 const IGNORED_FILENAMES = new Set([
-  "package-lock.json",
-  "yarn.lock",
-  "pnpm-lock.yaml",
-  "composer.lock",
-  "gemfile.lock",
-  "license",
-  "license.md",
-  "license.txt",
-  "copying",
-  "copying.md",
-  "copying.txt",
-  "vercel.json",
-  ".env"
+  // Arquivos de Lock
+  "package-lock.json", "yarn.lock", "pnpm-lock.yaml", "composer.lock", "gemfile.lock",
+  // Arquivos de Licença
+  "license", "license.md", "license.txt", "copying", "copying.md", "copying.txt",
+  // Configurações de Deploy
+  "vercel.json", "netlify.toml",
+  // Arquivos de Sistema
+  ".ds_store", "thumbs.db",
+  // Arquivos de Ambiente (exceto exemplos)
+  ".env", ".env.local", ".env.development", ".env.production"
 ])
 
 const shouldIgnoreFile = (path) => {
   const pathParts = path.split("/")
   const filename = pathParts[pathParts.length - 1].toLowerCase()
 
-  // 1. Checa por nomes de arquivos exatos (lockfiles, licenças, etc.)
-  if (IGNORED_FILENAMES.has(filename)) {
-    return true
-  }
+  if (IGNORED_FILENAMES.has(filename)) return true
+  if (pathParts.some(part => IGNORED_PATHS.has(part))) return true
 
-  // 2. Checa por nomes de pastas ignoradas
-  if (pathParts.some(part => IGNORED_PATHS.has(part))) {
-    return true
-  }
-
-  // 3. Checa por extensões de arquivos ignoradas
   const extension = filename.includes(".") ? filename.substring(filename.lastIndexOf(".")) : ""
-  if (IGNORED_EXTENSIONS.has(extension)) {
-    return true
-  }
+  if (IGNORED_EXTENSIONS.has(extension)) return true
 
-  // 4. Checa por arquivos e pastas ocultos (começam com .)
-  if (pathParts.some(part => part.startsWith(".") && part.length > 1)) {
+  if (pathParts.some(part => part.startsWith(".") && part.length > 1 && !IGNORED_PATHS.has(part))) {
     return true
   }
 
