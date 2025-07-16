@@ -16,7 +16,7 @@ const MAX_RECENTS = 5
 const DB_NAME = "CodebaseDB"
 const STORE_NAME = "DirectoryHandles"
 
-// --- Funções Auxiliares ---
+// --- Funções Auxiliares (Armazenamento) ---
 
 const openDB = () => {
   return new Promise((resolve, reject) => {
@@ -115,7 +115,7 @@ const IGNORED_PATHS = new Set([
   "dist", "build", "target", "out", "bin", "obj",
   "__pycache__", ".gradle", ".next", ".nuxt", ".svelte-kit",
   "coverage", ".pytest_cache", ".cache",
-  ".git", ".vscode", ".idea", "tmp",
+  ".git", ".vscode", ".vercel", ".cursor", ".trae", ".idea", "tmp",
   ".venv", "venv", "env",
 ])
 
@@ -305,7 +305,7 @@ const FileExplorer = memo(({ fileTree, allFiles, selectedFiles, setSelectedFiles
 
     const getFolderSelectionState = (folderNode) => {
         const allChildPaths = getAllFilePathsFromNode(folderNode)
-        if (allChildPaths.length === 0) return "none" // Pastas vazias não têm estado
+        if (allChildPaths.length === 0) return "none"
         const selectedChildPaths = allChildPaths.filter(p => selectedFiles.has(p))
         if (selectedChildPaths.length === 0) return "none"
         if (selectedChildPaths.length === allChildPaths.length) return "all"
@@ -552,15 +552,43 @@ const Codebase = () => {
     const filesToInclude = allFiles.filter(file => selectedFiles.has(file.path))
     try {
       let codebaseString = ""
+      const processContent = (content) => content.replace(/(\r\n|\n|\r){3,}/g, "$1$1").trim()
+      const generateFileTree = (filePaths, rootName) => {
+        const tree = {}
+        filePaths.forEach((path) => {
+          let level = tree
+          path.split("/").forEach((part) => {
+            if (!part) return
+            if (!level[part]) level[part] = {}
+            level = level[part]
+          })
+        })
+        const buildTreeString = (dir, prefix = "") => {
+          const entries = Object.keys(dir).sort()
+          let result = ""
+          entries.forEach((entry, index) => {
+            const isLast = index === entries.length - 1
+            const connector = isLast ? "└── " : "├── "
+            result += `${prefix}${connector}${entry}\n`
+            if (Object.keys(dir[entry]).length > 0) {
+              const newPrefix = prefix + (isLast ? "    " : "│   ")
+              result += buildTreeString(dir[entry], newPrefix)
+            }
+          })
+          return result
+        }
+        return `${rootName}/\n${buildTreeString(tree)}`
+      }
+
       if (projectSource === "github") {
         const payload = { projectName, selectedFiles: filesToInclude }
         const response = await api.post("/github/generate-codebase", payload, { responseType: "text" })
         codebaseString = response.data
       } else {
-        const fileTree = generateFileTree(filesToInclude.map(f => f.path), projectName)
+        const fileTreeString = generateFileTree(filesToInclude.map(f => f.path), projectName)
         const outputParts = [
           `PROJETO: ${projectName}`, "---",
-          `ESTRUTURA DE FICHEIROS:\n${fileTree}\n---`,
+          `ESTRUTURA DE FICHEIROS:\n${fileTreeString}\n---`,
           "CONTEÚDO DOS FICHEIROS:", "---",
           ...filesToInclude.map(({ path, content }) => `---[ ${path} ]---\n${processContent(content)}`)
         ]
