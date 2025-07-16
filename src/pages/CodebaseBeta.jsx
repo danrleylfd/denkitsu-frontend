@@ -14,7 +14,7 @@ import api from "../services"
 const OUTPUT_HEADER_PROJECT = "PROJETO:"
 const OUTPUT_HEADER_TREE = "ESTRUTURA DE FICHEIROS:"
 const OUTPUT_HEADER_CONTENT = "CONTEÚDO DOS FICHEIROS:"
-const SEPARATOR = "---"
+const SEPARATOR = "=================================="
 const RECENTS_KEY = "codebase_recents"
 const MAX_RECENTS = 5
 const DB_NAME = "CodebaseDB"
@@ -189,7 +189,7 @@ const RecentItemsList = memo(({ items, onClick }) => {
           <li key={item.id}>
             <button onClick={() => onClick(item)}
               className="w-full text-left flex items-center gap-3 p-2 rounded-md transition-colors hover:bg-lightBg-tertiary dark:hover:bg-darkBg-tertiary"
-              title={item.handleAvailable ? `Recarregar ${item.name}` : `Lembrar de carregar ${item.name} (via Drag-and-Drop)`}>
+              title={item.handleAvailable ? `Recarregar ${item.name}` : `Lembrar de carregar ${item.name}`}>
               {item.type === 'github' ? <Github size={16} className="text-lightFg-secondary dark:text-darkFg-secondary" /> : <Folder size={16} className="text-lightFg-secondary dark:text-darkFg-secondary" />}
               <span className="font-mono text-sm truncate text-lightFg-primary dark:text-darkFg-primary">{item.name}</span>
             </button>
@@ -256,33 +256,36 @@ const Codebase = () => {
   }, [notifyError, notifyWarning])
 
   const handleFetchFromGithubProxy = useCallback(async (repoNameToFetch) => {
-    const repoName = (typeof repoNameToFetch === 'string' && repoNameToFetch) ? repoNameToFetch : githubRepo;
+    const repoName = (typeof repoNameToFetch === 'string' && repoNameToFetch) ? repoNameToFetch : githubRepo
     if (!repoName.trim()) {
-      notifyError("Por favor, insira o nome do repositório.");
-      return;
+      notifyError("Por favor, insira o nome do repositório.")
+      return
     }
     if (!user?.githubId) {
-      notifyError("Você precisa estar logado com o GitHub para usar esta funcionalidade.");
-      return;
+      notifyError("Você precisa estar logado com o GitHub para usar esta funcionalidade.")
+      return
     }
 
-    setIsProcessing(true);
-    setStatusText("Buscando e processando repositório no servidor...");
+    setIsProcessing(true)
+    setStatusText("Buscando e processando repositório no servidor...")
     try {
-      const response = await api.get(`/github/repo-content?repo=${repoName}`);
+      const response = await api.get(`/github/repo-content?repo=${repoName}`)
+      const { projectName: name, files } = response.data
 
-      setResult(response.data);
-      setProjectName(repoName);
-      addRecentItem({ id: `github-${repoName}`, type: 'github', name: repoName, timestamp: Date.now() });
-      setStep("result");
+      if (!files || files.length === 0) {
+        notifyWarning("Nenhum arquivo de texto válido foi encontrado no repositório.")
+        setIsProcessing(false)
+        return
+      }
+
+      handleFileProcessing(files, name, 'github', false)
 
     } catch (error) {
-      console.error("Erro ao buscar do backend:", error);
-      notifyError(error.response?.data?.error || "Falha ao buscar o repositório.");
-    } finally {
-      setIsProcessing(false);
+      console.error("Erro ao buscar do backend:", error)
+      notifyError(error.response?.data?.error || "Falha ao buscar o repositório.")
+      setIsProcessing(false)
     }
-  }, [githubRepo, user, notifyError]);
+  }, [githubRepo, user, notifyError, notifyWarning, handleFileProcessing])
 
   const handleDrop = useCallback(async (items) => {
     setIsProcessing(true)
@@ -505,8 +508,11 @@ const Codebase = () => {
                   }} variant="secondary" size="sm" $squared>
                     <Download size={16} className="mr-2" /><span>Baixar .txt</span>
                   </Button>
+                  <Button onClick={() => setStep("select")} variant="secondary" size="sm" $squared>
+                    <ArrowLeft size={16} className="mr-2" /><span>Voltar para Seleção</span>
+                  </Button>
                   <Button onClick={handleReset} variant="danger" size="sm" $squared>
-                    <ArrowLeft size={16} className="mr-2" /><span>Gerar Novo</span>
+                    <Folder size={16} className="mr-2" /><span>Começar de Novo</span>
                   </Button>
                 </div>
               </div>
