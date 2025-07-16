@@ -1,5 +1,5 @@
 import { useState, useCallback, memo, useEffect } from "react"
-import { Upload, Copy, Download, Github, Loader2, Files, ArrowLeft, Folder, X, Edit } from "lucide-react"
+import { Upload, Copy, Download, Github, Loader2, Files, ArrowLeft, Folder, X, Edit, Trash2 } from "lucide-react"
 
 import SideMenu from "../components/SideMenu"
 import Paper from "../components/Paper"
@@ -11,10 +11,6 @@ import { useAuth } from "../contexts/AuthContext"
 import api from "../services"
 
 // --- Constantes ---
-const OUTPUT_HEADER_PROJECT = "PROJETO:"
-const OUTPUT_HEADER_TREE = "ESTRUTURA DE FICHEIROS:"
-const OUTPUT_HEADER_CONTENT = "CONTEÚDO DOS FICHEIROS:"
-const SEPARATOR = "---"
 const RECENTS_KEY = "codebase_recents"
 const MAX_RECENTS = 5
 const DB_NAME = "CodebaseDB"
@@ -58,6 +54,17 @@ const getHandle = async (key) => {
   })
 }
 
+const deleteHandle = async (key) => {
+  const db = await openDB()
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(STORE_NAME, "readwrite")
+    const store = transaction.objectStore(STORE_NAME)
+    const request = store.delete(key)
+    transaction.oncomplete = () => resolve()
+    transaction.onerror = () => reject("Falha ao remover o handle do diretório.")
+  })
+}
+
 const getRecentItems = () => {
   try {
     const items = localStorage.getItem(RECENTS_KEY)
@@ -75,6 +82,18 @@ const addRecentItem = (newItem) => {
   items.splice(MAX_RECENTS)
   localStorage.setItem(RECENTS_KEY, JSON.stringify(items))
   return items
+}
+
+const removeRecentItem = (itemId) => {
+  let items = getRecentItems()
+  items = items.filter(item => item.id !== itemId)
+  localStorage.setItem(RECENTS_KEY, JSON.stringify(items))
+  return items
+}
+
+const clearRecentItems = () => {
+  localStorage.removeItem(RECENTS_KEY)
+  return []
 }
 
 const isBinaryContent = (content) => /[\x00-\x08\x0B\x0C\x0E-\x1F]/.test(content)
@@ -179,20 +198,28 @@ const GithubInputView = memo(({ githubRepo, onRepoChange, onFetch, isProcessing 
   </div>
 ))
 
-const RecentItemsList = memo(({ items, onClick }) => {
+const RecentItemsList = memo(({ items, onClick, onRemove, onClearAll }) => {
   if (items.length === 0) return null
   return (
     <div className="w-full mt-6 pt-4 border-t border-bLight dark:border-bDark">
-      <h4 className="text-sm font-bold text-lightFg-secondary dark:text-darkFg-secondary mb-2 px-1">Recentes</h4>
+      <div className="flex justify-between items-center mb-2 px-1">
+        <h4 className="text-sm font-bold text-lightFg-secondary dark:text-darkFg-secondary">Recentes</h4>
+        <Button onClick={onClearAll} variant="danger" size="xs" $rounded>Limpar Histórico</Button>
+      </div>
       <ul className="space-y-1">
         {items.map(item => (
-          <li key={item.id}>
-            <button onClick={() => onClick(item)}
-              className="w-full text-left flex items-center gap-3 p-2 rounded-md transition-colors hover:bg-lightBg-tertiary dark:hover:bg-darkBg-tertiary"
-              title={item.handleAvailable ? `Recarregar ${item.name}` : `Lembrar de carregar ${item.name}`}>
+          <li key={item.id} className="flex items-center justify-between p-2 rounded-md hover:bg-lightBg-tertiary dark:hover:bg-darkBg-tertiary group">
+            <button onClick={() => onClick(item)} className="flex items-center gap-3 text-left flex-grow truncate" title={item.handleAvailable ? `Recarregar ${item.name}` : `Lembrar de carregar ${item.name}`}>
               {item.type === 'github' ? <Github size={16} className="text-lightFg-secondary dark:text-darkFg-secondary" /> : <Folder size={16} className="text-lightFg-secondary dark:text-darkFg-secondary" />}
               <span className="font-mono text-sm truncate text-lightFg-primary dark:text-darkFg-primary">{item.name}</span>
             </button>
+            <Button
+              onClick={(e) => { e.stopPropagation(); onRemove(item) }}
+              variant="danger" size="icon" $rounded
+              className="opacity-0 group-hover:opacity-100 transition-opacity"
+              title={`Remover ${item.name}`}>
+              <Trash2 size={14} />
+            </Button>
           </li>
         ))}
       </ul>
@@ -255,20 +282,16 @@ const Codebase = () => {
       notifyError("Você precisa estar logado com o GitHub para usar esta funcionalidade.")
       return
     }
-
     setIsProcessing(true)
     setStatusText("Buscando arquivos do repositório...")
     try {
       const response = await api.get(`/github/repo-files?repo=${repoName}`)
       const { projectName: name, files } = response.data
-
       if (!files || files.length === 0) {
         notifyWarning("Nenhum arquivo de texto válido foi encontrado no repositório.")
         return
       }
-
       handleFileProcessing(files, name, 'github', false)
-
     } catch (error) {
       console.error("Erro ao buscar do backend:", error)
       notifyError(error.response?.data?.error || "Falha ao buscar o repositório.")
@@ -325,7 +348,6 @@ const Codebase = () => {
     try {
       const dirHandle = await window.showDirectoryPicker()
       await setHandle(dirHandle.name, dirHandle)
-
       const files = []
       const traverseHandles = async (directoryHandle, path = "") => {
         for await (const [name, handle] of directoryHandle.entries()) {
@@ -368,12 +390,9 @@ const Codebase = () => {
       notifyError("Nenhum arquivo selecionado.")
       return
     }
-
     setIsProcessing(true)
     setStatusText("Gerando codebase...")
-
     const filesToInclude = allFiles.filter(file => selectedFiles.has(file.id))
-
     try {
       let codebaseString = ""
       if (projectSource === 'github') {
@@ -383,9 +402,9 @@ const Codebase = () => {
       } else {
         const fileTree = generateFileTree(filesToInclude.map(f => f.path), projectName)
         const outputParts = [
-          `${OUTPUT_HEADER_PROJECT} ${projectName}`, SEPARATOR,
-          `${OUTPUT_HEADER_TREE}\n${fileTree}\n---`,
-          OUTPUT_HEADER_CONTENT, SEPARATOR,
+          `PROJETO: ${projectName}`, "---",
+          `ESTRUTURA DE FICHEIROS:\n${fileTree}\n---`,
+          "CONTEÚDO DOS FICHEIROS:", "---",
           ...filesToInclude.map(({ path, content }) => `---[ ${path} ]---\n${processContent(content)}`)
         ]
         codebaseString = outputParts.join("\n\n")
@@ -460,6 +479,39 @@ const Codebase = () => {
     }
   }, [handleFetchFromGithubProxy, handleFileProcessing, notifyInfo, notifyError])
 
+  const handleRemoveRecent = useCallback(async (item) => {
+    try {
+      if (item.type === 'local' && item.handleAvailable) {
+        await deleteHandle(item.name);
+      }
+      const updatedItems = removeRecentItem(item.id)
+      setRecentItems(updatedItems)
+      notifyInfo(`'${item.name}' removido do histórico.`)
+    } catch (error) {
+      console.error("Erro ao remover item recente:", error);
+      notifyError("Não foi possível remover o item do banco de dados.");
+    }
+  }, [notifyInfo, notifyError])
+
+  const handleClearRecents = useCallback(async () => {
+    if (window.confirm("Tem certeza que deseja limpar todo o histórico de projetos recentes?")) {
+        try {
+            const itemsToClear = getRecentItems();
+            for (const item of itemsToClear) {
+                if (item.type === 'local' && item.handleAvailable) {
+                    await deleteHandle(item.name);
+                }
+            }
+            const updatedItems = clearRecentItems()
+            setRecentItems(updatedItems)
+            notifyInfo("Histórico limpo com sucesso.")
+        } catch (error) {
+            console.error("Erro ao limpar histórico:", error);
+            notifyError("Não foi possível limpar completamente o histórico do banco de dados.");
+        }
+    }
+  }, [notifyInfo, notifyError])
+
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
       <FileViewer file={viewingFile} onClose={() => setViewingFile(null)} />
@@ -479,7 +531,7 @@ const Codebase = () => {
               <div className="flex-grow">
                 {inputMethod === "local" ? <LocalInputView onDrop={handleDrop} onSelectFolder={handleSelectFolder} /> : <GithubInputView githubRepo={githubRepo} onRepoChange={handleGithubRepoChange} onFetch={handleFetchFromGithubProxy} isProcessing={isProcessing} />}
               </div>
-              <RecentItemsList items={recentItems} onClick={handleRecentClick} />
+              <RecentItemsList items={recentItems} onClick={handleRecentClick} onRemove={handleRemoveRecent} onClearAll={handleClearRecents} />
             </div>
           ),
           "select": (
