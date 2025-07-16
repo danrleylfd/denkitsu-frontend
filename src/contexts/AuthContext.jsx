@@ -38,6 +38,14 @@ const AuthProvider = ({ children }) => {
     }
   }
 
+  const completeOAuthSignIn = ({ token, refreshToken, user }) => {
+    localStorage.setItem("@Denkitsu:user", JSON.stringify(user))
+    localStorage.setItem("@Denkitsu:refreshToken", refreshToken)
+    sessionStorage.setItem("@Denkitsu:token", token)
+    api.defaults.headers.Authorization = `Bearer ${token}`
+    setUser(user)
+  }
+
   const signIn = async ({ email, password }) => {
     try {
       const response = await api.post("/auth/signin", { email, password })

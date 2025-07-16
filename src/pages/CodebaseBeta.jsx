@@ -166,7 +166,7 @@ const GithubInputView = memo(({ githubRepo, onRepoChange, onFetch, isProcessing 
     <Github size={48} className="text-lightFg-secondary dark:text-darkFg-secondary" />
     <p className="text-xl font-semibold text-lightFg-primary dark:text-darkFg-primary">Extrair de um Repositório Público</p>
     <Input placeholder="owner/repo" value={githubRepo} onChange={onRepoChange} onKeyDown={(e) => e.key === "Enter" && onFetch()} disabled={isProcessing} />
-    <Button onClick={onFetch} loading={isProcessing} disabled={isProcessing || !githubRepo.trim()} $squared>
+    <Button onClick={() => onFetch()} loading={isProcessing} disabled={isProcessing || !githubRepo.trim()} $squared>
       {isProcessing ? "Buscando..." : "Buscar Repositório"}
     </Button>
   </div>
@@ -246,7 +246,7 @@ const Codebase = () => {
   }, [notifyError, notifyWarning])
 
   const handleFetchFromGithub = useCallback(async (repoNameToFetch) => {
-    const repoName = repoNameToFetch || githubRepo
+    const repoName = (typeof repoNameToFetch === 'string' && repoNameToFetch) ? repoNameToFetch : githubRepo
     if (!repoName.trim()) {
       notifyError("Por favor, insira o nome do repositório no formato 'owner/repo'.")
       return
@@ -284,7 +284,7 @@ const Codebase = () => {
           }
         })
       const files = (await Promise.all(filePromises)).filter(Boolean)
-      handleFileProcessing(files, repo, 'github', false)
+      handleFileProcessing(files, repoName, 'github', false)
     } catch (error) {
       console.error("Erro ao buscar do GitHub:", error)
       notifyError(error.message || "Ocorreu um erro desconhecido.")

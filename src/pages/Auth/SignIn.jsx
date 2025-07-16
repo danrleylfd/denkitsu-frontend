@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Eye, EyeClosed } from "lucide-react"
+import { Eye, EyeClosed, Github } from "lucide-react"
 
 import { useAuth } from "../../contexts/AuthContext"
 import { useNotification } from "../../contexts/NotificationContext"
@@ -24,6 +24,9 @@ const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+
+  const backendGithubAuthUrl = "https://denkitsu.up.railway.app/auth/github"
+
   const handleSignIn = async () => {
     if (!email || !password) return notifyError("Por favor, preencha todos os campos.")
 
@@ -41,6 +44,11 @@ const SignIn = () => {
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
       <Form title="Entrar" onSubmit={handleSignIn}>
+        <a href={backendGithubAuthUrl} className="w-full">
+          <Button type="button" variant="secondary" className="w-full" $rounded>
+            <Github size={16} className="mr-2"/> Entrar com GitHub
+          </Button>
+        </a>
         <Input
           name="email"
           type="email"

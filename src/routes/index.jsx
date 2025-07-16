@@ -8,6 +8,7 @@ import SignUp from "../pages/Auth/SignUp"
 import SignIn from "../pages/Auth/SignIn"
 import ForgotPassword from "../pages/Auth/ForgotPassword"
 import ResetPassword from "../pages/Auth/ResetPassword"
+import GithubCallback from "../pages/Auth/GithubCallback"
 
 import Shortcut from "../pages/Shortcut"
 import Redirect from "../pages/Redirect"
@@ -74,6 +75,7 @@ const AppRoutes = () => {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/forgot_password" element={<ForgotPassword />} />
             <Route path="/reset_password" element={<ResetPassword />} />
+            <Route path="/auth/github/callback" element={<GithubCallback />} />
             <Route path="/access/:label" element={<Redirect />} />
             <Route path="/*" element={<Redirect />} />
           </>
