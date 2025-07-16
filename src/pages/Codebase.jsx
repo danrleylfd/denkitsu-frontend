@@ -218,7 +218,7 @@ const RecentItemsList = memo(({ items, onClick, onRemove, onClearAll }) => {
               variant="danger" size="icon" $rounded
               className="opacity-0 group-hover:opacity-100 transition-opacity"
               title={`Remover ${item.name}`}>
-              <Trash2 size={14} />
+              <Trash2 size={16} />
             </Button>
           </li>
         ))}
@@ -518,15 +518,15 @@ const Codebase = () => {
       <Paper opaque className="w-full h-full max-w-6xl max-h-[90vh] flex flex-col items-center justify-center bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary">
         {isProcessing ? (
           <div className="flex flex-col items-center justify-center gap-4">
-            <Loader2 className="h-12 w-12 animate-spin text-primary-base" />
+            <Loader2 className="h-10 w-10 animate-spin text-primary-base" />
             <p className="text-lg font-medium text-lightFg-primary dark:text-darkFg-primary">{statusText}</p>
           </div>
         ) : {
           "input": (
             <div className="w-full h-full flex flex-col gap-4 p-4">
               <div className="flex justify-center gap-2">
-                <Button variant={inputMethod === "local" ? "primary" : "secondary"} onClick={() => setInputMethod("local")} $squared><Folder size={16} className="mr-2" /> Local</Button>
-                <Button variant={inputMethod === "github" ? "primary" : "secondary"} onClick={() => setInputMethod("github")} $squared><Github size={16} className="mr-2" /> GitHub</Button>
+                <Button variant={inputMethod === "local" ? "primary" : "secondary"} $squared onClick={() => setInputMethod("local")}><Folder size={16} className="mr-2" /> Local</Button>
+                <Button variant={inputMethod === "github" ? "primary" : "secondary"} $squared onClick={() => setInputMethod("github")}><Github size={16} className="mr-2" /> GitHub</Button>
               </div>
               <div className="flex-grow">
                 {inputMethod === "local" ? <LocalInputView onDrop={handleDrop} onSelectFolder={handleSelectFolder} /> : <GithubInputView githubRepo={githubRepo} onRepoChange={handleGithubRepoChange} onFetch={handleFetchFromGithubProxy} isProcessing={isProcessing} />}
@@ -538,11 +538,11 @@ const Codebase = () => {
             <div className="flex flex-col h-full w-full gap-4">
               <h3 className="text-lg font-bold">Selecione os arquivos para incluir no codebase</h3>
               <div className="flex gap-2 flex-wrap">
-                <Button onClick={() => setSelectedFiles(new Set(allFiles.map(f => f.id)))} variant="outline" size="sm" $squared>Selecionar Tudo</Button>
-                <Button onClick={() => setSelectedFiles(new Set())} variant="outline" size="sm" $squared>Limpar Seleção</Button>
+                <Button variant="outline" $rounded onClick={() => setSelectedFiles(new Set(allFiles.map(f => f.id)))}>Selecionar Tudo</Button>
+                <Button variant="outline" $rounded onClick={() => setSelectedFiles(new Set())}>Limpar Seleção</Button>
                 <div className="flex-grow" />
-                <Button onClick={() => setStep("input")} variant="danger" size="sm" $squared><ArrowLeft size={16} className="mr-2" /> Voltar</Button>
-                <Button onClick={handleGenerateCodebase} variant="success" size="sm" $squared><Files size={16} className="mr-2" /> Gerar Codebase</Button>
+                <Button onClick={() => setStep("input")} variant="secondary" $rounded><ArrowLeft size={16} className="mr-2" /> Voltar</Button>
+                <Button onClick={handleGenerateCodebase} variant="success" $rounded><Files size={16} className="mr-2" /> Gerar Codebase</Button>
               </div>
               <div className="flex-1 overflow-y-auto p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md">
                 <ul className="space-y-1">
@@ -565,10 +565,10 @@ const Codebase = () => {
               <div className="flex justify-between items-center flex-wrap gap-2">
                 <h3 className="font-semibold text-xl">Codebase Gerada para: {projectName}</h3>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <Button onClick={() => { navigator.clipboard.writeText(result); notifyInfo("Copiado!") }} variant="primary" size="sm" $squared>
+                  <Button variant="primary" $rounded onClick={() => { navigator.clipboard.writeText(result); notifyInfo("Copiado!") }}>
                     <Copy size={16} className="mr-2" /><span>Copiar Tudo</span>
                   </Button>
-                  <Button onClick={() => {
+                  <Button variant="secondary" $rounded onClick={() => {
                     const blob = new Blob([result], { type: "text/plain" });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement("a");
@@ -576,13 +576,13 @@ const Codebase = () => {
                     a.download = `${projectName.replace('/', '_')}_codebase.txt`;
                     a.click();
                     URL.revokeObjectURL(url);
-                  }} variant="secondary" size="sm" $squared>
+                  }}>
                     <Download size={16} className="mr-2" /><span>Baixar .txt</span>
                   </Button>
-                  <Button onClick={() => setStep("select")} variant="secondary" size="sm" $squared>
+                  <Button variant="secondary" onClick={() => setStep("select")} >
                     <Edit size={16} className="mr-2" /><span>Voltar para Seleção</span>
                   </Button>
-                  <Button onClick={handleReset} variant="danger" size="sm" $squared>
+                  <Button variant="secondary" onClick={handleReset}>
                     <Folder size={16} className="mr-2" /><span>Começar de Novo</span>
                   </Button>
                 </div>
