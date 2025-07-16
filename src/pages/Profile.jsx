@@ -36,8 +36,8 @@ const Profile = () => {
         setLoading(true)
         const data = await getUserAccount(userID)
         setUserData(data)
-        setName(data.name)
-        setAvatarUrl(data.avatarUrl)
+        setName(data?.name)
+        setAvatarUrl(data?.avatarUrl)
       } catch (err) {
         console.error(err)
         notifyError("Falha ao carregar dados do perfil.")
@@ -51,8 +51,8 @@ const Profile = () => {
   const handleEditToggle = () => {
     setIsEditing(!isEditing)
     if (isEditing && userData) {
-      setName(userData.name)
-      setAvatarUrl(userData.avatarUrl)
+      setName(userData?.name)
+      setAvatarUrl(userData?.avatarUrl)
     }
   }
 
@@ -107,7 +107,7 @@ const Profile = () => {
         <div
           className="flex w-max h-max my-40 min-w-96 mx-auto p-4 gap-2 items-center bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-[8rem_0.5rem_0.5rem_8rem] shadow-[6px_6px_16px_rgba(0,0,0,0.5)] opacity-75 dark:opacity-90">
           <img
-            src={avatarUrl || userData.avatarUrl}
+            src={avatarUrl || userData?.avatarUrl}
             alt={name || userData.name}
             className="w-24 h-24 rounded-full object-cover border-4 border-violet-500"
           />
@@ -127,16 +127,16 @@ const Profile = () => {
           ) : (
             <div className="flex-1 flex flex-col gap-2">
               <h5 className="text-lg font-bold text-lightFg-primary dark:text-darkFg-primary">
-                {userData.name}
+                {userData?.name}
               </h5>
               <p className="text-lightFg-secondary dark:text-darkFg-secondary">
-                @{userData.email.split("@")[0]}
+                @{userData?.email?.split("@")[0]}
               </p>
               <small className="text-xs text-lightFg-secondary dark:text-darkFg-secondary">
-                Conta criada em {new Date(userData.createdAt).toLocaleString()}
+                Conta criada em {new Date(userData?.createdAt).toLocaleString()}
               </small>
               <small className="text-xs text-lightFg-secondary dark:text-darkFg-secondary">
-                Conta editada em {new Date(userData.updatedAt).toLocaleString()}
+                Conta editada em {new Date(userData?.updatedAt).toLocaleString()}
               </small>
               {userID === user._id && (
                 <div className="flex-1 flex flex-col gap-0 items-center">
