@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { LogOut, Pencil, Trash, X, Check, Github } from "lucide-react"
 
@@ -36,6 +36,10 @@ const Profile = () => {
         setUserData(data)
         setName(data.name)
         setAvatarUrl(data.avatarUrl)
+        // Atualiza o contexto e o localStorage se o perfil visualizado for o do usuário logado
+        if (user?._id === data._id) {
+          updateUser(data)
+        }
       } catch (err) {
         console.error(err)
         notifyError("Falha ao carregar dados do perfil.")
@@ -47,7 +51,7 @@ const Profile = () => {
     if (connectedUserId) {
         fetchUserData()
     }
-  }, [connectedUserId, notifyError, navigate])
+  }, [connectedUserId, notifyError, navigate, updateUser, user?._id])
 
   const handleGithubConnect = () => {
     const token = sessionStorage.getItem("@Denkitsu:token")
@@ -55,7 +59,6 @@ const Profile = () => {
       notifyError("Sessão inválida. Por favor, faça login novamente.")
       return
     }
-    // Redireciona para o backend, passando o token como parâmetro de URL
     window.location.href = `https://denkitsu.up.railway.app/auth/github/connect?token=${token}`
   }
 
@@ -144,7 +147,11 @@ const Profile = () => {
               )}
 
               <div className="flex gap-2">
-                {!userData.githubId && (
+                {userData.githubId ? (
+                  <Button variant="success" size="icon" $rounded title={`Vinculado com GitHub`} disabled>
+                    <Github size={16} />
+                  </Button>
+                ) : (
                   <Button onClick={handleGithubConnect} type="button" variant="secondary" size="icon" $rounded title="Vincular com GitHub">
                     <Github size={16}/>
                   </Button>
