@@ -1,5 +1,5 @@
 import { useState, useCallback, memo, useEffect } from "react"
-import { Upload, Copy, Download, Github, Loader2, Files, ArrowLeft, Folder, X } from "lucide-react"
+import { Upload, Copy, Download, Github, Loader2, Files, ArrowLeft, Folder, X, Edit } from "lucide-react"
 
 import SideMenu from "../components/SideMenu"
 import Paper from "../components/Paper"
@@ -470,7 +470,7 @@ const Codebase = () => {
                 <Button onClick={() => setSelectedFiles(new Set(allFiles.map(f => f.id)))} variant="outline" size="sm" $squared>Selecionar Tudo</Button>
                 <Button onClick={() => setSelectedFiles(new Set())} variant="outline" size="sm" $squared>Limpar Seleção</Button>
                 <div className="flex-grow" />
-                <Button onClick={handleReset} variant="danger" size="sm" $squared><ArrowLeft size={16} className="mr-2" /> Voltar</Button>
+                <Button onClick={handleReset} variant="danger" size="sm" $squared><ArrowLeft size={16} className="mr-2" /> Voltar para Início</Button>
                 <Button onClick={handleGenerateCodebase} variant="success" size="sm" $squared><Files size={16} className="mr-2" /> Gerar Codebase</Button>
               </div>
               <div className="flex-1 overflow-y-auto p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md">
@@ -509,7 +509,7 @@ const Codebase = () => {
                     <Download size={16} className="mr-2" /><span>Baixar .txt</span>
                   </Button>
                   <Button onClick={() => setStep("select")} variant="secondary" size="sm" $squared>
-                    <ArrowLeft size={16} className="mr-2" /><span>Voltar para Seleção</span>
+                    <Edit size={16} className="mr-2" /><span>Voltar para Seleção</span>
                   </Button>
                   <Button onClick={handleReset} variant="danger" size="sm" $squared>
                     <Folder size={16} className="mr-2" /><span>Começar de Novo</span>
