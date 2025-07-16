@@ -28,9 +28,6 @@ const Profile = () => {
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
 
-  // URL para o endpoint de vinculação no backend
-  const backendGithubConnectUrl = "https://denkitsu.up.railway.app/auth/github/connect"
-
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -42,7 +39,7 @@ const Profile = () => {
       } catch (err) {
         console.error(err)
         notifyError("Falha ao carregar dados do perfil.")
-        navigate("/") // Volta para a home se o perfil não for encontrado
+        navigate("/")
       } finally {
         setLoading(false)
       }
@@ -52,10 +49,19 @@ const Profile = () => {
     }
   }, [connectedUserId, notifyError, navigate])
 
+  const handleGithubConnect = () => {
+    const token = sessionStorage.getItem("@Denkitsu:token")
+    if (!token) {
+      notifyError("Sessão inválida. Por favor, faça login novamente.")
+      return
+    }
+    // Redireciona para o backend, passando o token como parâmetro de URL
+    window.location.href = `https://denkitsu.up.railway.app/auth/github/connect?token=${token}`
+  }
+
   const handleEditToggle = () => {
     setIsEditing(!isEditing)
     if (!isEditing && userData) {
-      // Reseta para os dados atuais ao cancelar
       setName(userData.name)
       setAvatarUrl(userData.avatarUrl)
     }
@@ -71,7 +77,7 @@ const Profile = () => {
       }
       const updatedUser = await editUserAccount({ name, avatarUrl })
       setUserData(updatedUser)
-      updateUser(updatedUser) // Atualiza o contexto global
+      updateUser(updatedUser)
       setIsEditing(false)
     } catch (err) {
       notifyError(err.response?.data?.error || "Falha ao atualizar perfil.")
@@ -139,11 +145,9 @@ const Profile = () => {
 
               <div className="flex gap-2">
                 {!userData.githubId && (
-                   <a href={backendGithubConnectUrl} title="Vincular com GitHub">
-                    <Button type="button" variant="secondary" size="icon" $rounded>
-                        <Github size={16}/>
-                    </Button>
-                  </a>
+                  <Button onClick={handleGithubConnect} type="button" variant="secondary" size="icon" $rounded title="Vincular com GitHub">
+                    <Github size={16}/>
+                  </Button>
                 )}
                 <Button variant="danger" size="icon" $rounded title="Deletar Conta" onClick={handleDeleteAccount} loading={loading}><Trash size={16} /></Button>
                 <Button variant="danger" size="icon" $rounded title="Sair" onClick={signOut}><LogOut size={16} /></Button>
