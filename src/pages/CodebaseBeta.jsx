@@ -384,7 +384,7 @@ const Codebase = () => {
         const fileTree = generateFileTree(filesToInclude.map(f => f.path), projectName)
         const outputParts = [
           `${OUTPUT_HEADER_PROJECT} ${projectName}`, SEPARATOR,
-          `${OUTPUT_HEADER_TREE}\n${fileTree}`, SEPARATOR,
+          `${OUTPUT_HEADER_TREE}\n${fileTree}\n---`,
           OUTPUT_HEADER_CONTENT, SEPARATOR,
           ...filesToInclude.map(({ path, content }) => `---[ ${path} ]---\n${processContent(content)}`)
         ]
