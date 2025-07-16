@@ -30,7 +30,7 @@ const NotificationProvider = ({ children }) => {
             animate-fade-in-down transition-all duration-300`}
         >
           <div className="flex items-center justify-between">
-            <p className="text-white font-medium text-sm">{notification.message}</p>
+            <p className="text-lightFg-primary dark:bg-darkFg-primary font-medium text-sm">{notification.message}</p>
             <button
               onClick={() => setNotification(null)}
               className="hover:bg-white/10 rounded-full p-1 transition-colors"
