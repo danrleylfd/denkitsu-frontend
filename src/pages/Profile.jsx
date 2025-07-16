@@ -1,10 +1,10 @@
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { LogOut, Pencil, Trash, X, Check, Github } from "lucide-react"
 
 import { useAuth } from "../contexts/AuthContext"
 import { useNotification } from "../contexts/NotificationContext"
-import { getUserAccount, editUserAccount, deleteUserAccount } from "../services/account"
+import { getUserAccount, editUserAccount, deleteUserAccount, unlinkGithubAccount } from "../services/account"
 
 import SideMenu from "../components/SideMenu"
 import Input from "../components/Input"
@@ -19,7 +19,7 @@ const ContentView = ({ children }) => (
 const Profile = () => {
   const { userId } = useParams()
   const { user, signOut, updateUser } = useAuth()
-  const { notifyWarning, notifyError } = useNotification()
+  const { notifyWarning, notifyError, notifyInfo } = useNotification()
   const connectedUserId = userId || user._id
   const [userData, setUserData] = useState(null)
   const [isEditing, setIsEditing] = useState(false)
@@ -36,7 +36,6 @@ const Profile = () => {
         setUserData(data)
         setName(data.name)
         setAvatarUrl(data.avatarUrl)
-        // Atualiza o contexto e o localStorage se o perfil visualizado for o do usuário logado
         if (user?._id === data._id) {
           updateUser(data)
         }
@@ -60,6 +59,22 @@ const Profile = () => {
       return
     }
     window.location.href = `https://denkitsu.up.railway.app/auth/github/connect?token=${token}`
+  }
+
+  const handleGithubUnlink = async () => {
+    if (!window.confirm("Tem certeza que deseja desvincular sua conta do GitHub? Você precisará usar seu e-mail e senha para fazer login.")) return
+
+    setLoading(true)
+    try {
+      const updatedUser = await unlinkGithubAccount()
+      setUserData(updatedUser)
+      updateUser(updatedUser)
+      notifyInfo("Conta do GitHub desvinculada com sucesso!")
+    } catch (error) {
+      notifyError("Falha ao desvincular a conta.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleEditToggle = () => {
@@ -137,26 +152,31 @@ const Profile = () => {
 
           {user?._id === connectedUserId && (
             <div className="flex w-full justify-between items-center border-t border-zinc-200 dark:border-zinc-700 pt-4 mt-2">
-              {isEditing ? (
-                <div className="flex gap-2">
-                  <Button variant="secondary" size="icon" $rounded title="Cancelar" onClick={handleEditToggle} disabled={loading}><X size={16} /></Button>
-                  <Button variant="success" size="icon" $rounded title="Salvar" onClick={handleSaveChanges} loading={loading}><Check size={16} /></Button>
-                </div>
-              ) : (
-                <Button variant="warning" size="icon" $rounded title="Editar" onClick={handleEditToggle}><Pencil size={16} /></Button>
-              )}
+              <div className="flex gap-2">
+                {isEditing ? (
+                  <>
+                    <Button variant="secondary" size="icon" $rounded title="Cancelar" onClick={handleEditToggle} disabled={loading}><X size={16} /></Button>
+                    <Button variant="success" size="icon" $rounded title="Salvar" onClick={handleSaveChanges} loading={loading}><Check size={16} /></Button>
+                  </>
+                ) : (
+                  <Button variant="warning" size="icon" $rounded title="Editar" onClick={handleEditToggle}><Pencil size={16} /></Button>
+                )}
+              </div>
 
               <div className="flex gap-2">
-                {userData.githubId ? (
-                  <Button variant="success" size="icon" $rounded title={`Vinculado com GitHub`} disabled>
-                    <Github size={16} />
-                  </Button>
+                {isEditing ? (
+                  <Button variant="danger" size="icon" $rounded title="Deletar Conta" onClick={handleDeleteAccount} loading={loading}><Trash size={16} /></Button>
                 ) : (
-                  <Button onClick={handleGithubConnect} type="button" variant="secondary" size="icon" $rounded title="Vincular com GitHub">
-                    <Github size={16}/>
-                  </Button>
+                  userData.githubId ? (
+                    <Button onClick={handleGithubUnlink} variant="danger" size="icon" $rounded title="Desvincular do GitHub">
+                      <Github size={16} />
+                    </Button>
+                  ) : (
+                    <Button onClick={handleGithubConnect} type="button" variant="secondary" size="icon" $rounded title="Vincular com GitHub">
+                      <Github size={16}/>
+                    </Button>
+                  )
                 )}
-                <Button variant="danger" size="icon" $rounded title="Deletar Conta" onClick={handleDeleteAccount} loading={loading}><Trash size={16} /></Button>
                 <Button variant="danger" size="icon" $rounded title="Sair" onClick={signOut}><LogOut size={16} /></Button>
               </div>
             </div>
