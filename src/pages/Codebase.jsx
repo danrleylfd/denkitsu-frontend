@@ -1,5 +1,5 @@
 import { useState, useCallback, memo, useEffect } from "react"
-import { Upload, Copy, Download, Github, Loader2, Files, ArrowLeft, Folder, X, Edit, Trash2 } from "lucide-react"
+import { Upload, Copy, Download, Github, Loader2, Files, ArrowLeft, Folder, X, Edit, Trash2, FileText, ChevronRight } from "lucide-react"
 
 import SideMenu from "../components/SideMenu"
 import Paper from "../components/Paper"
@@ -98,50 +98,32 @@ const clearRecentItems = () => {
 
 const isBinaryContent = (content) => /[\x00-\x08\x0B\x0C\x0E-\x1F]/.test(content)
 
-// Listas de exclusão atualizadas e expandidas
 const IGNORED_EXTENSIONS = new Set([
-  // Imagens e Mídia
   ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".ico", ".svg", ".webp",
   ".mp3", ".mp4", ".mov", ".avi", ".webm", ".mkv",
-  // Fontes
   ".woff", ".woff2", ".eot", ".ttf", ".otf",
-  // Documentos
   ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx",
-  // Arquivos compactados
   ".zip", ".tar", ".gz", ".rar", ".7z",
-  // Binários e compilados
   ".pyc", ".pyo", ".pyd", ".so", ".o", ".a", ".dll", ".exe",
   ".class", ".jar", ".war", ".ear", ".out",
-  // Logs e temporários
   ".log", ".tmp", ".swp", ".swo",
-  // Mobile
   ".apk", ".aab",
 ])
 
 const IGNORED_PATHS = new Set([
-  // Gerenciadores de Pacotes
   "node_modules", "vendor", "Pods",
-  // Pastas de Build e Compilação
   "dist", "build", "target", "out", "bin", "obj",
   "__pycache__", ".gradle", ".next", ".nuxt", ".svelte-kit",
-  // Pastas de Cache e Testes
   "coverage", ".pytest_cache", ".cache",
-  // Pastas de IDEs e Sistema
   ".git", ".vscode", ".idea", "tmp",
-  // Ambientes Virtuais
   ".venv", "venv", "env",
 ])
 
 const IGNORED_FILENAMES = new Set([
-  // Arquivos de Lock
   "package-lock.json", "yarn.lock", "pnpm-lock.yaml", "composer.lock", "gemfile.lock",
-  // Arquivos de Licença
   "license", "license.md", "license.txt", "copying", "copying.md", "copying.txt",
-  // Configurações de Deploy
   "vercel.json", "netlify.toml",
-  // Arquivos de Sistema
   ".ds_store", "thumbs.db",
-  // Arquivos de Ambiente (exceto exemplos)
   ".env", ".env.local", ".env.development", ".env.production"
 ])
 
@@ -162,33 +144,37 @@ const shouldIgnoreFile = (path) => {
   return false
 }
 
-const processContent = (content) => content.replace(/(\r\n|\n|\r){3,}/g, "$1$1").trim()
+const buildFileTree = (files) => {
+  const root = { name: "root", type: "folder", path: "", children: [] }
+  const nodeMap = { "": root }
 
-const generateFileTree = (filePaths, rootName) => {
-  const tree = {}
-  filePaths.forEach((path) => {
-    let level = tree
-    path.split("/").forEach((part) => {
-      if (!part) return
-      if (!level[part]) level[part] = {}
-      level = level[part]
-    })
-  })
-  const buildTreeString = (dir, prefix = "") => {
-    const entries = Object.keys(dir).sort()
-    let result = ""
-    entries.forEach((entry, index) => {
-      const isLast = index === entries.length - 1
-      const connector = isLast ? "└── " : "├── "
-      result += `${prefix}${connector}${entry}\n`
-      if (Object.keys(dir[entry]).length > 0) {
-        const newPrefix = prefix + (isLast ? "    " : "│   ")
-        result += buildTreeString(dir[entry], newPrefix)
+  files.forEach(file => {
+    const parts = file.path.split("/")
+    let currentLevel = root.children
+    let currentPath = ""
+
+    parts.forEach((part, index) => {
+      const isLastPart = index === parts.length - 1
+      currentPath = currentPath ? `${currentPath}/${part}` : part
+
+      let node = nodeMap[currentPath]
+
+      if (!node) {
+        if (isLastPart) {
+          node = { name: part, type: "file", path: file.path, content: file.content }
+          currentLevel.push(node)
+        } else {
+          node = { name: part, type: "folder", path: currentPath, children: [] }
+          currentLevel.push(node)
+        }
+        nodeMap[currentPath] = node
+      }
+      if (node.type === "folder") {
+        currentLevel = node.children
       }
     })
-    return result
-  }
-  return `${rootName}/\n${buildTreeString(tree)}`
+  })
+  return root.children
 }
 
 // --- Componentes de UI ---
@@ -296,6 +282,8 @@ const Codebase = () => {
   const [viewingFile, setViewingFile] = useState(null)
   const [recentItems, setRecentItems] = useState([])
   const [projectSource, setProjectSource] = useState(null)
+  const [fileTree, setFileTree] = useState([])
+  const [currentPath, setCurrentPath] = useState("")
 
   const { notifyError, notifyInfo, notifyWarning } = useNotification()
   const { user } = useAuth()
@@ -304,96 +292,84 @@ const Codebase = () => {
     setRecentItems(getRecentItems())
   }, [])
 
-  const handleFileProcessing = useCallback(
-    (files, name, type, handleAvailable = false) => {
-      const filteredFiles = files.map((file) => ({ ...file, id: file.path }))
-      if (filteredFiles.length === 0) {
-        notifyWarning("Nenhum arquivo de texto válido foi encontrado para processar.")
-        return
-      }
-      filteredFiles.sort((a, b) => a.path.localeCompare(b.path))
-      setAllFiles(filteredFiles)
-      setSelectedFiles(new Set(filteredFiles.map((f) => f.id)))
-      setProjectName(name)
-      setProjectSource(type)
-      const updatedRecents = addRecentItem({ id: `${type}-${name}`, type, name, timestamp: Date.now(), handleAvailable })
-      setRecentItems(updatedRecents)
-      setStep("select")
-    },
-    [notifyWarning]
-  )
+  const handleFileProcessing = useCallback((files, name, type, handleAvailable = false) => {
+    const tree = buildFileTree(files)
+    setFileTree(tree)
+    setAllFiles(files)
+    setSelectedFiles(new Set(files.map(f => f.path)))
+    setProjectName(name)
+    setProjectSource(type)
+    const updatedRecents = addRecentItem({ id: `${type}-${name}`, type, name, timestamp: Date.now(), handleAvailable })
+    setRecentItems(updatedRecents)
+    setStep("select")
+  }, [])
 
-  const handleFetchFromGithubProxy = useCallback(
-    async (repoNameToFetch) => {
-      const repoName = typeof repoNameToFetch === "string" && repoNameToFetch ? repoNameToFetch : githubRepo
-      if (!repoName.trim()) {
-        notifyError("Por favor, insira o nome do repositório.")
+  const handleFetchFromGithubProxy = useCallback(async (repoNameToFetch) => {
+    const repoName = (typeof repoNameToFetch === "string" && repoNameToFetch) ? repoNameToFetch : githubRepo
+    if (!repoName.trim()) {
+      notifyError("Por favor, insira o nome do repositório.")
+      return
+    }
+    if (!user?.githubId) {
+      notifyError("Você precisa estar logado com o GitHub para usar esta funcionalidade.")
+      return
+    }
+    setIsProcessing(true)
+    setStatusText("Buscando arquivos do repositório...")
+    try {
+      const response = await api.get(`/github/repo-files?repo=${repoName}`)
+      const { projectName: name, files } = response.data
+      if (!files || files.length === 0) {
+        notifyWarning("Nenhum arquivo de texto válido foi encontrado no repositório.")
         return
       }
-      if (!user?.githubId) {
-        notifyError("Você precisa estar logado com o GitHub para usar esta funcionalidade.")
-        return
-      }
-      setIsProcessing(true)
-      setStatusText("Buscando arquivos do repositório...")
-      try {
-        const response = await api.get(`/github/repo-files?repo=${repoName}`)
-        const { projectName: name, files } = response.data
-        if (!files || files.length === 0) {
-          notifyWarning("Nenhum arquivo de texto válido foi encontrado no repositório.")
-          return
-        }
-        handleFileProcessing(files, name, "github", false)
-      } catch (error) {
-        console.error("Erro ao buscar do backend:", error)
-        notifyError(error.response?.data?.error || "Falha ao buscar o repositório.")
-      } finally {
-        setIsProcessing(false)
-      }
-    },
-    [githubRepo, user, notifyError, notifyWarning, handleFileProcessing]
-  )
+      handleFileProcessing(files, name, "github", false)
+    } catch (error) {
+      console.error("Erro ao buscar do backend:", error)
+      notifyError(error.response?.data?.error || "Falha ao buscar o repositório.")
+    } finally {
+      setIsProcessing(false)
+    }
+  }, [githubRepo, user, notifyError, notifyWarning, handleFileProcessing])
 
-  const handleDrop = useCallback(
-    async (items) => {
-      setIsProcessing(true)
-      setStatusText("Lendo estrutura de pastas...")
-      try {
-        const entries = Array.from(items).map((item) => item.webkitGetAsEntry())
-        const rootEntry = entries.find((e) => e.isDirectory)
-        if (!rootEntry) {
-          notifyError("Por favor, arraste uma pasta, não arquivos individuais.")
-          return
-        }
-        const files = []
-        const traverse = async (entry, currentPath) => {
-          if (entry.isFile) {
-            const file = await new Promise((resolve, reject) => entry.file(resolve, reject))
-            const content = await file.text()
-            if (!shouldIgnoreFile(file.name) && !isBinaryContent(content)) {
-              files.push({ path: currentPath + file.name, content })
-            }
-          } else if (entry.isDirectory) {
-            if (shouldIgnoreFile(entry.name)) return
-            const dirReader = entry.createReader()
-            const dirEntries = await new Promise((resolve, reject) => dirReader.readEntries(resolve, reject))
-            for (const subEntry of dirEntries) {
-              await traverse(subEntry, currentPath + entry.name + "/")
-            }
+  const handleDrop = useCallback(async (items) => {
+    setIsProcessing(true)
+    setStatusText("Lendo estrutura de pastas...")
+    try {
+      const entries = Array.from(items).map((item) => item.webkitGetAsEntry())
+      const rootEntry = entries.find(e => e.isDirectory)
+      if (!rootEntry) {
+        notifyError("Por favor, arraste uma pasta, não arquivos individuais.")
+        return
+      }
+      const files = []
+      const traverse = async (entry, currentPath) => {
+        if (entry.isFile) {
+          const file = await new Promise((resolve, reject) => entry.file(resolve, reject))
+          if (shouldIgnoreFile(file.name)) return
+          const content = await file.text()
+          if (!isBinaryContent(content)) {
+            files.push({ path: currentPath + file.name, content })
+          }
+        } else if (entry.isDirectory) {
+          if (shouldIgnoreFile(entry.name)) return
+          const dirReader = entry.createReader()
+          const dirEntries = await new Promise((resolve, reject) => dirReader.readEntries(resolve, reject))
+          for (const subEntry of dirEntries) {
+            await traverse(subEntry, currentPath + entry.name + "/")
           }
         }
-        await traverse(rootEntry, "")
-        const relativeFiles = files.map((f) => ({ ...f, path: f.path.substring(rootEntry.name.length + 1) }))
-        handleFileProcessing(relativeFiles, rootEntry.name, "local", false)
-      } catch (error) {
-        console.error("Erro no drop:", error)
-        notifyError("Seu navegador não suporta a leitura de diretórios. Tente um navegador baseado em Chromium.")
-      } finally {
-        setIsProcessing(false)
       }
-    },
-    [handleFileProcessing, notifyError]
-  )
+      await traverse(rootEntry, "")
+      const relativeFiles = files.map(f => ({ ...f, path: f.path.substring(rootEntry.name.length + 1) }))
+      handleFileProcessing(relativeFiles, rootEntry.name, "local", false)
+    } catch (error) {
+      console.error("Erro no drop:", error)
+      notifyError("Seu navegador não suporta a leitura de diretórios. Tente um navegador baseado em Chromium.")
+    } finally {
+        setIsProcessing(false)
+    }
+  }, [handleFileProcessing, notifyError])
 
   const handleSelectFolder = useCallback(async () => {
     if (!window.showDirectoryPicker) {
@@ -414,7 +390,7 @@ const Codebase = () => {
             const file = await handle.getFile()
             const content = await file.text()
             if (!isBinaryContent(content)) {
-              files.push({ path: newPath, content })
+                files.push({ path: newPath, content })
             }
           } else if (handle.kind === "directory") {
             await traverseHandles(handle, newPath)
@@ -433,15 +409,6 @@ const Codebase = () => {
     }
   }, [handleFileProcessing, notifyError])
 
-  const handleToggleFileSelection = (fileId) => {
-    setSelectedFiles((prev) => {
-      const newSelection = new Set(prev)
-      if (newSelection.has(fileId)) newSelection.delete(fileId)
-      else newSelection.add(fileId)
-      return newSelection
-    })
-  }
-
   const handleGenerateCodebase = useCallback(async () => {
     if (selectedFiles.size === 0) {
       notifyError("Nenhum arquivo selecionado.")
@@ -449,7 +416,7 @@ const Codebase = () => {
     }
     setIsProcessing(true)
     setStatusText("Gerando codebase...")
-    const filesToInclude = allFiles.filter((file) => selectedFiles.has(file.id))
+    const filesToInclude = allFiles.filter(file => selectedFiles.has(file.path))
     try {
       let codebaseString = ""
       if (projectSource === "github") {
@@ -457,16 +424,11 @@ const Codebase = () => {
         const response = await api.post("/github/generate-codebase", payload, { responseType: "text" })
         codebaseString = response.data
       } else {
-        const fileTree = generateFileTree(
-          filesToInclude.map((f) => f.path),
-          projectName
-        )
+        const fileTree = generateFileTree(filesToInclude.map(f => f.path), projectName)
         const outputParts = [
-          `PROJETO: ${projectName}`,
-          "---",
+          `PROJETO: ${projectName}`, "---",
           `ESTRUTURA DE FICHEIROS:\n${fileTree}\n---`,
-          "CONTEÚDO DOS FICHEIROS:",
-          "---",
+          "CONTEÚDO DOS FICHEIROS:", "---",
           ...filesToInclude.map(({ path, content }) => `---[ ${path} ]---\n${processContent(content)}`)
         ]
         codebaseString = outputParts.join("\n\n")
@@ -474,10 +436,10 @@ const Codebase = () => {
       setResult(codebaseString)
       setStep("result")
     } catch (error) {
-      console.error("Erro ao gerar codebase:", error)
-      notifyError(error.response?.data?.error || "Falha ao gerar o codebase.")
+        console.error("Erro ao gerar codebase:", error)
+        notifyError(error.response?.data?.error || "Falha ao gerar o codebase.")
     } finally {
-      setIsProcessing(false)
+        setIsProcessing(false)
     }
   }, [allFiles, selectedFiles, projectName, projectSource, notifyError])
 
@@ -489,225 +451,292 @@ const Codebase = () => {
     setGithubRepo("")
     setProjectName("")
     setViewingFile(null)
+    setCurrentPath("")
   }
 
   const handleGithubRepoChange = useCallback((e) => {
     setGithubRepo(e.target.value)
   }, [])
 
-  const handleRecentClick = useCallback(
-    async (item) => {
-      if (item.type === "github") {
-        setInputMethod("github")
-        setGithubRepo(item.name)
-        await handleFetchFromGithubProxy(item.name)
-      } else if (item.type === "local" && item.handleAvailable) {
-        setIsProcessing(true)
-        setStatusText(`Recarregando "${item.name}"...`)
-        try {
-          const handle = await getHandle(item.name)
-          if (!handle) throw new Error("A referência para a pasta foi perdida. Por favor, selecione-a novamente.")
-          if ((await handle.queryPermission({ mode: "read" })) !== "granted") {
-            if ((await handle.requestPermission({ mode: "read" })) !== "granted") {
-              throw new Error("Permissão para acessar a pasta foi negada.")
-            }
-          }
-          const files = []
-          const traverseHandles = async (directoryHandle, path = "") => {
-            for await (const [name, entryHandle] of directoryHandle.entries()) {
-              if (shouldIgnoreFile(name)) continue
-              const newPath = path ? `${path}/${name}` : name
-              if (entryHandle.kind === "file") {
-                const file = await entryHandle.getFile()
-                const content = await file.text()
-                if (!isBinaryContent(content)) {
-                  files.push({ path: newPath, content })
-                }
-              } else if (entryHandle.kind === "directory") {
-                await traverseHandles(entryHandle, newPath)
-              }
-            }
-          }
-          await traverseHandles(handle)
-          handleFileProcessing(files, handle.name, "local", true)
-        } catch (error) {
-          console.error("Erro ao carregar pasta recente:", error)
-          notifyError(error.message || "Não foi possível carregar a pasta.")
-        } finally {
-          setIsProcessing(false)
-        }
-      } else {
-        setInputMethod("local")
-        notifyInfo(`A pasta "${item.name}" foi adicionada via Drag-and-Drop e não pode ser recarregada. Por favor, arraste-a novamente.`)
-      }
-    },
-    [handleFetchFromGithubProxy, handleFileProcessing, notifyInfo, notifyError]
-  )
-
-  const handleRemoveRecent = useCallback(
-    async (item) => {
+  const handleRecentClick = useCallback(async (item) => {
+    if (item.type === "github") {
+      setInputMethod("github")
+      setGithubRepo(item.name)
+      await handleFetchFromGithubProxy(item.name)
+    } else if (item.type === "local" && item.handleAvailable) {
+      setIsProcessing(true)
+      setStatusText(`Recarregando "${item.name}"...`)
       try {
-        if (item.type === "local" && item.handleAvailable) {
-          await deleteHandle(item.name)
+        const handle = await getHandle(item.name)
+        if (!handle) throw new Error("A referência para a pasta foi perdida. Por favor, selecione-a novamente.")
+        if ((await handle.queryPermission({ mode: "read" })) !== "granted") {
+          if ((await handle.requestPermission({ mode: "read" })) !== "granted") {
+            throw new Error("Permissão para acessar a pasta foi negada.")
+          }
         }
-        const updatedItems = removeRecentItem(item.id)
-        setRecentItems(updatedItems)
-        notifyInfo(`"${item.name}" removido do histórico.`)
+        const files = []
+        const traverseHandles = async (directoryHandle, path = "") => {
+          for await (const [name, entryHandle] of directoryHandle.entries()) {
+            if (shouldIgnoreFile(name)) continue
+            const newPath = path ? `${path}/${name}` : name
+            if (entryHandle.kind === "file") {
+              const file = await entryHandle.getFile()
+              const content = await file.text()
+              if (!isBinaryContent(content)) {
+                  files.push({ path: newPath, content })
+              }
+            } else if (entryHandle.kind === "directory") {
+              await traverseHandles(entryHandle, newPath)
+            }
+          }
+        }
+        await traverseHandles(handle)
+        handleFileProcessing(files, handle.name, "local", true)
       } catch (error) {
-        console.error("Erro ao remover item recente:", error)
-        notifyError("Não foi possível remover o item do banco de dados.")
+        console.error("Erro ao carregar pasta recente:", error)
+        notifyError(error.message || "Não foi possível carregar a pasta.")
+      } finally {
+        setIsProcessing(false)
       }
-    },
-    [notifyInfo, notifyError]
-  )
+    } else {
+      setInputMethod("local")
+      notifyInfo(`A pasta "${item.name}" foi adicionada via Drag-and-Drop e não pode ser recarregada. Por favor, arraste-a novamente.`)
+    }
+  }, [handleFetchFromGithubProxy, handleFileProcessing, notifyInfo, notifyError])
+
+  const handleRemoveRecent = useCallback(async (item) => {
+    try {
+      if (item.type === "local" && item.handleAvailable) {
+        await deleteHandle(item.name)
+      }
+      const updatedItems = removeRecentItem(item.id)
+      setRecentItems(updatedItems)
+      notifyInfo(`"${item.name}" removido do histórico.`)
+    } catch (error) {
+      console.error("Erro ao remover item recente:", error)
+      notifyError("Não foi possível remover o item do banco de dados.")
+    }
+  }, [notifyInfo, notifyError])
 
   const handleClearRecents = useCallback(async () => {
     if (window.confirm("Tem certeza que deseja limpar todo o histórico de projetos recentes?")) {
-      try {
-        const itemsToClear = getRecentItems()
-        for (const item of itemsToClear) {
-          if (item.type === "local" && item.handleAvailable) {
-            await deleteHandle(item.name)
-          }
+        try {
+            const itemsToClear = getRecentItems()
+            for (const item of itemsToClear) {
+                if (item.type === "local" && item.handleAvailable) {
+                    await deleteHandle(item.name)
+                }
+            }
+            const updatedItems = clearRecentItems()
+            setRecentItems(updatedItems)
+            notifyInfo("Histórico limpo com sucesso.")
+        } catch (error) {
+            console.error("Erro ao limpar histórico:", error)
+            notifyError("Não foi possível limpar completamente o histórico do banco de dados.")
         }
-        const updatedItems = clearRecentItems()
-        setRecentItems(updatedItems)
-        notifyInfo("Histórico limpo com sucesso.")
-      } catch (error) {
-        console.error("Erro ao limpar histórico:", error)
-        notifyError("Não foi possível limpar completamente o histórico do banco de dados.")
-      }
     }
   }, [notifyInfo, notifyError])
 
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
       <FileViewer file={viewingFile} onClose={() => setViewingFile(null)} />
-      <Paper
-        opaque
-        className="w-full h-full max-w-6xl max-h-[90vh] flex flex-col items-center justify-center bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary">
+      <Paper opaque className="w-full h-full max-w-6xl max-h-[90vh] flex flex-col items-center justify-center bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary">
         {isProcessing ? (
           <div className="flex flex-col items-center justify-center gap-4">
-            <Loader2 className="h-10 w-10 animate-spin text-primary-base" />
+            <Loader2 className="h-12 w-12 animate-spin text-primary-base" />
             <p className="text-lg font-medium text-lightFg-primary dark:text-darkFg-primary">{statusText}</p>
           </div>
-        ) : (
-          {
-            input: (
-              <div className="w-full h-full flex flex-col gap-4 p-4">
-                <div className="flex justify-center gap-2">
-                  <Button variant={inputMethod === "local" ? "primary" : "secondary"} $squared onClick={() => setInputMethod("local")}>
-                    <Folder size={16} className="mr-2" /> Local
-                  </Button>
-                  <Button variant={inputMethod === "github" ? "primary" : "secondary"} $squared onClick={() => setInputMethod("github")}>
-                    <Github size={16} className="mr-2" /> GitHub
-                  </Button>
-                </div>
-                <div className="flex-grow">
-                  {inputMethod === "local" ? (
-                    <LocalInputView onDrop={handleDrop} onSelectFolder={handleSelectFolder} />
-                  ) : (
-                    <GithubInputView githubRepo={githubRepo} onRepoChange={handleGithubRepoChange} onFetch={handleFetchFromGithubProxy} isProcessing={isProcessing} />
-                  )}
-                </div>
-                <RecentItemsList items={recentItems} onClick={handleRecentClick} onRemove={handleRemoveRecent} onClearAll={handleClearRecents} />
+        ) : {
+          "input": (
+            <div className="w-full h-full flex flex-col gap-4 p-4">
+              <div className="flex justify-center gap-2">
+                <Button variant={inputMethod === "local" ? "primary" : "secondary"} onClick={() => setInputMethod("local")} $squared><Folder size={16} className="mr-2" /> Local</Button>
+                <Button variant={inputMethod === "github" ? "primary" : "secondary"} onClick={() => setInputMethod("github")} $squared><Github size={16} className="mr-2" /> GitHub</Button>
               </div>
-            ),
-            select: (
-              <div className="flex flex-col h-full w-full gap-4">
-                <h3 className="text-lg font-bold">Selecione os arquivos para incluir no codebase</h3>
-                <div className="flex gap-2 flex-wrap">
-                  <Button variant="outline" $rounded onClick={() => setSelectedFiles(new Set(allFiles.map((f) => f.id)))}>
-                    Selecionar Tudo
-                  </Button>
-                  <Button variant="outline" $rounded onClick={() => setSelectedFiles(new Set())}>
-                    Limpar Seleção
-                  </Button>
-                  <div className="flex-grow" />
-                  <Button variant="secondary" $rounded onClick={() => setStep("input")}>
-                    <ArrowLeft size={16} className="mr-2" /> Voltar
-                  </Button>
-                  <Button variant="success" $rounded onClick={handleGenerateCodebase}>
-                    <Files size={16} className="mr-2" /> Gerar Codebase
-                  </Button>
-                </div>
-                <div className="flex-1 overflow-y-auto p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md">
-                  <ul className="space-y-1">
-                    {allFiles.map((file) => (
-                      <li key={file.id} className="flex items-center gap-3 p-2 rounded-md hover:bg-lightBg-secondary/50 dark:hover:bg-darkBg-secondary/50">
-                        <input
-                          type="checkbox"
-                          checked={selectedFiles.has(file.id)}
-                          onChange={() => handleToggleFileSelection(file.id)}
-                          className="h-4 w-4 shrink-0 cursor-pointer rounded border-gray-300 bg-gray-100 text-primary-base focus:ring-2 focus:ring-primary-base dark:border-gray-600 dark:bg-darkBg-primary dark:ring-offset-gray-800"
-                        />
-                        <span
-                          onClick={() => setViewingFile(file)}
-                          className="font-mono text-sm cursor-pointer truncate text-lightFg-secondary dark:text-darkFg-secondary hover:text-primary-base hover:underline"
-                          title={file.path}>
-                          {file.path}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary text-center">
-                  {selectedFiles.size} de {allFiles.length} arquivos selecionados.
-                </p>
+              <div className="flex-grow">
+                {inputMethod === "local" ? <LocalInputView onDrop={handleDrop} onSelectFolder={handleSelectFolder} /> : <GithubInputView githubRepo={githubRepo} onRepoChange={handleGithubRepoChange} onFetch={handleFetchFromGithubProxy} isProcessing={isProcessing} />}
               </div>
-            ),
-            result: (
-              <div className="flex flex-col h-full w-full gap-4">
-                <div className="flex justify-between items-center flex-wrap gap-2">
-                  <h3 className="font-semibold text-xl">Codebase extraída de: {projectName}</h3>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <Button
-                      variant="primary"
-                      $rounded
-                      onClick={() => {
-                        navigator.clipboard.writeText(result)
-                        notifyInfo("Copiado!")
-                      }}>
-                      <Copy size={16} className="mr-2" />
-                      <span>Copiar Tudo</span>
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      $rounded
-                      onClick={() => {
-                        const blob = new Blob([result], { type: "text/plain" })
-                        const url = URL.createObjectURL(blob)
-                        const a = document.createElement("a")
-                        a.href = url
-                        a.download = `${projectName.replace("/", "_")}_codebase.txt`
-                        a.click()
-                        URL.revokeObjectURL(url)
-                      }}>
-                      <Download size={16} className="mr-2" />
-                      <span>Baixar .txt</span>
-                    </Button>
-                    <Button variant="secondary"$rounded onClick={() => setStep("select")}>
-                      <Edit size={16} className="mr-2" />
-                      <span>Voltar para Seleção</span>
-                    </Button>
-                    <Button variant="secondary" $rounded onClick={handleReset}>
-                      <Folder size={16} className="mr-2" />
-                      <span>Começar de Novo</span>
-                    </Button>
-                  </div>
+              <RecentItemsList items={recentItems} onClick={handleRecentClick} onRemove={handleRemoveRecent} onClearAll={handleClearRecents} />
+            </div>
+          ),
+          "select": (
+            <FileExplorer
+                fileTree={fileTree}
+                allFiles={allFiles}
+                selectedFiles={selectedFiles}
+                setSelectedFiles={setSelectedFiles}
+                onGenerate={handleGenerateCodebase}
+                onBack={() => setStep("input")}
+                onViewFile={setViewingFile}
+            />
+          ),
+          "result": (
+            <div className="flex flex-col h-full w-full gap-4">
+              <div className="flex justify-between items-center flex-wrap gap-2">
+                <h3 className="font-semibold text-xl">Codebase Gerada para: {projectName}</h3>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <Button onClick={() => { navigator.clipboard.writeText(result); notifyInfo("Copiado!") }} variant="primary" size="sm" $squared>
+                    <Copy size={16} className="mr-2" /><span>Copiar Tudo</span>
+                  </Button>
+                  <Button onClick={() => {
+                    const blob = new Blob([result], { type: "text/plain" })
+                    const url = URL.createObjectURL(blob)
+                    const a = document.createElement("a")
+                    a.href = url
+                    a.download = `${projectName.replace("/", "_")}_codebase.txt`
+                    a.click()
+                    URL.revokeObjectURL(url)
+                  }} variant="secondary" size="sm" $squared>
+                    <Download size={16} className="mr-2" /><span>Baixar .txt</span>
+                  </Button>
+                  <Button onClick={() => setStep("select")} variant="secondary" size="sm" $squared>
+                    <Edit size={16} className="mr-2" /><span>Voltar para Seleção</span>
+                  </Button>
+                  <Button onClick={handleReset} variant="danger" size="sm" $squared>
+                    <Folder size={16} className="mr-2" /><span>Começar de Novo</span>
+                  </Button>
                 </div>
-                <textarea
-                  value={result}
-                  readOnly
-                  className="w-full flex-grow p-4 font-mono text-sm bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md focus:ring-0 resize-none border-none"
-                />
               </div>
-            )
-          }[step]
-        )}
+              <textarea value={result} readOnly className="w-full flex-grow p-4 font-mono text-sm bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md focus:ring-0 resize-none border-none" />
+            </div>
+          )
+        }[step]}
       </Paper>
     </SideMenu>
   )
 }
+
+const FileExplorer = memo(({ fileTree, allFiles, selectedFiles, setSelectedFiles, onGenerate, onBack, onViewFile }) => {
+    const [currentPath, setCurrentPath] = useState("")
+    const [currentNodes, setCurrentNodes] = useState(fileTree)
+
+    useEffect(() => {
+        let nodes = fileTree
+        if (currentPath) {
+            const pathParts = currentPath.split("/")
+            for (const part of pathParts) {
+                const nextNode = nodes.find(n => n.name === part && n.type === "folder")
+                if (nextNode) {
+                    nodes = nextNode.children
+                } else {
+                    nodes = []
+                    break
+                }
+            }
+        }
+        setCurrentNodes(nodes.sort((a, b) => {
+            if (a.type === b.type) return a.name.localeCompare(b.name)
+            return a.type === "folder" ? -1 : 1
+        }))
+    }, [currentPath, fileTree])
+
+    const getAllFilePathsFromNode = (node) => {
+        let paths = []
+        if (node.type === "file") {
+            paths.push(node.path)
+        } else if (node.type === "folder") {
+            node.children.forEach(child => {
+                paths = paths.concat(getAllFilePathsFromNode(child))
+            })
+        }
+        return paths
+    }
+
+    const getFolderSelectionState = (folderNode) => {
+        const allChildPaths = getAllFilePathsFromNode(folderNode)
+        const selectedChildPaths = allChildPaths.filter(p => selectedFiles.has(p))
+        if (selectedChildPaths.length === 0) return "none"
+        if (selectedChildPaths.length === allChildPaths.length) return "all"
+        return "some"
+    }
+
+    const handleToggleFolder = (folderNode) => {
+        const allChildPaths = getAllFilePathsFromNode(folderNode)
+        const currentState = getFolderSelectionState(folderNode)
+        const newSelectedFiles = new Set(selectedFiles)
+        if (currentState === "all") {
+            allChildPaths.forEach(p => newSelectedFiles.delete(p))
+        } else {
+            allChildPaths.forEach(p => newSelectedFiles.add(p))
+        }
+        setSelectedFiles(newSelectedFiles)
+    }
+
+    const handleToggleFile = (filePath) => {
+        const newSelectedFiles = new Set(selectedFiles)
+        if (newSelectedFiles.has(filePath)) {
+            newSelectedFiles.delete(filePath)
+        } else {
+            newSelectedFiles.add(filePath)
+        }
+        setSelectedFiles(newSelectedFiles)
+    }
+
+    const navigateTo = (path) => {
+        setCurrentPath(path)
+    }
+
+    const breadcrumbs = ["Projeto", ...currentPath.split("/")].filter(Boolean)
+
+    return (
+        <div className="flex flex-col h-full w-full gap-4">
+            <div className="flex items-center text-sm text-lightFg-secondary dark:text-darkFg-secondary">
+                {breadcrumbs.map((crumb, index) => {
+                    const path = breadcrumbs.slice(1, index + 1).join("/")
+                    return (
+                        <React.Fragment key={path}>
+                            <button onClick={() => navigateTo(path)} className="hover:underline hover:text-primary-base">
+                                {crumb === "Projeto" ? <Folder size={16} className="inline-block mr-1"/> : crumb}
+                            </button>
+                            {index < breadcrumbs.length - 1 && <ChevronRight size={16} className="mx-1" />}
+                        </React.Fragment>
+                    )
+                })}
+            </div>
+            <div className="flex gap-2 flex-wrap">
+                <Button onClick={() => setSelectedFiles(new Set(allFiles.map(f => f.path)))} variant="outline" size="sm" $rounded>Selecionar Tudo</Button>
+                <Button onClick={() => setSelectedFiles(new Set())} variant="outline" size="sm" $rounded>Limpar Seleção</Button>
+                <div className="flex-grow" />
+                <Button onClick={onBack} variant="danger" size="sm" $rounded><ArrowLeft size={16} className="mr-2" /> Voltar</Button>
+                <Button onClick={onGenerate} variant="success" size="sm" $rounded><Files size={16} className="mr-2" /> Gerar Codebase</Button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md">
+                <ul className="space-y-1">
+                    {currentNodes.map(node => {
+                        if (node.type === "folder") {
+                            const selectionState = getFolderSelectionState(node)
+                            return (
+                                <li key={node.path} className="flex items-center gap-3 p-2 rounded-md hover:bg-lightBg-secondary/50 dark:hover:bg-darkBg-secondary/50">
+                                    <input type="checkbox"
+                                        checked={selectionState === "all"}
+                                        ref={el => el && (el.indeterminate = selectionState === "some")}
+                                        onChange={() => handleToggleFolder(node)}
+                                        className="h-4 w-4 shrink-0 cursor-pointer rounded border-gray-300 bg-gray-100 text-primary-base focus:ring-2 focus:ring-primary-base dark:border-gray-600 dark:bg-darkBg-primary dark:ring-offset-gray-800"
+                                    />
+                                    <button onClick={() => navigateTo(node.path)} className="flex items-center gap-2 text-left flex-grow">
+                                        <Folder size={16} className="text-yellow-500"/>
+                                        <span className="font-mono text-sm">{node.name}</span>
+                                    </button>
+                                </li>
+                            )
+                        }
+                        return (
+                            <li key={node.path} className="flex items-center gap-3 p-2 rounded-md hover:bg-lightBg-secondary/50 dark:hover:bg-darkBg-secondary/50">
+                                <input type="checkbox" checked={selectedFiles.has(node.path)} onChange={() => handleToggleFile(node.path)}
+                                    className="h-4 w-4 shrink-0 cursor-pointer rounded border-gray-300 bg-gray-100 text-primary-base focus:ring-2 focus:ring-primary-base dark:border-gray-600 dark:bg-darkBg-primary dark:ring-offset-gray-800"
+                                />
+                                <button onClick={() => onViewFile(node)} className="flex items-center gap-2 text-left flex-grow">
+                                    <FileText size={16} className="text-lightFg-secondary dark:text-darkFg-secondary"/>
+                                    <span className="font-mono text-sm">{node.name}</span>
+                                </button>
+                            </li>
+                        )
+                    })}
+                </ul>
+            </div>
+            <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary text-center">{selectedFiles.size} de {allFiles.length} arquivos selecionados.</p>
+        </div>
+    )
+})
 
 export default Codebase
