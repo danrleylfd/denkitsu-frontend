@@ -77,7 +77,7 @@ const getRecentItems = () => {
 
 const addRecentItem = (newItem) => {
   let items = getRecentItems()
-  items = items.filter((item) => item.id !== newItem.id)
+  items = items.filter(item => item.id !== newItem.id)
   items.unshift(newItem)
   items.splice(MAX_RECENTS)
   localStorage.setItem(RECENTS_KEY, JSON.stringify(items))
@@ -86,7 +86,7 @@ const addRecentItem = (newItem) => {
 
 const removeRecentItem = (itemId) => {
   let items = getRecentItems()
-  items = items.filter((item) => item.id !== itemId)
+  items = items.filter(item => item.id !== itemId)
   localStorage.setItem(RECENTS_KEY, JSON.stringify(items))
   return items
 }
@@ -99,51 +99,57 @@ const clearRecentItems = () => {
 const isBinaryContent = (content) => /[\x00-\x08\x0B\x0C\x0E-\x1F]/.test(content)
 
 const IGNORED_EXTENSIONS = new Set([
-  ".png",
-  ".jpg",
-  ".jpeg",
-  ".gif",
-  ".bmp",
-  ".ico",
-  ".pdf",
-  ".doc",
-  ".docx",
-  ".xls",
-  ".xlsx",
-  ".ppt",
-  ".pptx",
-  ".zip",
-  ".tar",
-  ".gz",
-  ".rar",
-  ".7z",
-  ".mp3",
-  ".mp4",
-  ".mov",
-  ".avi",
-  ".woff",
-  ".woff2",
-  ".eot",
-  ".ttf",
-  ".otf",
-  ".DS_Store",
-  ".pyc",
-  ".pyo",
-  ".pyd",
-  ".so",
-  ".o",
-  ".a",
-  ".dll",
-  ".exe"
+  ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".ico", ".pdf", ".doc", ".docx", ".xls", ".xlsx",
+  ".ppt", ".pptx", ".zip", ".tar", ".gz", ".rar", ".7z", ".mp3", ".mp4", ".mov", ".avi",
+  ".woff", ".woff2", ".eot", ".ttf", ".otf", ".DS_Store", ".pyc", ".pyo", ".pyd", ".so",
+  ".o", ".a", ".dll", ".exe"
 ])
 
 const IGNORED_PATHS = new Set(["node_modules", ".git", "dist", "build", "vendor", "target", "out", "bin", "obj"])
 
+// NOVA LISTA DE ARQUIVOS ESPECÍFICOS PARA IGNORAR
+const IGNORED_FILENAMES = new Set([
+  "package-lock.json",
+  "yarn.lock",
+  "pnpm-lock.yaml",
+  "composer.lock",
+  "gemfile.lock",
+  "license",
+  "license.md",
+  "license.txt",
+  "copying",
+  "copying.md",
+  "copying.txt",
+  "vercel.json",
+  ".env"
+])
+
 const shouldIgnoreFile = (path) => {
-  const extension = path.includes(".") ? path.substring(path.lastIndexOf(".")).toLowerCase() : ""
-  if (IGNORED_EXTENSIONS.has(extension)) return true
   const pathParts = path.split("/")
-  return pathParts.some((part) => IGNORED_PATHS.has(part) || (part.startsWith(".") && part.length > 1))
+  const filename = pathParts[pathParts.length - 1].toLowerCase()
+
+  // 1. Checa por nomes de arquivos exatos (lockfiles, licenças, etc.)
+  if (IGNORED_FILENAMES.has(filename)) {
+    return true
+  }
+
+  // 2. Checa por nomes de pastas ignoradas
+  if (pathParts.some(part => IGNORED_PATHS.has(part))) {
+    return true
+  }
+
+  // 3. Checa por extensões de arquivos ignoradas
+  const extension = filename.includes(".") ? filename.substring(filename.lastIndexOf(".")) : ""
+  if (IGNORED_EXTENSIONS.has(extension)) {
+    return true
+  }
+
+  // 4. Checa por arquivos e pastas ocultos (começam com .)
+  if (pathParts.some(part => part.startsWith(".") && part.length > 1)) {
+    return true
+  }
+
+  return false
 }
 
 const processContent = (content) => content.replace(/(\r\n|\n|\r){3,}/g, "$1$1").trim()
@@ -187,18 +193,12 @@ const FileViewer = memo(({ file, onClose }) => {
   const markdownContent = "```" + `${getLanguage(file.path)}\n${file.content}` + "\n```"
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={onClose}>
-      <div
-        className="relative flex flex-col w-full max-w-4xl h-[80vh] rounded-lg bg-lightBg-secondary dark:bg-darkBg-secondary shadow-2xl"
-        onClick={(e) => e.stopPropagation()}>
+      <div className="relative flex flex-col w-full max-w-4xl h-[80vh] rounded-lg bg-lightBg-secondary dark:bg-darkBg-secondary shadow-2xl" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between p-2 pl-4 border-b border-bLight dark:border-bDark flex-shrink-0">
           <h3 className="font-mono font-bold text-lightFg-primary dark:text-darkFg-primary">{file.path}</h3>
-          <Button variant="danger" size="icon" $rounded onClick={onClose}>
-            <X size={16} />
-          </Button>
+          <Button variant="danger" size="icon" $rounded onClick={onClose}><X size={16} /></Button>
         </div>
-        <div className="flex-1 overflow-auto p-4">
-          <Markdown content={markdownContent} />
-        </div>
+        <div className="flex-1 overflow-auto p-4"><Markdown content={markdownContent} /></div>
       </div>
     </div>
   )
@@ -206,33 +206,16 @@ const FileViewer = memo(({ file, onClose }) => {
 
 const LocalInputView = memo(({ onDrop, onSelectFolder }) => {
   const [isDragging, setIsDragging] = useState(false)
-  const handleDragOver = useCallback((e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setIsDragging(true)
-  }, [])
-  const handleDragLeave = useCallback((e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setIsDragging(false)
-  }, [])
-  const handleDrop = useCallback(
-    (e) => {
-      e.preventDefault()
-      e.stopPropagation()
-      setIsDragging(false)
-      if (e.dataTransfer.items) onDrop(e.dataTransfer.items)
-    },
-    [onDrop]
-  )
+  const handleDragOver = useCallback((e) => { e.preventDefault(); e.stopPropagation(); setIsDragging(true) }, [])
+  const handleDragLeave = useCallback((e) => { e.preventDefault(); e.stopPropagation(); setIsDragging(false) }, [])
+  const handleDrop = useCallback((e) => {
+    e.preventDefault(); e.stopPropagation(); setIsDragging(false)
+    if (e.dataTransfer.items) onDrop(e.dataTransfer.items)
+  }, [onDrop])
   return (
-    <div
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
-      onClick={onSelectFolder}
+    <div onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop} onClick={onSelectFolder}
       className={`flex flex-col items-center justify-center text-center transition-all duration-300 p-8 h-full rounded-lg cursor-pointer
-                  border-2 border-dashed ${isDragging ? "border-primary-base bg-primary-base/10" : "border-bLight dark:border-bDark hover:border-primary-light"}`}>
+                  border-2 border-dashed ${isDragging ? "border-primary-base bg-primary-base/10" : "border-bLight dark:border-bDark hover:border-primary-light"}`} >
       <Upload className={`w-12 h-12 transition-transform ${isDragging ? "text-primary-base scale-110" : "text-lightFg-secondary dark:text-darkFg-secondary"}`} />
       <p className={`text-xl font-semibold mt-6 transition-colors ${isDragging ? "text-primary-base" : "text-lightFg-primary dark:text-darkFg-primary"}`}>
         {isDragging ? "Pode soltar a pasta!" : "Arraste uma pasta ou clique para selecionar"}
@@ -259,35 +242,21 @@ const RecentItemsList = memo(({ items, onClick, onRemove, onClearAll }) => {
     <div className="w-full mt-6 pt-4 border-t border-bLight dark:border-bDark">
       <div className="flex justify-between items-center mb-2 px-1">
         <h4 className="text-sm font-bold text-lightFg-secondary dark:text-darkFg-secondary">Recentes</h4>
-        <Button onClick={onClearAll} variant="danger" size="xs" $rounded>
-          Limpar Histórico
-        </Button>
+        <Button onClick={onClearAll} variant="danger" size="xs" $rounded>Limpar Histórico</Button>
       </div>
       <ul className="space-y-1">
-        {items.map((item) => (
+        {items.map(item => (
           <li key={item.id} className="flex items-center justify-between p-2 rounded-md hover:bg-lightBg-tertiary dark:hover:bg-darkBg-tertiary group">
-            <button
-              onClick={() => onClick(item)}
-              className="flex items-center gap-3 text-left flex-grow truncate"
-              title={item.handleAvailable ? `Recarregar ${item.name}` : `Lembrar de carregar ${item.name}`}>
-              {item.type === "github" ? (
-                <Github size={16} className="text-lightFg-secondary dark:text-darkFg-secondary" />
-              ) : (
-                <Folder size={16} className="text-lightFg-secondary dark:text-darkFg-secondary" />
-              )}
+            <button onClick={() => onClick(item)} className="flex items-center gap-3 text-left flex-grow truncate" title={item.handleAvailable ? `Recarregar ${item.name}` : `Lembrar de carregar ${item.name}`}>
+              {item.type === "github" ? <Github size={16} className="text-lightFg-secondary dark:text-darkFg-secondary" /> : <Folder size={16} className="text-lightFg-secondary dark:text-darkFg-secondary" />}
               <span className="font-mono text-sm truncate text-lightFg-primary dark:text-darkFg-primary">{item.name}</span>
             </button>
             <Button
-              onClick={(e) => {
-                e.stopPropagation()
-                onRemove(item)
-              }}
-              variant="danger"
-              size="icon"
-              $rounded
+              onClick={(e) => { e.stopPropagation(); onRemove(item) }}
+              variant="danger" size="icon" $rounded
               className="opacity-0 group-hover:opacity-100 transition-opacity"
               title={`Remover ${item.name}`}>
-              <Trash2 size={16} />
+              <Trash2 size={14} />
             </Button>
           </li>
         ))}
@@ -296,7 +265,11 @@ const RecentItemsList = memo(({ items, onClick, onRemove, onClearAll }) => {
   )
 })
 
-const ContentView = ({ children }) => <main className="flex items-center justify-center p-4 min-h-screen w-full ml-[3.5rem] md:ml-auto">{children}</main>
+const ContentView = ({ children }) => (
+  <main className="flex items-center justify-center p-4 min-h-screen w-full ml-[3.5rem] md:ml-auto">
+    {children}
+  </main>
+)
 
 // --- Componente Principal ---
 
@@ -520,7 +493,7 @@ const Codebase = () => {
         await handleFetchFromGithubProxy(item.name)
       } else if (item.type === "local" && item.handleAvailable) {
         setIsProcessing(true)
-        setStatusText(`Recarregando '${item.name}'...`)
+        setStatusText(`Recarregando "${item.name}"...`)
         try {
           const handle = await getHandle(item.name)
           if (!handle) throw new Error("A referência para a pasta foi perdida. Por favor, selecione-a novamente.")
@@ -555,7 +528,7 @@ const Codebase = () => {
         }
       } else {
         setInputMethod("local")
-        notifyInfo(`A pasta '${item.name}' foi adicionada via Drag-and-Drop e não pode ser recarregada. Por favor, arraste-a novamente.`)
+        notifyInfo(`A pasta "${item.name}" foi adicionada via Drag-and-Drop e não pode ser recarregada. Por favor, arraste-a novamente.`)
       }
     },
     [handleFetchFromGithubProxy, handleFileProcessing, notifyInfo, notifyError]
@@ -569,7 +542,7 @@ const Codebase = () => {
         }
         const updatedItems = removeRecentItem(item.id)
         setRecentItems(updatedItems)
-        notifyInfo(`'${item.name}' removido do histórico.`)
+        notifyInfo(`"${item.name}" removido do histórico.`)
       } catch (error) {
         console.error("Erro ao remover item recente:", error)
         notifyError("Não foi possível remover o item do banco de dados.")
