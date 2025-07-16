@@ -1,4 +1,4 @@
-import { useState, useCallback, memo, useEffect } from "react"
+import { useState, useCallback, memo, useEffect, Fragment } from "react"
 import { Upload, Copy, Download, Github, Loader2, Files, ArrowLeft, Folder, X, Edit, Trash2, FileText, ChevronRight } from "lucide-react"
 
 import SideMenu from "../components/SideMenu"
@@ -684,12 +684,12 @@ const FileExplorer = memo(({ fileTree, allFiles, selectedFiles, setSelectedFiles
                 {breadcrumbs.map((crumb, index) => {
                     const path = breadcrumbs.slice(1, index + 1).join("/")
                     return (
-                        <React.Fragment key={path}>
+                        <Fragment key={path}>
                             <button onClick={() => navigateTo(path)} className="hover:underline hover:text-primary-base">
                                 {crumb === "Projeto" ? <Folder size={16} className="inline-block mr-1"/> : crumb}
                             </button>
                             {index < breadcrumbs.length - 1 && <ChevronRight size={16} className="mx-1" />}
-                        </React.Fragment>
+                        </Fragment>
                     )
                 })}
             </div>
