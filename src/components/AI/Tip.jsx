@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import Paper from "../Paper"
 
 const TIPS = [
@@ -12,14 +12,44 @@ const TIPS = [
 
 const AITip = () => {
   const [tip, setTip] = useState("")
+  const tipIndexRef = useRef(0)
+  const containerRef = useRef(null)
+  const textRef = useRef(null)
+
   useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * TIPS.length)
-    setTip(TIPS[randomIndex])
+    tipIndexRef.current = Math.floor(Math.random() * TIPS.length)
+    setTip(TIPS[tipIndexRef.current])
+
+    const intervalId = setInterval(() => {
+      tipIndexRef.current = (tipIndexRef.current + 1) % TIPS.length
+      setTip(TIPS[tipIndexRef.current])
+    }, 12000)
+
+    return () => clearInterval(intervalId)
   }, [])
+
+  useEffect(() => {
+    const container = containerRef.current
+    const text = textRef.current
+    if (container && text) {
+      const textWidth = text.offsetWidth
+      const containerWidth = container.offsetWidth
+      text.classList.remove("animate-marquee")
+      container.classList.remove("justify-center")
+      if (textWidth > containerWidth) {
+        const speed = 60
+        const duration = textWidth / speed
+        text.style.animationDuration = `${duration}s`
+        text.classList.add("animate-marquee")
+      } else {
+        container.classList.add("justify-center")
+      }
+    }
+  }, [tip])
   if (!tip) return null
   return (
-    <Paper className="bg-lightBg-primary dark:bg-darkBg-primary rounded-lg overflow-x-auto max-w-[95%] mb-2 mx-auto">
-      <p className="text-center text-xs text-lightFg-primary dark:text-darkFg-primary px-1 py-1">{tip}</p>
+    <Paper ref={containerRef} className="bg-lightBg-primary dark:bg-darkBg-primary p-0 flex items-center overflow-hidden whitespace-nowrap h-8 max-w-[95%] mb-2 mx-auto">
+      <p ref={textRef} className="text-xs text-lightFg-primary dark:text-darkFg-primary px-3 will-change-transform">{tip}</p>
     </Paper>
   )
 }
