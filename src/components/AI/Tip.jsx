@@ -13,36 +13,20 @@ const TIPS = [
 const AITip = () => {
   const [tip, setTip] = useState("")
   const tipIndexRef = useRef(0)
-
-  // Efeito para ciclar as dicas de tempos em tempos
   useEffect(() => {
-    // Define a primeira dica
     tipIndexRef.current = Math.floor(Math.random() * TIPS.length)
     setTip(TIPS[tipIndexRef.current])
-
-    // Inicia o intervalo para trocar a dica
     const intervalId = setInterval(() => {
       tipIndexRef.current = (tipIndexRef.current + 1) % TIPS.length
       setTip(TIPS[tipIndexRef.current])
-    }, 15000) // Troca a cada 15 segundos
+    }, 15000)
 
-    // Limpa o intervalo ao desmontar o componente
     return () => clearInterval(intervalId)
   }, [])
-
   if (!tip) return null
-
   return (
-    <Paper
-      // O contêiner que "corta" o texto que transborda
-      className="bg-lightBg-primary dark:bg-darkBg-primary p-0 h-8 max-w-[95%] mb-2 mx-auto overflow-hidden flex items-center">
-      <p
-        // A chave `key` força o React a remontar o <p> quando a dica muda,
-        // o que reinicia a animação CSS do zero para a nova dica.
-        key={tip}
-        className="animacao-letreiro-final text-xs text-lightFg-primary dark:text-darkFg-primary will-change-transform">
-        {tip}
-      </p>
+    <Paper className="bg-lightBg-primary dark:bg-darkBg-primary p-0 h-8 max-w-[95%] mb-2 mx-auto overflow-hidden flex items-center">
+      <p className="animacao-letreiro-final text-xs text-lightFg-primary dark:text-darkFg-primary will-change-transform">{tip}</p>
     </Paper>
   )
 }
