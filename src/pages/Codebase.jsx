@@ -227,7 +227,7 @@ const GithubInputView = memo(({ githubRepo, onRepoChange, onFetch, isProcessing 
     <p className="text-xl font-semibold text-lightFg-primary dark:text-darkFg-primary">Extrair de um Repositório Público</p>
     <Input placeholder="owner/repo" value={githubRepo} onChange={onRepoChange} onKeyDown={(e) => e.key === "Enter" && onFetch()} disabled={isProcessing}>
       <Button variant="outline" $rounded onClick={() => onFetch()} loading={isProcessing} disabled={isProcessing || !githubRepo.trim()}>
-        {isProcessing ? "Buscando..." : "Buscar Repositório"}
+        {isProcessing ? "Buscando..." : "Buscar"}
       </Button>
     </Input>
   </div>
