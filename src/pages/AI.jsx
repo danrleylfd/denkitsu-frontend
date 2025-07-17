@@ -167,6 +167,9 @@ const AI = () => {
             onSendMessage={onSendMessage}
             clearHistory={clearHistory}
             loading={loading}
+            freeModels={freeModels}
+            payModels={payModels}
+            groqModels={groqModels}
           />
           <AISettings
             settingsOpen={settingsOpen}
@@ -192,6 +195,9 @@ const AI = () => {
             onSendMessage={onSendMessage}
             clearHistory={clearHistory}
             loading={loading}
+            freeModels={freeModels}
+            payModels={payModels}
+            groqModels={groqModels}
           />
           <AISettings
             settingsOpen={settingsOpen}
