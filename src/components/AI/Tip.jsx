@@ -53,7 +53,7 @@ const AITip = () => {
           // Centraliza o texto se ele couber no contêiner
           pElement.classList.add("text-center", "w-full")
         }
-      }, 50) // 50ms é um delay seguro
+      }, 300) // 50ms é um delay seguro
 
       return () => clearTimeout(timer)
     }
