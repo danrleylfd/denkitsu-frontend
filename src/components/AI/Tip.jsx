@@ -18,8 +18,8 @@ const AITip = () => {
   }, [])
   if (!tip) return null
   return (
-    <Paper className="bg-lightBg-primary dark:bg-darkBg-primary rounded-lg flex gap-2 overflow-x-auto max-w-[95%] mb-2 mx-auto">
-      <p className="text-center text-xs text-lightFg-primary dark:text-darkFg-primary px-4 py-1">{tip}</p>
+    <Paper className="bg-lightBg-primary dark:bg-darkBg-primary rounded-lg overflow-x-auto max-w-[95%] mb-2 mx-auto">
+      <p className="text-center text-xs text-lightFg-primary dark:text-darkFg-primary px-1 py-1">{tip}</p>
     </Paper>
   )
 }
