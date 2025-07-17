@@ -14,9 +14,9 @@ import Paper from "../Paper"
 import AIInput from "./Input"
 import Button from "../Button"
 
-const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessage, clearHistory, toggleSettings, loading, freeModels, payModels, groqModels }) => {
+const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessage, clearHistory, toggleSettings, loading }) => {
   const { signed } = useAuth()
-  const { aiProvider, aiProviderToggle, aiKey, stream, toggleStream, web, toggleWeb, newsTool, toggleNews, weatherTool, toggleWeather, wikiTool, toggleWiki, browseTool, toggleBrowse, genshinTool, toggleGenshin } = useAI()
+  const { aiProvider, aiProviderToggle, aiKey, model, freeModels, payModels, groqModels, stream, toggleStream, web, toggleWeb, newsTool, toggleNews, weatherTool, toggleWeather, wikiTool, toggleWiki, browseTool, toggleBrowse, genshinTool, toggleGenshin } = useAI()
 
   const [isToolsOpen, setIsToolsOpen] = useState(false)
 
