@@ -43,7 +43,7 @@ const AITip = () => {
         gradient={false}
         pauseOnHover={true}
       >
-        <p className="text-xs text-lightFg-primary dark:text-darkFg-primary mx-4">
+        <p className="text-xs text-lightFg-primary dark:text-darkFg-primary">
           {tip}
         </p>
       </Marquee>
