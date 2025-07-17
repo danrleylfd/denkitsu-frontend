@@ -45,24 +45,24 @@ const Markdown = ({ content, think }) => {
           remarkPlugins={[remarkGfm]}
           components={{
             h1: ({ node, children, ...props }) => (
+              <h1 className="text-lightFg-primary dark:text-darkFg-primary" {...props}>
+                {children}
+              </h1>
+            ),
+            h2: ({ node, children, ...props }) => (
+              <h2 className="text-lightFg-primary dark:text-darkFg-primary" {...props}>
+                {children}
+              </h2>
+            ),
+            h3: ({ node, children, ...props }) => (
+              <h3 className="text-lightFg-primary dark:text-darkFg-primary" {...props}>
+                {children}
+              </h3>
+            ),
+            h4: ({ node, children, ...props }) => (
               <h4 className="text-lightFg-primary dark:text-darkFg-primary" {...props}>
                 {children}
               </h4>
-            ),
-            h2: ({ node, children, ...props }) => (
-              <h6 className="text-lightFg-primary dark:text-darkFg-primary" {...props}>
-                {children}
-              </h6>
-            ),
-            h3: ({ node, children, ...props }) => (
-              <h5 className="text-lightFg-primary dark:text-darkFg-primary" {...props}>
-                {children}
-              </h5>
-            ),
-            h4: ({ node, children, ...props }) => (
-              <h6 className="text-lightFg-primary dark:text-darkFg-primary" {...props}>
-                {children}
-              </h6>
             ),
             h5: ({ node, children, ...props }) => (
               <h5 className="text-lightFg-primary dark:text-darkFg-primary" {...props}>
