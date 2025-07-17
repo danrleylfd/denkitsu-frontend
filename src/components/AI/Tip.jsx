@@ -12,49 +12,63 @@ const TIPS = [
 
 const AITip = () => {
   const [tip, setTip] = useState("")
+  const [animation, setAnimation] = useState({ duration: 0, className: "" })
   const tipIndexRef = useRef(0)
-  const textRef = useRef(null)
+  const paperRef = useRef(null)
+  const paragraphRef = useRef(null)
 
-  // Efeito para ciclar as dicas a cada 12 segundos
+  // Efeito para ciclar as dicas
   useEffect(() => {
+    // Define a primeira dica aleatoriamente
     tipIndexRef.current = Math.floor(Math.random() * TIPS.length)
     setTip(TIPS[tipIndexRef.current])
 
     const intervalId = setInterval(() => {
       tipIndexRef.current = (tipIndexRef.current + 1) % TIPS.length
       setTip(TIPS[tipIndexRef.current])
-    }, 12000) // Troca a dica a cada 12 segundos
+    }, 12000) // Troca a dica a cada 12 segundos para dar tempo à animação
 
     return () => clearInterval(intervalId)
   }, [])
 
-  // Efeito para aplicar a animação de letreiro
+  // Efeito para controlar a animação
   useEffect(() => {
-    const text = textRef.current
-    // O contêiner pai é o 'Paper', que já tem 'overflow-hidden'
-    const container = text?.parentElement
+    const paperElement = paperRef.current
+    const pElement = paragraphRef.current
 
-    if (container && text) {
-      const textWidth = text.scrollWidth // Usa scrollWidth para obter a largura real do conteúdo
-      const containerWidth = container.offsetWidth
+    if (paperElement && pElement) {
+      const containerWidth = paperElement.offsetWidth
+      const textWidth = pElement.scrollWidth
 
-      // Adiciona ou remove a classe de animação
       if (textWidth > containerWidth) {
-        const speed = 75 // pixels por segundo, um pouco mais rápido
+        const speed = 70 // pixels por segundo
         const duration = textWidth / speed
-        text.style.animationDuration = `${duration}s`
-        text.classList.add("animate-marquee")
+        setAnimation({
+          duration: `${duration}s`,
+          className: "animate-letreiro" // Usa a classe CSS definida em global.css
+        })
       } else {
-        text.classList.remove("animate-marquee")
+        // Se o texto couber, remove a animação e centraliza
+        setAnimation({
+          duration: 0,
+          className: "text-center w-full"
+        })
       }
     }
-  }, [tip]) // Reavalia sempre que a dica muda
+  }, [tip]) // Re-executa sempre que a dica mudar
 
   if (!tip) return null
 
   return (
-    <Paper className="bg-lightBg-primary dark:bg-darkBg-primary p-0 h-8 max-w-[95%] mb-2 mx-auto overflow-hidden">
-      <p ref={textRef} className="text-xs text-center text-lightFg-primary dark:text-darkFg-primary will-change-transform py-1.5 whitespace-nowrap">
+    <Paper
+      ref={paperRef}
+      className="bg-lightBg-primary dark:bg-darkBg-primary p-0 h-8 max-w-[95%] mb-2 mx-auto overflow-hidden flex items-center"
+    >
+      <p
+        ref={paragraphRef}
+        className={`text-xs text-lightFg-primary dark:text-darkFg-primary whitespace-nowrap ${animation.className}`}
+        style={{ animationDuration: animation.duration }}
+      >
         {tip}
       </p>
     </Paper>
