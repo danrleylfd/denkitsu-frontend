@@ -12,7 +12,7 @@ import api from "../services"
 
 // --- Constantes ---
 const RECENTS_KEY = "codebase_recents"
-const MAX_RECENTS = 5
+const MAX_RECENTS = 3
 const DB_NAME = "CodebaseDB"
 const STORE_NAME = "DirectoryHandles"
 
@@ -238,7 +238,7 @@ const RecentItemsList = memo(({ items, onClick, onRemove, onClearAll }) => {
     <div className="w-full mt-6 pt-4 border-t border-bLight dark:border-bDark">
       <div className="flex justify-between items-center mb-2 px-1">
         <h4 className="text-sm font-bold text-lightFg-secondary dark:text-darkFg-secondary">Recentes</h4>
-        <Button onClick={onClearAll} variant="danger" size="xs" $rounded>Limpar Histórico</Button>
+        <Button variant="danger" $rounded onClick={onClearAll}>Limpar Histórico</Button>
       </div>
       <ul className="space-y-1">
         {items.map(item => (
@@ -248,8 +248,8 @@ const RecentItemsList = memo(({ items, onClick, onRemove, onClearAll }) => {
               <span className="font-mono text-sm truncate text-lightFg-primary dark:text-darkFg-primary">{item.name}</span>
             </button>
             <Button
-              onClick={(e) => { e.stopPropagation(); onRemove(item) }}
               variant="danger" size="icon" $rounded
+              onClick={(e) => { e.stopPropagation(); onRemove(item) }}
               className="opacity-0 group-hover:opacity-100 transition-opacity"
               title={`Remover ${item.name}`}>
               <Trash2 size={14} />
@@ -356,11 +356,11 @@ const FileExplorer = memo(({ fileTree, allFiles, selectedFiles, setSelectedFiles
                 })}
             </div>
             <div className="flex gap-2 flex-wrap">
-                <Button onClick={() => setSelectedFiles(new Set(allFiles.map(f => f.path)))} variant="outline" size="sm" $rounded>Selecionar Tudo</Button>
-                <Button onClick={() => setSelectedFiles(new Set())} variant="outline" size="sm" $rounded>Limpar Seleção</Button>
+                <Button variant="outline" $rounded onClick={() => setSelectedFiles(new Set(allFiles.map(f => f.path)))}>Selecionar Tudo</Button>
+                <Button variant="secondary" $rounded onClick={() => setSelectedFiles(new Set())}>Limpar Seleção</Button>
                 <div className="flex-grow" />
-                <Button onClick={onBack} variant="danger" size="sm" $rounded><ArrowLeft size={16} className="mr-2" /> Voltar</Button>
-                <Button onClick={onGenerate} variant="success" size="sm" $rounded><Files size={16} className="mr-2" /> Gerar Codebase</Button>
+                <Button variant="secondary" $rounded onClick={onBack}><ArrowLeft size={16} className="mr-2" /> Voltar</Button>
+                <Button variant="outline" $rounded onClick={onGenerate}><Files size={16} className="mr-2" /> Extrair Codebase</Button>
             </div>
             <div className="flex-1 overflow-y-auto p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md">
                 <ul className="space-y-1">
@@ -710,8 +710,8 @@ const Codebase = () => {
           "input": (
             <div className="w-full h-full flex flex-col gap-4 p-4">
               <div className="flex justify-center gap-2">
-                <Button variant={inputMethod === "local" ? "primary" : "secondary"} onClick={() => setInputMethod("local")} $squared><Folder size={16} className="mr-2" /> Local</Button>
-                <Button variant={inputMethod === "github" ? "primary" : "secondary"} onClick={() => setInputMethod("github")} $squared><Github size={16} className="mr-2" /> GitHub</Button>
+                <Button variant={inputMethod === "local" ? "primary" : "secondary"} $squared onClick={() => setInputMethod("local")}><Folder size={16} className="mr-2" /> Local</Button>
+                <Button variant={inputMethod === "github" ? "primary" : "secondary"} $squared onClick={() => setInputMethod("github")}><Github size={16} className="mr-2" /> GitHub</Button>
               </div>
               <div className="flex-grow">
                 {inputMethod === "local" ? <LocalInputView onDrop={handleDrop} onSelectFolder={handleSelectFolder} /> : <GithubInputView githubRepo={githubRepo} onRepoChange={handleGithubRepoChange} onFetch={handleFetchFromGithubProxy} isProcessing={isProcessing} />}
@@ -733,12 +733,12 @@ const Codebase = () => {
           "result": (
             <div className="flex flex-col h-full w-full gap-4">
               <div className="flex justify-between items-center flex-wrap gap-2">
-                <h3 className="font-semibold text-xl">Codebase Gerada para: {projectName}</h3>
+                <h3 className="font-semibold text-xl">Codebase extraída de: {projectName}</h3>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <Button onClick={() => { navigator.clipboard.writeText(result); notifyInfo("Copiado!") }} variant="primary" size="sm" $squared>
+                  <Button variant="primary" $rounded onClick={() => { navigator.clipboard.writeText(result); notifyInfo("Copiado!") }}>
                     <Copy size={16} className="mr-2" /><span>Copiar Tudo</span>
                   </Button>
-                  <Button onClick={() => {
+                  <Button variant="secondary" $rounded onClick={() => {
                     const blob = new Blob([result], { type: "text/plain" })
                     const url = URL.createObjectURL(blob)
                     const a = document.createElement("a")
@@ -746,13 +746,13 @@ const Codebase = () => {
                     a.download = `${projectName.replace("/", "_")}_codebase.txt`
                     a.click()
                     URL.revokeObjectURL(url)
-                  }} variant="secondary" size="sm" $squared>
+                  }}>
                     <Download size={16} className="mr-2" /><span>Baixar .txt</span>
                   </Button>
-                  <Button onClick={() => setStep("select")} variant="secondary" size="sm" $squared>
+                  <Button variant="secondary" $rounded onClick={() => setStep("select")}>
                     <Edit size={16} className="mr-2" /><span>Voltar para Seleção</span>
                   </Button>
-                  <Button onClick={handleReset} variant="danger" size="sm" $squared>
+                  <Button variant="outline" $rounded onClick={handleReset}>
                     <Folder size={16} className="mr-2" /><span>Começar de Novo</span>
                   </Button>
                 </div>
