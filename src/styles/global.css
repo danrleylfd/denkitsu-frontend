@@ -4,26 +4,6 @@
 @tailwind variants;
 /* @import "tailwindcss"; */
 
-/* Animação de Letreiro Definitiva (Puro CSS) */
-@keyframes letreiro-final {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(100%);
-  }
-}
-
-.animacao-letreiro-puro {
-  /* Garante que o elemento tenha largura própria e não quebre a linha */
-  display: inline-block;
-  white-space: nowrap;
-  /* Força o início da animação fora da tela */
-  padding-left: 100%;
-  /* Aplica a animação com duração fixa */
-  animation: letreiro-final 20s linear infinite;
-}
-
 *, *::before, *::after {
   margin: 0;
   padding: 0;

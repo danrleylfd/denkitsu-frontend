@@ -5,47 +5,34 @@ import Paper from "../Paper"
 
 const TIPS = [
   "Clique no ícone de cérebro para alternar entre os provedores de IA GROQ & OpenRouter.",
-  "Para usar as ferramentas use o provedor OpenRouter e configure as chaves de API nas configurações.",
-  "Você pode adicionar até 3 imagens em provedores compatíveis.",
-  "As ferramentas exigem um modelo compatível ex: deepseek/deepseek-chat-v3-0324:free.",
-  "Pressione Shift + Enter para quebrar a linha no campo de prompt.",
+  "Configure as chaves de API dos provedores Groq e OpenRouter nas configurações para desbloquear a análise de imagens e as ferramentas.",
+  "A análise de imagens exige o provedor OpenRouter e um modelo compatível ex: qwen/qwen2.5-vl-72b-instruct:free. Máximo 3 imagens.",
+  "As ferramentas exigem o provedor OpenRouter e um modelo compatível ex: deepseek/deepseek-chat-v3-0324:free.",
   "Explore diferentes modos de IA nas configurações para tarefas específicas.",
-  "Use o ícone de ferramentas para ativar a busca na web, notícias e mais.",
+  "Descreva como Denkitsu AI deve se comportar em configurações.",
+  "Pressione Shift + Enter para quebrar a linha no campo de prompt.",
+  "Salve seu UID do Genshin no prompt personalizado, assim toda vez que precisar de uma analise, só precisará mencionar o nome do personagem.",
+  "Use o ícone de ferramentas para ativar a pesquisa web, wikipédia, clima, notícias e mais.",
   "Limpe a conversa a qualquer momento clicando no ícone de nova mensagem."
 ]
 
 const AITip = () => {
   const [tip, setTip] = useState("")
   const tipIndexRef = useRef(0)
-
-  // Efeito para ciclar as dicas
   useEffect(() => {
     tipIndexRef.current = Math.floor(Math.random() * TIPS.length)
     setTip(TIPS[tipIndexRef.current])
-
     const intervalId = setInterval(() => {
       tipIndexRef.current = (tipIndexRef.current + 1) % TIPS.length
       setTip(TIPS[tipIndexRef.current])
     }, 15000)
-
     return () => clearInterval(intervalId)
   }, [])
-
   if (!tip) return null
-
   return (
-    <Paper
-      className="bg-lightBg-primary dark:bg-darkBg-primary p-0 h-8 max-w-[95%] mb-2 mx-auto overflow-hidden flex items-center"
-    >
-      <Marquee
-        speed={40}
-        direction="right" // Move da esquerda para a direita
-        gradient={false}
-        pauseOnHover={true}
-      >
-        <p className="text-xs text-lightFg-primary dark:text-darkFg-primary">
-          {tip}
-        </p>
+    <Paper className="bg-lightBg-primary dark:bg-darkBg-primary p-0 h-8 max-w-[95%] mb-2 mx-auto overflow-hidden flex items-center">
+      <Marquee speed={50} direction="right" gradient={false} pauseOnHover={true}>
+        <p className="text-xs text-lightFg-primary dark:text-darkFg-primary">{tip}</p>
       </Marquee>
     </Paper>
   )
