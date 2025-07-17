@@ -84,12 +84,12 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
         <Settings size={16} />
       </Button>
       <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={!isImageSupported || aiProvider === "groq" || loading}>
-        {isImageSupported && (aiProvider === "openrouter" ? <ImagePlus size={16} /> : <ImageOff size={16} />)}
+        {isImageSupported && aiProvider === "openrouter" ? <ImagePlus size={16} /> : <ImageOff size={16} />}
       </Button>
 
       {aiKey.length > 0 && (
         <div className="relative">
-          <Button ref={toolsTriggerRef} variant="secondary" size="icon" title="Ferramentas" $rounded onClick={() => setIsToolsOpen(!isToolsOpen)} disabled={aiProvider === "groq" || stream || loading}>
+          <Button ref={toolsTriggerRef} variant="secondary" size="icon" title="Ferramentas" $rounded onClick={() => setIsToolsOpen(!isToolsOpen)} disabled={!isToolsSupported || aiProvider === "groq" || stream || loading}>
             <Wrench size={16} />
           </Button>
 
@@ -99,22 +99,22 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
               className={`absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-7 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4`}
             >
               <Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Web" onClick={toggleWeb} disabled={!isToolsSupported || aiProvider === "groq" || loading}>
-                {isToolsSupported && (aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />)}
+                {isToolsSupported && aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
               </Button>
               <Button variant={isToolsSupported && aiProvider === "openrouter" && !stream && browseTool ? "outline" : "secondary"} size="icon" $rounded title="Navegar em Links" onClick={toggleBrowse} disabled={!isToolsSupported || aiProvider === "groq" || stream || loading}>
-                {isToolsSupported && ((aiProvider === "openrouter" && !stream) ? <Link2 size={16} /> : <Link2Off size={16} />)}
+                {isToolsSupported && aiProvider === "openrouter" && !stream ? <Link2 size={16} /> : <Link2Off size={16} />}
               </Button>
               <Button variant={isToolsSupported && aiProvider === "openrouter" && !stream && wikiTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Wikipédia" onClick={toggleWiki} disabled={!isToolsSupported || aiProvider === "groq" || stream || loading}>
-                {isToolsSupported && ((aiProvider === "openrouter" && !stream) ? <BookOpen size={16} /> : <BookAlert size={16} />)}
+                {isToolsSupported && aiProvider === "openrouter" && !stream ? <BookOpen size={16} /> : <BookAlert size={16} />}
               </Button>
               <Button variant={isToolsSupported && aiProvider === "openrouter" && !stream && newsTool ? "outline" : "secondary"} size="icon" $rounded title="Buscar Notícias" onClick={toggleNews} disabled={!isToolsSupported || aiProvider === "groq" || stream || loading}>
-                {isToolsSupported && (aiProvider === "openrouter" && !stream ? <Newspaper size={16} /> : <Shredder size={16} />)}
+                {isToolsSupported && aiProvider === "openrouter" && !stream ? <Newspaper size={16} /> : <Shredder size={16} />}
               </Button>
               <Button variant={isToolsSupported && aiProvider === "openrouter" && !stream && weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Prever Clima" onClick={toggleWeather} disabled={!isToolsSupported || aiProvider === "groq" || stream || loading}>
-                {isToolsSupported && ((aiProvider === "openrouter" && !stream) ? <Cloud size={16} /> : <CloudOff size={16} />)}
+                {isToolsSupported && aiProvider === "openrouter" && !stream ? <Cloud size={16} /> : <CloudOff size={16} />}
               </Button>
               <Button variant={isToolsSupported && aiProvider === "openrouter" && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Genshin Impact" onClick={toggleGenshin} disabled={!isToolsSupported || aiProvider === "groq" || stream || loading}>
-                {isToolsSupported && ((aiProvider === "openrouter" && !stream) ? <Gamepad size={16} /> : <Gamepad2 size={16} />)}
+                {isToolsSupported && aiProvider === "openrouter" && !stream ? <Gamepad size={16} /> : <Gamepad2 size={16} />}
               </Button>
             </div>
           )}
