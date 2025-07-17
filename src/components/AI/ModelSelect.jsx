@@ -24,13 +24,13 @@ const AIModelSelect = ({ setAIProvider, model, setModel, loading, freeModels, pa
         OpenRouter Gratuito
       </option>
       {freeModels.map((model) => (
-        <>
+        <div className="flex gap-2">
+          {model.supports_tools && "🛠️"}
+          {model.supports_images && "🖼️"}
           <option key={model.id} value={model.id}>
             {model.id}
           </option>
-          {model.supports_tools && "🛠️"}
-          {model.supports_images && " 🖼️"}
-        </>
+        </div>
       ))}
       <option className="text-primary-base" disabled>
         OpenRouter Premium
@@ -48,7 +48,7 @@ const AIModelSelect = ({ setAIProvider, model, setModel, loading, freeModels, pa
       {groqModels.map((model) => (
         <option key={model.id} value={model.id}>
           {model.id}
-          {model.supports_tools && "🛠️"}
+          {model.supports_tools && " 🛠️"}
           {model.supports_images && " 🖼️"}
         </option>
       ))}
