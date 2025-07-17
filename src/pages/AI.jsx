@@ -7,6 +7,7 @@ import { sendMessageStream, sendMessage, getModels } from "../services/aiChat"
 
 import SideMenu from "../components/SideMenu"
 import AIBar from "../components/AI/Bar"
+import AITip from "../components/AI/Tip"
 import ImagePreview from "../components/AI/ImagePreview"
 import AISettings from "../components/AI/Settings"
 import AIHistory from "../components/AI/History"
@@ -156,6 +157,7 @@ const AI = () => {
       {!temMensagensDoUsuario ? (
         <div className="flex grow justify-center items-center flex-col">
           <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
+          <AITip />
           <AIBar
             userPrompt={userPrompt}
             setUserPrompt={setUserPrompt}
@@ -180,6 +182,7 @@ const AI = () => {
         <>
           <AIHistory toggleLousa={toggleLousa} messages={messages} />
           <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
+          <AITip />
           <AIBar
             userPrompt={userPrompt}
             setUserPrompt={setUserPrompt}
