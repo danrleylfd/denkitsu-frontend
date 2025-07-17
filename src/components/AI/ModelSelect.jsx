@@ -25,7 +25,9 @@ const AIModelSelect = ({ setAIProvider, model, setModel, loading, freeModels, pa
       </option>
       {freeModels.map((model) => (
         <option key={model.id} value={model.id}>
-          {model.id}
+          {model.name}
+          {model.supports_tools && "🛠️"}
+          {model.supports_images && " 🖼️"}
         </option>
       ))}
       <option className="text-primary-base" disabled>
@@ -33,7 +35,9 @@ const AIModelSelect = ({ setAIProvider, model, setModel, loading, freeModels, pa
       </option>
       {payModels.map((model) => (
         <option key={model.id} value={model.id}>
-          {model.id}
+          {model.name}
+          {model.supports_tools && " 🛠️"}
+          {model.supports_images && " 🖼️"}
         </option>
       ))}
       <option className="text-primary-base" disabled>
@@ -41,7 +45,9 @@ const AIModelSelect = ({ setAIProvider, model, setModel, loading, freeModels, pa
       </option>
       {groqModels.map((model) => (
         <option key={model.id} value={model.id}>
-          {model.id}
+          {model.name}
+          {model.supports_tools && "🛠️"}
+          {model.supports_images && " 🖼️"}
         </option>
       ))}
     </select>
