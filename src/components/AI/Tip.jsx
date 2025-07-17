@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import Marquee from "react-fast-marquee"
 
 import Paper from "../Paper"
@@ -19,19 +19,24 @@ const TIPS = [
 const AITip = () => {
   const [tip, setTip] = useState("")
   const tipIndexRef = useRef(0)
-  useEffect(() => {
-    tipIndexRef.current = Math.floor(Math.random() * TIPS.length)
-    setTip(TIPS[tipIndexRef.current])
-    const intervalId = setInterval(() => {
-      tipIndexRef.current = (tipIndexRef.current + 1) % TIPS.length
-      setTip(TIPS[tipIndexRef.current])
-    }, 15000)
-    return () => clearInterval(intervalId)
+  const intervalIdRef = useRef(null)
+  const advanceToNextTip = useCallback(() => {
+    clearInterval(intervalIdRef.current)
+    const newIndex = (tipIndexRef.current + 1) % TIPS.length
+    tipIndexRef.current = newIndex
+    setTip(TIPS[newIndex])
+    intervalIdRef.current = setInterval(advanceToNextTip, 15000)
   }, [])
+  useEffect(() => {
+    tipIndexRef.current = 0
+    setTip(TIPS[tipIndexRef.current])
+    intervalIdRef.current = setInterval(advanceToNextTip, 15000)
+    return () => clearInterval(intervalIdRef.current)
+  }, [advanceToNextTip])
   if (!tip) return null
   return (
     <Paper className="bg-lightBg-primary dark:bg-darkBg-primary p-0 h-8 max-w-[95%] mb-2 mx-auto overflow-hidden flex items-center">
-      <Marquee speed={50} direction="right" gradient={false} pauseOnHover={true}>
+      <Marquee key={tip} speed={50} direction="right" gradient={false} pauseOnHover={true}>
         <p className="text-xs text-lightFg-primary dark:text-darkFg-primary">{tip}</p>
       </Marquee>
     </Paper>
