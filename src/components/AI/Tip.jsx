@@ -40,7 +40,7 @@ const AITip = () => {
         // A chave `key` força o React a remontar o <p> quando a dica muda,
         // o que reinicia a animação CSS do zero para a nova dica.
         key={tip}
-        className="animacao-letreiro-puro text-xs text-lightFg-primary dark:text-darkFg-primary will-change-transform">
+        className="animacao-letreiro-final text-xs text-lightFg-primary dark:text-darkFg-primary will-change-transform">
         {tip}
       </p>
     </Paper>

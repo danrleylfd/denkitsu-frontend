@@ -7,10 +7,10 @@
 /* Animação de Letreiro Definitiva (Puro CSS) */
 @keyframes letreiro-final {
   from {
-    transform: translateX(100%);
+    transform: translateX(-100%);
   }
   to {
-    transform: translateX(-100%);
+    transform: translateX(100%);
   }
 }
 
@@ -21,7 +21,7 @@
   /* Força o início da animação fora da tela */
   padding-left: 100%;
   /* Aplica a animação com duração fixa */
-  animation: letreiro-final 25s linear infinite;
+  animation: letreiro-final 20s linear infinite;
 }
 
 *, *::before, *::after {
