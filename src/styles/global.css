@@ -5,22 +5,16 @@
 /* @import "tailwindcss"; */
 
 /* Animação de Letreiro - Garantido */
-@keyframes letreiro {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(-100%);
-  }
+@keyframes letreiro-anim {
+  from { transform: translateX(100%); }
+  to { transform: translateX(-100%); }
 }
 
-.animate-letreiro {
-  /* Força o display para que o transform funcione corretamente */
+.animacao-letreiro-ativa {
   display: inline-block;
-  /* Garante que o texto comece fora da tela */
-  padding-left: 100%;
-  /* Aplica a animação */
-  animation: letreiro linear infinite;
+  padding-left: 100%; /* Força o início fora da tela */
+  white-space: nowrap;
+  animation: letreiro-anim 20s linear infinite; /* Duração base, será sobrescrita */
 }
 
 *, *::before, *::after {

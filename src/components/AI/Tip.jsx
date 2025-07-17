@@ -12,21 +12,19 @@ const TIPS = [
 
 const AITip = () => {
   const [tip, setTip] = useState("")
-  const [animation, setAnimation] = useState({ duration: 0, className: "" })
   const tipIndexRef = useRef(0)
   const paperRef = useRef(null)
   const paragraphRef = useRef(null)
 
   // Efeito para ciclar as dicas
   useEffect(() => {
-    // Define a primeira dica aleatoriamente
     tipIndexRef.current = Math.floor(Math.random() * TIPS.length)
     setTip(TIPS[tipIndexRef.current])
 
     const intervalId = setInterval(() => {
       tipIndexRef.current = (tipIndexRef.current + 1) % TIPS.length
       setTip(TIPS[tipIndexRef.current])
-    }, 12000) // Troca a dica a cada 12 segundos para dar tempo à animação
+    }, 12000)
 
     return () => clearInterval(intervalId)
   }, [])
@@ -37,38 +35,35 @@ const AITip = () => {
     const pElement = paragraphRef.current
 
     if (paperElement && pElement) {
-      const containerWidth = paperElement.offsetWidth
-      const textWidth = pElement.scrollWidth
+      // Reseta os estilos antes de qualquer cálculo
+      pElement.classList.remove("animacao-letreiro-ativa", "text-center", "w-full")
+      pElement.style.animationDuration = ""
 
-      if (textWidth > containerWidth) {
-        const speed = 70 // pixels por segundo
-        const duration = textWidth / speed
-        setAnimation({
-          duration: `${duration}s`,
-          className: "animate-letreiro" // Usa a classe CSS definida em global.css
-        })
-      } else {
-        // Se o texto couber, remove a animação e centraliza
-        setAnimation({
-          duration: 0,
-          className: "text-center w-full"
-        })
-      }
+      // Usa setTimeout para garantir que o DOM foi atualizado com o novo texto
+      const timer = setTimeout(() => {
+        const containerWidth = paperElement.offsetWidth
+        const textWidth = pElement.scrollWidth
+
+        if (textWidth > containerWidth) {
+          const speed = 70 // pixels por segundo
+          const duration = textWidth / speed
+          pElement.style.animationDuration = `${duration}s`
+          pElement.classList.add("animacao-letreiro-ativa")
+        } else {
+          // Centraliza o texto se ele couber no contêiner
+          pElement.classList.add("text-center", "w-full")
+        }
+      }, 50) // 50ms é um delay seguro
+
+      return () => clearTimeout(timer)
     }
-  }, [tip]) // Re-executa sempre que a dica mudar
+  }, [tip])
 
   if (!tip) return null
 
   return (
-    <Paper
-      ref={paperRef}
-      className="bg-lightBg-primary dark:bg-darkBg-primary p-0 h-8 max-w-[95%] mb-2 mx-auto overflow-hidden flex items-center"
-    >
-      <p
-        ref={paragraphRef}
-        className={`text-xs text-lightFg-primary dark:text-darkFg-primary whitespace-nowrap ${animation.className}`}
-        style={{ animationDuration: animation.duration }}
-      >
+    <Paper ref={paperRef} className="bg-lightBg-primary dark:bg-darkBg-primary p-0 h-8 max-w-[95%] mb-2 mx-auto overflow-hidden flex items-center">
+      <p ref={paragraphRef} className="text-xs text-lightFg-primary dark:text-darkFg-primary will-change-transform">
         {tip}
       </p>
     </Paper>
