@@ -24,18 +24,20 @@ const AIModelSelect = ({ setAIProvider, model, setModel, loading, freeModels, pa
         OpenRouter Gratuito
       </option>
       {freeModels.map((model) => (
-        <option key={model.id} value={model.id}>
-          {model.name}
+        <>
+          <option key={model.id} value={model.id}>
+            {model.id}
+          </option>
           {model.supports_tools && "🛠️"}
           {model.supports_images && " 🖼️"}
-        </option>
+        </>
       ))}
       <option className="text-primary-base" disabled>
         OpenRouter Premium
       </option>
       {payModels.map((model) => (
         <option key={model.id} value={model.id}>
-          {model.name}
+          {model.id}
           {model.supports_tools && " 🛠️"}
           {model.supports_images && " 🖼️"}
         </option>
