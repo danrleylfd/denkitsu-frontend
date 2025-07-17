@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import Paper from "./Paper"
+import Paper from "../Paper"
 
 const TIPS = [
   "Pressione Shift + Enter para quebrar a linha no campo de prompt.",
