@@ -4,17 +4,24 @@
 @tailwind variants;
 /* @import "tailwindcss"; */
 
-/* Animação de Letreiro - Garantido */
-@keyframes letreiro-anim {
-  from { transform: translateX(100%); }
-  to { transform: translateX(-100%); }
+/* Animação de Letreiro Definitiva (Puro CSS) */
+@keyframes letreiro-final {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
 }
 
-.animacao-letreiro-ativa {
+.animacao-letreiro-puro {
+  /* Garante que o elemento tenha largura própria e não quebre a linha */
   display: inline-block;
-  padding-left: 100%; /* Força o início fora da tela */
   white-space: nowrap;
-  animation: letreiro-anim 20s linear infinite; /* Duração base, será sobrescrita */
+  /* Força o início da animação fora da tela */
+  padding-left: 100%;
+  /* Aplica a animação com duração fixa */
+  animation: letreiro-final 25s linear infinite;
 }
 
 *, *::before, *::after {
