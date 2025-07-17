@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import Paper from "./Paper"
 
 const TIPS = [
   "Pressione Shift + Enter para quebrar a linha no campo de prompt.",
@@ -17,9 +18,9 @@ const AITip = () => {
   }, [])
   if (!tip) return null
   return (
-    <p className="text-center text-xs text-lightFg-tertiary dark:text-darkFg-tertiary px-4 py-1">
-      {tip}
-    </p>
+    <Paper className="bg-lightBg dark:bg-darkBg">
+      <p className="text-center text-xs text-lightFg-tertiary dark:text-darkFg-tertiary px-4 py-1">{tip}</p>
+    </Paper>
   )
 }
 
