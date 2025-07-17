@@ -35,8 +35,8 @@ const AITip = () => {
   }, [advanceToNextTip])
   if (!tip) return null
   return (
-    <Paper className="bg-lightBg-primary dark:bg-darkBg-primary p-0 h-8 max-w-[95%] mb-2 mx-auto overflow-hidden flex items-center">
-      <Marquee key={tip} speed={50} direction="right" gradient={false} pauseOnHover={true}>
+    <Paper onClick={advanceToNextTip} className="bg-lightBg-primary dark:bg-darkBg-primary p-0 h-8 max-w-[95%] mb-2 mx-auto overflow-hidden flex items-center">
+      <Marquee speed={50} direction="right" gradient={false} pauseOnHover={true}>
         <p className="text-xs text-lightFg-primary dark:text-darkFg-primary">{tip}</p>
       </Marquee>
     </Paper>
