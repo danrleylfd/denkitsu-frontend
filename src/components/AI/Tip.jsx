@@ -4,7 +4,7 @@ import Marquee from "react-fast-marquee"
 import Paper from "../Paper"
 
 const TIPS = [
-  "Clique no ícone de cérebro para alternar entre os provedores de IA GROQ & OpenRouter.",
+  "Clique no ícone de cérebro para alternar entre os provedores de IA Groq & OpenRouter.",
   "Configure as chaves de API dos provedores Groq e OpenRouter nas configurações para desbloquear a análise de imagens e as ferramentas.",
   "A análise de imagens exige o provedor OpenRouter e um modelo compatível ex: qwen/qwen2.5-vl-72b-instruct:free. Máximo 3 imagens.",
   "As ferramentas exigem o provedor OpenRouter e um modelo compatível ex: deepseek/deepseek-chat-v3-0324:free.",

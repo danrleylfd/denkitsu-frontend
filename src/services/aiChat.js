@@ -1,5 +1,7 @@
 import api from "./"
 
+import { useAI } from "../contexts/AIContext"
+
 const sendMessageStream = async (aiKey, aiProvider, model, messages, web, mode, onDelta) => {
   const permission = aiProvider === "groq" ? false : web
   const plugins = permission ? [{ id: "web" }] : undefined
@@ -52,14 +54,16 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, web, mode, 
 const sendMessage = async (aiKey, aiProvider, model, messages, mode = "", web = false, newsTool = false, weatherTool = false, wikiTool = false, browseTool = false, genshinTool = false) => {
   const permission = aiProvider === "groq" ? false : web
   const plugins = permission ? [{ id: "web" }] : undefined
-
+  const { freeModels, payModels, groqModels } = useAI()
+  const models = [...freeModels, ...payModels, ...groqModels]
+  const fullModel = models.find((item) => item.id === model)
   const activeTools = []
   if (newsTool) activeTools.push("searchNews")
   if (weatherTool) activeTools.push("getWeather")
   if (wikiTool) activeTools.push("searchWikipedia")
   if (browseTool) activeTools.push("browseUrl")
   if (genshinTool) activeTools.push("getPlayerBuild")
-  const use_tools = activeTools.length > 0 ? activeTools : undefined
+  const use_tools = fullModel.supports_tools && activeTools.length > 0 ? activeTools : undefined
 
   const payload = {
     aiKey,
