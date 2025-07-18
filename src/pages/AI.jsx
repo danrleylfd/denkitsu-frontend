@@ -127,7 +127,7 @@ const AI = () => {
     try {
       if (genshinTool) apiMessages.push({
         role: "system",
-        content: "Divida a análise de personagens em 4 tópicos: 1. Informações gerais sobre o personagem; 2. Status do personagem; 3. Status recomendados; 4. Sua opinião sobre os Status do personagem."
+        content: "Denkitsu deve entender como o personagem funciona. Divida a análise de personagens em 5 tópicos: 1. Informações gerais sobre o personagem; 2. Informações sobre como o personagem funciona; 3. Status do personagem(Números); 4. Status recomendados(Números); 5. Sua opinião sobre os Status(atual) do personagem."
       })
       const data = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, selectedPrompt, web, newsTool, weatherTool, wikiTool, browseTool, genshinTool)
       const res = data?.choices?.[0]?.message
