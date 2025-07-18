@@ -33,8 +33,8 @@ const AIMessage = ({ msg, user, toggleLousa, loading }) => {
         {isAssistant && msg.reasoning && <Markdown content={msg.reasoning} think />}
         {loading && !msg.content ? <Button variant="outline" size="icon" $rounded loading={true} disabled /> : renderContent()}
         {msg.timestamp && (
-          <small className="ml-auto pl-2 text-xs text-lightFg-tertiary dark:text-darkFg-tertiary whitespace-nowrap">
-            {new Date(msg.timestamp).toLocaleString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+          <small className="ml-auto pl-2 text-xs text-lightFg-secondary dark:text-darkFg-secondary whitespace-nowrap">
+            {new Date(msg.timestamp).toLocaleString("pt-BR")}
           </small>
         )}
         {!loading && isAssistant && <AIReactions message={msg} toggleLousa={toggleLousa} />}
