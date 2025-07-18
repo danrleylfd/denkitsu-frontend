@@ -99,7 +99,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
               ref={toolsDropdownRef}
               className={`absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-7 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4`}
             >
-              <Button variant={isToolsSupported && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Web" onClick={toggleWeb} disabled={!isToolsSupported || aiProvider === "groq" || loading}>
+              <Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Web" onClick={toggleWeb} disabled={!isToolsSupported || aiProvider === "groq" || loading}>
                 {isToolsSupported && aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
               </Button>
               <Button variant={isToolsSupported && !stream && browseTool ? "outline" : "secondary"} size="icon" $rounded title="Navegar em Links" onClick={toggleBrowse} disabled={!isToolsSupported || stream || loading}>
