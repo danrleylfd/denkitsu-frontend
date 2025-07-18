@@ -63,7 +63,7 @@ const sendMessage = async (aiKey, aiProvider, model, messages, mode = "", web = 
   if (wikiTool) activeTools.push("searchWikipedia")
   if (browseTool) activeTools.push("browseUrl")
   if (genshinTool) activeTools.push("getPlayerBuild")
-  const use_tools = fullModel.supports_tools && activeTools.length > 0 ? activeTools : undefined
+  const use_tools = (fullModel.supports_tools && activeTools.length > 0) ? activeTools : undefined
 
   const payload = {
     aiKey,
