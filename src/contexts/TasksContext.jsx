@@ -24,7 +24,7 @@ const TasksProvider = ({ children }) => {
   const [loading, setLoading] = useState(false)
   const [editingId, setEditingId] = useState(null)
 
-  const { aiKey, model, aiProvider } = useAI()
+  const { aiKey, model, aiProvider, freeModels, payModels, groqModels } = useAI()
   const { notifyError } = useNotification()
 
   useEffect(() => {
@@ -64,7 +64,7 @@ const TasksProvider = ({ children }) => {
     }
     try {
       const userPrompt = { role: "user", content: `Objetivo: "${goal}"` }
-      const { data } = await sendMessage(aiKey, aiProvider, model, [userPrompt], "Secretário")
+      const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], [userPrompt], "Secretário")
       const rawContent = data?.choices?.[0]?.message?.content
       if (typeof rawContent !== "string" || !rawContent.trim()) return notifyError("A resposta da IA veio vazia ou em formato inválido.")
       const content = rawContent.replace(/<think>[\s\S]*?<\/think>/g, "")

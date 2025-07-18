@@ -21,7 +21,7 @@ const ContentView = ({ children }) => (
 )
 
 const Upload = () => {
-  const { aiKey, model, aiProvider, aiProviderToggle  } = useAI()
+  const { aiKey, model, aiProvider, aiProviderToggle, freeModels, payModels, groqModels } = useAI()
   const { notifyWarning, notifyError } = useNotification()
   const [content, setContent] = useState("")
   const [thumbnail, setThumbnail] = useState("")
@@ -34,7 +34,7 @@ const Upload = () => {
     setLoading(true)
     try {
       const userPrompt = { role: "user", content: `Tema: ${content}` }
-      const data = await sendMessage(aiKey, aiProvider, model, [userPrompt], "Blogueiro")
+      const data = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], [userPrompt], "Blogueiro")
       if (data.error) return notifyError(data.error.message)
       const message = data?.choices?.[0]?.message
       if (!message) return notifyError("Serviço temporariamente indisponível.")

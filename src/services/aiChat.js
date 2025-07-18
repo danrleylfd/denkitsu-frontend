@@ -51,11 +51,9 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, web, mode, 
   }
 }
 
-const sendMessage = async (aiKey, aiProvider, model, messages, mode = "", web = false, newsTool = false, weatherTool = false, wikiTool = false, browseTool = false, genshinTool = false) => {
+const sendMessage = async (aiKey, aiProvider, model, models, messages, mode = "", web = false, newsTool = false, weatherTool = false, wikiTool = false, browseTool = false, genshinTool = false) => {
   const permission = aiProvider === "groq" ? false : web
   const plugins = permission ? [{ id: "web" }] : undefined
-  const { freeModels, payModels, groqModels } = useAI()
-  const models = [...freeModels, ...payModels, ...groqModels]
   const fullModel = models.find((item) => item.id === model)
   const activeTools = []
   if (newsTool) activeTools.push("searchNews")

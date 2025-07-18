@@ -125,7 +125,7 @@ const AI = () => {
     }
   } else {
     try {
-      const data = await sendMessage(aiKey, aiProvider, model, apiMessages, selectedPrompt, web, newsTool, weatherTool, wikiTool, browseTool, genshinTool)
+      const data = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, selectedPrompt, web, newsTool, weatherTool, wikiTool, browseTool, genshinTool)
       const res = data?.choices?.[0]?.message
       if (!res) return
       const { content, reasoning } = cleanContent(res.content || "")
@@ -139,6 +139,7 @@ const AI = () => {
         }
       ])
     } catch (error) {
+      console.error(error)
       const err = JSON.parse(error.message)
       console.error(err)
       notifyError(err.message)
