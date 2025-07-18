@@ -116,13 +116,13 @@ const getModels = async () => {
     }))
     const freeModels = processedModels
       .filter((item) => item.id && item.id.includes(":free"))
-      .map((item) => ({ id: item.id, aiProvider: item.aiProvider }))
       .sort((a, b) => a.id.localeCompare(b.id))
     const payModels = processedModels
       .filter((item) => item.id && !item.id.includes(":free") && item.aiProvider !== "groq")
-      .map((item) => ({ id: item.id, aiProvider: item.aiProvider }))
       .sort((a, b) => a.id.localeCompare(b.id))
-    const groqModels = processedModels.filter((item) => item.aiProvider === "groq")
+    const groqModels = processedModels
+      .filter((item) => item.aiProvider === "groq")
+      .sort((a, b) => a.id.localeCompare(b.id))
     return { freeModels, payModels, groqModels }
   } catch (error) {
     console.error(error.message)
