@@ -115,7 +115,7 @@ const Profile = () => {
       navigate("/")
       alert("Conta excluída com sucesso.")
     } catch (err) {
-      console.log(err)
+      console.error(err)
       notifyError(err.response?.data?.error || "Falha ao excluir conta.")
     } finally {
       setLoading(false)
