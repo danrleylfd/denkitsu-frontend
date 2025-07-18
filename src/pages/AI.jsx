@@ -125,6 +125,10 @@ const AI = () => {
     }
   } else {
     try {
+      if (genshinTool) apiMessages.push({
+        role: "system",
+        content: "Divida a análise de personagens em 4 tópicos: 1. Informações gerais sobre o personagem; 2. Status do personagem; 3. Status recomendados; 4. Sua opinião sobre os Status do personagem."
+      })
       const data = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, selectedPrompt, web, newsTool, weatherTool, wikiTool, browseTool, genshinTool)
       const res = data?.choices?.[0]?.message
       if (!res) return
