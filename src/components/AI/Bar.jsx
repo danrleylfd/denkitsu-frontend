@@ -114,7 +114,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
                 {isToolsSupported && !stream ? <Cloud size={16} /> : <CloudOff size={16} />}
               </Button>
               <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>
-                {isToolsSupported && !stream ? <Gamepad size={16} /> : <Gamepad2 size={16} />}
+                {isToolsSupported && !stream ? <Gamepad2 size={16} /> : <Gamepad size={16} />}
               </Button>
             </div>
           )}
