@@ -89,38 +89,18 @@ const getPrompt = async () => {
   }
 }
 
-const checkToolCompatibility = (model) => {
-  if (Array.isArray(model.supported_parameters)) {
-    const params = new Set(model.supported_parameters)
-    return params.has("tools") && params.has("tool_choice")
-  }
-  return false
-}
-
-const checkImageCompatibility = (model) => {
-  if (model.input_modalities && Array.isArray(model.input_modalities)) {
-    return model.input_modalities.includes("image")
-  }
-  return false
-}
-
 const getModels = async () => {
   try {
     const { data } = await api.get("/ai/models")
     if (!data) throw new Error("Falha ao obter modelos.")
     if (data.error) throw new Error(data.error?.message || "Erro ao consultar modelos.")
-    const processedModels = data.models.map(model => ({
-      ...model,
-      supports_tools: checkToolCompatibility(model),
-      supports_images: checkImageCompatibility(model)
-    }))
-    const freeModels = processedModels
+    const freeModels = data.models
       .filter((item) => item.id && item.id.includes(":free"))
       .sort((a, b) => a.id.localeCompare(b.id))
-    const payModels = processedModels
+    const payModels = data.models
       .filter((item) => item.id && !item.id.includes(":free") && item.aiProvider !== "groq")
       .sort((a, b) => a.id.localeCompare(b.id))
-    const groqModels = processedModels
+    const groqModels = data.models
       .filter((item) => item.aiProvider === "groq")
       .sort((a, b) => a.id.localeCompare(b.id))
     return { freeModels, payModels, groqModels }
