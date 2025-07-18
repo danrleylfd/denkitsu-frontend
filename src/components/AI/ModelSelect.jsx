@@ -27,7 +27,8 @@ const AIModelSelect = ({ setAIProvider, model, setModel, loading, freeModels, pa
         <option key={model.id} value={model.id}>
           {model.id}
           {model.supports_tools && " 🛠️"}
-          {model.supports_images && " 🖼️"}
+          {model.supports_images && " 🖼️"},
+          {model.supports_files && " 📄"}
         </option>
       ))}
       <option className="text-primary-base" disabled>
@@ -37,7 +38,8 @@ const AIModelSelect = ({ setAIProvider, model, setModel, loading, freeModels, pa
         <option key={model.id} value={model.id}>
           {model.id}
           {model.supports_tools && " 🛠️"}
-          {model.supports_images && " 🖼️"}
+          {model.supports_images && " 🖼️"},
+          {model.supports_files && " 📄"}
         </option>
       ))}
       <option className="text-primary-base" disabled>
@@ -47,7 +49,8 @@ const AIModelSelect = ({ setAIProvider, model, setModel, loading, freeModels, pa
         <option key={model.id} value={model.id}>
           {model.id}
           {model.supports_tools && " 🛠️"}
-          {model.supports_images && " 🖼️"}
+          {model.supports_images && " 🖼️"},
+          {model.supports_files && " 📄"}
         </option>
       ))}
     </select>
