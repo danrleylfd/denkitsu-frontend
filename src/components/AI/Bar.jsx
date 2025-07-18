@@ -4,7 +4,7 @@ import {
   LogIn, UserPlus,
   Settings, SendHorizontal, ImagePlus, ImageOff, Globe, GlobeLock, Newspaper, Shredder, Cloud, CloudOff,
   AudioLines, Brain, MessageCirclePlus, BookOpen, BookAlert, Link2, Link2Off, Wrench, Gamepad, Gamepad2,
-  Lock
+  Lock, Server, ServerOff,
 } from "lucide-react"
 
 import { useAuth } from "../../contexts/AuthContext"
@@ -16,7 +16,7 @@ import Button from "../Button"
 
 const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessage, clearHistory, toggleSettings, loading }) => {
   const { signed } = useAuth()
-  const { aiProvider, aiProviderToggle, aiKey, model, freeModels, payModels, groqModels, stream, toggleStream, web, toggleWeb, newsTool, toggleNews, weatherTool, toggleWeather, wikiTool, toggleWiki, browseTool, toggleBrowse, genshinTool, toggleGenshin } = useAI()
+  const { aiProvider, aiProviderToggle, aiKey, model, freeModels, payModels, groqModels, stream, toggleStream, web, toggleWeb, newsTool, toggleNews, weatherTool, toggleWeather, wikiTool, toggleWiki, browseTool, toggleBrowse, genshinTool, toggleGenshin, httpTool, toggleHttp } = useAI()
 
   const [isToolsOpen, setIsToolsOpen] = useState(false)
 
@@ -115,6 +115,9 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
               </Button>
               <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>
                 {isToolsSupported && !stream ? <Gamepad2 size={16} /> : <Gamepad size={16} />}
+              </Button>
+              <Button variant={isToolsSupported && !stream && httpTool ? "outline" : "secondary"} size="icon" $rounded title="Requisição HTTP" onClick={toggleHttp} disabled={!isToolsSupported || stream || loading}>
+                {isToolsSupported && !stream ? <Server size={16} /> : <ServerOff size={16} />}
               </Button>
             </div>
           )}

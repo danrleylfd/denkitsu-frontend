@@ -16,6 +16,7 @@ const AIProvider = ({ children }) => {
   const storedBrowseTool = JSON.parse(localStorage.getItem("@Denkitsu:BrowseTool"))
   const storedWikiTool = JSON.parse(localStorage.getItem("@Denkitsu:WikiTool"))
   const storedGenshinTool = JSON.parse(localStorage.getItem("@Denkitsu:GenshinTool"))
+  const storedHttpTool = JSON.parse(localStorage.getItem("@Denkitsu:HttpTool"))
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
 
   const [aiProvider, setAIProvider] = useState(storedAIProvider || "groq")
@@ -35,6 +36,7 @@ const AIProvider = ({ children }) => {
   const [wikiTool, setWikiTool] = useState(storedWikiTool === null? false : storedWikiTool)
   const [browseTool, setBrowseTool] = useState(storedBrowseTool === null ? false : storedBrowseTool)
   const [genshinTool, setGenshinTool] = useState(storedGenshinTool === null? false : storedGenshinTool)
+  const [httpTool, setHttpTool] = useState(storedHttpTool === null? false : storedHttpTool)
   const [userPrompt, setUserPrompt] = useState("")
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
 
@@ -59,6 +61,8 @@ const AIProvider = ({ children }) => {
   useEffect(() => (localStorage.setItem("@Denkitsu:BrowseTool", browseTool)), [browseTool])
 
   useEffect(() => (localStorage.setItem("@Denkitsu:GenshinTool", genshinTool)), [genshinTool])
+
+  useEffect(() => (localStorage.setItem("@Denkitsu:HttpTool", httpTool)), [httpTool])
 
   useEffect(() => {
     if (groqKey.trim() === "") return localStorage.removeItem("@Denkitsu:Groq")
@@ -91,7 +95,7 @@ const AIProvider = ({ children }) => {
     wikiTool, setWikiTool, toggleWiki: () => setWikiTool(!wikiTool),
     browseTool, setBrowseTool, toggleBrowse: () => setBrowseTool(!browseTool),
     genshinTool, setGenshinTool, toggleGenshin: () => setGenshinTool(!genshinTool),
-
+    httpTool, setHttpTool, toggleHttp: () => setHttpTool(!httpTool),
     imageUrls, setImageUrls,
     aiProvider, setAIProvider, aiProviderToggle,
     aiKey: aiProvider === "groq" ? groqKey : openRouterKey,
@@ -104,7 +108,6 @@ const AIProvider = ({ children }) => {
     userPrompt, setUserPrompt,
     messages, setMessages, clearHistory
   }
-
   return (
     <AIContext.Provider value={values}>
       {children}
