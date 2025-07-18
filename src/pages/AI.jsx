@@ -73,7 +73,8 @@ const AI = () => {
     content: [
       ...(userPrompt.trim() ? [{ type: "text", content: userPrompt.trim() }] : []),
       ...imageUrls.map(url => ({ type: "image_url", image_url: { url } }))
-    ]
+    ],
+    timestamp: new Date().toISOString()
   }
   const history = [...messages, newMessage]
   setMessages(history)
@@ -102,7 +103,8 @@ const AI = () => {
       content: "",
       reasoning: "",
       _contentBuffer: "",
-      _reasoningBuffer: ""
+      _reasoningBuffer: "",
+      timestamp: new Date().toISOString()
     }
     setMessages(prev => [...prev, placeholder])
     try {
@@ -139,7 +141,8 @@ const AI = () => {
           id: Date.now(),
           role: "assistant",
           content,
-          reasoning: (res.reasoning || "") + reasoning
+          reasoning: (res.reasoning || "") + reasoning,
+          timestamp: new Date().toISOString()
         }
       ])
     } catch (error) {
