@@ -95,10 +95,10 @@ const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqM
               return (
                 <Button
                   key={modeName}
-                  variant={selectedPrompt === `## Modo ${modeName}` ? selectedColor : "secondary"}
+                  variant={selectedPrompt === `Modo ${modeName}` ? selectedColor : "secondary"}
                   size="xs"
                   $rounded
-                  onClick={() => onSelectPrompt(`## Modo ${modeName}`)}
+                  onClick={() => onSelectPrompt(`Modo ${modeName}`)}
                   disabled={loading}>
                   {modeName}
                 </Button>
