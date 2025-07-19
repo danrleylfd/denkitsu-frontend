@@ -21,7 +21,7 @@ const AIMessage = ({ msg, user, toggleLousa, loading }) => {
   }
 
   return (
-    <div className={`flex items-end gap-2 px-2 ${isUser ? "flex-row-reverse" : "flex-row"}`}>
+    <div className={`flex items-end gap-2 px-2 ${isUser ? "flex-row" : "flex-row-reverse"}`}>
       {isUser ? (
         <PurpleLink to={`/profile/${user._id}`}>
           <img src={user.avatarUrl} alt={msg.role} className="w-8 h-8 rounded-full object-cover" />
