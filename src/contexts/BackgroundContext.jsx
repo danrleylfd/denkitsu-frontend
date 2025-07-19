@@ -17,12 +17,8 @@ const BackgroundProvider = ({ children }) => {
       const response = await fetch(`${unsplashApiUrl}?query=raindrop-wallpaper&orientation=landscape&client_id=G0_VOjkauHvBWnVTKcMVKGlpumo7trpktjRD-y7YHMQ`)
       if (!response.ok) throw new Error(`Erro na API do Unsplash: ${response.statusText}`)
       const data = await response.json()
-      console.log(data.urls.regular)
-      setBackground({
-        url: data.urls.regular,
-        authorName: data.user.name,
-        authorLink: data.user.links.html,
-      })
+      console.log(data.urls.full)
+      setBackground({ url: data.urls.regular })
     } catch (err) {
       setBackground({ url: "/background.jpg" })
     }
