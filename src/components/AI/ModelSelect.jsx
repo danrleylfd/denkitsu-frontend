@@ -16,37 +16,37 @@ const AIModelSelect = ({ setAIProvider, model, setModel, loading, freeModels, pa
       value={model}
       onChange={handleChange}
       disabled={loading}
-      className="bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary text-sm py-2 w-full rounded-md">
-      <option className="text-primary-base" disabled value="">
+      className="bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary text-sm py-2 w-full rounded-full">
+      <option className="text-lightFg-primary dark:text-darkFg-primary" disabled value="">
         Selecionar Modelo
       </option>
-      <option className="text-primary-base" disabled>
+      <option className="text-lightFg-primary dark:text-darkFg-primary" disabled value="">
         OpenRouter Gratuito
       </option>
       {freeModels.map((model) => (
-        <option key={model.id} value={model.id}>
+        <option key={model.id} value={model.id} className="text-lightFg-secondary dark:text-darkFg-secondary">
           {model.id}
           {model.supports_tools && " 🛠️"}
           {model.supports_images && " 🖼️"}
           {model.supports_files && " 📄"}
         </option>
       ))}
-      <option className="text-primary-base" disabled>
+      <option className="text-lightFg-primary dark:text-darkFg-primary" disabled value="">
         OpenRouter Premium
       </option>
       {payModels.map((model) => (
-        <option key={model.id} value={model.id}>
+        <option key={model.id} value={model.id} className="text-lightFg-secondary dark:text-darkFg-secondary">
           {model.id}
           {model.supports_tools && " 🛠️"}
           {model.supports_images && " 🖼️"}
           {model.supports_files && " 📄"}
         </option>
       ))}
-      <option className="text-primary-base" disabled>
+      <option className="text-lightFg-primary dark:text-darkFg-primary" disabled value="">
         Groq Gratuito
       </option>
       {groqModels.map((model) => (
-        <option key={model.id} value={model.id}>
+        <option key={model.id} value={model.id} className="text-lightFg-secondary dark:text-darkFg-secondary">
           {model.id}
           {model.supports_tools && " 🛠️"}
           {model.supports_images && " 🖼️"}
