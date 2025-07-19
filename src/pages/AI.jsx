@@ -165,7 +165,6 @@ const AI = () => {
       {!temMensagensDoUsuario ? (
         <div className="flex grow justify-center items-center flex-col">
           <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
-          <AITip />
           <AIBar
             userPrompt={userPrompt}
             setUserPrompt={setUserPrompt}
@@ -176,6 +175,7 @@ const AI = () => {
             clearHistory={clearHistory}
             loading={loading}
           />
+          <AITip />
           <AISettings
             settingsOpen={settingsOpen}
             toggleSettings={() => setSettingsOpen(!settingsOpen)}
@@ -190,7 +190,6 @@ const AI = () => {
         <>
           <AIHistory toggleLousa={toggleLousa} messages={messages} />
           <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
-          <AITip />
           <AIBar
             userPrompt={userPrompt}
             setUserPrompt={setUserPrompt}
@@ -201,6 +200,7 @@ const AI = () => {
             clearHistory={clearHistory}
             loading={loading}
           />
+          <AITip />
           <AISettings
             settingsOpen={settingsOpen}
             toggleSettings={() => setSettingsOpen(!settingsOpen)}
