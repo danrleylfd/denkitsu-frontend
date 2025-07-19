@@ -50,7 +50,7 @@ const IconGroup = ({ items, title, isOpen }) => {
 
 const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => {
   // const { pathname } = useLocation()
-  const { bgUrl } = useBackground()
+  const { background } = useBackground()
   const { theme, toggleTheme } = useTheme()
   const { signed } = useAuth()
 
@@ -110,7 +110,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
     .join(" ")
 
   return (
-    <div className={`flex ${className || ""}`} style={{ backgroundImage: `url('${bgUrl}')` }}>
+    <div className={`flex ${className || ""}`} style={{ backgroundImage: `url('${background}')` }}>
       <aside
         className={`h-screen transition-all duration-300 ease-in-out z-40 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] border-r ${
           isOpen ? "w-48" : "w-14"

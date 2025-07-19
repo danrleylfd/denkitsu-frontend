@@ -18,9 +18,9 @@ const BackgroundProvider = ({ children }) => {
       if (!response.ok) throw new Error(`Erro na API do Unsplash: ${response.statusText}`)
       const data = await response.json()
       console.log(data.urls.full)
-      setBackground({ url: data.urls.regular })
+      setBackground(data.urls.regular)
     } catch (err) {
-      setBackground({ url: "/background.jpg" })
+      setBackground("/background.jpg")
     }
   }, [])
 
@@ -28,13 +28,8 @@ const BackgroundProvider = ({ children }) => {
     fetchNewBackground()
   }, [])
 
-  const value = {
-    background,
-    bgUrl: background?.url,
-  }
-
   return (
-    <BackgroundContext.Provider value={value}>
+    <BackgroundContext.Provider value={{ background }}>
       {children}
     </BackgroundContext.Provider>
   )
