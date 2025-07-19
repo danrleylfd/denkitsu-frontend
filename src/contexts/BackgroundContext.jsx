@@ -6,27 +6,37 @@ const unsplashApiUrl = "https://api.unsplash.com/photos/random"
 const unsplashAccessKey = "G0_VOjkauHvBWnVTKcMVKGlpumo7trpktjRD-y7YHMQ"
 
 const BackgroundProvider = ({ children }) => {
-  const [background, setBackground] = useState(null)
+  const [background, setBackground] = useState("/background.jpg")
 
   const fetchNewBackground = useCallback(async () => {
     if (!unsplashAccessKey) {
-      console.error("Chave da API do Unsplash não configurada. Verifique o arquivo .env")
+      console.error("Chave da API do Unsplash não configurada.")
       return
     }
     try {
-      const response = await fetch(`${unsplashApiUrl}?query=wallpaper&orientation=landscape&client_id=G0_VOjkauHvBWnVTKcMVKGlpumo7trpktjRD-y7YHMQ`)
+      const response = await fetch(`${unsplashApiUrl}?query=wallpaper&orientation=landscape&client_id=${unsplashAccessKey}`)
       if (!response.ok) throw new Error(`Erro na API do Unsplash: ${response.statusText}`)
       const data = await response.json()
-      console.log(data.urls.full)
-      setBackground(data.urls.regular)
+      const regularUrl = data.urls.regular
+      const fullUrl = data.urls.full
+      setBackground(regularUrl)
+      const highResImage = new Image()
+      highResImage.src = fullUrl
+      highResImage.onload = () => {
+        setBackground(fullUrl)
+      }
+      highResImage.onerror = () => {
+        console.error("Falha ao carregar a imagem em alta resolução. Mantendo a versão regular.")
+      }
     } catch (err) {
+      console.error("Falha ao buscar novo plano de fundo:", err)
       setBackground("/background.jpg")
     }
   }, [])
 
   useEffect(() => {
     fetchNewBackground()
-  }, [])
+  }, [fetchNewBackground])
 
   return (
     <BackgroundContext.Provider value={{ background }}>
