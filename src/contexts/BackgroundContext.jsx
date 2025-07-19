@@ -19,11 +19,13 @@ const BackgroundProvider = ({ children }) => {
       const data = await response.json()
       const regularUrl = data.urls.regular
       const fullUrl = data.urls.full
+      console.log(fullUrl)
       setBackground(regularUrl)
       const highResImage = new Image()
       highResImage.src = fullUrl
       highResImage.onload = () => {
         setBackground(fullUrl)
+        console.log("Plano de fundo trocado para alta resolução.")
       }
       highResImage.onerror = () => {
         console.error("Falha ao carregar a imagem em alta resolução. Mantendo a versão regular.")
