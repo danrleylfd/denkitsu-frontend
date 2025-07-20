@@ -139,7 +139,7 @@ const Markdown = ({ content, think }) => {
               </li>
             ),
             table: ({ node, children, ...props }) => (
-              <table className="w-full my-4 border-collapse border border-lightBorder dark:border-darkBorder rounded" {...props}>
+              <table className="w-full my-2 border-collapse border border-bLight dark:border-bDark rounded" {...props}>
                 {children}
               </table>
             ),
@@ -149,7 +149,7 @@ const Markdown = ({ content, think }) => {
               </thead>
             ),
             tbody: ({ node, children, ...props }) => (
-              <tbody className="divide-y divide-lightBorder dark:divide-darkBorder" {...props}>
+              <tbody className="divide-y divide-bLight dark:divide-bDark" {...props}>
                 {children}
               </tbody>
             ),
@@ -159,12 +159,12 @@ const Markdown = ({ content, think }) => {
               </tr>
             ),
             th: ({ node, children, ...props }) => (
-              <th className="text-lightFg-primary dark:text-darkFg-primary px-4 py-2 text-left font-medium" {...props}>
+              <th className="text-lightFg-primary dark:text-darkFg-primary px-2 py-1 text-left font-medium text-xs" {...props}>
                 {children}
               </th>
             ),
             td: ({ node, children, ...props }) => (
-              <td className="text-lightFg-secondary dark:text-darkFg-secondary px-4 py-2 text-left" {...props}>
+              <td className="text-lightFg-secondary dark:text-darkFg-secondary px-2 py-1 text-left text-xs" {...props}>
                 {children}
               </td>
             )
