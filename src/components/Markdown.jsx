@@ -139,7 +139,7 @@ const Markdown = ({ content, think }) => {
               </li>
             ),
             table: ({ node, children, ...props }) => (
-              <table className="w-full my-2 border-collapse border border-bLight dark:border-bDark rounded" {...props}>
+              <table className="my-2 border-collapse border border-bLight dark:border-bDark rounded" {...props}>
                 {children}
               </table>
             ),
@@ -154,7 +154,7 @@ const Markdown = ({ content, think }) => {
               </tbody>
             ),
             tr: ({ node, children, ...props }) => (
-              <tr className="hover:bg-lightBg-tertiary dark:hover:bg-darkBg-tertiary transition-colors" {...props}>
+              <tr className="rounded-lg hover:bg-lightBg-tertiary dark:hover:bg-darkBg-tertiary transition-colors" {...props}>
                 {children}
               </tr>
             ),
