@@ -8,7 +8,7 @@ import Input from "../Input"
 import AIInput from "./Input"
 import Button from "../Button"
 
-const AVALIABLE_MODES = ["Blogueiro", "Desenvolvedor", "Lousa", "Moderador", "Prompter", "Redator", "Secretário"]
+const AVALIABLE_MODES = ["Analista", "Blogueiro", "Desenvolvedor", "Lousa", "Moderador", "Prompter", "Redator", "Secretário"]
 
 const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqModels, selectedPrompt, onSelectPrompt }) => {
   const [showAIKey, setShowAIKey] = useState(false)
