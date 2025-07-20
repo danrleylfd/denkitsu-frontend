@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useContext } from "react"
+import { createContext, useState, useEffect, useContext, useMemo } from "react"
 
 const AIContext = createContext()
 
@@ -83,31 +83,45 @@ const AIProvider = ({ children }) => {
     localStorage.setItem("@Denkitsu:messages", JSON.stringify(messages))
   }, [messages, customPrompt])
 
-  const aiProviderToggle = () => setAIProvider((prev) => (prev === "groq" ? "openrouter" : "groq"))
+  const aiProviderToggle = useCallback(() => setAIProvider((prev) => (prev === "groq" ? "openrouter" : "groq")), [])
+  const clearHistory = useCallback(() => setMessages([{ role: "system", content: customPrompt }]), [customPrompt])
+  const toggleStream = useCallback(() => setStream(s => !s), [])
+  const toggleWeb = useCallback(() => setWeb(w => !w), [])
+  const toggleNews = useCallback(() => setNewsTool(n => !n), [])
+  const toggleWeather = useCallback(() => setWeatherTool(w => !w), [])
+  const toggleWiki = useCallback(() => setWikiTool(w => !w), [])
+  const toggleBrowse = useCallback(() => setBrowseTool(b => !b), [])
+  const toggleGenshin = useCallback(() => setGenshinTool(g => !g), [])
+  const toggleHttp = useCallback(() => setHttpTool(h => !h), [])
 
-  const clearHistory = () => setMessages([{ role: "system", content: customPrompt }])
-
-  const values = {
-    stream, setStream, toggleStream: () => setStream(!stream),
-    web, setWeb, toggleWeb: () => setWeb(!web),
-    newsTool, setNewsTool, toggleNews: () => setNewsTool(!newsTool),
-    weatherTool, setWeatherTool, toggleWeather: () => setWeatherTool(!weatherTool),
-    wikiTool, setWikiTool, toggleWiki: () => setWikiTool(!wikiTool),
-    browseTool, setBrowseTool, toggleBrowse: () => setBrowseTool(!browseTool),
-    genshinTool, setGenshinTool, toggleGenshin: () => setGenshinTool(!genshinTool),
-    httpTool, setHttpTool, toggleHttp: () => setHttpTool(!httpTool),
+  const values = useMemo(() => ({
+    stream, setStream, toggleStream,
+    web, setWeb, toggleWeb,
+    newsTool, setNewsTool, toggleNews,
+    weatherTool, setWeatherTool, toggleWeather,
+    wikiTool, setWikiTool, toggleWiki,
+    browseTool, setBrowseTool, toggleBrowse,
+    genshinTool, setGenshinTool, toggleGenshin,
+    httpTool, setHttpTool, toggleHttp,
     imageUrls, setImageUrls,
     aiProvider, setAIProvider, aiProviderToggle,
     aiKey: aiProvider === "groq" ? groqKey : openRouterKey,
     setAIKey: aiProvider === "groq" ? setGroqKey : setOpenRouterKey,
-    model: aiProvider === "groq" ? groqModel : openRouterModel, setModel: aiProvider === "groq" ? setGroqModel : setOpenRouterModel,
+    model: aiProvider === "groq" ? groqModel : openRouterModel,
+    setModel: aiProvider === "groq" ? setGroqModel : setOpenRouterModel,
     freeModels, setFreeModels,
     payModels, setPayModels,
     groqModels, setGroqModels,
     customPrompt, setCustomPrompt,
     userPrompt, setUserPrompt,
     messages, setMessages, clearHistory
-  }
+  }), [
+    stream, web, newsTool, weatherTool, wikiTool, browseTool, genshinTool, httpTool,
+    imageUrls, aiProvider, groqKey, openRouterKey, groqModel, openRouterModel,
+    freeModels, payModels, groqModels, customPrompt, userPrompt, messages,
+    toggleStream, toggleWeb, toggleNews, toggleWeather, toggleWiki,
+    toggleBrowse, toggleGenshin, toggleHttp, aiProviderToggle, clearHistory
+  ])
   return (
     <AIContext.Provider value={values}>
       {children}
