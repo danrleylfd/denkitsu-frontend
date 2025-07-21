@@ -32,6 +32,7 @@ const Lousa = ({ canvas = false, content, toggleLousa }) => {
       )
     }
   }
+  console.log("canvas", canvas)
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <div className="relative flex w-[90%] h-[95%] flex-col rounded-lg bg-white shadow-2xl dark:bg-darkBg-primary">
