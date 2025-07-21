@@ -29,6 +29,7 @@ const AI = () => {
   const { notifyWarning, notifyError } = useNotification()
   const [loading, setLoading] = useState(false)
   const [lousaContent, setLousaContent] = useState(null)
+  const [canvasContent, setCanvasContent] = useState(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [selectedPrompt, setSelectedPrompt] = useState("")
 
@@ -156,7 +157,8 @@ const AI = () => {
   }
 }, [userPrompt, imageUrls, messages, model, aiKey, aiProvider, stream, web, newsTool, weatherTool, wikiTool, selectedPrompt, setMessages, setUserPrompt, setImageUrls, setLoading, notifyError])
 
-  const toggleLousa = useCallback(content => setLousaContent(content), [])
+  const toggleLousa = useCallback((content) => setLousaContent(content), [])
+  const toggleCanvas = useCallback((content) => setCanvasContent(content), [])
 
   const temMensagensDoUsuario = messages.some(msg => msg.role === "user")
 
@@ -211,7 +213,7 @@ const AI = () => {
             onSelectPrompt={setSelectedPrompt}
           />
           <Lousa content={lousaContent} toggleLousa={toggleLousa} />
-          <Lousa content={lousaContent} toggleLousa={toggleLousa} canvas={true} />
+          <Lousa content={canvasContent} toggleLousa={toggleCanvas} canvas={true} />
         </>
       )}
     </SideMenu>
