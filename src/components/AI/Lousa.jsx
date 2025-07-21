@@ -10,15 +10,22 @@ import Button from "../Button"
 const Lousa = ({ content, toggleLousa }) => {
   if (!content) return null
   const { theme } = useTheme()
-  let files = {}
+  let finalFiles = {}
   let customSetup = {}
+
   try {
-    // O 'content' agora é uma string JSON vinda da IA
-    const parsedContent = JSON.parse(content)
-    const { dependencies, ...fileEntries } = parsedContent
-    files = fileEntries
+    const aiFiles = JSON.parse(content)
+    const { dependencies, ...fileEntries } = aiFiles
+
+    // Lógica principal: Mesclamos o boilerplate com os arquivos da IA.
+    // Os arquivos da IA (fileEntries) sobrescrevem os do boilerplate se tiverem o mesmo nome.
+    finalFiles = { ...reactBoilerplate, ...fileEntries }
+
     if (dependencies) {
-      customSetup = { dependencies }
+      // Se a IA especificar dependências, nós as adicionamos.
+      const packageJson = JSON.parse(finalFiles["/package.json"])
+      packageJson.dependencies = { ...packageJson.dependencies, ...dependencies }
+      finalFiles["/package.json"] = JSON.stringify(packageJson, null, 2)
     }
   } catch (error) {
     console.error("Erro ao parsear o conteúdo da Lousa:", error)
@@ -43,11 +50,12 @@ const Lousa = ({ content, toggleLousa }) => {
           <Sandpack
             template="react"
             theme={theme}
-            files={files}
+            files={finalFiles}
             customSetup={customSetup}
             options={{
               showLineNumbers: true,
               showTabs: true,
+              activeFile: "/App.js",
               // editorHeight: "100%",
               layout: "responsive"
             }}
