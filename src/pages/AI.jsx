@@ -212,7 +212,11 @@ const AI = () => {
             selectedPrompt={selectedPrompt}
             onSelectPrompt={setSelectedPrompt}
           />
-          <Lousa content={lousaContent || canvasContent} toggleLousa={lousaContent ? toggleLousa : toggleCanvas} canvas={lousaContent ? false : true} />
+          <Lousa
+            content={lousaContent || canvasContent}
+            toggleLousa={lousaContent ? toggleLousa : toggleCanvas}
+            canvas={lousaContent ? false : true}
+          />
         </>
       )}
     </SideMenu>
