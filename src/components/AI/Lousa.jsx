@@ -11,8 +11,15 @@ const Lousa = ({ content, toggleLousa }) => {
   if (!content) return null
   const { theme } = useTheme()
   let files = {}
+  let customSetup = {}
   try {
-    files = JSON.parse(content)
+    // O 'content' agora é uma string JSON vinda da IA
+    const parsedContent = JSON.parse(content)
+    const { dependencies, ...fileEntries } = parsedContent
+    files = fileEntries
+    if (dependencies) {
+      customSetup = { dependencies }
+    }
   } catch (error) {
     console.error("Erro ao parsear o conteúdo da Lousa:", error)
     return (
@@ -37,10 +44,13 @@ const Lousa = ({ content, toggleLousa }) => {
             template="react"
             theme={theme}
             files={files}
-            // customSetup={customSetup}
+            customSetup={customSetup}
             options={{
               showLineNumbers: true,
               showTabs: true,
+              showConsoleButton: true,
+              showRefreshButton: true,
+              showConsole: true,
               // editorHeight: "100%",
               layout: "responsive"
             }}
