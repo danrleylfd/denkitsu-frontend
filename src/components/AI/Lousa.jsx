@@ -13,7 +13,6 @@ const Lousa = ({ content, toggleLousa }) => {
   let files = {}
   let customSetup = {}
   try {
-    // O 'content' agora é uma string JSON vinda da IA
     const parsedContent = JSON.parse(content)
     const { dependencies, ...fileEntries } = parsedContent
     files = fileEntries
@@ -51,7 +50,7 @@ const Lousa = ({ content, toggleLousa }) => {
               showConsoleButton: true,
               showRefreshButton: true,
               showConsole: true,
-              // editorHeight: "100%",
+              editorHeight: "100%",
               layout: "responsive"
             }}
           />
