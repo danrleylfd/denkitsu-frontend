@@ -45,13 +45,15 @@ const Lousa = ({ content, toggleLousa }) => {
             files={files}
             customSetup={customSetup}
             options={{
+              showNavigator: true,
               showLineNumbers: true,
+              showInlineErrors: true,
               showTabs: true,
               showConsoleButton: true,
               showRefreshButton: true,
               showConsole: true,
               editorHeight: "100%",
-              layout: "responsive"
+              layout: "preview"
             }}
           />
         </div>
