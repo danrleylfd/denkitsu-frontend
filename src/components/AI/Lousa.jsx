@@ -7,28 +7,30 @@ import { useTheme } from "../../contexts/ThemeContext"
 
 import Button from "../Button"
 
-const Lousa = ({ content, toggleLousa }) => {
+const Lousa = ({ canvas = false, content, toggleLousa }) => {
   if (!content) return null
   const { theme } = useTheme()
   let files = {}
   let customSetup = {}
-  try {
-    const parsedContent = JSON.parse(content)
-    const { dependencies, ...fileEntries } = parsedContent
-    files = fileEntries
-    if (dependencies) {
-      customSetup = { dependencies }
-    }
-  } catch (error) {
-    console.error("Erro ao parsear o conteúdo da Lousa:", error)
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-        <div className="text-red-500 bg-darkBg-secondary p-4 rounded-lg">
-          Erro: A IA não retornou um formato de ficheiro JSON válido.
-          <Button variant="secondary" onClick={() => toggleLousa()}>Fechar</Button>
+  if (canvas) {
+    try {
+      const parsedContent = JSON.parse(content)
+      const { dependencies, ...fileEntries } = parsedContent
+      files = fileEntries
+      if (dependencies) {
+        customSetup = { dependencies }
+      }
+    } catch (error) {
+      console.error("Erro ao parsear o conteúdo da Lousa:", error)
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="text-red-500 bg-darkBg-secondary p-4 rounded-lg">
+            Erro: A IA não retornou um formato de ficheiro JSON válido.
+            <Button variant="secondary" onClick={() => toggleLousa()}>Fechar</Button>
+          </div>
         </div>
-      </div>
-    )
+      )
+    }
   }
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
@@ -37,26 +39,28 @@ const Lousa = ({ content, toggleLousa }) => {
           <h3 className="font-bold text-lightFg-primary dark:text-darkFg-primary">Lousa</h3>
           <Button variant="danger" size="icon" $rounded onClick={() => toggleLousa()}><X size={16} /></Button>
         </div>
-        {/* <iframe srcDoc={content} title="Lousa" sandbox="allow-scripts allow-same-origin" className="w-full h-full flex-1 rounded-b-lg border-none outline-none m-0 p-0 box-border" /> */}
-        <div className="w-full h-full flex-1">
-          <Sandpack
-            template="react"
-            theme={theme}
-            files={files}
-            customSetup={customSetup}
-            options={{
-              showNavigator: true,
-              showLineNumbers: true,
-              showInlineErrors: true,
-              showTabs: true,
-              showConsoleButton: true,
-              showRefreshButton: true,
-              showConsole: true,
-              editorHeight: "100%",
-              layout: "preview"
-            }}
-          />
-        </div>
+        {!canvas && <iframe srcDoc={content} title="Lousa" sandbox="allow-scripts allow-same-origin" className="w-full h-full flex-1 rounded-b-lg border-none outline-none m-0 p-0 box-border" />}
+        {canvas && (
+          <div className="w-full h-full flex-1">
+            <Sandpack
+              template="react"
+              theme={theme}
+              files={files}
+              customSetup={customSetup}
+              options={{
+                showNavigator: true,
+                showLineNumbers: true,
+                showInlineErrors: true,
+                showTabs: true,
+                showConsoleButton: true,
+                showRefreshButton: true,
+                showConsole: true,
+                editorHeight: "100%",
+                layout: "preview"
+              }}
+            />
+          </div>
+        )}
       </div>
     </div>
   )

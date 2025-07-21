@@ -26,8 +26,7 @@ const getFileExtension = (lang) => {
     python: "py",
     html: "html",
     css: "css",
-    markdown: "md",
-    json: "json"
+    markdown: "md"
   }
   return langMap[lang] || lang
 }
@@ -37,18 +36,17 @@ const AIReactions = ({ message, toggleLousa }) => {
   const [loadingType, setLoadingType] = useState(null)
   const { setTasks } = useTasks()
 
-  const { allCodeToCopy, lousaContentBlock, kanbanableJsonString, codeBlocks } = useMemo(() => {
+  const { allCodeToCopy, htmlBlockForPreview, canvasBlockForPreview, kanbanableJsonString, codeBlocks } = useMemo(() => {
     if (!message?.content) {
-      return { allCodeToCopy: null, lousaContentBlock: null, kanbanableJsonString: null, codeBlocks: [] }
+      return { allCodeToCopy: null, htmlBlockForPreview: null, kanbanableJsonString: null, codeBlocks: [] }
     }
     const blocks = [...message.content.matchAll(/^```(\w*)\n([\s\S]+?)\n^```/gm)].map((match) => ({
       lang: match[1].toLowerCase() || "md",
       code: match[2].trim()
     }))
-
-    const lousaContentBlock = blocks.find((block) => block.lang === "json" || block.lang === "html") || null
-
     const allCode = blocks.length > 0 ? blocks.map((block) => block.code).join("\n\n") : null
+    const htmlBlock = blocks.find((block) => block.lang === "html") || null
+    const canvasBlock = blocks.find((block) => block.lang === "json") || null
     const firstCodeBlockContent = blocks.length > 0 ? blocks[0].code : null
     let kanbanJson = null
     if (firstCodeBlockContent && isValidJsonStringArray(firstCodeBlockContent)) {
@@ -58,7 +56,8 @@ const AIReactions = ({ message, toggleLousa }) => {
     }
     return {
       allCodeToCopy: allCode,
-      lousaContentBlock,
+      htmlBlockForPreview: htmlBlock,
+      canvasBlockForPreview: canvasBlock,
       kanbanableJsonString: kanbanJson,
       codeBlocks: blocks
     }
@@ -122,7 +121,7 @@ const AIReactions = ({ message, toggleLousa }) => {
     toggleLousa(code)
   }
 
-  const hasContextualAction = !!lousaContentBlock || !!kanbanableJsonString || !!allCodeToCopy
+  const hasContextualAction = !!htmlBlockForPreview || !!canvasBlockForPreview || !!kanbanableJsonString || !!allCodeToCopy
 
   return (
     <div className="flex items-center gap-2 mt-2">
@@ -159,12 +158,24 @@ const AIReactions = ({ message, toggleLousa }) => {
         </Button>
       )}
 
-      {lousaContentBlock && (
+      {htmlBlockForPreview && (
         <Button
           variant="outline"
           size="icon"
           $rounded
-          onClick={() => handlePreview(lousaContentBlock.code)}
+          onClick={() => handlePreview(htmlBlockForPreview.code)}
+          title="Desenhar na Lousa"
+          loading={loadingType === "preview" && loading}>
+          {loadingType !== "preview" && <Presentation size={16} />}
+        </Button>
+      )}
+
+      {canvasBlockForPreview && (
+        <Button
+          variant="danger"
+          size="icon"
+          $rounded
+          onClick={() => handlePreview(canvasBlockForPreview.code)}
           title="Desenhar na Lousa"
           loading={loadingType === "preview" && loading}>
           {loadingType !== "preview" && <Presentation size={16} />}
