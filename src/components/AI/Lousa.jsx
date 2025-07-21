@@ -7,6 +7,57 @@ import { useTheme } from "../../contexts/ThemeContext"
 
 import Button from "../Button"
 
+const reactBoilerplate = {
+  "/App.js": `export default function App() {
+  return <h1>Projeto React Vazio</h1>
+}`,
+  "/index.js": `import React, { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./styles.css";
+
+import App from "./App";
+
+const root = createRoot(document.getElementById("root"));
+root.render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);`,
+  "/styles.css": `body {
+  font-family: sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8f9fa;
+  margin: 0;
+  padding: 20px;
+}
+
+#root {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}`,
+  "/public/index.html": `<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Preview</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>`,
+  "/package.json": `{
+  "dependencies": {
+    "react": "18.x",
+    "react-dom": "18.x",
+    "react-scripts": "5.x"
+  }
+}`
+}
+
 const Lousa = ({ content, toggleLousa }) => {
   if (!content) return null
   const { theme } = useTheme()
