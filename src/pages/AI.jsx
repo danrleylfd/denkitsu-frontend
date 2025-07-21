@@ -211,6 +211,7 @@ const AI = () => {
             onSelectPrompt={setSelectedPrompt}
           />
           <Lousa content={lousaContent} toggleLousa={toggleLousa} />
+          <Lousa content={lousaContent} toggleLousa={toggleLousa} canvas={true} />
         </>
       )}
     </SideMenu>
