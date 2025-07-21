@@ -1,6 +1,6 @@
 import { memo } from "react"
 import { Sandpack } from "@codesandbox/sandpack-react"
-import "@codesandbox/sandpack-react/dist/index.css"
+// import "@codesandbox/sandpack-react/dist/style.css"
 import { X } from "lucide-react"
 
 import { useTheme } from "../../contexts/ThemeContext"
