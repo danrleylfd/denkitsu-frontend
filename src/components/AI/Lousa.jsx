@@ -48,7 +48,7 @@ const Lousa = ({ content, toggleLousa }) => {
             options={{
               showLineNumbers: true,
               showTabs: true,
-              editorHeight: "100%",
+              // editorHeight: "100%",
               layout: "responsive"
             }}
           />
