@@ -37,7 +37,7 @@ const Lousa = ({ content, toggleLousa }) => {
             template="react"
             theme={theme}
             files={files}
-            customSetup={customSetup}
+            // customSetup={customSetup}
             options={{
               showLineNumbers: true,
               showTabs: true,
