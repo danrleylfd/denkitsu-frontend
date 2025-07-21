@@ -172,7 +172,7 @@ const AIReactions = ({ message, toggleLousa }) => {
 
       {canvasBlockForPreview && (
         <Button
-          variant="danger"
+          variant="outline"
           size="icon"
           $rounded
           onClick={() => handlePreview(canvasBlockForPreview.code)}
