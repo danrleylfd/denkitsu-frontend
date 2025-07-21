@@ -31,7 +31,7 @@ const getFileExtension = (lang) => {
   return langMap[lang] || lang
 }
 
-const AIReactions = ({ message, toggleLousa }) => {
+const AIReactions = ({ message, toggleLousa, toggleCanvas }) => {
   const [loading, setLoading] = useState(false)
   const [loadingType, setLoadingType] = useState(null)
   const { setTasks } = useTasks()
@@ -117,10 +117,6 @@ const AIReactions = ({ message, toggleLousa }) => {
     }
   }
 
-  const handlePreview = (code) => {
-    toggleLousa(code)
-  }
-
   const hasContextualAction = !!htmlBlockForPreview || !!canvasBlockForPreview || !!kanbanableJsonString || !!allCodeToCopy
 
   return (
@@ -163,7 +159,7 @@ const AIReactions = ({ message, toggleLousa }) => {
           variant="outline"
           size="icon"
           $rounded
-          onClick={() => handlePreview(htmlBlockForPreview.code)}
+          onClick={() => toggleLousa(htmlBlockForPreview.code)}
           title="Desenhar na Lousa"
           loading={loadingType === "preview" && loading}>
           {loadingType !== "preview" && <Presentation size={16} />}
@@ -175,8 +171,8 @@ const AIReactions = ({ message, toggleLousa }) => {
           variant="outline"
           size="icon"
           $rounded
-          onClick={() => handlePreview(canvasBlockForPreview.code)}
-          title="Desenhar na Lousa"
+          onClick={() => toggleCanvas(canvasBlockForPreview.code)}
+          title="Desenhar no Canvas"
           loading={loadingType === "preview" && loading}>
           {loadingType !== "preview" && <Presentation size={16} />}
         </Button>

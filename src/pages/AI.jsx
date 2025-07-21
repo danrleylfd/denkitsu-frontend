@@ -190,7 +190,7 @@ const AI = () => {
         </div>
       ) : (
         <>
-          <AIHistory toggleLousa={toggleLousa} messages={messages} />
+          <AIHistory toggleLousa={toggleLousa} toggleCanvas={toggleCanvas} messages={messages} />
           <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
           <AIBar
             userPrompt={userPrompt}
