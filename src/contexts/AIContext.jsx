@@ -39,6 +39,7 @@ const AIProvider = ({ children }) => {
   const [httpTool, setHttpTool] = useState(storedHttpTool === null? false : storedHttpTool)
   const [userPrompt, setUserPrompt] = useState("")
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
+  const [speaking, setSpeaking] = useState(false)
 
   useEffect(() => (localStorage.setItem("@Denkitsu:aiProvider", aiProvider)), [aiProvider])
 
@@ -94,6 +95,19 @@ const AIProvider = ({ children }) => {
   const toggleGenshin = useCallback(() => setGenshinTool(g => !g), [])
   const toggleHttp = useCallback(() => setHttpTool(h => !h), [])
 
+  const speakResponse = useCallback((text) => {
+    if ("speechSynthesis" in window) {
+      const utterance = new SpeechSynthesisUtterance(text)
+      utterance.lang = "pt-BR"
+      utterance.onstart = () => setSpeaking(true)
+      utterance.onend = () => setSpeaking(false)
+      utterance.onerror = () => setSpeaking(false)
+      window.speechSynthesis.speak(utterance)
+    } else {
+      console.warn("Speech Synthesis API not supported in this browser.")
+    }
+  }, [])
+
   const values = useMemo(() => ({
     stream, setStream, toggleStream,
     web, setWeb, toggleWeb,
@@ -114,7 +128,8 @@ const AIProvider = ({ children }) => {
     groqModels, setGroqModels,
     customPrompt, setCustomPrompt,
     userPrompt, setUserPrompt,
-    messages, setMessages, clearHistory
+    messages, setMessages, clearHistory,
+    speaking, setSpeaking, speakResponse
   }), [
     stream, web, newsTool, weatherTool, wikiTool, browseTool, genshinTool, httpTool,
     imageUrls, aiProvider, groqKey, openRouterKey, groqModel, openRouterModel,

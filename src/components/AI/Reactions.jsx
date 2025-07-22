@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react"
-import { Code, Copy, Kanban, Newspaper, Presentation, Download } from "lucide-react"
+import { Code, Copy, Kanban, Newspaper, Presentation, Download, Mic } from "lucide-react"
 
+import { useAI } from "../../contexts/AIContext"
 import { useTasks } from "../../contexts/TasksContext"
 
 import { publishNews } from "../../services/news"
@@ -34,6 +35,7 @@ const getFileExtension = (lang) => {
 const AIReactions = ({ message, toggleLousa, toggleCanvas }) => {
   const [loading, setLoading] = useState(false)
   const [loadingType, setLoadingType] = useState(null)
+  const { speakResponse } = useAI()
   const { setTasks } = useTasks()
 
   const { allCodeToCopy, htmlBlockForPreview, kanbanableJsonString, codeBlocks } = useMemo(() => {
@@ -130,6 +132,7 @@ const AIReactions = ({ message, toggleLousa, toggleCanvas }) => {
           {loadingType !== "reasoning" && <Copy size={16} />}
         </Button>
       )}
+
       <Button
         variant="secondary"
         size="icon"
@@ -138,6 +141,16 @@ const AIReactions = ({ message, toggleLousa, toggleCanvas }) => {
         title="Copiar Resposta"
         loading={loadingType === "content" && loading}>
         {loadingType !== "content" && <Copy size={16} />}
+      </Button>
+
+      <Button
+        variant="secondary"
+        size="icon"
+        $rounded
+        onClick={() => speakResponse(message.content)}
+        title="Falar Resposta"
+        loading={loadingType === "speak" && loading}>
+        {loadingType !== "speak" && <Mic size={16} />}
       </Button>
 
       {allCodeToCopy && (
