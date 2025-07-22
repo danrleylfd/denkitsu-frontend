@@ -36,7 +36,7 @@ const AIReactions = ({ message, toggleLousa, toggleCanvas }) => {
   const [loadingType, setLoadingType] = useState(null)
   const { setTasks } = useTasks()
 
-  const { allCodeToCopy, htmlBlockForPreview, canvasBlockForPreview, kanbanableJsonString, codeBlocks } = useMemo(() => {
+  const { allCodeToCopy, htmlBlockForPreview, kanbanableJsonString, codeBlocks } = useMemo(() => {
     if (!message?.content) {
       return { allCodeToCopy: null, htmlBlockForPreview: null, kanbanableJsonString: null, codeBlocks: [] }
     }
@@ -46,7 +46,6 @@ const AIReactions = ({ message, toggleLousa, toggleCanvas }) => {
     }))
     const allCode = blocks.length > 0 ? blocks.map((block) => block.code).join("\n\n") : null
     const htmlBlock = blocks.find((block) => block.lang === "html") || null
-    const canvasBlock = blocks.find((block) => block.lang === "json") || null
     const firstCodeBlockContent = blocks.length > 0 ? blocks[0].code : null
     let kanbanJson = null
     if (firstCodeBlockContent && isValidJsonStringArray(firstCodeBlockContent)) {
@@ -57,7 +56,6 @@ const AIReactions = ({ message, toggleLousa, toggleCanvas }) => {
     return {
       allCodeToCopy: allCode,
       htmlBlockForPreview: htmlBlock,
-      canvasBlockForPreview: canvasBlock,
       kanbanableJsonString: kanbanJson,
       codeBlocks: blocks
     }
@@ -117,7 +115,7 @@ const AIReactions = ({ message, toggleLousa, toggleCanvas }) => {
     }
   }
 
-  const hasContextualAction = !!htmlBlockForPreview || !!canvasBlockForPreview || !!kanbanableJsonString || !!allCodeToCopy
+  const hasContextualAction = !!htmlBlockForPreview || !!kanbanableJsonString || !!allCodeToCopy
 
   return (
     <div className="flex items-center gap-2 mt-2">
@@ -161,18 +159,6 @@ const AIReactions = ({ message, toggleLousa, toggleCanvas }) => {
           $rounded
           onClick={() => toggleLousa(htmlBlockForPreview.code)}
           title="Desenhar na Lousa"
-          loading={loadingType === "preview" && loading}>
-          {loadingType !== "preview" && <Presentation size={16} />}
-        </Button>
-      )}
-
-      {canvasBlockForPreview && (
-        <Button
-          variant="outline"
-          size="icon"
-          $rounded
-          onClick={() => toggleCanvas(canvasBlockForPreview.code)}
-          title="Desenhar no Canvas"
           loading={loadingType === "preview" && loading}>
           {loadingType !== "preview" && <Presentation size={16} />}
         </Button>

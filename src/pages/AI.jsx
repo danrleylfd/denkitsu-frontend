@@ -29,7 +29,6 @@ const AI = () => {
   const { notifyWarning, notifyError } = useNotification()
   const [loading, setLoading] = useState(false)
   const [lousaContent, setLousaContent] = useState(null)
-  const [canvasContent, setCanvasContent] = useState(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [selectedPrompt, setSelectedPrompt] = useState("")
 
@@ -158,7 +157,6 @@ const AI = () => {
 }, [userPrompt, imageUrls, messages, model, aiKey, aiProvider, stream, web, newsTool, weatherTool, wikiTool, selectedPrompt, setMessages, setUserPrompt, setImageUrls, setLoading, notifyError])
 
   const toggleLousa = useCallback((content) => setLousaContent(content), [])
-  const toggleCanvas = useCallback((content) => setCanvasContent(content), [])
 
   const temMensagensDoUsuario = messages.some(msg => msg.role === "user")
 
@@ -190,7 +188,7 @@ const AI = () => {
         </div>
       ) : (
         <>
-          <AIHistory toggleLousa={toggleLousa} toggleCanvas={toggleCanvas} messages={messages} />
+          <AIHistory toggleLousa={toggleLousa} messages={messages} />
           <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
           <AIBar
             userPrompt={userPrompt}
@@ -212,11 +210,7 @@ const AI = () => {
             selectedPrompt={selectedPrompt}
             onSelectPrompt={setSelectedPrompt}
           />
-          <Lousa
-            content={lousaContent || canvasContent}
-            toggleLousa={lousaContent ? toggleLousa : toggleCanvas}
-            canvas={lousaContent ? false : true}
-          />
+          <Lousa content={lousaContent} toggleLousa={toggleLousa} />
         </>
       )}
     </SideMenu>

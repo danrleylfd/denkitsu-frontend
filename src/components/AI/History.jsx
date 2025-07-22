@@ -5,7 +5,7 @@ import AIMessage from "./Message"
 import { useAuth } from "../../contexts/AuthContext"
 import { useAI } from "../../contexts/AIContext"
 
-const AIHistory = ({ toggleLousa, toggleCanvas }) => {
+const AIHistory = ({ toggleLousa }) => {
   const { user } = useAuth()
   const { messages, loading } = useAI()
   // const initialMessage = { role: "assistant", content: "Olá! Como posso ajudar você hoje?\n Shift + Enter para quebrar a linha." }
@@ -23,7 +23,6 @@ const AIHistory = ({ toggleLousa, toggleCanvas }) => {
           msg={msg}
           user={user}
           toggleLousa={toggleLousa}
-          toggleCanvas={toggleCanvas}
           loading={loading && !msg.content}
         />
       ))}
