@@ -114,7 +114,7 @@ const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqM
             id="custom-prompt"
             value={customPrompt}
             onChange={(e) => setCustomPrompt(e.target.value)}
-            rows={10}
+            rows={9}
             maxLength={6144}
             placeholder="Escreva seu prompt de sistema"
             disabled={loading}
