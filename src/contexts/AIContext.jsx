@@ -137,7 +137,7 @@ const AIProvider = ({ children }) => {
     stream, speaking, listening, web, newsTool, weatherTool, wikiTool, browseTool, genshinTool, httpTool,
     imageUrls, aiProvider, groqKey, openRouterKey, groqModel, openRouterModel,
     freeModels, payModels, groqModels, customPrompt, userPrompt, messages,
-    toggleStream, toggleSpeaking, toggleListening, toggleWeb, toggleNews, toggleWeather, toggleWiki,
+    toggleStream, speakResponse, toggleListening, toggleWeb, toggleNews, toggleWeather, toggleWiki,
     toggleBrowse, toggleGenshin, toggleHttp, aiProviderToggle, clearHistory
   ])
   return (
