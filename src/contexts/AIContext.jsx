@@ -25,7 +25,7 @@ const AIProvider = ({ children }) => {
   const [freeModels, setFreeModels] = useState([])
   const [payModels, setPayModels] = useState([])
   const [groqModels, setGroqModels] = useState([])
-  const [customPrompt, setCustomPrompt] = useState(storedCustomPrompt || "Responda em português do Brasil (pt-BR).")
+  const [customPrompt, setCustomPrompt] = useState(storedCustomPrompt || `Responda em ${navigator.language}`)
   const [groqKey, setGroqKey] = useState(storedGroqKey || "")
   const [openRouterKey, setOpenRouterKey] = useState(storedOpenRouterKey || "")
   const [stream, setStream] = useState(storedStream === null ? false : storedStream)
