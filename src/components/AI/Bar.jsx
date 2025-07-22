@@ -41,45 +41,60 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
   const isImageSupported = selectedModel?.supports_images ?? false
   const isToolsSupported = selectedModel?.supports_tools ?? false
 
-  useEffect(() => {
-    if (!("webkitSpeechRecognition" in window)) return
-    if (!listening) return
-    const recognition = new window.webkitSpeechRecognition()
-    recognition.continuous = true
-    recognition.interimResults = true
-    recognition.lang = "pt-BR"
-    recognitionRef.current = recognition
-    recognition.onresult = (event) => {
-      let interimTranscript = ""
-      let finalTranscript = ""
-      for (let i = event.resultIndex; i < event.results.length; ++i) {
-        if (event.results[i].isFinal) {
-          finalTranscript += event.results[i][0].transcript
-        } else {
-          interimTranscript += event.results[i][0].transcript
-        }
-      }
-      setUserPrompt(prev => prev + finalTranscript)
-    }
-    recognition.onend = () => {
-      if (listening) {
-        recognition.start()
-      }
-    }
-    return () => {
-      recognition.stop()
-    }
-  }, [listening, setUserPrompt])
+  // Substitua os dois useEffects de reconhecimento por este
+useEffect(() => {
+  if (!("webkitSpeechRecognition" in window)) {
+    console.error("Reconhecimento de voz não é suportado neste navegador.")
+    return
+  }
 
-  useEffect(() => {
-    if (recognitionRef.current) {
-      if (listening) {
-        recognitionRef.current.start()
-      } else {
-        recognitionRef.current.stop()
+  // Se não estivermos ouvindo, não fazemos nada.
+  // A função de cleanup do render anterior já terá parado a escuta.
+  if (!listening) {
+    return
+  }
+
+  const recognition = new window.webkitSpeechRecognition()
+  recognitionRef.current = recognition
+  recognition.continuous = true
+  recognition.interimResults = true
+  recognition.lang = "pt-BR"
+
+  recognition.onresult = (event) => {
+    let finalTranscript = ""
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      if (event.results[i].isFinal) {
+        finalTranscript += event.results[i][0].transcript
       }
     }
-  }, [listening])
+    // Usamos uma função de callback para evitar dependência direta do prompt
+    if (finalTranscript) {
+      setUserPrompt(prev => prev.trim() ? `${prev.trim()} ${finalTranscript.trim()}` : finalTranscript.trim())
+    }
+  }
+
+  // Reinicia a escuta caso o navegador a pare por conta própria (ex: silêncio)
+  recognition.onend = () => {
+    // A verificação "listening" dentro do cleanup garante que não reinicie se o usuário desativou
+    if (listening && recognitionRef.current) {
+      recognitionRef.current.start()
+    }
+  }
+
+  recognition.onerror = (event) => {
+    console.error("Erro no reconhecimento de voz:", event.error)
+    toggleListening() // Opcional: desativa se ocorrer um erro
+  }
+
+  recognition.start()
+
+  // Função de cleanup: é chamada quando `listening` muda para `false` ou o componente desmonta
+  return () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop()
+    }
+  }
+}, [listening, setUserPrompt, toggleListening]) // Adicionei toggleListening à dependência
 
   useEffect(() => {
     const handleClickOutside = (event) => {
