@@ -42,10 +42,8 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
   const isToolsSupported = selectedModel?.supports_tools ?? false
 
   useEffect(() => {
-    if (!("webkitSpeechRecognition" in window)) {
-      // notifyError("Reconhecimento de voz não é suportado neste navegador.")
-      return
-    }
+    if (!("webkitSpeechRecognition" in window)) return
+    if (!listening) return
     const recognition = new window.webkitSpeechRecognition()
     recognition.continuous = true
     recognition.interimResults = true
