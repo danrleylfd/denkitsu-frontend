@@ -147,7 +147,7 @@ const AIReactions = ({ message, toggleLousa, toggleCanvas }) => {
         variant="secondary"
         size="icon"
         $rounded
-        onClick={() => speakResponse(message.content)}
+        onClick={() => speakResponse(message.content.replace(/[^a-zA-Z0-9À-ÿ,.\-\s;]/g, ""))}
         title="Ler em voz alta"
         loading={loadingType === "speak" && loading}>
         {loadingType !== "speak" && <Mic size={16} />}
