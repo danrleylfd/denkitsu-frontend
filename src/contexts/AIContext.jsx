@@ -40,6 +40,7 @@ const AIProvider = ({ children }) => {
   const [userPrompt, setUserPrompt] = useState("")
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
   const [speaking, setSpeaking] = useState(false)
+  const [listening, setListening] = useState(false)
 
   useEffect(() => (localStorage.setItem("@Denkitsu:aiProvider", aiProvider)), [aiProvider])
 
@@ -87,6 +88,7 @@ const AIProvider = ({ children }) => {
   const aiProviderToggle = useCallback(() => setAIProvider((prev) => (prev === "groq" ? "openrouter" : "groq")), [])
   const clearHistory = useCallback(() => setMessages([{ role: "system", content: customPrompt }]), [customPrompt])
   const toggleStream = useCallback(() => setStream(s => !s), [])
+  const toggleListening = useCallback(() => setListening(l => !l), [])
   const toggleWeb = useCallback(() => setWeb(w => !w), [])
   const toggleNews = useCallback(() => setNewsTool(n => !n), [])
   const toggleWeather = useCallback(() => setWeatherTool(w => !w), [])
@@ -110,6 +112,8 @@ const AIProvider = ({ children }) => {
 
   const values = useMemo(() => ({
     stream, setStream, toggleStream,
+    speaking, setSpeaking, speakResponse,
+    listening, setListening, toggleListening,
     web, setWeb, toggleWeb,
     newsTool, setNewsTool, toggleNews,
     weatherTool, setWeatherTool, toggleWeather,
@@ -129,12 +133,11 @@ const AIProvider = ({ children }) => {
     customPrompt, setCustomPrompt,
     userPrompt, setUserPrompt,
     messages, setMessages, clearHistory,
-    speaking, setSpeaking, speakResponse
   }), [
-    stream, web, newsTool, weatherTool, wikiTool, browseTool, genshinTool, httpTool,
+    stream, speaking, listening, web, newsTool, weatherTool, wikiTool, browseTool, genshinTool, httpTool,
     imageUrls, aiProvider, groqKey, openRouterKey, groqModel, openRouterModel,
     freeModels, payModels, groqModels, customPrompt, userPrompt, messages,
-    toggleStream, toggleWeb, toggleNews, toggleWeather, toggleWiki,
+    toggleStream, toggleSpeaking, toggleListening, toggleWeb, toggleNews, toggleWeather, toggleWiki,
     toggleBrowse, toggleGenshin, toggleHttp, aiProviderToggle, clearHistory
   ])
   return (

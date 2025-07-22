@@ -4,7 +4,7 @@ import {
   LogIn, UserPlus,
   Settings, SendHorizontal, ImagePlus, ImageOff, Globe, GlobeLock, Newspaper, Shredder, Cloud, CloudOff,
   AudioLines, Brain, MessageCirclePlus, BookOpen, BookAlert, Link2, Link2Off, Wrench, Gamepad, Gamepad2,
-  Lock, Server, ServerOff,
+  Lock, Server, ServerOff, Mic, MicOff
 } from "lucide-react"
 
 import { useAuth } from "../../contexts/AuthContext"
@@ -16,7 +16,19 @@ import Button from "../Button"
 
 const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessage, clearHistory, toggleSettings, loading }) => {
   const { signed } = useAuth()
-  const { aiProvider, aiProviderToggle, aiKey, model, freeModels, payModels, groqModels, stream, toggleStream, web, toggleWeb, newsTool, toggleNews, weatherTool, toggleWeather, wikiTool, toggleWiki, browseTool, toggleBrowse, genshinTool, toggleGenshin, httpTool, toggleHttp } = useAI()
+  const {
+    aiProvider, aiProviderToggle, aiKey,
+    model, freeModels, payModels, groqModels,
+    stream, toggleStream,
+    listening, toggleListening,
+    web, toggleWeb,
+    newsTool, toggleNews,
+    weatherTool, toggleWeather,
+    wikiTool, toggleWiki,
+    browseTool, toggleBrowse,
+    genshinTool, toggleGenshin,
+    httpTool, toggleHttp,
+  } = useAI()
 
   const [isToolsOpen, setIsToolsOpen] = useState(false)
 
@@ -134,6 +146,9 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
       />
       <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={newsTool || weatherTool || wikiTool || browseTool || genshinTool || loading}>
         <AudioLines size={16} />
+      </Button>
+      <Button variant={listening ? "danger" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>
+        {listening ? <MicOff size={16} /> : <Mic size={16} />}
       </Button>
       <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
         <MessageCirclePlus size={16} />
