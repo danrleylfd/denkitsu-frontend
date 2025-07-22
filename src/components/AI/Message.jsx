@@ -5,7 +5,7 @@ import Markdown from "../Markdown"
 import Button from "../Button"
 import PurpleLink from "../Embeds/PurpleLink"
 
-const AIMessage = ({ msg, user, toggleLousa, loading }) => {
+const AIMessage = ({ msg, user, toggleLousa, loading, onRegenerate, isLastMessage }) => {
   const isSystem = msg.role === "system"
   if (isSystem) return null
   const isAssistant = msg.role === "assistant"
@@ -37,7 +37,9 @@ const AIMessage = ({ msg, user, toggleLousa, loading }) => {
             {new Date(msg.timestamp).toLocaleString("pt-BR")}
           </small>
         )}
-        {!loading && isAssistant && <AIReactions message={msg} toggleLousa={toggleLousa} />}
+        {!loading && isAssistant && (
+          <AIReactions message={msg} toggleLousa={toggleLousa} onRegenerate={onRegenerate} isLastMessage={isLastMessage} />
+        )}
       </div>
     </div>
   )

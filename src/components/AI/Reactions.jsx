@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react"
-import { Code, Copy, Kanban, Newspaper, Presentation, Download, Mic } from "lucide-react"
+import { Code, Copy, Kanban, Newspaper, Presentation, Download, Mic, RefreshCw } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 import { useTasks } from "../../contexts/TasksContext"
@@ -32,7 +32,7 @@ const getFileExtension = (lang) => {
   return langMap[lang] || lang
 }
 
-const AIReactions = ({ message, toggleLousa, toggleCanvas }) => {
+const AIReactions = ({ message, toggleLousa, onRegenerate, isLastMessage }) => {
   const [loading, setLoading] = useState(false)
   const [loadingType, setLoadingType] = useState(null)
   const { speakResponse } = useAI()
@@ -152,6 +152,17 @@ const AIReactions = ({ message, toggleLousa, toggleCanvas }) => {
         loading={loadingType === "speak" && loading}>
         {loadingType !== "speak" && <Mic size={16} />}
       </Button>
+
+      {isLastMessage && (
+        <Button
+          variant="secondary"
+          size="icon"
+          $rounded
+          onClick={onRegenerate}
+          title="Regenerar resposta">
+          <RefreshCw size={16} />
+        </Button>
+      )}
 
       {allCodeToCopy && (
         <Button
