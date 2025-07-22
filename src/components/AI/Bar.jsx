@@ -50,7 +50,6 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
     recognition.continuous = true
     recognition.interimResults = true
     recognition.lang = "pt-BR"
-
     recognition.onresult = (event) => {
       let finalTranscript = ""
       for (let i = event.resultIndex; i < event.results.length; ++i) {
@@ -62,13 +61,10 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
         setUserPrompt((prev) => `${prev}${finalTranscript}`)
       }
     }
-
     recognition.onerror = (event) => {
       console.error(`Erro no reconhecimento de voz: ${event.error}`)
     }
-
     recognitionRef.current = recognition
-
     return () => {
       if (recognitionRef.current) {
         recognitionRef.current.onend = null
