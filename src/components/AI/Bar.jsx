@@ -20,7 +20,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
     aiProvider, aiProviderToggle, aiKey,
     model, freeModels, payModels, groqModels,
     stream, toggleStream,
-    listening, toggleListening,
+    listening, setListening, toggleListening,
     web, toggleWeb,
     newsTool, toggleNews,
     weatherTool, toggleWeather,
@@ -203,7 +203,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
       <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
         <MessageCirclePlus size={16} />
       </Button>
-      <Button size="icon" $rounded title="Enviar" onClick={onSendMessage} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
+      <Button size="icon" $rounded title="Enviar" onClick={() => { setListening(false); onSendMessage()}} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
         {!loading && <SendHorizontal size={16} />}
       </Button>
     </Paper>
