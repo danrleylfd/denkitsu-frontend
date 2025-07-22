@@ -34,11 +34,54 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
 
   const toolsDropdownRef = useRef(null)
   const toolsTriggerRef = useRef(null)
+  const recognitionRef = useRef(null)
 
   const allModels = [...freeModels, ...payModels, ...groqModels]
   const selectedModel = allModels.find(m => m.id === model)
   const isImageSupported = selectedModel?.supports_images ?? false
   const isToolsSupported = selectedModel?.supports_tools ?? false
+
+  useEffect(() => {
+    if (!("webkitSpeechRecognition" in window)) {
+      // notifyError("Reconhecimento de voz não é suportado neste navegador.")
+      return
+    }
+    const recognition = new window.webkitSpeechRecognition()
+    recognition.continuous = true
+    recognition.interimResults = true
+    recognition.lang = "pt-BR"
+    recognitionRef.current = recognition
+    recognition.onresult = (event) => {
+      let interimTranscript = ""
+      let finalTranscript = ""
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          finalTranscript += event.results[i][0].transcript
+        } else {
+          interimTranscript += event.results[i][0].transcript
+        }
+      }
+      setUserPrompt(prev => prev + finalTranscript)
+    }
+    recognition.onend = () => {
+      if (listening) {
+        recognition.start()
+      }
+    }
+    return () => {
+      recognition.stop()
+    }
+  }, [listening, setUserPrompt])
+
+  useEffect(() => {
+    if (recognitionRef.current) {
+      if (listening) {
+        recognitionRef.current.start()
+      } else {
+        recognitionRef.current.stop()
+      }
+    }
+  }, [listening])
 
   useEffect(() => {
     const handleClickOutside = (event) => {
