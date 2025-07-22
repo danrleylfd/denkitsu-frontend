@@ -148,7 +148,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
         <AudioLines size={16} />
       </Button>
       <Button variant={listening ? "danger" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>
-        {listening ? <MicOff size={16} /> : <Mic size={16} />}
+        {listening ? <Mic size={16} /> : <MicOff size={16} />}
       </Button>
       <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
         <MessageCirclePlus size={16} />
