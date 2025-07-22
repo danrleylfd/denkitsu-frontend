@@ -148,7 +148,7 @@ const AIReactions = ({ message, toggleLousa, toggleCanvas }) => {
         size="icon"
         $rounded
         onClick={() => speakResponse(message.content)}
-        title="Falar Resposta"
+        title="Ler em voz alta"
         loading={loadingType === "speak" && loading}>
         {loadingType !== "speak" && <Mic size={16} />}
       </Button>
