@@ -19,7 +19,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
   const { signed } = useAuth()
   const {
     aiProvider, aiProviderToggle, aiKey,
-    stream, listening, setListening, toggleListening
+    stream, toggleStream, listening, setListening, toggleListening
   } = useAI()
 
   const [isToolsOpen, setIsToolsOpen] = useState(false)
