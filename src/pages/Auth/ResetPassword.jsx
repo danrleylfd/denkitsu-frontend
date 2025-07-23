@@ -12,7 +12,7 @@ import Input from "../../components/Input"
 import Button from "../../components/Button"
 
 const ContentView = ({ children }) => (
-  <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-screen">
+  <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-dvh">
     {children}
   </main>
 )
