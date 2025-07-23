@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from "react"
 import { Link } from "react-router-dom"
 import {
   LogIn, UserPlus,
-  Settings, SendHorizontal, ImagePlus, ImageOff, Globe, GlobeLock, Newspaper, Shredder, Cloud, CloudOff,
-  AudioLines, Brain, MessageCirclePlus, BookOpen, BookAlert, Link2, Link2Off, Wrench, Gamepad, Gamepad2,
-  Lock, Server, ServerOff, Mic, MicOff
+  Settings, SendHorizontal, ImagePlus, ImageOff,
+  AudioLines, Brain, MessageCirclePlus, Wrench,
+  Lock, Mic, MicOff
 } from "lucide-react"
 
 import { useAuth } from "../../contexts/AuthContext"
@@ -19,28 +19,15 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
   const { signed } = useAuth()
   const {
     aiProvider, aiProviderToggle, aiKey,
-    model, freeModels, payModels, groqModels,
-    stream, toggleStream,
-    listening, setListening, toggleListening,
-    web, toggleWeb,
-    newsTool, toggleNews,
-    weatherTool, toggleWeather,
-    wikiTool, toggleWiki,
-    browseTool, toggleBrowse,
-    genshinTool, toggleGenshin,
-    httpTool, toggleHttp,
+    stream, listening, setListening, toggleListening
   } = useAI()
 
-  // Controles separados para os menus de ferramentas de Desktop e Mobile
-  const [isDesktopToolsOpen, setIsDesktopToolsOpen] = useState(false)
-  const desktopToolsDropdownRef = useRef(null)
-  const desktopToolsTriggerRef = useRef(null)
-
-  const [isMobileToolsOpen, setIsMobileToolsOpen] = useState(false)
-  const mobileToolsDropdownRef = useRef(null)
-  const mobileToolsTriggerRef = useRef(null)
-
+  const [isToolsOpen, setIsToolsOpen] = useState(false)
   const recognitionRef = useRef(null)
+  const desktopToolsTriggerRef = useRef(null)
+  const mobileToolsTriggerRef = useRef(null)
+  const desktopToolsDropdownRef = useRef(null)
+  const mobileToolsDropdownRef = useRef(null)
 
   const allModels = [...freeModels, ...payModels, ...groqModels]
   const selectedModel = allModels.find(m => m.id === model)
