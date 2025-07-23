@@ -13,7 +13,7 @@ import AISettings from "../components/AI/Settings"
 import AIHistory from "../components/AI/History"
 import Lousa from "../components/AI/Lousa"
 
-const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-screen mx-auto">{children}</main>
+const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-dvh mx-auto">{children}</main>
 
 const AI = () => {
   const {

@@ -6,6 +6,12 @@ export default {
   darkMode: "class",
   theme: {
     extend: {
+      height: {
+        "dvh": "100dvh",
+      },
+      minHeight: {
+        "dvh": "100dvh",
+      },
       animation: {
         "spin-fast": "spin .3s linear infinite",
         "marquee": "marquee linear infinite"

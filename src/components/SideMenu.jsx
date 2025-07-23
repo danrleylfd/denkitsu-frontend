@@ -114,7 +114,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
       <aside
         className={`h-screen transition-all duration-300 ease-in-out z-40 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] border-r ${
           isOpen ? "w-48" : "w-14"
-        } bg-lightBg-secondary dark:bg-darkBg-secondary border-border ${fixed && "fixed"}`}>
+        } bg-lightBg-secondary dark:bg-darkBg-secondary border-border h-dvh ${fixed && "fixed"}`}>
         <nav className="flex flex-col gap-1">
           <div className="w-0 h-0 p-0 m-0" />
           <button onClick={toggleMenu} className={menuItemClass} title={!isOpen ? "Menu" : ""}>
