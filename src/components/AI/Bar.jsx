@@ -102,9 +102,10 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
         setIsMoreMenuOpen(false)
       }
     }
-    document.addEventListener("mousedown", handleClickOutside)
+    // CORREÇÃO: Alterado de "mousedown" para "click" para evitar o bug no mobile.
+    document.addEventListener("click", handleClickOutside)
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
+      document.removeEventListener("click", handleClickOutside)
     }
   }, [])
 
@@ -112,13 +113,6 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
       onSendMessage()
-    }
-  }
- 
-  const createToolHandler = (toggleFunction) => {
-    return () => {
-      toggleFunction()
-      setIsToolsOpen(false)
     }
   }
 
@@ -139,165 +133,165 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
             <Link to="/signin">
               <Button variant="primary" size="icon" $rounded>
                 <LogIn size={16} />
-            	</Button>
-          	</Link>
-        	</div>
-      	</div>
-    	</Paper>
-  	)
+             </Button>
+           </Link>
+         </div>
+       </div>
+     </Paper>
+   )
   }
 
   return (
-  	<Paper className="relative bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 max-w-[95%] mb-2 mx-auto">
+   <Paper className="relative bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 max-w-[95%] mb-2 mx-auto">
 
-    	{/* --- MOBILE LAYOUT --- */}
-    	<div className="w-full flex flex-col gap-2 sm:hidden">
-    	{/* Linha de cima para os botões */}
-    	<div className="flex items-center justify-center flex-wrap gap-2">
-    		<Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"} disabled={loading}>
-    		<Brain size={16} />
-    		</Button>
-    		<Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettings} disabled={loading}>
-    		<Settings size={16} />
-    		</Button>
-    		<Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={isImageSupported === false || aiProvider === "groq" || loading}>
-    		{isImageSupported && aiProvider === "openrouter" ? <ImagePlus size={16} /> : <ImageOff size={16} />}
-    		</Button>
-    		{aiKey.length > 0 && (
-    		<div className="relative">
-    			<Button ref={toolsTriggerRef} variant="secondary" size="icon" title="Ferramentas" $rounded onClick={() => setIsToolsOpen(!isToolsOpen)} disabled={loading}>
-    			<Wrench size={16} />
-    			</Button>
-    			{isToolsOpen && (
-    			<div ref={toolsDropdownRef} className="absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-5 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4">
-    				<Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Profunda" onClick={createToolHandler(toggleWeb)} disabled={!isToolsSupported || aiProvider === "groq" || loading}>
-    				{isToolsSupported && aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
-    				</Button>
-    				<Button variant={isToolsSupported && !stream && browseTool ? "outline" : "secondary"} size="icon" $rounded title="Acessar Site Específico" onClick={createToolHandler(toggleBrowse)} disabled={!isToolsSupported || stream || loading}>
-    				{isToolsSupported && !stream ? <Link2 size={16} /> : <Link2Off size={16} />}
-    				</Button>
-    				<Button variant={isToolsSupported && !stream && httpTool ? "outline" : "secondary"} size="icon" $rounded title="Requisição HTTP" onClick={createToolHandler(toggleHttp)} disabled={!isToolsSupported || stream || loading}>
-    				{isToolsSupported && !stream ? <Server size={16} /> : <ServerOff size={16} />}
-    				</Button>
-    				<Button variant={isToolsSupported && !stream && wikiTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Wikipédia" onClick={createToolHandler(toggleWiki)} disabled={!isToolsSupported || stream || loading}>
-    				{isToolsSupported && !stream ? <BookOpen size={16} /> : <BookAlert size={16} />}
-    				</Button>
-    				<Button variant={isToolsSupported && !stream && newsTool ? "outline" : "secondary"} size="icon" $rounded title="Buscar Notícias" onClick={createToolHandler(toggleNews)} disabled={!isToolsSupported || stream || loading}>
-    				{isToolsSupported && !stream ? <Newspaper size={16} /> : <Shredder size={16} />}
-    				</Button>
-    				<Button variant={isToolsSupported && !stream && weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Prever Clima" onClick={createToolHandler(toggleWeather)} disabled={!isToolsSupported || stream || loading}>
-    				{isToolsSupported && !stream ? <Cloud size={16} /> : <CloudOff size={16} />}
-    				</Button>
-    				<Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Genshin Impact (Beta)" onClick={createToolHandler(toggleGenshin)} disabled={!isToolsSupported || stream || loading}>
-    				{isToolsSupported && !stream ? <Gamepad2 size={16} /> : <Gamepad size={16} />}
-    				</Button>
-    			</div>
-    			)}
-    		</div>
-    		)}
-    		<Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={newsTool || weatherTool || wikiTool || browseTool || genshinTool || httpTool || loading}>
-    		<AudioLines size={16} />
-    		</Button>
-    		<Button variant={listening ? "danger" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>
-    		{listening ? <Mic size={16} /> : <MicOff size={16} />}
-    		</Button>
-    		<Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
-    		<MessageCirclePlus size={16} />
-    		</Button>
-    		<div className="relative">
-    		<Button ref={moreMenuTriggerRef} variant="secondary" size="icon" $rounded title="Mais Opções" onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)} disabled={loading}>
-    			<MoreVertical size={16} />
-    		</Button>
-    		{isMoreMenuOpen && (
-    			<div ref={moreMenuDropdownRef} className="absolute z-20 left-0 bottom-full mb-4 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark flex flex-col gap-2">
-    			{/* O conteúdo foi movido, mas o menu é mantido conforme solicitado. */}
-    			</div>
-    		)}
-    		</div>
-    	</div>
-    	{/* Linha de baixo para o input e botão de enviar */}
-    	<div className="flex items-center gap-2 w-full">
-    		<AIInput
-    		id="prompt-input"
-    		value={userPrompt}
-    		onChange={(e) => setUserPrompt(e.target.value)}
-    		onKeyDown={handleKeyDown}
-    		disabled={loading}
-    		className="resize-y"
-    		/>
-    		<Button size="icon" $rounded title="Enviar" onClick={() => { setListening(false); onSendMessage() }} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
-    		{!loading && <SendHorizontal size={16} />}
-    		</Button>
-    	</div>
-    	</div>
+     {/* --- MOBILE LAYOUT --- */}
+     <div className="w-full flex flex-col gap-2 sm:hidden">
+     {/* Linha de cima para os botões */}
+     <div className="flex items-center justify-center flex-wrap gap-2">
+      <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"} disabled={loading}>
+      <Brain size={16} />
+      </Button>
+      <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettings} disabled={loading}>
+      <Settings size={16} />
+      </Button>
+      <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={isImageSupported === false || aiProvider === "groq" || loading}>
+      {isImageSupported && aiProvider === "openrouter" ? <ImagePlus size={16} /> : <ImageOff size={16} />}
+      </Button>
+      {aiKey.length > 0 && (
+      <div className="relative">
+       <Button ref={toolsTriggerRef} variant="secondary" size="icon" title="Ferramentas" $rounded onClick={() => setIsToolsOpen(!isToolsOpen)} disabled={loading}>
+       <Wrench size={16} />
+       </Button>
+       {isToolsOpen && (
+       <div ref={toolsDropdownRef} className="absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-5 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4">
+        <Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Profunda" onClick={toggleWeb} disabled={!isToolsSupported || aiProvider === "groq" || loading}>
+        {isToolsSupported && aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
+        </Button>
+        <Button variant={isToolsSupported && !stream && browseTool ? "outline" : "secondary"} size="icon" $rounded title="Acessar Site Específico" onClick={toggleBrowse} disabled={!isToolsSupported || stream || loading}>
+        {isToolsSupported && !stream ? <Link2 size={16} /> : <Link2Off size={16} />}
+        </Button>
+        <Button variant={isToolsSupported && !stream && httpTool ? "outline" : "secondary"} size="icon" $rounded title="Requisição HTTP" onClick={toggleHttp} disabled={!isToolsSupported || stream || loading}>
+        {isToolsSupported && !stream ? <Server size={16} /> : <ServerOff size={16} />}
+        </Button>
+        <Button variant={isToolsSupported && !stream && wikiTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Wikipédia" onClick={toggleWiki} disabled={!isToolsSupported || stream || loading}>
+        {isToolsSupported && !stream ? <BookOpen size={16} /> : <BookAlert size={16} />}
+        </Button>
+        <Button variant={isToolsSupported && !stream && newsTool ? "outline" : "secondary"} size="icon" $rounded title="Buscar Notícias" onClick={toggleNews} disabled={!isToolsSupported || stream || loading}>
+        {isToolsSupported && !stream ? <Newspaper size={16} /> : <Shredder size={16} />}
+        </Button>
+        <Button variant={isToolsSupported && !stream && weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Prever Clima" onClick={toggleWeather} disabled={!isToolsSupported || stream || loading}>
+        {isToolsSupported && !stream ? <Cloud size={16} /> : <CloudOff size={16} />}
+        </Button>
+        <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>
+        {isToolsSupported && !stream ? <Gamepad2 size={16} /> : <Gamepad size={16} />}
+        </Button>
+       </div>
+       )}
+      </div>
+      )}
+      <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={newsTool || weatherTool || wikiTool || browseTool || genshinTool || httpTool || loading}>
+      <AudioLines size={16} />
+      </Button>
+      <Button variant={listening ? "danger" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>
+      {listening ? <Mic size={16} /> : <MicOff size={16} />}
+      </Button>
+      <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
+      <MessageCirclePlus size={16} />
+      </Button>
+      <div className="relative">
+      <Button ref={moreMenuTriggerRef} variant="secondary" size="icon" $rounded title="Mais Opções" onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)} disabled={loading}>
+       <MoreVertical size={16} />
+      </Button>
+      {isMoreMenuOpen && (
+       <div ref={moreMenuDropdownRef} className="absolute z-20 left-0 bottom-full mb-4 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark flex flex-col gap-2">
+       {/* O conteúdo foi movido, mas o menu é mantido conforme solicitado. */}
+       </div>
+      )}
+      </div>
+     </div>
+     {/* Linha de baixo para o input e botão de enviar */}
+     <div className="flex items-center gap-2 w-full">
+      <AIInput
+      id="prompt-input"
+      value={userPrompt}
+      onChange={(e) => setUserPrompt(e.target.value)}
+      onKeyDown={handleKeyDown}
+      disabled={loading}
+      className="resize-y"
+      />
+      <Button size="icon" $rounded title="Enviar" onClick={() => { setListening(false); onSendMessage() }} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
+      {!loading && <SendHorizontal size={16} />}
+      </Button>
+     </div>
+     </div>
 
-    	{/* --- DESKTOP LAYOUT --- */}
-    	<div className="w-full hidden sm:flex items-center gap-2">
-    	<Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"} disabled={loading}>
-    		<Brain size={16} />
-    	</Button>
-    	<Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettings} disabled={loading}>
-    		<Settings size={16} />
-    	</Button>
-    	<Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={isImageSupported === false || aiProvider === "groq" || loading}>
-    		{isImageSupported && aiProvider === "openrouter" ? <ImagePlus size={16} /> : <ImageOff size={16} />}
-    	</Button>
-    	{aiKey.length > 0 && (
-    		<div className="relative">
-    		<Button ref={toolsTriggerRef} variant="secondary" size="icon" title="Ferramentas" $rounded onClick={() => setIsToolsOpen(!isToolsOpen)} disabled={loading}>
-    			<Wrench size={16} />
-    		</Button>
-    		{isToolsOpen && (
-    			<div ref={toolsDropdownRef} className="absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-5 sm:grid-cols-7 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4">
-    			<Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Profunda" onClick={createToolHandler(toggleWeb)} disabled={!isToolsSupported || aiProvider === "groq" || loading}>
-    				{isToolsSupported && aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
-    			</Button>
-    			<Button variant={isToolsSupported && !stream && browseTool ? "outline" : "secondary"} size="icon" $rounded title="Acessar Site Específico" onClick={createToolHandler(toggleBrowse)} disabled={!isToolsSupported || stream || loading}>
-    				{isToolsSupported && !stream ? <Link2 size={16} /> : <Link2Off size={16} />}
-    			</Button>
-    			<Button variant={isToolsSupported && !stream && httpTool ? "outline" : "secondary"} size="icon" $rounded title="Requisição HTTP" onClick={createToolHandler(toggleHttp)} disabled={!isToolsSupported || stream || loading}>
-    				{isToolsSupported && !stream ? <Server size={16} /> : <ServerOff size={16} />}
-    			</Button>
-    			<Button variant={isToolsSupported && !stream && wikiTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Wikipédia" onClick={createToolHandler(toggleWiki)} disabled={!isToolsSupported || stream || loading}>
-    				{isToolsSupported && !stream ? <BookOpen size={16} /> : <BookAlert size={16} />}
-    			</Button>
-    			<Button variant={isToolsSupported && !stream && newsTool ? "outline" : "secondary"} size="icon" $rounded title="Buscar Notícias" onClick={createToolHandler(toggleNews)} disabled={!isToolsSupported || stream || loading}>
-    				{isToolsSupported && !stream ? <Newspaper size={16} /> : <Shredder size={16} />}
-    			</Button>
-    			<Button variant={isToolsSupported && !stream && weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Prever Clima" onClick={createToolHandler(toggleWeather)} disabled={!isToolsSupported || stream || loading}>
-    				{isToolsSupported && !stream ? <Cloud size={16} /> : <CloudOff size={16} />}
-    			</Button>
-    			<Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Genshin Impact (Beta)" onClick={createToolHandler(toggleGenshin)} disabled={!isToolsSupported || stream || loading}>
-    				{isToolsSupported && !stream ? <Gamepad2 size={16} /> : <Gamepad size={16} />}
-    			</Button>
-    			</div>
-    		)}
-    		</div>
-    	)}
-    	<AIInput
-    		id="prompt-input"
-    		value={userPrompt}
-    		onChange={(e) => setUserPrompt(e.target.value)}
-    		onKeyDown={handleKeyDown}
-    		disabled={loading}
-    		className="resize-y"
-    	/>
-    	<div className="flex items-center gap-2">
-    		<Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={newsTool || weatherTool || wikiTool || browseTool || genshinTool || httpTool || loading}>
-    		<AudioLines size={16} />
-    		</Button>
-    		<Button variant={listening ? "danger" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>
-    		{listening ? <Mic size={16} /> : <MicOff size={16} />}
-    		</Button>
-    		<Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
-    		<MessageCirclePlus size={16} />
-    		</Button>
-    	</div>
-    	<Button size="icon" $rounded title="Enviar" onClick={() => { setListening(false); onSendMessage() }} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
-    		{!loading && <SendHorizontal size={16} />}
-    	</Button>
-    	</div>
-  	</Paper>
+     {/* --- DESKTOP LAYOUT --- */}
+     <div className="w-full hidden sm:flex items-center gap-2">
+     <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"} disabled={loading}>
+      <Brain size={16} />
+     </Button>
+     <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettings} disabled={loading}>
+      <Settings size={16} />
+     </Button>
+     <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={isImageSupported === false || aiProvider === "groq" || loading}>
+      {isImageSupported && aiProvider === "openrouter" ? <ImagePlus size={16} /> : <ImageOff size={16} />}
+     </Button>
+     {aiKey.length > 0 && (
+      <div className="relative">
+      <Button ref={toolsTriggerRef} variant="secondary" size="icon" title="Ferramentas" $rounded onClick={() => setIsToolsOpen(!isToolsOpen)} disabled={loading}>
+       <Wrench size={16} />
+      </Button>
+      {isToolsOpen && (
+       <div ref={toolsDropdownRef} className="absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-5 sm:grid-cols-7 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4">
+       <Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Profunda" onClick={toggleWeb} disabled={!isToolsSupported || aiProvider === "groq" || loading}>
+        {isToolsSupported && aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
+       </Button>
+       <Button variant={isToolsSupported && !stream && browseTool ? "outline" : "secondary"} size="icon" $rounded title="Acessar Site Específico" onClick={toggleBrowse} disabled={!isToolsSupported || stream || loading}>
+        {isToolsSupported && !stream ? <Link2 size={16} /> : <Link2Off size={16} />}
+       </Button>
+       <Button variant={isToolsSupported && !stream && httpTool ? "outline" : "secondary"} size="icon" $rounded title="Requisição HTTP" onClick={toggleHttp} disabled={!isToolsSupported || stream || loading}>
+        {isToolsSupported && !stream ? <Server size={16} /> : <ServerOff size={16} />}
+       </Button>
+       <Button variant={isToolsSupported && !stream && wikiTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Wikipédia" onClick={toggleWiki} disabled={!isToolsSupported || stream || loading}>
+        {isToolsSupported && !stream ? <BookOpen size={16} /> : <BookAlert size={16} />}
+       </Button>
+       <Button variant={isToolsSupported && !stream && newsTool ? "outline" : "secondary"} size="icon" $rounded title="Buscar Notícias" onClick={toggleNews} disabled={!isToolsSupported || stream || loading}>
+        {isToolsSupported && !stream ? <Newspaper size={16} /> : <Shredder size={16} />}
+       </Button>
+       <Button variant={isToolsSupported && !stream && weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Prever Clima" onClick={toggleWeather} disabled={!isToolsSupported || stream || loading}>
+        {isToolsSupported && !stream ? <Cloud size={16} /> : <CloudOff size={16} />}
+       </Button>
+       <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>
+        {isToolsSupported && !stream ? <Gamepad2 size={16} /> : <Gamepad size={16} />}
+       </Button>
+       </div>
+      )}
+      </div>
+     )}
+     <AIInput
+      id="prompt-input"
+      value={userPrompt}
+      onChange={(e) => setUserPrompt(e.target.value)}
+      onKeyDown={handleKeyDown}
+      disabled={loading}
+      className="resize-y"
+     />
+     <div className="flex items-center gap-2">
+      <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={newsTool || weatherTool || wikiTool || browseTool || genshinTool || httpTool || loading}>
+      <AudioLines size={16} />
+      </Button>
+      <Button variant={listening ? "danger" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>
+      {listening ? <Mic size={16} /> : <MicOff size={16} />}
+      </Button>
+      <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
+      <MessageCirclePlus size={16} />
+      </Button>
+     </div>
+     <Button size="icon" $rounded title="Enviar" onClick={() => { setListening(false); onSendMessage() }} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
+      {!loading && <SendHorizontal size={16} />}
+     </Button>
+     </div>
+   </Paper>
   )
 }
 
