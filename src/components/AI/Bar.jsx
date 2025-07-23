@@ -4,7 +4,7 @@ import {
   LogIn, UserPlus,
   Settings, SendHorizontal, ImagePlus, ImageOff, Globe, GlobeLock, Newspaper, Shredder, Cloud, CloudOff,
   AudioLines, Brain, MessageCirclePlus, BookOpen, BookAlert, Link2, Link2Off, Wrench, Gamepad, Gamepad2,
-  Lock, Server, ServerOff, Mic, MicOff
+  Lock, Server, ServerOff, Mic, MicOff, MoreVertical
 } from "lucide-react"
 
 import { useAuth } from "../../contexts/AuthContext"
@@ -31,9 +31,12 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
   } = useAI()
 
   const [isToolsOpen, setIsToolsOpen] = useState(false)
+  const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false)
 
   const toolsDropdownRef = useRef(null)
   const toolsTriggerRef = useRef(null)
+  const moreMenuDropdownRef = useRef(null)
+  const moreMenuTriggerRef = useRef(null)
   const recognitionRef = useRef(null)
 
   const allModels = [...freeModels, ...payModels, ...groqModels]
@@ -92,11 +95,11 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        toolsDropdownRef.current && !toolsDropdownRef.current.contains(event.target) &&
-        toolsTriggerRef.current && !toolsTriggerRef.current.contains(event.target)
-      ) {
+      if (toolsDropdownRef.current && !toolsDropdownRef.current.contains(event.target) && toolsTriggerRef.current && !toolsTriggerRef.current.contains(event.target)) {
         setIsToolsOpen(false)
+      }
+      if (moreMenuDropdownRef.current && !moreMenuDropdownRef.current.contains(event.target) && moreMenuTriggerRef.current && !moreMenuTriggerRef.current.contains(event.target)) {
+        setIsMoreMenuOpen(false)
       }
     }
     document.addEventListener("mousedown", handleClickOutside)
@@ -139,12 +142,17 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
 
   return (
     <Paper className="relative bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 max-w-[95%] mb-2 mx-auto">
-      <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"} disabled={loading}>
-        <Brain size={16} />
-      </Button>
-      <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettings} disabled={loading}>
-        <Settings size={16} />
-      </Button>
+      {/* Botões que ficam visíveis em telas grandes */}
+      <div className="hidden sm:flex items-center gap-2">
+        <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"} disabled={loading}>
+          <Brain size={16} />
+        </Button>
+        <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettings} disabled={loading}>
+          <Settings size={16} />
+        </Button>
+      </div>
+
+      {/* Botões sempre visíveis */}
       <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={isImageSupported === false || aiProvider === "groq" || loading}>
         {isImageSupported && aiProvider === "openrouter" ? <ImagePlus size={16} /> : <ImageOff size={16} />}
       </Button>
@@ -156,10 +164,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
           </Button>
 
           {isToolsOpen && (
-            <div
-              ref={toolsDropdownRef}
-              className={`absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-7 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4`}
-            >
+            <div ref={toolsDropdownRef} className="absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-7 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4">
               <Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Profunda" onClick={toggleWeb} disabled={!isToolsSupported || aiProvider === "groq" || loading}>
                 {isToolsSupported && aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
               </Button>
@@ -194,18 +199,49 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
         disabled={loading}
         className="resize-y"
       />
-      <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={newsTool || weatherTool || wikiTool || browseTool || genshinTool || loading}>
-        <AudioLines size={16} />
-      </Button>
-      <Button variant={listening ? "danger" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>
-        {listening ? <Mic size={16} /> : <MicOff size={16} />}
-      </Button>
-      <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
-        <MessageCirclePlus size={16} />
-      </Button>
-      <Button size="icon" $rounded title="Enviar" onClick={() => { setListening(false); onSendMessage()}} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
+
+      {/* Botões que ficam visíveis em telas grandes */}
+      <div className="hidden sm:flex items-center gap-2">
+        <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={newsTool || weatherTool || wikiTool || browseTool || genshinTool || httpTool || loading}>
+          <AudioLines size={16} />
+        </Button>
+        <Button variant={listening ? "danger" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>
+          {listening ? <Mic size={16} /> : <MicOff size={16} />}
+        </Button>
+        <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
+          <MessageCirclePlus size={16} />
+        </Button>
+      </div>
+
+      <Button size="icon" $rounded title="Enviar" onClick={() => { setListening(false); onSendMessage() }} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
         {!loading && <SendHorizontal size={16} />}
       </Button>
+
+      {/* Menu "Mais Opções" para telas pequenas */}
+      <div className="relative sm:hidden">
+        <Button ref={moreMenuTriggerRef} variant="secondary" size="icon" $rounded title="Mais Opções" onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)} disabled={loading}>
+          <MoreVertical size={16} />
+        </Button>
+        {isMoreMenuOpen && (
+          <div ref={moreMenuDropdownRef} className="absolute z-20 right-0 bottom-full mb-2 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark flex flex-col gap-2">
+            <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"} disabled={loading}>
+              <Brain size={16} />
+            </Button>
+            <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettings} disabled={loading}>
+              <Settings size={16} />
+            </Button>
+            <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={newsTool || weatherTool || wikiTool || browseTool || genshinTool || httpTool || loading}>
+              <AudioLines size={16} />
+            </Button>
+            <Button variant={listening ? "danger" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>
+              {listening ? <Mic size={16} /> : <MicOff size={16} />}
+            </Button>
+            <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
+              <MessageCirclePlus size={16} />
+            </Button>
+          </div>
+        )}
+      </div>
     </Paper>
   )
 }
