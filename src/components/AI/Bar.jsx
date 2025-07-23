@@ -148,7 +148,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
           <MoreVertical size={16} />
         </Button>
         {isMoreMenuOpen && (
-          <div ref={moreMenuDropdownRef} className="absolute z-20 left-0 bottom-full mb-2 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark flex flex-col gap-2">
+          <div ref={moreMenuDropdownRef} className="absolute z-20 left-0 bottom-full mb-4 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark flex flex-col gap-2">
             <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"} disabled={loading}>
               <Brain size={16} />
             </Button>
