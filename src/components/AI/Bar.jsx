@@ -30,9 +30,15 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
     httpTool, toggleHttp,
   } = useAI()
 
-  const [isToolsOpen, setIsToolsOpen] = useState(false)
-  const toolsDropdownRef = useRef(null)
-  const toolsTriggerRef = useRef(null)
+  // Controles separados para os menus de ferramentas de Desktop e Mobile
+  const [isDesktopToolsOpen, setIsDesktopToolsOpen] = useState(false)
+  const desktopToolsDropdownRef = useRef(null)
+  const desktopToolsTriggerRef = useRef(null)
+
+  const [isMobileToolsOpen, setIsMobileToolsOpen] = useState(false)
+  const mobileToolsDropdownRef = useRef(null)
+  const mobileToolsTriggerRef = useRef(null)
+
   const recognitionRef = useRef(null)
 
   const allModels = [...freeModels, ...payModels, ...groqModels]
@@ -87,8 +93,12 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (toolsDropdownRef.current && !toolsDropdownRef.current.contains(event.target) && toolsTriggerRef.current && !toolsTriggerRef.current.contains(event.target)) {
-        setIsToolsOpen(false)
+      // Lógica para fechar cada menu independentemente
+      if (desktopToolsDropdownRef.current && !desktopToolsDropdownRef.current.contains(event.target) && desktopToolsTriggerRef.current && !desktopToolsTriggerRef.current.contains(event.target)) {
+        setIsDesktopToolsOpen(false)
+      }
+      if (mobileToolsDropdownRef.current && !mobileToolsDropdownRef.current.contains(event.target) && mobileToolsTriggerRef.current && !mobileToolsTriggerRef.current.contains(event.target)) {
+        setIsMobileToolsOpen(false)
       }
     }
     document.addEventListener("mousedown", handleClickOutside)
@@ -134,32 +144,18 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
         </Button>
         {aiKey.length > 0 && (
           <div className="relative">
-            <Button ref={toolsTriggerRef} variant="secondary" size="icon" title="Ferramentas" $rounded onClick={() => setIsToolsOpen(!isToolsOpen)} disabled={loading}>
+            <Button ref={desktopToolsTriggerRef} variant="secondary" size="icon" title="Ferramentas" $rounded onClick={() => setIsDesktopToolsOpen(!isDesktopToolsOpen)} disabled={loading}>
               <Wrench size={16} />
             </Button>
-            {isToolsOpen && (
-              <div ref={toolsDropdownRef} className="absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-7 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4">
-                <Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Profunda" onClick={toggleWeb} disabled={!isToolsSupported || aiProvider === "groq" || loading}>
-                      {isToolsSupported && aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
-                    </Button>
-                <Button variant={isToolsSupported && !stream && browseTool ? "outline" : "secondary"} size="icon" $rounded title="Acessar Site Específico" onClick={toggleBrowse} disabled={!isToolsSupported || stream || loading}>
-                      {isToolsSupported && !stream ? <Link2 size={16} /> : <Link2Off size={16} />}
-                    </Button>
-                <Button variant={isToolsSupported && !stream && httpTool ? "outline" : "secondary"} size="icon" $rounded title="Requisição HTTP" onClick={toggleHttp} disabled={!isToolsSupported || stream || loading}>
-                      {isToolsSupported && !stream ? <Server size={16} /> : <ServerOff size={16} />}
-                    </Button>
-                <Button variant={isToolsSupported && !stream && wikiTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Wikipédia" onClick={toggleWiki} disabled={!isToolsSupported || stream || loading}>
-                      {isToolsSupported && !stream ? <BookOpen size={16} /> : <BookAlert size={16} />}
-                    </Button>
-                <Button variant={isToolsSupported && !stream && newsTool ? "outline" : "secondary"} size="icon" $rounded title="Buscar Notícias" onClick={toggleNews} disabled={!isToolsSupported || stream || loading}>
-                      {isToolsSupported && !stream ? <Newspaper size={16} /> : <Shredder size={16} />}
-                    </Button>
-                <Button variant={isToolsSupported && !stream && weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Prever Clima" onClick={toggleWeather} disabled={!isToolsSupported || stream || loading}>
-                      {isToolsSupported && !stream ? <Cloud size={16} /> : <CloudOff size={16} />}
-                    </Button>
-                <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>
-                      {isToolsSupported && !stream ? <Gamepad2 size={16} /> : <Gamepad size={16} />}
-                    </Button>
+            {isDesktopToolsOpen && (
+              <div ref={desktopToolsDropdownRef} className="absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-7 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4">
+                <Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Profunda" onClick={toggleWeb} disabled={!isToolsSupported || aiProvider === "groq" || loading}>{isToolsSupported && aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}</Button>
+                <Button variant={isToolsSupported && !stream && browseTool ? "outline" : "secondary"} size="icon" $rounded title="Acessar Site Específico" onClick={toggleBrowse} disabled={!isToolsSupported || stream || loading}>{isToolsSupported && !stream ? <Link2 size={16} /> : <Link2Off size={16} />}</Button>
+                <Button variant={isToolsSupported && !stream && httpTool ? "outline" : "secondary"} size="icon" $rounded title="Requisição HTTP" onClick={toggleHttp} disabled={!isToolsSupported || stream || loading}>{isToolsSupported && !stream ? <Server size={16} /> : <ServerOff size={16} />}</Button>
+                <Button variant={isToolsSupported && !stream && wikiTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Wikipédia" onClick={toggleWiki} disabled={!isToolsSupported || stream || loading}>{isToolsSupported && !stream ? <BookOpen size={16} /> : <BookAlert size={16} />}</Button>
+                <Button variant={isToolsSupported && !stream && newsTool ? "outline" : "secondary"} size="icon" $rounded title="Buscar Notícias" onClick={toggleNews} disabled={!isToolsSupported || stream || loading}>{isToolsSupported && !stream ? <Newspaper size={16} /> : <Shredder size={16} />}</Button>
+                <Button variant={isToolsSupported && !stream && weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Prever Clima" onClick={toggleWeather} disabled={!isToolsSupported || stream || loading}>{isToolsSupported && !stream ? <Cloud size={16} /> : <CloudOff size={16} />}</Button>
+                <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>{isToolsSupported && !stream ? <Gamepad2 size={16} /> : <Gamepad size={16} />}</Button>
               </div>
             )}
           </div>
@@ -194,32 +190,18 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
           </Button>
           {aiKey.length > 0 && (
             <div className="relative">
-              <Button ref={toolsTriggerRef} variant="secondary" size="icon" title="Ferramentas" $rounded onClick={() => setIsToolsOpen(!isToolsOpen)} disabled={loading}>
+              <Button ref={mobileToolsTriggerRef} variant="secondary" size="icon" title="Ferramentas" $rounded onClick={() => setIsMobileToolsOpen(!isMobileToolsOpen)} disabled={loading}>
                 <Wrench size={16} />
               </Button>
-              {isToolsOpen && (
-                <div ref={toolsDropdownRef} className="absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-6 sm:grid-cols-7 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4">
-                  <Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Profunda" onClick={toggleWeb} disabled={!isToolsSupported || aiProvider === "groq" || loading}>
-                      {isToolsSupported && aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
-                    </Button>
-                  <Button variant={isToolsSupported && !stream && browseTool ? "outline" : "secondary"} size="icon" $rounded title="Acessar Site Específico" onClick={toggleBrowse} disabled={!isToolsSupported || stream || loading}>
-                      {isToolsSupported && !stream ? <Link2 size={16} /> : <Link2Off size={16} />}
-                    </Button>
-                  <Button variant={isToolsSupported && !stream && httpTool ? "outline" : "secondary"} size="icon" $rounded title="Requisição HTTP" onClick={toggleHttp} disabled={!isToolsSupported || stream || loading}>
-                      {isToolsSupported && !stream ? <Server size={16} /> : <ServerOff size={16} />}
-                    </Button>
-                  <Button variant={isToolsSupported && !stream && wikiTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Wikipédia" onClick={toggleWiki} disabled={!isToolsSupported || stream || loading}>
-                      {isToolsSupported && !stream ? <BookOpen size={16} /> : <BookAlert size={16} />}
-                    </Button>
-                  <Button variant={isToolsSupported && !stream && newsTool ? "outline" : "secondary"} size="icon" $rounded title="Buscar Notícias" onClick={toggleNews} disabled={!isToolsSupported || stream || loading}>
-                      {isToolsSupported && !stream ? <Newspaper size={16} /> : <Shredder size={16} />}
-                    </Button>
-                  <Button variant={isToolsSupported && !stream && weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Prever Clima" onClick={toggleWeather} disabled={!isToolsSupported || stream || loading}>
-                      {isToolsSupported && !stream ? <Cloud size={16} /> : <CloudOff size={16} />}
-                    </Button>
-                  <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>
-                      {isToolsSupported && !stream ? <Gamepad2 size={16} /> : <Gamepad size={16} />}
-                    </Button>
+              {isMobileToolsOpen && (
+                <div ref={mobileToolsDropdownRef} className="absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-6 sm:grid-cols-7 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4">
+                  <Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Profunda" onClick={toggleWeb} disabled={!isToolsSupported || aiProvider === "groq" || loading}>{isToolsSupported && aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}</Button>
+                  <Button variant={isToolsSupported && !stream && browseTool ? "outline" : "secondary"} size="icon" $rounded title="Acessar Site Específico" onClick={toggleBrowse} disabled={!isToolsSupported || stream || loading}>{isToolsSupported && !stream ? <Link2 size={16} /> : <Link2Off size={16} />}</Button>
+                  <Button variant={isToolsSupported && !stream && httpTool ? "outline" : "secondary"} size="icon" $rounded title="Requisição HTTP" onClick={toggleHttp} disabled={!isToolsSupported || stream || loading}>{isToolsSupported && !stream ? <Server size={16} /> : <ServerOff size={16} />}</Button>
+                  <Button variant={isToolsSupported && !stream && wikiTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Wikipédia" onClick={toggleWiki} disabled={!isToolsSupported || stream || loading}>{isToolsSupported && !stream ? <BookOpen size={16} /> : <BookAlert size={16} />}</Button>
+                  <Button variant={isToolsSupported && !stream && newsTool ? "outline" : "secondary"} size="icon" $rounded title="Buscar Notícias" onClick={toggleNews} disabled={!isToolsSupported || stream || loading}>{isToolsSupported && !stream ? <Newspaper size={16} /> : <Shredder size={16} />}</Button>
+                  <Button variant={isToolsSupported && !stream && weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Prever Clima" onClick={toggleWeather} disabled={!isToolsSupported || stream || loading}>{isToolsSupported && !stream ? <Cloud size={16} /> : <CloudOff size={16} />}</Button>
+                  <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>{isToolsSupported && !stream ? <Gamepad2 size={16} /> : <Gamepad size={16} />}</Button>
                 </div>
               )}
             </div>
