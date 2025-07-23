@@ -95,21 +95,18 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Só executa a lógica de fechar se o menu de ferramentas estiver aberto
-      if (isToolsOpen && toolsDropdownRef.current && !toolsDropdownRef.current.contains(event.target) && toolsTriggerRef.current && !toolsTriggerRef.current.contains(event.target)) {
+      if (toolsDropdownRef.current && !toolsDropdownRef.current.contains(event.target) && toolsTriggerRef.current && !toolsTriggerRef.current.contains(event.target)) {
         setIsToolsOpen(false)
       }
-      // Só executa a lógica de fechar se o outro menu estiver aberto
-      if (isMoreMenuOpen && moreMenuDropdownRef.current && !moreMenuDropdownRef.current.contains(event.target) && moreMenuTriggerRef.current && !moreMenuTriggerRef.current.contains(event.target)) {
+      if (moreMenuDropdownRef.current && !moreMenuDropdownRef.current.contains(event.target) && moreMenuTriggerRef.current && !moreMenuTriggerRef.current.contains(event.target)) {
         setIsMoreMenuOpen(false)
       }
     }
-
     document.addEventListener("mousedown", handleClickOutside)
     return () => {
       document.removeEventListener("mousedown", handleClickOutside)
     }
-  }, [isToolsOpen, isMoreMenuOpen]) // Adiciona os estados como dependência
+  }, [])
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -165,7 +162,11 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
                 <Wrench size={16} />
               </Button>
               {isToolsOpen && (
-                <div ref={toolsDropdownRef} className="absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-5 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4">
+                <div
+                  ref={toolsDropdownRef}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  className="absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-5 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4"
+                >
                   <Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Profunda" onClick={toggleWeb} disabled={!isToolsSupported || aiProvider === "groq" || loading}>
                     {isToolsSupported && aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
                   </Button>
@@ -205,7 +206,11 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
               <MoreVertical size={16} />
             </Button>
             {isMoreMenuOpen && (
-              <div ref={moreMenuDropdownRef} className="absolute z-20 left-0 bottom-full mb-4 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark flex flex-col gap-2">
+              <div
+                ref={moreMenuDropdownRef}
+                onMouseDown={(e) => e.stopPropagation()}
+                className="absolute z-20 left-0 bottom-full mb-4 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark flex flex-col gap-2"
+              >
                 {/* O conteúdo foi movido, mas o menu é mantido conforme solicitado. */}
               </div>
             )}
@@ -244,7 +249,11 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
               <Wrench size={16} />
             </Button>
             {isToolsOpen && (
-              <div ref={toolsDropdownRef} className="absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-5 sm:grid-cols-7 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4">
+              <div
+                ref={toolsDropdownRef}
+                onMouseDown={(e) => e.stopPropagation()}
+                className="absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-5 sm:grid-cols-7 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4"
+              >
                 <Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Profunda" onClick={toggleWeb} disabled={!isToolsSupported || aiProvider === "groq" || loading}>
                   {isToolsSupported && aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
                 </Button>
