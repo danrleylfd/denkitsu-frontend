@@ -127,7 +127,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
   }
 
   return (
-    <Paper className="flex flex-col sm:flex-row items-center gap-2 max-w-[95%] mb-2 mx-auto">
+    <Paper className="relative bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 max-w-[95%] mb-2 mx-auto">
       {/* LINHA 1 (Mobile) / PARTE 2 (Desktop): CAMPO DE TEXTO E ENVIAR */}
       <div className="flex w-full flex-1 items-center gap-2 order-1 sm:order-2">
         <AIInput
