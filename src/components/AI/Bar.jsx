@@ -95,7 +95,10 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (toolsDropdownRef.current && !toolsDropdownRef.current.contains(event.target) && toolsTriggerRef.current && !toolsTriggerRef.current.contains(event.target)) {
+      if (toolsTriggerRef.current && toolsTriggerRef.current.contains(event.target)) {
+        return
+      }
+      if (toolsDropdownRef.current && !toolsDropdownRef.current.contains(event.target)) {
         setIsToolsOpen(false)
       }
       if (moreMenuDropdownRef.current && !moreMenuDropdownRef.current.contains(event.target) && moreMenuTriggerRef.current && !moreMenuTriggerRef.current.contains(event.target)) {
