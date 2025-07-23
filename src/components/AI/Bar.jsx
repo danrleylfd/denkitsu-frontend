@@ -29,11 +29,6 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
   const desktopToolsDropdownRef = useRef(null)
   const mobileToolsDropdownRef = useRef(null)
 
-  const allModels = [...freeModels, ...payModels, ...groqModels]
-  const selectedModel = allModels.find(m => m.id === model)
-  const isImageSupported = selectedModel?.supports_images ?? false
-  const isToolsSupported = selectedModel?.supports_tools ?? false
-
   useEffect(() => {
     if (!("webkitSpeechRecognition" in window)) {
       console.error("Reconhecimento de voz não é suportado neste navegador.")
