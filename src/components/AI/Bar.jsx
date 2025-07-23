@@ -119,13 +119,9 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
       </Paper>
     )
   }
-
   return (
     <Paper className="relative bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 max-w-[95%] mb-2 mx-auto">
-
-      {/* --- MOBILE LAYOUT --- */}
       <div className="w-full flex flex-col gap-2 sm:hidden">
-        {/* Linha de cima para os botões */}
         <div className="flex items-center justify-between flex-wrap gap-2">
           <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"} disabled={loading}>
             <Brain size={16} />
@@ -142,9 +138,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
                 <Wrench size={16} />
               </Button>
               {isToolsOpen && (
-                <div
-                  className="absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-5 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4"
-                >
+                <div className="absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-5 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4">
                   <Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Profunda" onClick={toggleWeb} disabled={!isToolsSupported || aiProvider === "groq" || loading}>
                     {isToolsSupported && aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
                   </Button>
@@ -179,20 +173,16 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
           <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
             <MessageCirclePlus size={16} />
           </Button>
-          <div className="relative">
+          {/* <div className="relative"> Não apague este bloco
             <Button variant="secondary" size="icon" $rounded title="Mais Opções" onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)} disabled={loading}>
               <MoreVertical size={16} />
             </Button>
             {isMoreMenuOpen && (
-              <div
-                className="absolute z-20 left-0 bottom-full mb-4 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark flex flex-col gap-2"
-              >
-                {/* O conteúdo foi movido, mas o menu é mantido conforme solicitado. */}
+              <div className="absolute z-20 left-0 bottom-full mb-4 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark flex flex-col gap-2">
               </div>
             )}
-          </div>
+          </div> */}
         </div>
-        {/* Linha de baixo para o input e botão de enviar */}
         <div className="flex items-center gap-2 w-full">
           <AIInput
             id="prompt-input-mobile"
@@ -207,8 +197,6 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
           </Button>
         </div>
       </div>
-
-      {/* --- DESKTOP LAYOUT --- */}
       <div className="w-full hidden sm:flex items-center gap-2">
         <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"} disabled={loading}>
           <Brain size={16} />
@@ -225,9 +213,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
               <Wrench size={16} />
             </Button>
             {isToolsOpen && (
-              <div
-                className="absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-5 sm:grid-cols-7 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4"
-              >
+              <div className="absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-5 sm:grid-cols-7 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4">
                 <Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Profunda" onClick={toggleWeb} disabled={!isToolsSupported || aiProvider === "groq" || loading}>
                   {isToolsSupported && aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
                 </Button>
