@@ -94,25 +94,20 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
   }, [listening])
 
   useEffect(() => {
-    const handleDocumentMouseDown = (event) => {
-      // Lógica centralizada para o menu de Ferramentas
-      if (toolsTriggerRef.current?.contains(event.target)) {
-        setIsToolsOpen(current => !current) // Ação de TOGGLE
-      } else if (toolsDropdownRef.current && !toolsDropdownRef.current.contains(event.target)) {
-        setIsToolsOpen(false) // Ação de FECHAR (clique fora)
+    const handleClickOutside = (event) => {
+      if (toolsTriggerRef.current && toolsTriggerRef.current.contains(event.target)) {
+        return
       }
-
-      // Lógica centralizada para o menu "Mais Opções"
-      if (moreMenuTriggerRef.current?.contains(event.target)) {
-        setIsMoreMenuOpen(current => !current) // Ação de TOGGLE
-      } else if (moreMenuDropdownRef.current && !moreMenuDropdownRef.current.contains(event.target)) {
-        setIsMoreMenuOpen(false) // Ação de FECHAR (clique fora)
+      if (toolsDropdownRef.current && !toolsDropdownRef.current.contains(event.target)) {
+        setIsToolsOpen(false)
+      }
+      if (moreMenuDropdownRef.current && !moreMenuDropdownRef.current.contains(event.target) && moreMenuTriggerRef.current && !moreMenuTriggerRef.current.contains(event.target)) {
+        setIsMoreMenuOpen(false)
       }
     }
-
-    document.addEventListener("mousedown", handleDocumentMouseDown)
+    document.addEventListener("mousedown", handleClickOutside)
     return () => {
-      document.removeEventListener("mousedown", handleDocumentMouseDown)
+      document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [])
 
@@ -154,7 +149,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
       {/* --- MOBILE LAYOUT --- */}
       <div className="w-full flex flex-col gap-2 sm:hidden">
         {/* Linha de cima para os botões */}
-        <div className="flex items-center justify-center flex-wrap gap-2">
+        <div className="flex items-center justify-between flex-wrap gap-2">
           <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"} disabled={loading}>
             <Brain size={16} />
           </Button>
@@ -166,12 +161,13 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
           </Button>
           {aiKey.length > 0 && (
             <div className="relative">
-              <Button ref={toolsTriggerRef} variant="secondary" size="icon" title="Ferramentas" $rounded disabled={loading}>
+              <Button ref={toolsTriggerRef} variant="secondary" size="icon" title="Ferramentas" $rounded onClick={() => setIsToolsOpen(!isToolsOpen)} disabled={loading}>
                 <Wrench size={16} />
               </Button>
               {isToolsOpen && (
                 <div
                   ref={toolsDropdownRef}
+                  onMouseDown={(e) => e.stopPropagation()}
                   className="absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-5 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4"
                 >
                   <Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Profunda" onClick={toggleWeb} disabled={!isToolsSupported || aiProvider === "groq" || loading}>
@@ -209,12 +205,13 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
             <MessageCirclePlus size={16} />
           </Button>
           <div className="relative">
-            <Button ref={moreMenuTriggerRef} variant="secondary" size="icon" $rounded title="Mais Opções" disabled={loading}>
+            <Button ref={moreMenuTriggerRef} variant="secondary" size="icon" $rounded title="Mais Opções" onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)} disabled={loading}>
               <MoreVertical size={16} />
             </Button>
             {isMoreMenuOpen && (
               <div
                 ref={moreMenuDropdownRef}
+                onMouseDown={(e) => e.stopPropagation()}
                 className="absolute z-20 left-0 bottom-full mb-4 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark flex flex-col gap-2"
               >
                 {/* O conteúdo foi movido, mas o menu é mantido conforme solicitado. */}
@@ -251,12 +248,13 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
         </Button>
         {aiKey.length > 0 && (
           <div className="relative">
-            <Button ref={toolsTriggerRef} variant="secondary" size="icon" title="Ferramentas" $rounded disabled={loading}>
+            <Button ref={toolsTriggerRef} variant="secondary" size="icon" title="Ferramentas" $rounded onClick={() => setIsToolsOpen(!isToolsOpen)} disabled={loading}>
               <Wrench size={16} />
             </Button>
             {isToolsOpen && (
               <div
                 ref={toolsDropdownRef}
+                onMouseDown={(e) => e.stopPropagation()}
                 className="absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-5 sm:grid-cols-7 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4"
               >
                 <Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Profunda" onClick={toggleWeb} disabled={!isToolsSupported || aiProvider === "groq" || loading}>
