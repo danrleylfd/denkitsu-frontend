@@ -174,15 +174,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
 
       {/* ########## LAYOUT PARA MOBILE (abaixo de sm:) ########## */}
       <div className="sm:hidden w-full flex flex-col gap-2">
-        {/* --- Linha 1: Input e Enviar --- */}
-        <div className="flex w-full items-center gap-2">
-          <AIInput id="prompt-input-mobile" value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} onKeyDown={handleKeyDown} disabled={loading} className="resize-y" />
-          <Button size="icon" $rounded title="Enviar" onClick={() => { setListening(false); onSendMessage() }} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
-            {!loading && <SendHorizontal size={16} />}
-          </Button>
-        </div>
-
-        {/* --- Linha 2: Botões de Ação --- */}
+        {/* --- Linha 1: Botões de Ação --- */}
         <div className="flex w-full items-center justify-around">
           <div className="relative">
             <Button ref={moreMenuTriggerRef} variant="secondary" size="icon" $rounded title="Mais Opções" onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)} disabled={loading}>
@@ -220,6 +212,14 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
           )}
           <Button variant={listening ? "danger" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>
             {listening ? <Mic size={16} /> : <MicOff size={16} />}
+          </Button>
+        </div>
+
+        {/* --- Linha 2: Input e Enviar --- */}
+        <div className="flex w-full items-center gap-2">
+          <AIInput id="prompt-input-mobile" value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} onKeyDown={handleKeyDown} disabled={loading} className="resize-y" />
+          <Button size="icon" $rounded title="Enviar" onClick={() => { setListening(false); onSendMessage() }} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
+            {!loading && <SendHorizontal size={16} />}
           </Button>
         </div>
       </div>
