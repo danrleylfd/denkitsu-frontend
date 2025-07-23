@@ -4,7 +4,7 @@ import {
   LogIn, UserPlus,
   Settings, SendHorizontal, ImagePlus, ImageOff, Globe, GlobeLock, Newspaper, Shredder, Cloud, CloudOff,
   AudioLines, Brain, MessageCirclePlus, BookOpen, BookAlert, Link2, Link2Off, Wrench, Gamepad, Gamepad2,
-  Lock, Server, ServerOff, Mic, MicOff, MoreVertical
+  Lock, Server, ServerOff, Mic, MicOff
 } from "lucide-react"
 
 import { useAuth } from "../../contexts/AuthContext"
@@ -31,12 +31,8 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
   } = useAI()
 
   const [isToolsOpen, setIsToolsOpen] = useState(false)
-  const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false)
-
   const toolsDropdownRef = useRef(null)
   const toolsTriggerRef = useRef(null)
-  const moreMenuDropdownRef = useRef(null)
-  const moreMenuTriggerRef = useRef(null)
   const recognitionRef = useRef(null)
 
   const allModels = [...freeModels, ...payModels, ...groqModels]
@@ -93,9 +89,6 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
     const handleClickOutside = (event) => {
       if (toolsDropdownRef.current && !toolsDropdownRef.current.contains(event.target) && toolsTriggerRef.current && !toolsTriggerRef.current.contains(event.target)) {
         setIsToolsOpen(false)
-      }
-      if (moreMenuDropdownRef.current && !moreMenuDropdownRef.current.contains(event.target) && moreMenuTriggerRef.current && !moreMenuTriggerRef.current.contains(event.target)) {
-        setIsMoreMenuOpen(false)
       }
     }
     document.addEventListener("mousedown", handleClickOutside)
@@ -175,20 +168,13 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
       {/* ########## LAYOUT PARA MOBILE (abaixo de sm:) ########## */}
       <div className="sm:hidden w-full flex flex-col gap-2">
         {/* --- Linha 1: Botões de Ação --- */}
-        <div className="flex w-full items-center justify-around">
-          <div className="relative">
-            <Button ref={moreMenuTriggerRef} variant="secondary" size="icon" $rounded title="Mais Opções" onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)} disabled={loading}>
-              <MoreVertical size={16} />
-            </Button>
-            {isMoreMenuOpen && (
-              <div ref={moreMenuDropdownRef} className="absolute z-20 left-0 bottom-full mb-2 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark flex flex-col gap-2">
-                <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"} disabled={loading}><Brain size={16} /></Button>
-                <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettings} disabled={loading}><Settings size={16} /></Button>
-                <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={newsTool || weatherTool || wikiTool || browseTool || genshinTool || httpTool || loading}><AudioLines size={16} /></Button>
-                <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}><MessageCirclePlus size={16} /></Button>
-              </div>
-            )}
-          </div>
+        <div className="flex w-full items-center justify-around flex-wrap gap-y-2">
+          <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"} disabled={loading}>
+            <Brain size={16} />
+          </Button>
+          <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettings} disabled={loading}>
+            <Settings size={16} />
+          </Button>
           <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={isImageSupported === false || aiProvider === "groq" || loading}>
             {isImageSupported && aiProvider === "openrouter" ? <ImagePlus size={16} /> : <ImageOff size={16} />}
           </Button>
@@ -210,11 +196,16 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
               )}
             </div>
           )}
+          <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={newsTool || weatherTool || wikiTool || browseTool || genshinTool || httpTool || loading}>
+            <AudioLines size={16} />
+          </Button>
           <Button variant={listening ? "danger" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>
             {listening ? <Mic size={16} /> : <MicOff size={16} />}
           </Button>
+          <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
+            <MessageCirclePlus size={16} />
+          </Button>
         </div>
-
         {/* --- Linha 2: Input e Enviar --- */}
         <div className="flex w-full items-center gap-2">
           <AIInput id="prompt-input-mobile" value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} onKeyDown={handleKeyDown} disabled={loading} className="resize-y" />
