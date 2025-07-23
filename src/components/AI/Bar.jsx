@@ -146,7 +146,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
       {/* --- MOBILE LAYOUT --- */}
       <div className="w-full flex flex-col gap-2 sm:hidden">
         {/* Linha de cima para os botões */}
-        <div className="flex items-center justify-center flex-wrap gap-2">
+        <div className="flex items-center justify-between flex-wrap gap-2">
           <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"} disabled={loading}>
             <Brain size={16} />
           </Button>
@@ -211,9 +211,6 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
                 onMouseDown={(e) => e.stopPropagation()}
                 className="absolute z-20 left-0 bottom-full mb-4 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark flex flex-col gap-2"
               >
-                <Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Profunda" onClick={toggleWeb} disabled={!isToolsSupported || aiProvider === "groq" || loading}>
-                  {isToolsSupported && aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
-                </Button>
                 {/* O conteúdo foi movido, mas o menu é mantido conforme solicitado. */}
               </div>
             )}
