@@ -1,6 +1,8 @@
+import { forwardRef } from "react"
+
 const Spinner = () => <div className="h-4 w-4 animate-spin-fast rounded-full border-2 border-solid border-transparent border-t-current" />
 
-const Button = ({
+const Button = forwardRef(({
   type = "button",
   variant = "primary",
   size = "sm",
@@ -11,7 +13,7 @@ const Button = ({
   className,
   children,
   ...props
-}) => {
+}, ref) => {
   const baseClasses = "relative flex select-none items-center justify-center font-bold uppercase transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-50 w-fit self-center"
   const variantClasses = {
     primary: "bg-primary-base hover:bg-primary-light active:bg-primary-dark text-white transform transition-transform hover:scale-105 active:scale-95",
@@ -54,6 +56,7 @@ const Button = ({
   }
   return (
     <button
+      ref={ref}
       {...props}
       type={type}
       className={`
@@ -68,6 +71,6 @@ const Button = ({
       {loading && <Spinner />} {children}
     </button>
   )
-}
+})
 
 export default Button
