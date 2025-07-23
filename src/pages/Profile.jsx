@@ -123,7 +123,7 @@ const Profile = () => {
   }
 
   return (
-    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
+    <SideMenu ContentView={ContentView} className="bg-cover bg-brand-purple">
       {loading ? (
         <div className="p-2">
           <Button variant="secondary" $rounded loading={true} disabled />

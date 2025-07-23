@@ -4,7 +4,11 @@ import { Timer, Settings, Play, Pause, RefreshCw } from "lucide-react"
 import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
 
-const ContentView = ({ children }) => <main className="flex justify-center items-center p-2 gap-2 w-full min-h-dvh">{children}</main>
+const ContentView = ({ children }) => (
+  <main className="flex justify-center items-center p-2 gap-2 w-full min-h-dvh">
+    {children}
+  </main>
+)
 
 const Pomodoro = () => {
   const [minutes, setMinutes] = useState(25)
