@@ -95,19 +95,21 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (toolsDropdownRef.current && !toolsDropdownRef.current.contains(event.target) && toolsTriggerRef.current && !toolsTriggerRef.current.contains(event.target)) {
+      // Só executa a lógica de fechar se o menu de ferramentas estiver aberto
+      if (isToolsOpen && toolsDropdownRef.current && !toolsDropdownRef.current.contains(event.target) && toolsTriggerRef.current && !toolsTriggerRef.current.contains(event.target)) {
         setIsToolsOpen(false)
       }
-      if (moreMenuDropdownRef.current && !moreMenuDropdownRef.current.contains(event.target) && moreMenuTriggerRef.current && !moreMenuTriggerRef.current.contains(event.target)) {
+      // Só executa a lógica de fechar se o outro menu estiver aberto
+      if (isMoreMenuOpen && moreMenuDropdownRef.current && !moreMenuDropdownRef.current.contains(event.target) && moreMenuTriggerRef.current && !moreMenuTriggerRef.current.contains(event.target)) {
         setIsMoreMenuOpen(false)
       }
     }
-    // CORREÇÃO: Alterado de "mousedown" para "click" para evitar o bug no mobile.
-    document.addEventListener("click", handleClickOutside)
+
+    document.addEventListener("mousedown", handleClickOutside)
     return () => {
-      document.removeEventListener("click", handleClickOutside)
+      document.removeEventListener("mousedown", handleClickOutside)
     }
-  }, [])
+  }, [isToolsOpen, isMoreMenuOpen]) // Adiciona os estados como dependência
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
