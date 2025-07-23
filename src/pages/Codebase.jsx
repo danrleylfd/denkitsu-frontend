@@ -263,7 +263,7 @@ const RecentItemsList = memo(({ items, onClick, onRemove, onClearAll }) => {
 })
 
 const ContentView = ({ children }) => (
-  <main className="flex items-center justify-center p-4 min-h-screen w-full ml-[3.5rem] md:ml-auto">
+  <main className="flex items-center justify-center p-4 min-h-dvh w-full ml-[3.5rem] md:ml-auto">
     {children}
   </main>
 )

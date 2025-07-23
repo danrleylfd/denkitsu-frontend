@@ -30,7 +30,7 @@ const Codebase = lazy(() => import("../pages/Codebase"))
 const Editor = lazy(() => import("../pages/Editor"))
 
 const PageLoader = () => (
-  <div className="flex justify-center items-center h-screen w-full">
+  <div className="flex justify-center items-center h-dvh w-full">
     <Button variant="outline" $rounded loading={true} disabled />
   </div>
 )

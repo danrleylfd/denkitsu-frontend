@@ -11,7 +11,7 @@ import { useAI } from "../contexts/AIContext"
 import { sendMessage } from "../services/aiChat"
 
 const EditorContentView = ({ children }) => (
-  <main className="flex flex-1 flex-col h-screen">{children}</main>
+  <main className="flex flex-1 flex-col h-dvh">{children}</main>
 )
 
 const Editor = () => {
