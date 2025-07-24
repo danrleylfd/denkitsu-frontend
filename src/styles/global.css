@@ -156,11 +156,12 @@ small, caption, sup, sub {
   .bg-gradient-rainbow {
     background-image: linear-gradient(
       45deg,
-      #ff1493, /* Rosa Escuro (Deep Pink) */
-      #dc2626, /* Vermelho 600 */
-      #b91c1c, /* Vermelho 700 */
-      #991b1b, /* Vermelho 800 */
-      #7f1d1d, /* Vermelho 900 */
+      #ffdddd, /* Vermelho bem claro (quase branco rosado) */
+      #ffaaaa, /* Vermelho claro */
+      #ff4d4d, /* Vermelho médio claro */
+      #ff0000, /* Vermelho puro */
+      #cc0000, /* Vermelho escuro */
+      #660000   /* Vermelho muito escuro (quase preto) */
     );
     background-size: 400% 400%; /* Aumenta o tamanho para um movimento mais suave */
     animation: gradient-flow 5s ease infinite; /* Aplica a animação em loop */
