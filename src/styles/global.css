@@ -156,9 +156,13 @@ small, caption, sup, sub {
   .bg-gradient-rainbow {
     background-image: linear-gradient(
       45deg,
+      theme('colors.success.light'),
       theme('colors.success.base'),
+      theme('colors.warning.light'),
       theme('colors.warning.base'),
+      theme('colors.danger.light'),
       theme('colors.danger.base'),
+      theme('colors.primary.light'),
       theme('colors.primary.base'),
     );
     background-size: 800% 800%;

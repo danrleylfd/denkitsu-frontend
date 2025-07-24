@@ -30,36 +30,36 @@ export default {
         bLight: "#E0E0E0",
         bDark: "#252525",
         primary: {
-          base: "#8257E5",
           light: "#9885F0",
+          base: "#8257E5",
           dark: "#633BBC"
         },
         violet: { 500: "#8b5cf6" },
         lightBtnBg: {
-          base: "#E0E0E0",
           light: "#F5F5F5",
+          base: "#E0E0E0",
           dark: "#CCCCCC"
         },
         darkBtnBg: {
-          base: "#252525",
           light: "#333333",
+          base: "#252525",
           dark: "#212121"
         },
         success: {
-          base: "#1B873F",
           light: "#04D361",
+          base: "#1B873F",
           dark: "#051B0D"
         },
         lime: { 400: "#a3e635" },
         warning: {
-          base: "#EB8A1D",
           light: "#FBA94C",
+          base: "#EB8A1D",
           dark: "#2E1B06"
         },
         amber: { 500: "#f59e0b" },
         danger: {
-          base: "#CC2937",
           light: "#F75A68",
+          base: "#CC2937",
           dark: "#2D090C"
         },
         pink: { 500: "#ec4899" },
