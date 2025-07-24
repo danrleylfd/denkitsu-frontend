@@ -154,15 +154,7 @@ small, caption, sup, sub {
 
 @layer utilities {
   .bg-gradient-rainbow {
-    background-image: linear-gradient(
-      45deg,
-      #f08080,
-      #fa8072,
-      #e53e3e,
-      #dc143c,
-      #c53030,
-      #b22222
-    );
+    background-image: linear-gradient(45deg, #FFD166, #EF476F, #8338EC, #073B4C);
     background-size: 400% 400%;
     animation: gradient-flow 5s ease infinite;
   }
