@@ -161,6 +161,9 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
                   <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>
                     {isToolsSupported && !stream ? <Gamepad2 size={16} /> : <Gamepad size={16} />}
                   </Button>
+                  <Button variant={isToolsSupported && !stream && pokedexTool ? "outline" : "secondary"} size="icon" $rounded title="Pokedex (Beta)" onClick={togglePokedex} disabled={!isToolsSupported || stream || loading}>
+                    {isToolsSupported && !stream ? <Smartphone size={16} /> : <Smartphone size={16} />}
+                  </Button>
                 </div>
               )}
             </div>
