@@ -167,37 +167,37 @@ small, caption, sup, sub {
     animation: gradient-flow 5s ease infinite;
   }
   .bg-gradient-orange-animated {
-    background-image: linear-gradient(45deg, #FFDDC1, #FF9F1C, #E76F51);
+    background-image: linear-gradient(45deg, theme('colors.danger.base'), theme('colors.warning.light'), theme('colors.danger.base'));
     background-size: 400% 400%;
     animation: gradient-flow 5s ease infinite;
   }
   .bg-gradient-blue-animated {
-    background-image: linear-gradient(45deg, #ADE8F4, #0077B6, #03045E);
+    background-image: linear-gradient(45deg, theme('colors.blue.500'), theme('colors.cyan.400'), theme('colors.blue.500'));
     background-size: 400% 400%;
     animation: gradient-flow 5s ease infinite;
   }
   .bg-gradient-green-animated {
-    background-image: linear-gradient(45deg, #D4FFB3, #55FF78, #16A085, #006A4E);
+    background-image: linear-gradient(45deg, theme('colors.success.light'), theme('colors.lime.400'), theme('colors.success.light'));
     background-size: 400% 400%;
     animation: gradient-flow 5s ease infinite;
   }
   .bg-gradient-red-animated {
-    background-image: linear-gradient(45deg, #f08080, #e53e3e, #b22222);
+    background-image: linear-gradient(45deg, theme('colors.danger.base'), theme('colors.pink.500'), theme('colors.danger.base'));
     background-size: 400% 400%;
     animation: gradient-flow 5s ease infinite;
   }
   .bg-gradient-yellow-animated {
-    background-image: linear-gradient(45deg, #FEF9E7, #F1C40F, #D35400);
+    background-image: linear-gradient(45deg, theme('colors.warning.light'), theme('colors.amber.500'), theme('colors.warning.light'));
     background-size: 400% 400%;
     animation: gradient-flow 5s ease infinite;
   }
   .bg-gradient-pink-animated {
-    background-image: linear-gradient(45deg, #FADADD, #EF476F, #C30052);
+    background-image: linear-gradient(45deg, theme('colors.pink.500'), theme('colors.fuchsia.500'), theme('colors.pink.500'));
     background-size: 400% 400%;
     animation: gradient-flow 5s ease infinite;
   }
   .bg-gradient-purple-animated {
-    background-image: linear-gradient(45deg, #E0AAFF, #C77DFF, #9D4EDD, #3C096C);
+    background-image: linear-gradient(45deg, theme('colors.primary.base'), theme('colors.violet.500'), theme('colors.primary.base'));
     background-size: 400% 400%;
     animation: gradient-flow 5s ease infinite;
   }

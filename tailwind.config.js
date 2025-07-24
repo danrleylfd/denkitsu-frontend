@@ -34,6 +34,7 @@ export default {
           light: "#9885F0",
           dark: "#633BBC"
         },
+        violet: { 500: "#8b5cf6" },
         lightBtnBg: {
           base: "#E0E0E0",
           light: "#F5F5F5",
@@ -49,16 +50,22 @@ export default {
           light: "#04D361",
           dark: "#051B0D"
         },
+        lime: { 400: "#a3e635" },
         warning: {
           base: "#EB8A1D",
           light: "#FBA94C",
           dark: "#2E1B06"
         },
+        amber: { 500: "#f59e0b" },
         danger: {
           base: "#CC2937",
           light: "#F75A68",
           dark: "#2D090C"
         },
+        pink: { 500: "#ec4899" },
+        fuchsia: { 500: "#d946ef" },
+        blue: { 500: "#3b82f6" },
+        cyan: { 400: "#22d3ee" },
         lightBg: {
           primary: "#ffffff",
           secondary: "#ececec",
