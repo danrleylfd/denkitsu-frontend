@@ -192,7 +192,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
             disabled={loading}
             className="resize-y"
           />
-          <Button variant="gradient-video" size="icon" $rounded title="Enviar" onClick={() => { setListening(false); onSendMessage() }} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
+          <Button variant="video-rainbow" size="icon" $rounded title="Enviar" onClick={() => { setListening(false); onSendMessage() }} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
             {!loading && <SendHorizontal size={16} />}
           </Button>
         </div>
@@ -258,7 +258,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
             <MessageCirclePlus size={16} />
           </Button>
         </div>
-        <Button variant="gradient-video" size="icon" $rounded title="Enviar" onClick={() => { setListening(false); onSendMessage() }} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
+        <Button variant="video-rainbow" size="icon" $rounded title="Enviar" onClick={() => { setListening(false); onSendMessage() }} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
           {!loading && <SendHorizontal size={16} />}
         </Button>
       </div>
