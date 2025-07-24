@@ -4,7 +4,7 @@ import {
   LogIn, UserPlus,
   Settings, SendHorizontal, ImagePlus, ImageOff, Globe, GlobeLock, Newspaper, Shredder, Cloud, CloudOff,
   AudioLines, AudioWaveform, Brain, MessageCirclePlus, BookOpen, BookAlert, Link2, Link2Off, Wrench, Gamepad, Gamepad2,
-  Lock, Server, ServerOff, Mic, MicOff, MoreVertical
+  Lock, Server, ServerOff, Mic, MicOff, MoreVertical, Smartphone,
 } from "lucide-react"
 
 import { useAuth } from "../../contexts/AuthContext"
@@ -22,12 +22,13 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
     stream, toggleStream,
     listening, setListening, toggleListening,
     web, toggleWeb,
+    browserTool, toggleBrowser,
+    httpTool, toggleHttp,
+    wikiTool, toggleWiki,
     newsTool, toggleNews,
     weatherTool, toggleWeather,
-    wikiTool, toggleWiki,
-    browseTool, toggleBrowse,
     genshinTool, toggleGenshin,
-    httpTool, toggleHttp,
+    pokedexTool, togglePokedex,
   } = useAI()
 
   const [isToolsOpen, setIsToolsOpen] = useState(false)
@@ -142,7 +143,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
                   <Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Profunda" onClick={toggleWeb} disabled={!isToolsSupported || aiProvider === "groq" || loading}>
                     {isToolsSupported && aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
                   </Button>
-                  <Button variant={isToolsSupported && !stream && browseTool ? "outline" : "secondary"} size="icon" $rounded title="Acessar Site Específico" onClick={toggleBrowse} disabled={!isToolsSupported || stream || loading}>
+                  <Button variant={isToolsSupported && !stream && browserTool ? "outline" : "secondary"} size="icon" $rounded title="Acessar Site Específico" onClick={toggleBrowser} disabled={!isToolsSupported || stream || loading}>
                     {isToolsSupported && !stream ? <Link2 size={16} /> : <Link2Off size={16} />}
                   </Button>
                   <Button variant={isToolsSupported && !stream && httpTool ? "outline" : "secondary"} size="icon" $rounded title="Requisição HTTP" onClick={toggleHttp} disabled={!isToolsSupported || stream || loading}>
@@ -164,7 +165,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
               )}
             </div>
           )}
-          <Button variant={stream ? "gradient-purple" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={newsTool || weatherTool || wikiTool || browseTool || genshinTool || httpTool || loading}>
+          <Button variant={stream ? "gradient-purple" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={browserTool || httpTool || wikiTool || newsTool || weatherTool || genshinTool || pokedexTool || loading}>
             <AudioWaveform size={16} />
           </Button>
           <Button variant={listening ? "gradient-red" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>
@@ -217,7 +218,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
                 <Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Profunda" onClick={toggleWeb} disabled={!isToolsSupported || aiProvider === "groq" || loading}>
                   {isToolsSupported && aiProvider === "openrouter" ? <Globe size={16} /> : <GlobeLock size={16} />}
                 </Button>
-                <Button variant={isToolsSupported && !stream && browseTool ? "outline" : "secondary"} size="icon" $rounded title="Acessar Site Específico" onClick={toggleBrowse} disabled={!isToolsSupported || stream || loading}>
+                <Button variant={isToolsSupported && !stream && browserTool ? "outline" : "secondary"} size="icon" $rounded title="Acessar Site Específico" onClick={toggleBrowser} disabled={!isToolsSupported || stream || loading}>
                   {isToolsSupported && !stream ? <Link2 size={16} /> : <Link2Off size={16} />}
                 </Button>
                 <Button variant={isToolsSupported && !stream && httpTool ? "outline" : "secondary"} size="icon" $rounded title="Requisição HTTP" onClick={toggleHttp} disabled={!isToolsSupported || stream || loading}>
@@ -235,6 +236,9 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
                 <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>
                   {isToolsSupported && !stream ? <Gamepad2 size={16} /> : <Gamepad size={16} />}
                 </Button>
+                <Button variant={isToolsSupported && !stream && pokedexTool ? "outline" : "secondary"} size="icon" $rounded title="Pokedex (Beta)" onClick={togglePokedex} disabled={!isToolsSupported || stream || loading}>
+                  {isToolsSupported && !stream ? <Smartphone size={16} /> : <Smartphone size={16} />}
+                </Button>
               </div>
             )}
           </div>
@@ -248,7 +252,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
           className="resize-y"
         />
         <div className="flex items-center gap-2">
-          <Button variant={stream ? "gradient-purple" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={newsTool || weatherTool || wikiTool || browseTool || genshinTool || httpTool || loading}>
+          <Button variant={stream ? "gradient-purple" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={newsTool || weatherTool || wikiTool || browserTool || genshinTool || httpTool || loading}>
             <AudioWaveform size={16} />
           </Button>
           <Button variant={listening ? "gradient-red" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>

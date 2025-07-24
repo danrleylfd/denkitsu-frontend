@@ -18,7 +18,7 @@ const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-dv
 const AI = () => {
   const {
     aiProvider, aiKey, model,
-    stream, web, newsTool, weatherTool, wikiTool, browseTool, genshinTool, httpTool,
+    stream, web, browserTool, httpTool, wikiTool, newsTool, weatherTool, genshinTool, pokedexTool,
     imageUrls, setImageUrls,
     freeModels, setFreeModels,
     payModels, setPayModels,
@@ -118,7 +118,7 @@ const AI = () => {
           role: "system",
           content: "Denkitsu deve entender como o personagem funciona. Divida a análise de personagens em 5 tópicos: 1. Informações gerais sobre o personagem; 2. Informações sobre como o personagem funciona; 3. Status do personagem(Números); 4. Status recomendados(Números); 5. Sua opinião sobre os Status(atual) do personagem."
         })
-        const data = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, selectedPrompt, web, newsTool, weatherTool, wikiTool, browseTool, genshinTool, httpTool)
+        const data = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, selectedPrompt, web, browserTool, httpTool, wikiTool, newsTool, weatherTool, genshinTool, pokedexTool)
         const res = data?.choices?.[0]?.message
         if (!res) return
         const { content, reasoning } = cleanContent(res.content || "")
@@ -141,7 +141,7 @@ const AI = () => {
         setLoading(false)
       }
     }
-  }, [aiKey, aiProvider, model, freeModels, payModels, groqModels, selectedPrompt, stream, web, newsTool, weatherTool, wikiTool, browseTool, genshinTool, httpTool, setMessages, setLoading, notifyError])
+  }, [aiKey, aiProvider, model, freeModels, payModels, groqModels, selectedPrompt, stream, web, browserTool, httpTool, wikiTool, newsTool, weatherTool, genshinTool, pokedexTool, setMessages, setLoading, notifyError])
 
   const onSendMessage = useCallback(async () => {
     if (loading || (!userPrompt.trim() && imageUrls.length === 0)) return

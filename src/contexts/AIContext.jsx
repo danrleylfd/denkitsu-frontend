@@ -3,6 +3,7 @@ import { createContext, useState, useEffect, useContext, useMemo, useCallback } 
 const AIContext = createContext()
 
 const AIProvider = ({ children }) => {
+  localStorage.removeItem("@Denkitsu:BrowseTool")
   const storedAIProvider = localStorage.getItem("@Denkitsu:aiProvider")
   const storedModelGroq = localStorage.getItem("@Denkitsu:GroqModel")
   const storedOpenRouterModel = localStorage.getItem("@Denkitsu:OpenRouterModel")
@@ -11,12 +12,13 @@ const AIProvider = ({ children }) => {
   const storedOpenRouterKey = localStorage.getItem("@Denkitsu:OpenRouter")
   const storedStream = JSON.parse(localStorage.getItem("@Denkitsu:Stream"))
   const storedWeb = JSON.parse(localStorage.getItem("@Denkitsu:Web"))
+  const storedBrowserTool = JSON.parse(localStorage.getItem("@Denkitsu:BrowserTool"))
+  const storedHttpTool = JSON.parse(localStorage.getItem("@Denkitsu:HttpTool"))
+  const storedWikiTool = JSON.parse(localStorage.getItem("@Denkitsu:WikiTool"))
   const storedNewsTool = JSON.parse(localStorage.getItem("@Denkitsu:NewsTool"))
   const storedWeatherTool = JSON.parse(localStorage.getItem("@Denkitsu:WeatherTool"))
-  const storedBrowseTool = JSON.parse(localStorage.getItem("@Denkitsu:BrowseTool"))
-  const storedWikiTool = JSON.parse(localStorage.getItem("@Denkitsu:WikiTool"))
   const storedGenshinTool = JSON.parse(localStorage.getItem("@Denkitsu:GenshinTool"))
-  const storedHttpTool = JSON.parse(localStorage.getItem("@Denkitsu:HttpTool"))
+  const storedPokedexTool = JSON.parse(localStorage.getItem("@Denkitsu:PokedexTool"))
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
 
   const [aiProvider, setAIProvider] = useState(storedAIProvider || "groq")
@@ -31,12 +33,13 @@ const AIProvider = ({ children }) => {
   const [stream, setStream] = useState(storedStream === null ? false : storedStream)
   const [imageUrls, setImageUrls] = useState([])
   const [web, setWeb] = useState(storedWeb === null ? false : storedWeb)
+  const [browserTool, setBrowserTool] = useState(storedBrowserTool === null ? false : storedBrowserTool)
+  const [httpTool, setHttpTool] = useState(storedHttpTool === null? false : storedHttpTool)
+  const [wikiTool, setWikiTool] = useState(storedWikiTool === null? false : storedWikiTool)
   const [newsTool, setNewsTool] = useState(storedNewsTool === null ? false : storedNewsTool)
   const [weatherTool, setWeatherTool] = useState(storedWeatherTool === null? false : storedWeatherTool)
-  const [wikiTool, setWikiTool] = useState(storedWikiTool === null? false : storedWikiTool)
-  const [browseTool, setBrowseTool] = useState(storedBrowseTool === null ? false : storedBrowseTool)
   const [genshinTool, setGenshinTool] = useState(storedGenshinTool === null? false : storedGenshinTool)
-  const [httpTool, setHttpTool] = useState(storedHttpTool === null? false : storedHttpTool)
+  const [pokedexTool, setPokedexTool] = useState(storedPokedexTool === null? false : storedPokedexTool)
   const [userPrompt, setUserPrompt] = useState("")
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
   const [speaking, setSpeaking] = useState(false)
@@ -54,17 +57,19 @@ const AIProvider = ({ children }) => {
 
   useEffect(() => (localStorage.setItem("@Denkitsu:Web", web)), [web])
 
+  useEffect(() => (localStorage.setItem("@Denkitsu:BrowserTool", browserTool)), [browserTool])
+
+  useEffect(() => (localStorage.setItem("@Denkitsu:HttpTool", httpTool)), [httpTool])
+
+  useEffect(() => (localStorage.setItem("@Denkitsu:WikiTool", wikiTool)), [wikiTool])
+
   useEffect(() => (localStorage.setItem("@Denkitsu:NewsTool", newsTool)), [newsTool])
 
   useEffect(() => (localStorage.setItem("@Denkitsu:WeatherTool", weatherTool)), [weatherTool])
 
-  useEffect(() => (localStorage.setItem("@Denkitsu:WikiTool", wikiTool)), [wikiTool])
-
-  useEffect(() => (localStorage.setItem("@Denkitsu:BrowseTool", browseTool)), [browseTool])
-
   useEffect(() => (localStorage.setItem("@Denkitsu:GenshinTool", genshinTool)), [genshinTool])
 
-  useEffect(() => (localStorage.setItem("@Denkitsu:HttpTool", httpTool)), [httpTool])
+  useEffect(() => (localStorage.setItem("@Denkitsu:PokedexTool", pokedexTool)), [pokedexTool])
 
   useEffect(() => {
     if (groqKey.trim() === "") return localStorage.removeItem("@Denkitsu:Groq")
@@ -90,12 +95,13 @@ const AIProvider = ({ children }) => {
   const toggleStream = useCallback(() => setStream(s => !s), [])
   const toggleListening = useCallback(() => setListening(l => !l), [])
   const toggleWeb = useCallback(() => setWeb(w => !w), [])
+  const toggleBrowser = useCallback(() => setBrowserTool(b => !b), [])
+  const toggleHttp = useCallback(() => setHttpTool(h => !h), [])
+  const toggleWiki = useCallback(() => setWikiTool(w => !w), [])
   const toggleNews = useCallback(() => setNewsTool(n => !n), [])
   const toggleWeather = useCallback(() => setWeatherTool(w => !w), [])
-  const toggleWiki = useCallback(() => setWikiTool(w => !w), [])
-  const toggleBrowse = useCallback(() => setBrowseTool(b => !b), [])
   const toggleGenshin = useCallback(() => setGenshinTool(g => !g), [])
-  const toggleHttp = useCallback(() => setHttpTool(h => !h), [])
+  const togglePokedex = useCallback(() => setPokedexTool(p => !p), [])
 
   const speakResponse = useCallback((text) => {
     if ("speechSynthesis" in window) {
@@ -115,12 +121,13 @@ const AIProvider = ({ children }) => {
     speaking, setSpeaking, speakResponse,
     listening, setListening, toggleListening,
     web, setWeb, toggleWeb,
+    browserTool, setBrowserTool, toggleBrowser,
+    httpTool, setHttpTool, toggleHttp,
+    wikiTool, setWikiTool, toggleWiki,
     newsTool, setNewsTool, toggleNews,
     weatherTool, setWeatherTool, toggleWeather,
-    wikiTool, setWikiTool, toggleWiki,
-    browseTool, setBrowseTool, toggleBrowse,
     genshinTool, setGenshinTool, toggleGenshin,
-    httpTool, setHttpTool, toggleHttp,
+    pokedexTool, setPokedexTool, togglePokedex,
     imageUrls, setImageUrls,
     aiProvider, setAIProvider, aiProviderToggle,
     aiKey: aiProvider === "groq" ? groqKey : openRouterKey,
@@ -134,11 +141,23 @@ const AIProvider = ({ children }) => {
     userPrompt, setUserPrompt,
     messages, setMessages, clearHistory,
   }), [
-    stream, speaking, listening, web, newsTool, weatherTool, wikiTool, browseTool, genshinTool, httpTool,
-    imageUrls, aiProvider, groqKey, openRouterKey, groqModel, openRouterModel,
-    freeModels, payModels, groqModels, customPrompt, userPrompt, messages,
-    toggleStream, speakResponse, toggleListening, toggleWeb, toggleNews, toggleWeather, toggleWiki,
-    toggleBrowse, toggleGenshin, toggleHttp, aiProviderToggle, clearHistory
+    stream, toggleStream,
+    speaking, speakResponse,
+    listening, toggleListening,
+    web, toggleWeb,
+    browserTool, toggleBrowser,
+    httpTool, toggleHttp,
+    wikiTool, toggleWiki,
+    newsTool, toggleNews,
+    weatherTool, toggleWeather,
+    genshinTool, toggleGenshin,
+    pokedexTool, togglePokedex,
+    imageUrls,
+    aiProvider, aiProviderToggle,
+    groqKey, openRouterKey,
+    groqModel, openRouterModel,
+    freeModels, payModels, groqModels, customPrompt, userPrompt,
+    messages, clearHistory
   ])
   return (
     <AIContext.Provider value={values}>

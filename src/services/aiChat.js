@@ -51,17 +51,18 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, web, mode, 
   }
 }
 
-const sendMessage = async (aiKey, aiProvider, model, models, messages, mode = "", web = false, newsTool = false, weatherTool = false, wikiTool = false, browseTool = false, genshinTool = false, httpTool = false) => {
+const sendMessage = async (aiKey, aiProvider, model, models, messages, mode = "", web = false, browserTool = false, httpTool = false, wikiTool = false, newsTool = false, weatherTool = false, genshinTool = false, pokedexTool = false) => {
   const permission = aiProvider === "groq" ? false : web
   const plugins = permission ? [{ id: "web" }] : undefined
   const fullModel = models.find((item) => item.id === model)
   const activeTools = []
+  if (browserTool) activeTools.push("browseUrl")
+  if (httpTool) activeTools.push("executeHttpRequest")
+  if (wikiTool) activeTools.push("searchWikipedia")
   if (newsTool) activeTools.push("searchNews")
   if (weatherTool) activeTools.push("getWeather")
-  if (wikiTool) activeTools.push("searchWikipedia")
-  if (browseTool) activeTools.push("browseUrl")
   if (genshinTool) activeTools.push("getPlayerBuild")
-  if (httpTool) activeTools.push("executeHttpRequest")
+  if (pokedexTool) activeTools.push("getPokemonDetails")
   const use_tools = (fullModel.supports_tools && activeTools.length > 0) ? activeTools : undefined
 
   const payload = {
