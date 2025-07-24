@@ -144,8 +144,10 @@ small, caption, sup, sub {
   .bg-video-rainbow {
     background-image: linear-gradient(
       45deg,
-      #ff00a9, /* Rosa Vibrante */
-      #c1121f  /* Vermelho Intenso */
+      #ff1b6b, /* Rosa vibrante */
+      #d902ee, /* Magenta */
+      #ff2800, /* Vermelho fogo */
+      #a40606  /* Vermelho escuro */
     );
     transition: all .5s ease;
     background-size: 200% auto;
