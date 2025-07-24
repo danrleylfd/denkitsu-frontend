@@ -161,9 +161,8 @@ small, caption, sup, sub {
       #b91c1c, /* Vermelho 700 */
       #991b1b, /* Vermelho 800 */
       #7f1d1d, /* Vermelho 900 */
-      #450a0a   /* Vermelho 950 */
     );
     background-size: 400% 400%; /* Aumenta o tamanho para um movimento mais suave */
-    animation: gradient-flow 6s ease infinite; /* Aplica a animação em loop */
+    animation: gradient-flow 5s ease infinite; /* Aplica a animação em loop */
   }
 }
