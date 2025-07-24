@@ -17,6 +17,7 @@ const AIProvider = ({ children }) => {
   const storedWikiTool = JSON.parse(localStorage.getItem("@Denkitsu:WikiTool"))
   const storedNewsTool = JSON.parse(localStorage.getItem("@Denkitsu:NewsTool"))
   const storedWeatherTool = JSON.parse(localStorage.getItem("@Denkitsu:WeatherTool"))
+  const storedCriptoTool = JSON.parse(localStorage.getItem("@Denkitsu:CriptoTool"))
   const storedGenshinTool = JSON.parse(localStorage.getItem("@Denkitsu:GenshinTool"))
   const storedPokedexTool = JSON.parse(localStorage.getItem("@Denkitsu:PokedexTool"))
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
@@ -38,6 +39,7 @@ const AIProvider = ({ children }) => {
   const [wikiTool, setWikiTool] = useState(storedWikiTool === null? false : storedWikiTool)
   const [newsTool, setNewsTool] = useState(storedNewsTool === null ? false : storedNewsTool)
   const [weatherTool, setWeatherTool] = useState(storedWeatherTool === null? false : storedWeatherTool)
+  const [criptoTool, setCriptoTool] = useState(storedCriptoTool === null? false : storedCriptoTool)
   const [genshinTool, setGenshinTool] = useState(storedGenshinTool === null? false : storedGenshinTool)
   const [pokedexTool, setPokedexTool] = useState(storedPokedexTool === null? false : storedPokedexTool)
   const [userPrompt, setUserPrompt] = useState("")
@@ -66,6 +68,8 @@ const AIProvider = ({ children }) => {
   useEffect(() => (localStorage.setItem("@Denkitsu:NewsTool", newsTool)), [newsTool])
 
   useEffect(() => (localStorage.setItem("@Denkitsu:WeatherTool", weatherTool)), [weatherTool])
+
+  useEffect(() => (localStorage.setItem("@Denkitsu:CriptoTool", criptoTool)), [criptoTool])
 
   useEffect(() => (localStorage.setItem("@Denkitsu:GenshinTool", genshinTool)), [genshinTool])
 
@@ -100,6 +104,7 @@ const AIProvider = ({ children }) => {
   const toggleWiki = useCallback(() => setWikiTool(w => !w), [])
   const toggleNews = useCallback(() => setNewsTool(n => !n), [])
   const toggleWeather = useCallback(() => setWeatherTool(w => !w), [])
+  const toggleCripto = useCallback(() => setCriptoTool(c => !c), [])
   const toggleGenshin = useCallback(() => setGenshinTool(g => !g), [])
   const togglePokedex = useCallback(() => setPokedexTool(p => !p), [])
 
@@ -126,6 +131,7 @@ const AIProvider = ({ children }) => {
     wikiTool, setWikiTool, toggleWiki,
     newsTool, setNewsTool, toggleNews,
     weatherTool, setWeatherTool, toggleWeather,
+    criptoTool, setCriptoTool, toggleCripto,
     genshinTool, setGenshinTool, toggleGenshin,
     pokedexTool, setPokedexTool, togglePokedex,
     imageUrls, setImageUrls,
@@ -150,6 +156,7 @@ const AIProvider = ({ children }) => {
     wikiTool, toggleWiki,
     newsTool, toggleNews,
     weatherTool, toggleWeather,
+    criptoTool, toggleCripto,
     genshinTool, toggleGenshin,
     pokedexTool, togglePokedex,
     imageUrls,

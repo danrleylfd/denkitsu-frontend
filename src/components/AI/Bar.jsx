@@ -4,7 +4,7 @@ import {
   LogIn, UserPlus,
   Settings, SendHorizontal, ImagePlus, ImageOff, Globe, GlobeLock, Newspaper, Shredder, Cloud, CloudOff,
   AudioLines, AudioWaveform, Brain, MessageCirclePlus, BookOpen, BookAlert, Link2, Link2Off, Wrench, Gamepad, Gamepad2,
-  Lock, Server, ServerOff, Mic, MicOff, MoreVertical, Smartphone,
+  Lock, Server, ServerOff, Mic, MicOff, MoreVertical, Smartphone, Bitcoin, CircleOff
 } from "lucide-react"
 
 import { useAuth } from "../../contexts/AuthContext"
@@ -27,6 +27,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
     wikiTool, toggleWiki,
     newsTool, toggleNews,
     weatherTool, toggleWeather,
+    criptoTool, toggleCripto,
     genshinTool, toggleGenshin,
     pokedexTool, togglePokedex,
   } = useAI()
@@ -158,6 +159,9 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
                   <Button variant={isToolsSupported && !stream && weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Prever Clima" onClick={toggleWeather} disabled={!isToolsSupported || stream || loading}>
                     {isToolsSupported && !stream ? <Cloud size={16} /> : <CloudOff size={16} />}
                   </Button>
+                  <Button variant={isToolsSupported && !stream && criptoTool ? "outline" : "secondary"} size="icon" $rounded title="Cripto (Beta)" onClick={toggleCripto} disabled={!isToolsSupported || stream || loading}>
+                    {isToolsSupported && !stream ? <Bitcoin size={16} /> : <CircleOff size={16} />}
+                  </Button>
                   <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>
                     {isToolsSupported && !stream ? <Gamepad2 size={16} /> : <Gamepad size={16} />}
                   </Button>
@@ -235,6 +239,9 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
                 </Button>
                 <Button variant={isToolsSupported && !stream && weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Prever Clima" onClick={toggleWeather} disabled={!isToolsSupported || stream || loading}>
                   {isToolsSupported && !stream ? <Cloud size={16} /> : <CloudOff size={16} />}
+                </Button>
+                <Button variant={isToolsSupported && !stream && criptoTool ? "outline" : "secondary"} size="icon" $rounded title="Cripto (Beta)" onClick={toggleCripto} disabled={!isToolsSupported || stream || loading}>
+                  {isToolsSupported && !stream ? <Bitcoin size={16} /> : <CircleOff size={16} />}
                 </Button>
                 <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>
                   {isToolsSupported && !stream ? <Gamepad2 size={16} /> : <Gamepad size={16} />}
