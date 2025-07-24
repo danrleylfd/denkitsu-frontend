@@ -59,6 +59,11 @@ export default {
           light: "#F75A68",
           dark: "#2D090C"
         },
+        "video-red": {
+          base: "#FF0000",
+          light: "#FF4D4D",
+          dark: "#B30000"
+        },
         lightBg: {
           primary: "#ffffff",
           secondary: "#ececec",

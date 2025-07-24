@@ -41,6 +41,8 @@ const Button = forwardRef(({
       "text-white bg-gradient-to-br from-pink-500 to-fuchsia-500 hover:from-pink-400 hover:to-fuchsia-400 active:from-pink-600 active:to-fuchsia-600 transform transition-transform hover:scale-105 active:scale-95",
     "gradient-purple":
       "text-white bg-gradient-to-br from-purple-500 to-violet-500 hover:from-purple-400 hover:to-violet-400 active:from-purple-600 active:to-violet-600 transform transition-transform hover:scale-105 active:scale-95",
+    "gradient-video":
+      "bg-transparent hover:bg-video-red-light active:bg-video-red-dark text-video-red-base hover:text-white active:text-white transform transition-transform hover:scale-105 active:scale-95",
   }
   const sizeClasses = {
     icon: "h-8 px-2 text-xs",
