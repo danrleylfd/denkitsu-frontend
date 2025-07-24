@@ -163,7 +163,7 @@ small, caption, sup, sub {
       theme('colors.danger.light'),
       theme('colors.danger.base'),
       theme('colors.primary.light'),
-      theme('colors.primary.base'),
+      theme('colors.primary.base')
     );
     background-size: 800% 800%;
     animation: gradient-flow 10s ease infinite;
