@@ -139,31 +139,3 @@ small, caption, sup, sub {
   font-weight: 400;
   line-height: 1.43;
 }
-
-@keyframes gradient-flow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-@layer utilities {
-  .bg-video-rainbow {
-    background-image: linear-gradient(
-      45deg,
-      #ffc0cb, /* Rosa claro (Pink) */
-      #ff69b4, /* Rosa vibrante (Hot Pink) */
-      #ff1493, /* Rosa escuro (Deep Pink) */
-      #f08080, /* Vermelho claro (Light Coral) */
-      #ff0000, /* Vermelho intenso (Red) */
-      #8b0000   /* Vermelho escuro (Dark Red) */
-    );
-    background-size: 400% 400%; /* Aumenta o tamanho para um movimento mais suave */
-    animation: gradient-flow 5s ease infinite; /* Aplica a animação em loop */
-  }
-}

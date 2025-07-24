@@ -40,9 +40,7 @@ const Button = forwardRef(({
     "gradient-pink":
       "text-white bg-gradient-to-br from-pink-500 to-fuchsia-500 hover:from-pink-400 hover:to-fuchsia-400 active:from-pink-600 active:to-fuchsia-600 transform transition-transform hover:scale-105 active:scale-95",
     "gradient-purple":
-      "text-white bg-gradient-to-br from-purple-500 to-violet-500 hover:from-purple-400 hover:to-violet-400 active:from-purple-600 active:to-violet-600 transform transition-transform hover:scale-105 active:scale-95",
-    "gradient-rainbow":
-      "text-white bg-video-rainbow transform transition-all hover:scale-105 active:scale-95",
+      "text-white bg-gradient-to-br from-purple-500 to-violet-700 hover:from-purple-400 hover:to-violet-600 active:from-purple-600 active:to-violet-800 transform transition-transform hover:scale-105 active:scale-95",
   }
   const sizeClasses = {
     icon: "h-8 px-2 text-xs",
