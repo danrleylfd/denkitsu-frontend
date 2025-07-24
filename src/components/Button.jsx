@@ -62,13 +62,13 @@ const Button = forwardRef(({
       {...props}
       type={type}
       className={`
-          ${baseClasses}
-          ${variantClasses[variant]}
-          ${loading ? sizeClasses.icon : sizeClasses[size]}
-          ${getBorderClasses()}
-          ${loading ? "pointer-events-none opacity-70" : ""}
-          ${className}
-        `}
+        ${baseClasses}
+        ${variantClasses[variant]}
+        ${loading ? sizeClasses.icon : sizeClasses[size]}
+        ${getBorderClasses()}
+        ${loading ? "pointer-events-none opacity-70" : ""}
+        ${className}
+      `}
       disabled={loading || disabled}>
       {loading && <Spinner />} {children}
     </button>
