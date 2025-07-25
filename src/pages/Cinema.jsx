@@ -6,7 +6,7 @@ import Paper from "../components/Paper"
 import { useNotification } from "../contexts/NotificationContext"
 
 const ContentView = ({ children }) => (
-  <main className="flex-1 flex flex-col w-full h-dvh overflow-y-auto ml-[3.5rem] md:ml-auto">
+  <main className="flex-1 flex flex-col w-full h-dvh overflow-y-auto ml-[3.5rem]">
     {children}
   </main>
 )
