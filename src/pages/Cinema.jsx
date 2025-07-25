@@ -114,7 +114,7 @@ const Cinema = () => {
     <SideMenu ContentView={ContentView} className="bg-cover bg-brand-purple">
       <div className="w-full h-full flex flex-col gap-4 p-4">
         {videos.length === 0 ? (
-          <Paper className="flex flex-col items-center justify-center h-96">
+          <Paper>
             <h1 className="text-2xl font-bold mb-4 text-lightFg-primary dark:text-darkFg-primary">Cinema Local</h1>
             <p className="mb-6 text-lightFg-secondary dark:text-darkFg-secondary">Selecione uma pasta do seu computador para listar os vídeos.</p>
             <Button onClick={handleSelectFolder} variant="primary" $rounded loading={isLoading}>
