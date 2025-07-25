@@ -113,7 +113,7 @@ const Cinema = () => {
 
   return (
     // ALTERADO: A classe `fixed` em SideMenu agora funciona corretamente com o novo layout
-    <SideMenu ContentView={ContentView} className="bg-cover bg-brand-purple">
+    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
       <div className="w-full flex flex-col gap-4 p-4">
         {videos.length === 0 ? (
           <div className="flex items-center justify-center h-full"> {/* NOVO: Wrapper para centralizar */}
