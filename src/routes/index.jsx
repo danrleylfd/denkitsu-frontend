@@ -28,6 +28,7 @@ const Weather = lazy(() => import("../pages/Weather"))
 const Translator = lazy(() => import("../pages/Translator"))
 const Codebase = lazy(() => import("../pages/Codebase"))
 const Editor = lazy(() => import("../pages/Editor"))
+const Cinema = lazy(() => import("../pages/Cinema"))
 
 const PageLoader = () => (
   <div className="flex justify-center items-center h-dvh w-full">
@@ -46,6 +47,7 @@ const AppRoutes = () => {
             <>
               <Route path="/" element={<News />} />
               <Route path="/editor" element={<Editor />} />
+              <Route path="/cinema" element={<Cinema />} />
               <Route path="/news" element={<News />} />
               <Route path="/kanban" element={<Kanban />} />
               <Route path="/pomodoro" element={<Pomodoro />} />
@@ -70,6 +72,7 @@ const AppRoutes = () => {
               <Route path="/" element={<News />} />
               <Route path="/news" element={<News />} />
               <Route path="/editor" element={<Editor />} />
+              <Route path="/cinema" element={<Cinema />} />
               <Route path="/todo" element={<Kanban />} />
               <Route path="/pomodoro" element={<Pomodoro />} />
               <Route path="/clima" element={<Weather />} />

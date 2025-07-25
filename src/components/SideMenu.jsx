@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom"
 import {
   Menu, X, Sun, Moon, Home, Newspaper, Cloud, Languages, Clock, Code, Bot, Kanban, Link2,
   PersonStanding, LogIn, UserPlus, Lock, KeyRound, LogOut,
-  Upload, Video, TrendingUp, Play, Edit2,
+  Upload, Video, TrendingUp, Play, Edit2, Clapperboard,
 } from "lucide-react"
 import { useTheme } from "../contexts/ThemeContext"
 import { useAuth } from "../contexts/AuthContext"
@@ -68,6 +68,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
     { icon: Cloud, label: "Clima", to: "/clima" },
     { icon: Languages, label: "Tradutor", to: "/translator" },
     { icon: Link2, label: "Atalho", to: "/atalho" },
+    { icon: Clapperboard, label: "Cinema", to: "/cinema" },
   ]
 
   const aiItems = [
