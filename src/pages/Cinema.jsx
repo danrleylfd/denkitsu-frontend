@@ -5,9 +5,8 @@ import Button from "../components/Button"
 import Paper from "../components/Paper"
 import { useNotification } from "../contexts/NotificationContext"
 
-// ALTERADO: O ContentView agora ocupa o espaço restante e controla sua própria rolagem.
 const ContentView = ({ children }) => (
-  <main className="flex-1 flex flex-col w-full h-dvh overflow-y-auto">
+  <main className="flex-1 flex flex-col w-full h-dvh overflow-y-auto ml-[3.5rem] md:ml-auto">
     {children}
   </main>
 )
@@ -112,12 +111,13 @@ const Cinema = () => {
   }, [notifyError])
 
   return (
-    // ALTERADO: A classe `fixed` em SideMenu agora funciona corretamente com o novo layout
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
-      <div className="w-full flex flex-col gap-4 p-4">
+        {/* ALTERADO: Todo o conteúdo agora está dentro de um Paper principal */}
+      <Paper className="bg-lightBg-primary dark:bg-darkBg-primary w-full h-full flex flex-col gap-4 p-4">
         {videos.length === 0 ? (
-          <div className="flex items-center justify-center h-full"> {/* NOVO: Wrapper para centralizar */}
-            <Paper className="flex flex-col items-center justify-center text-center">
+          <div className="flex items-center justify-center h-full">
+            {/* ALTERADO: Fundo secundário para contraste com o novo fundo primário */}
+            <Paper className="bg-lightBg-secondary dark:bg-darkBg-secondary flex flex-col items-center justify-center text-center">
               <h1 className="text-2xl font-bold mb-4 text-lightFg-primary dark:text-darkFg-primary">Cinema Local</h1>
               <p className="mb-6 text-lightFg-secondary dark:text-darkFg-secondary">Selecione uma pasta do seu computador para listar os vídeos.</p>
               <Button onClick={handleSelectFolder} variant="primary" $rounded loading={isLoading}>
@@ -128,7 +128,7 @@ const Cinema = () => {
           </div>
         ) : (
           <>
-            <div className="flex justify-between items-center flex-shrink-0"> {/* NOVO: flex-shrink-0 impede que o header encolha */}
+            <div className="flex justify-between items-center flex-shrink-0">
               <h2 className="text-xl font-bold text-lightFg-primary dark:text-darkFg-primary">Pasta: {directoryName}</h2>
               <Button onClick={handleSelectFolder} variant="secondary" $rounded>
                 <FolderSearch className="mr-2" size={16} />
@@ -142,7 +142,7 @@ const Cinema = () => {
             </div>
           </>
         )}
-      </div>
+      </Paper>
       <VideoPlayerModal video={selectedVideo} onClose={() => setSelectedVideo(null)} />
     </SideMenu>
   )
