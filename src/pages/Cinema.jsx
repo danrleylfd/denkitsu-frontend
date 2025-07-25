@@ -113,11 +113,11 @@ const Cinema = () => {
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
         {/* ALTERADO: Todo o conteúdo agora está dentro de um Paper principal */}
-      <Paper className="bg-lightBg-primary dark:bg-darkBg-primary w-full h-full flex flex-col gap-4 p-4">
+      <Paper>
         {videos.length === 0 ? (
           <div className="flex items-center justify-center h-full">
             {/* ALTERADO: Fundo secundário para contraste com o novo fundo primário */}
-            <Paper className="bg-lightBg-secondary dark:bg-darkBg-secondary flex flex-col items-center justify-center text-center">
+            <Paper>
               <h1 className="text-2xl font-bold mb-4 text-lightFg-primary dark:text-darkFg-primary">Cinema Local</h1>
               <p className="mb-6 text-lightFg-secondary dark:text-darkFg-secondary">Selecione uma pasta do seu computador para listar os vídeos.</p>
               <Button onClick={handleSelectFolder} variant="primary" $rounded loading={isLoading}>
