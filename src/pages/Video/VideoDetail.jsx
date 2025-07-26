@@ -42,11 +42,9 @@ const VideoDetail = () => {
       setLikeCount(videoData.likes?.length || 0)
       setCommentCount(videoData.comments?.length || 0)
       setShareCount((videoData.shares?.length || 0) + (videoData.sharesExtras || 0))
-
       const commentsData = await getCommentsForVideo(videoId)
       setComments(commentsData || [])
       setCommentCount(commentsData?.length || 0)
-
       if (signed && videoData.likes?.includes(user?._id)) {
         setIsLiked(true)
       } else {
@@ -60,7 +58,7 @@ const VideoDetail = () => {
     } finally {
       setLoading(false)
     }
-  }, [videoId, signed, user?._id])
+  }, [videoId, signed, user?._id, notifyError])
 
   useEffect(() => {
     if (videoId) {
@@ -123,18 +121,21 @@ const VideoDetail = () => {
   }
 
   const handleAddComment = async (content) => {
-    if (!signed) notifyWarning("Você precisa estar logado para comentar.")
-    setLoading(true)
+    if (!signed) {
+      notifyWarning("Você precisa estar logado para comentar.")
+      throw new Error("User not signed in")
+    }
     try {
       const newComment = await addComment(videoId, content)
       setComments((prevComments) => [newComment, ...prevComments])
       setCommentCount((prev) => prev + 1)
-      setLoading(false)
-    } catch (error) {
-      console.error("Erro ao adicionar comentário:", error)
-      notifyError("Falha ao adicionar comentário.")
-      setLoading(false)
-      throw error
+    } catch (err) {
+      if (err.response && err.response.data.error) {
+        notifyError(err.response.data.error.message)
+      } else {
+        notifyError("Falha ao adicionar comentário.")
+      }
+      throw err
     }
   }
 
