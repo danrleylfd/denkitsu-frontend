@@ -50,8 +50,8 @@ const SignIn = () => {
       await signIn({ email, password })
       navigate("/")
     } catch (err) {
-      console.error(err.response?.data?.error || err)
-      notifyError("Falha ao entrar. Verifique suas credenciais.")
+      if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+      else notifyError("Não foi possível conectar ao servidor. Tente novamente.")
     } finally {
       setLoading(false)
     }
