@@ -95,7 +95,6 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
 
   const signedItems = [
     { icon: PersonStanding, label: "Perfil", to: "/profile" },
-    // { icon: LogOut, label: "Sair", to: "/auth/signout" },
   ]
 
   const currentMenuItems = signed ? [...menuItems, ...signedItems] : menuItems

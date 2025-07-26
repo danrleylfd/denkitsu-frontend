@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Link, useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { LogOut, Pencil, Trash, X, Check, Github } from "lucide-react"
 
 import { useAuth } from "../contexts/AuthContext"
@@ -20,7 +20,7 @@ const Profile = () => {
   const { userId } = useParams()
   const { user, signOut, updateUser } = useAuth()
   const { notifyWarning, notifyError, notifyInfo } = useNotification()
-  const connectedUserId = userId || user._id
+  const connectedUserId = userId || user?._id
   const [userData, setUserData] = useState(null)
   const [isEditing, setIsEditing] = useState(false)
   const [name, setName] = useState("")
@@ -30,27 +30,27 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
+      if (!connectedUserId) {
+        navigate("/signin")
+        return
+      }
       try {
         setLoading(true)
         const data = await getUserAccount(connectedUserId)
         setUserData(data)
         setName(data.name)
         setAvatarUrl(data.avatarUrl)
-        if (user?._id === data._id) {
-          updateUser(data)
-        }
+        if (user?._id === data._id) updateUser(data)
       } catch (err) {
-        console.error(err)
-        notifyError("Falha ao carregar dados do perfil.")
+        if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+        else notifyError("Falha ao carregar dados do perfil.")
         navigate("/")
       } finally {
         setLoading(false)
       }
     }
-    if (connectedUserId) {
-        fetchUserData()
-    }
-  }, [connectedUserId, notifyError, navigate, updateUser, user?._id])
+    fetchUserData()
+  }, [connectedUserId, navigate, notifyError, updateUser, user?._id])
 
   const handleGithubConnect = () => {
     const token = sessionStorage.getItem("@Denkitsu:token")
@@ -63,15 +63,15 @@ const Profile = () => {
 
   const handleGithubUnlink = async () => {
     if (!window.confirm("Tem certeza que deseja desvincular sua conta do GitHub? Você precisará usar seu e-mail e senha para fazer login.")) return
-
     setLoading(true)
     try {
       const updatedUser = await unlinkGithubAccount()
       setUserData(updatedUser)
       updateUser(updatedUser)
       notifyInfo("Conta do GitHub desvinculada com sucesso!")
-    } catch (error) {
-      notifyError("Falha ao desvincular a conta.")
+    } catch (err) {
+      if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+      else notifyError("Falha ao desvincular a conta do GitHub.")
     } finally {
       setLoading(false)
     }
@@ -87,18 +87,20 @@ const Profile = () => {
 
   const handleSaveChanges = async (e) => {
     e.preventDefault()
+    if (!name.trim() || !avatarUrl.trim()) {
+      notifyWarning("Nome e URL do avatar são obrigatórios.")
+      return
+    }
     setLoading(true)
     try {
-      if (!name || !avatarUrl) {
-        notifyWarning("Nome e URL do avatar são obrigatórios.")
-        return
-      }
       const updatedUser = await editUserAccount({ name, avatarUrl })
       setUserData(updatedUser)
       updateUser(updatedUser)
       setIsEditing(false)
+      notifyInfo("Perfil atualizado com sucesso!")
     } catch (err) {
-      notifyError(err.response?.data?.error || "Falha ao atualizar perfil.")
+      if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+      else notifyError("Falha ao atualizar o perfil.")
     } finally {
       setLoading(false)
     }
@@ -115,12 +117,12 @@ const Profile = () => {
     setLoading(true)
     try {
       await deleteUserAccount()
+      notifyInfo("Conta excluída com sucesso.")
       signOut()
       navigate("/signup")
-      alert("Conta excluída com sucesso.")
     } catch (err) {
-      console.error(err)
-      notifyError(err.response?.data?.error || "Falha ao excluir conta.")
+      if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+      else notifyError("Falha ao excluir a conta.")
     } finally {
       setLoading(false)
     }
