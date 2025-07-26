@@ -41,8 +41,9 @@ const Profile = () => {
         setName(data.name)
         setAvatarUrl(data.avatarUrl)
         if (user?._id === data._id) updateUser(data)
-      } catch (err) {
-        if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+      } catch (error) {
+        console.error("Error fetching user account:", error)
+        if (error.response && error.response.data.error) notifyError(error.response.data.error.message)
         else notifyError("Falha ao carregar dados do perfil.")
         navigate("/")
       } finally {
@@ -69,8 +70,9 @@ const Profile = () => {
       setUserData(updatedUser)
       updateUser(updatedUser)
       notifyInfo("Conta do GitHub desvinculada com sucesso!")
-    } catch (err) {
-      if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+    } catch (error) {
+      console.error("Error unlinking GitHub account:", error)
+      if (error.response && error.response.data.error) notifyError(error.response.data.error.message)
       else notifyError("Falha ao desvincular a conta do GitHub.")
     } finally {
       setLoading(false)
@@ -98,8 +100,9 @@ const Profile = () => {
       updateUser(updatedUser)
       setIsEditing(false)
       notifyInfo("Perfil atualizado com sucesso!")
-    } catch (err) {
-      if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+    } catch (error) {
+      console.error("Error updating user account:", error)
+      if (error.response && error.response.data.error) notifyError(error.response.data.error.message)
       else notifyError("Falha ao atualizar o perfil.")
     } finally {
       setLoading(false)
@@ -120,8 +123,9 @@ const Profile = () => {
       notifyInfo("Conta excluída com sucesso.")
       signOut()
       navigate("/signup")
-    } catch (err) {
-      if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+    } catch (error) {
+      console.error("Error deleting user account:", error)
+      if (error.response && error.response.data.error) notifyError(error.response.data.error.message)
       else notifyError("Falha ao excluir a conta.")
     } finally {
       setLoading(false)
