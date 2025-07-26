@@ -40,19 +40,10 @@ const AI = () => {
         if (aiKey) setPayModels(loadedPay || [])
         setGroqModels(loadedGroq || [])
       } catch (error) {
-        const { message } = (() => {
-          try {
-            return JSON.parse(error.message)
-          } catch (err) {
-            console.error(err)
-            notifyError("Falha ao carregar modelos. Tente novamente.")
-            return { message: "Falha ao carregar modelos. Tente novamente." }
-          }
-        })()
-        setMessages(prev => [...prev, { id: Date.now(), role: "assistant", content: message, reasoning: "" }])
+        notifyError(error.message || "Falha ao carregar modelos de IA.")
       }
     })()
-  }, [aiKey, setFreeModels, setPayModels, setGroqModels, setMessages, notifyError])
+  }, [aiKey, setFreeModels, setPayModels, setGroqModels, notifyError])
 
   const onAddImage = () => {
     if (imageUrls.length >= 3) return notifyWarning("Você pode adicionar no máximo 3 imagens.")
@@ -73,55 +64,48 @@ const AI = () => {
         ? { role, content: content.map(item => (item.type === "text" ? { type: "text", text: item.content } : item)) }
         : { role, content }
     )
-
-    const cleanContent = raw => {
-      let reasoning = ""
-      const content = raw.replace(/<think>(.*?)<\/think>/gs, (_, r) => {
-        reasoning += r
-        return ""
-      })
-      return { content, reasoning }
-    }
-
-    if (stream) {
-      const placeholder = {
-        id: Date.now(),
-        role: "assistant",
-        content: "",
-        reasoning: "",
-        _contentBuffer: "",
-        _reasoningBuffer: "",
-        timestamp: new Date().toISOString()
-      }
-      setMessages(prev => [...prev, placeholder])
-      try {
+    try {
+      if (stream) {
+        const placeholder = {
+          id: Date.now(),
+          role: "assistant",
+          content: "",
+          reasoning: "",
+          _contentBuffer: "",
+          _reasoningBuffer: "",
+          timestamp: new Date().toISOString()
+        }
+        setMessages(prev => [...prev, placeholder])
         await sendMessageStream(aiKey, aiProvider, model, apiMessages, web, selectedPrompt, delta => {
           if (delta.content) placeholder._contentBuffer += delta.content
           if (delta.reasoning) placeholder._reasoningBuffer += delta.reasoning
-          if (delta.tool_calls?.[0]?.arguments?.reasoning) placeholder._reasoningBuffer += delta.tool_calls[0].arguments.reasoning
+          if (delta.tool_calls?.[0]?.function?.arguments) placeholder._reasoningBuffer += delta.tool_calls[0].function.arguments
+          const cleanContent = raw => {
+            let reasoning = ""
+            const content = raw.replace(/(<think>.*?<\/think>|<thinking>.*?<\/thinking>|◁think▷.*?◁\/think▷)/gs, (_, r) => {
+              reasoning += r
+              return ""
+            })
+            return { content, reasoning }
+          }
           const { content, reasoning } = cleanContent(placeholder._contentBuffer)
           placeholder.content = content
           placeholder.reasoning = (placeholder._reasoningBuffer + reasoning).trim()
           setMessages((prev) => prev.map(msg => (msg.id === placeholder.id ? { ...placeholder } : msg)))
         })
-      } catch (error) {
-        const err = JSON.parse(error.message)
-        console.error(err)
-        notifyError(err.message)
-        setMessages(prev => prev.filter(msg => msg.id !== placeholder.id))
-      } finally {
-        setLoading(false)
-      }
-    } else {
-      try {
-        if (genshinTool) apiMessages.push({
-          role: "system",
-          content: "Denkitsu deve entender como o personagem funciona. Divida a análise de personagens em 5 tópicos: 1. Informações gerais sobre o personagem; 2. Informações sobre como o personagem funciona; 3. Status do personagem(Números); 4. Status recomendados(Números); 5. Sua opinião sobre os Status(atual) do personagem."
-        })
+      } else {
         const data = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, selectedPrompt, web, browserTool, httpTool, wikiTool, newsTool, weatherTool, criptoTool, genshinTool, pokedexTool)
         const res = data?.choices?.[0]?.message
         if (!res) return
-        const { content, reasoning } = cleanContent(res.content || "")
+        const cleanContent = (raw = "") => {
+          let reasoning = ""
+          const content = raw.replace(/(<think>.*?<\/think>|<thinking>.*?<\/thinking>|◁think▷.*?◁\/think▷)/gs, (_, r) => {
+            reasoning += r;
+            return ""
+          });
+          return { content, reasoning }
+        }
+        const { content, reasoning } = cleanContent(res.content)
         setMessages(prev => [
           ...prev,
           {
@@ -132,20 +116,18 @@ const AI = () => {
             timestamp: new Date().toISOString()
           }
         ])
-      } catch (error) {
-        console.error(error)
-        const err = JSON.parse(error.message)
-        console.error(err)
-        notifyError(err.message)
-      } finally {
-        setLoading(false)
       }
+    } catch (err) {
+      if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+      else notifyError("Falha na comunicação com o servidor de IA.")
+      setMessages(prev => prev.filter(msg => msg.content !== "" || msg.id !== err.id))
+    } finally {
+      setLoading(false)
     }
-  }, [aiKey, aiProvider, model, freeModels, payModels, groqModels, selectedPrompt, stream, web, browserTool, httpTool, wikiTool, newsTool, weatherTool, criptoTool, genshinTool, pokedexTool, setMessages, setLoading, notifyError])
+  }, [aiProvider, aiKey, model, stream, web, browserTool, httpTool, wikiTool, newsTool, weatherTool, criptoTool, genshinTool, pokedexTool, freeModels, payModels, groqModels, selectedPrompt, setMessages, notifyError])
 
   const onSendMessage = useCallback(async () => {
     if (loading || (!userPrompt.trim() && imageUrls.length === 0)) return
-
     const newMessage = {
       role: "user",
       content: [
@@ -154,27 +136,22 @@ const AI = () => {
       ],
       timestamp: new Date().toISOString()
     }
-
     const history = [...messages, newMessage]
     setMessages(history)
     setUserPrompt("")
     setImageUrls([])
-
     await executeSendMessage(history)
   }, [loading, userPrompt, imageUrls, messages, setMessages, setUserPrompt, setImageUrls, executeSendMessage])
 
   const handleRegenerateResponse = useCallback(async () => {
     if (loading) return
-
     const lastMessage = messages[messages.length - 1]
     if (lastMessage?.role !== "assistant") {
       notifyWarning("Apenas a última resposta da IA pode ser regenerada.")
       return
     }
-
     const historyWithoutLastResponse = messages.slice(0, -1)
     setMessages(historyWithoutLastResponse)
-
     await executeSendMessage(historyWithoutLastResponse)
   }, [loading, messages, setMessages, executeSendMessage, notifyWarning])
 
