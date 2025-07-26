@@ -9,8 +9,7 @@ import { getLinkByLabel } from "../services/linker"
 import SideMenu from "../components/SideMenu"
 
 const ContentView = ({ children }) => (
-  <main
-    className="flex flex-col justify-center items-center p-2 gap-2 mx-auto h-dvh w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[75%] lg:max-w-[67%] ml-[3.5rem] md:ml-auto">
+  <main className="flex flex-col justify-center items-center p-2 gap-2 mx-auto h-dvh w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[75%] lg:max-w-[67%] ml-[3.5rem] md:ml-auto">
     {children}
   </main>
 )
@@ -29,9 +28,7 @@ const Redirect = () => {
       } catch (err) {
         if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
         else notifyError("Ocorreu um erro ao processar este atalho.")
-        setTimeout(() => {
-          navigate("/")
-        }, 3000)
+        setTimeout(() => { navigate("/") }, 3000)
       }
     }
     if (label) handleRedirect()
