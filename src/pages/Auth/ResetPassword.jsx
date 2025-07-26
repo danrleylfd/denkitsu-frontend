@@ -43,14 +43,18 @@ const ResetPassword = () => {
     try {
       await api.post("/auth/reset_password", { token, email, password })
       notifyInfo("Senha redefinida com sucesso! Você será redirecionado para o login.")
-      setTimeout(() => navigate("/"), 3000)
+      setTimeout(() => navigate("/signin"), 3000)
     } catch (err) {
-      console.error(err.response?.data?.error || err)
-      notifyError("Falha ao redefinir a senha. Verifique o token e o email informados.")
+      if (err.response && err.response.data.error) {
+        notifyError(err.response.data.error.message)
+      } else {
+        notifyError("Ocorreu um erro inesperado ao redefinir a senha.")
+      }
     } finally {
       setLoading(false)
     }
   }
+
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
       <Form title="Redefinir Senha" onSubmit={handleResetPassword}>

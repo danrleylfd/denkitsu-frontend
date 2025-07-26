@@ -19,20 +19,25 @@ const ForgotPassword = () => {
   const { notifyInfo, notifyWarning, notifyError } = useNotification()
   const [email, setEmail] = useState("")
   const [loading, setLoading] = useState(false)
+
   const handleForgotPassword = async () => {
     if (!email) return notifyWarning("Por favor, insira seu email.")
     setLoading(true)
     try {
       await api.post("/auth/forgot_password", { email })
-      notifyInfo("Email enviado com sucesso! Verifique sua caixa de entrada.")
+      notifyInfo("E-mail de recuperação enviado! Verifique sua caixa de entrada e spam.")
       setEmail("")
     } catch (err) {
-      console.error(err.response?.data?.error || err)
-      notifyError("Falha ao enviar email. Verifique o endereço informado.")
+      if (err.response && err.response.data.error) {
+        notifyError(err.response.data.error.message)
+      } else {
+        notifyError("Ocorreu um erro inesperado.")
+      }
     } finally {
       setLoading(false)
     }
   }
+
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
       <Form title="Recuperar Conta" onSubmit={handleForgotPassword}>

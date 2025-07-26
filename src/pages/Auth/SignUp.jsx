@@ -26,6 +26,7 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+
   const handleSignUp = async () => {
     if (!name || !email || !password || !confirmPassword) return notifyWarning("Por favor, preencha todos os campos.")
     if (password !== confirmPassword) return notifyWarning("As senhas não coincidem.")
@@ -35,12 +36,16 @@ const SignUp = () => {
       await signUp({ name, email, password })
       navigate("/signin")
     } catch (err) {
-      console.error(err.response?.data?.error || err)
-      notifyError("Falha ao cadastrar. Verifique os dados informados.")
+      if (err.response && err.response.data.error) {
+        notifyError(err.response.data.error.message)
+      } else {
+        notifyError("Ocorreu um erro inesperado no cadastro.")
+      }
     } finally {
       setLoading(false)
     }
   }
+
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
       <Form title="Cadastrar" onSubmit={handleSignUp}>
