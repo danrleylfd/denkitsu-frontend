@@ -16,8 +16,8 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, web, mode, 
   const response = await fetch(`${api.defaults.baseURL}/ai/chat/completions`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
       ...api.defaults.headers.common,
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(payload)
   })
