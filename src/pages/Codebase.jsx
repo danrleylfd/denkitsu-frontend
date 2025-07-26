@@ -464,7 +464,7 @@ const Codebase = () => {
     } finally {
       setIsProcessing(false)
     }
-  }, [githubRepo, user, notifyError, notifyWarning, handleFileProcessing])
+  }, [githubRepo, user, handleFileProcessing])
 
   const handleDrop = useCallback(async (items) => {
     setIsProcessing(true)
