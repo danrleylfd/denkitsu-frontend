@@ -22,33 +22,26 @@ const Redirect = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const fetchLink = async () => {
+    const handleRedirect = async () => {
+      if (label === "signout") {
+        signOut()
+        navigate("/signin")
+        return
+      }
       try {
-        if (label === "signout") {
-          signOut()
-          navigate("/signin")
-          return
-        }
         const data = await getLinkByLabel(label)
-        if (data.link) {
-          window.location.href = data.link
-        } else {
-          navigate("/")
-        }
+        if (data.link) window.location.href = data.link
+        else navigate("/")
       } catch (err) {
-        if (err.response && err.response.data.error) {
-          notifyError(err.response.data.error.message)
-        } else {
-          notifyError("Ocorreu um erro ao processar este atalho.")
-        }
+        if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+        else notifyError("Ocorreu um erro ao processar este atalho.")
         setTimeout(() => {
           navigate("/")
         }, 3000)
       }
     }
-
-    fetchLink()
-  }, [label, signOut, navigate, notifyError])
+    handleRedirect()
+  }, [])
 
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
