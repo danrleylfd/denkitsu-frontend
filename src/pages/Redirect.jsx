@@ -20,28 +20,40 @@ const Redirect = () => {
   const { signOut } = useAuth()
   const { notifyError } = useNotification()
   const navigate = useNavigate()
+
   useEffect(() => {
     const fetchLink = async () => {
       try {
         if (label === "signout") {
           signOut()
-          return navigate("/signin")
+          navigate("/signin")
+          return
         }
         const data = await getLinkByLabel(label)
-        if (data.link) window.location.href = data.link
-        else navigate("/")
-      } catch (error) {
-        console.error("Erro ao redirecionar:", error)
-        // notifyError(`Falha ao redirecionar para ${label}.`)
-        navigate("/")
+        if (data.link) {
+          window.location.href = data.link
+        } else {
+          navigate("/")
+        }
+      } catch (err) {
+        if (err.response && err.response.data.error) {
+          notifyError(err.response.data.error.message)
+        } else {
+          notifyError("Ocorreu um erro ao processar este atalho.")
+        }
+        setTimeout(() => {
+          navigate("/")
+        }, 3000)
       }
     }
+
     fetchLink()
-  }, [])
+  }, [label, signOut, navigate, notifyError])
+
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
       <h3 className="text-lightFg-primary dark:text-darkFg-primary">
-        Redirecionando para {label || "Início"}...
+        Redirecionando...
       </h3>
     </SideMenu>
   )
