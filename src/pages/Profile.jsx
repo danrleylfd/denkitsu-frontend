@@ -106,7 +106,7 @@ const Profile = () => {
 
   const handleSignOut = () => {
     signOut()
-    navigate("/signout")
+    navigate("/signin")
   }
 
   const handleDeleteAccount = async () => {

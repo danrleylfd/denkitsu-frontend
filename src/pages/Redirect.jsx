@@ -17,17 +17,11 @@ const ContentView = ({ children }) => (
 
 const Redirect = () => {
   const { label } = useParams()
-  const { signOut } = useAuth()
   const { notifyError } = useNotification()
   const navigate = useNavigate()
 
   useEffect(() => {
     const handleRedirect = async () => {
-      if (label === "signout") {
-        signOut()
-        navigate("/signin")
-        return
-      }
       try {
         const data = await getLinkByLabel(label)
         if (data.link) window.location.href = data.link
@@ -35,16 +29,19 @@ const Redirect = () => {
       } catch (err) {
         if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
         else notifyError("Ocorreu um erro ao processar este atalho.")
-        setTimeout(() => { navigate("/") }, 3000)
+        setTimeout(() => {
+          navigate("/")
+        }, 3000)
       }
     }
-    handleRedirect()
+    if (label) handleRedirect()
+    else navigate("/")
   }, [])
 
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
       <h3 className="text-lightFg-primary dark:text-darkFg-primary">
-        Redirecionando...
+        Redirecionando para {label || "Início"}...
       </h3>
     </SideMenu>
   )
