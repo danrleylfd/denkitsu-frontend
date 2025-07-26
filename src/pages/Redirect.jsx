@@ -35,9 +35,7 @@ const Redirect = () => {
       } catch (err) {
         if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
         else notifyError("Ocorreu um erro ao processar este atalho.")
-        setTimeout(() => {
-          navigate("/")
-        }, 3000)
+        setTimeout(() => { navigate("/") }, 3000)
       }
     }
     handleRedirect()
