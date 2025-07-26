@@ -50,7 +50,7 @@ const Profile = () => {
       }
     }
     fetchUserData()
-  }, [connectedUserId, navigate, notifyError, updateUser, user?._id])
+  }, [connectedUserId, navigate, updateUser, user?._id])
 
   const handleGithubConnect = () => {
     const token = sessionStorage.getItem("@Denkitsu:token")
