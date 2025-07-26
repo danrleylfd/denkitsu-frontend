@@ -33,21 +33,24 @@ const Weather = () => {
   }, [])
 
   const buscarPorCidade = useCallback(async () => {
-    if (!cityInput.trim() || !isMounted.current) return
+    if (!cityInput.trim()) return
     setLoading(true)
     try {
       const data = await getWeatherByLocation(cityInput.trim())
       if (isMounted.current) setWeatherData(data)
     } catch (err) {
-      if (isMounted.current) notifyError("Não foi possível encontrar o clima para esta cidade")
+      if (isMounted.current) {
+        if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+        else notifyError("Não foi possível encontrar o clima para esta cidade.")
+      }
     } finally {
       if (isMounted.current) setLoading(false)
     }
-  }, [cityInput])
+  }, [cityInput, notifyError])
 
   const buscarPorCoordenadas = useCallback(() => {
     if (!navigator.geolocation) {
-      notifyError("Geolocalização não suportada pelo seu navegador")
+      notifyError("Geolocalização não suportada pelo seu navegador.")
       setLoading(false)
       return
     }
@@ -57,23 +60,24 @@ const Weather = () => {
         try {
           const { latitude, longitude } = position.coords
           const data = await getWeatherByCoordinates(latitude, longitude)
-          if (isMounted.current) {
-            setWeatherData(data)
-          }
+          if (isMounted.current) setWeatherData(data)
         } catch (err) {
-          if (isMounted.current) notifyError("Erro ao obter clima pela sua localização")
+          if (isMounted.current) {
+            if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+            else notifyError("Erro ao obter clima pela sua localização.")
+          }
         } finally {
           if (isMounted.current) setLoading(false)
         }
       },
       (err) => {
         if (isMounted.current) {
-          notifyError("Permissão de localização negada ou erro ao obter localização")
+          notifyError("Permissão de localização negada ou erro ao obter localização.")
           setLoading(false)
         }
       }
     )
-  }, [])
+  }, [notifyError])
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") buscarPorCidade()
@@ -81,7 +85,7 @@ const Weather = () => {
 
   useEffect(() => {
     buscarPorCoordenadas()
-  }, [])
+  }, [buscarPorCoordenadas])
 
   return (
     <SideMenu ContentView={ContentView} className="bg-cover bg-brand-purple">
@@ -92,7 +96,8 @@ const Weather = () => {
           value={cityInput}
           onChange={(e) => setCityInput(e.target.value)}
           onKeyDown={handleKeyPress}
-          placeholder="Buscar por cidade...">
+          placeholder="Buscar por cidade..."
+        >
           <Button variant="outline" size="icon" $rounded onClick={buscarPorCidade}>
             <SearchIcon size={16} />
           </Button>
