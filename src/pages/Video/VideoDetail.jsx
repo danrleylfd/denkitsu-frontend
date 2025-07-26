@@ -108,12 +108,14 @@ const VideoDetail = () => {
     setShareCount(originalShareCount + 1)
     try {
       await shareVideo(videoId)
-      setLoading(false)
     } catch (err) {
+      setShareCount(originalShareCount)
       console.error("Erro ao compartilhar:", err)
       notifyError("Ocorreu um erro ao compartilhar o vídeo.")
-      setShareCount(originalShareCount)
+    } finally {
       setLoading(false)
+      if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+      else notifyError("Ocorreu um erro ao compartilhar o vídeo.")
     }
   }
 
