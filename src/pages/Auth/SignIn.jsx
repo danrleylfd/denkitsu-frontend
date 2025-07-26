@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { Eye, EyeClosed, Github } from "lucide-react"
 
 import { useAuth } from "../../contexts/AuthContext"
@@ -24,12 +24,27 @@ const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
 
   const backendGithubAuthUrl = "https://denkitsu.up.railway.app/auth/github"
 
+  useEffect(() => {
+    const errorCode = searchParams.get("error_code")
+    if (errorCode) {
+      const errorMessages = {
+        GITHUB_CODE_MISSING: "O GitHub não retornou um código de autorização.",
+        GITHUB_TOKEN_FETCH_FAILED: "Falha na comunicação com o GitHub. Tente novamente.",
+        GITHUB_ACCOUNT_IN_USE: "Esta conta do GitHub já está vinculada a outro usuário.",
+        GITHUB_AUTH_FAILED: "Ocorreu um erro inesperado durante a autenticação com o GitHub.",
+        USER_LINK_NOT_FOUND: "Usuário para vincular não encontrado."
+      }
+      const message = errorMessages[errorCode] || errorMessages.GITHUB_AUTH_FAILED
+      notifyError(message)
+    }
+  }, [searchParams, notifyError])
+
   const handleSignIn = async () => {
     if (!email || !password) return notifyError("Por favor, preencha todos os campos.")
-
     setLoading(true)
     try {
       await signIn({ email, password })
@@ -41,6 +56,7 @@ const SignIn = () => {
       setLoading(false)
     }
   }
+
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
       <Form title="Entrar" onSubmit={handleSignIn}>
