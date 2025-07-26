@@ -81,6 +81,7 @@ const VideoDetail = () => {
   }
 
   const handleLikeToggle = async () => {
+    if (!signed) return notifyWarning("Você precisa estar logado para interagir.")
     setLoading(true)
     const originalIsLiked = isLiked
     const originalLikeCount = likeCount
@@ -89,12 +90,13 @@ const VideoDetail = () => {
     try {
       if (originalIsLiked) await unlikeVideo(videoId)
       else await likeVideo(videoId)
-      setLoading(false)
     } catch (err) {
-      console.error("Erro ao curtir/descurtir:", err)
-      notifyError("Ocorreu um erro ao processar sua curtida.")
       setIsLiked(originalIsLiked)
       setLikeCount(originalLikeCount)
+      console.error("Erro ao curtir/descurtir:", err)
+      if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+      else notifyError("Ocorreu um erro ao processar sua curtida.")
+    } finally {
       setLoading(false)
     }
   }
