@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react"
 import { Pencil, Trash, MessageCircleReply, X } from "lucide-react"
+
 import { useAuth } from "../contexts/AuthContext"
+import { useNotification } from "../contexts/NotificationContext"
+
 import { deleteComment, getRepliesForComment } from "../services/video"
 
 import CommentForm from "./CommentForm"
@@ -9,6 +12,7 @@ import PurpleLink from "./Embeds/PurpleLink"
 
 const CommentItem = ({ comment, videoId, onCommentDeleted, onReplyAdded, disabled }) => {
   const { user, signed } = useAuth()
+  const { notifyError } = useNotification()
   const [showReplyForm, setShowReplyForm] = useState(false)
   const [replies, setReplies] = useState([])
   const isAuthor = signed && user?._id === comment.user?._id
@@ -21,7 +25,6 @@ const CommentItem = ({ comment, videoId, onCommentDeleted, onReplyAdded, disable
       console.error("Erro ao buscar respostas:", error)
     }
   }
-
   useEffect(() => {
     fetchReplies()
   }, [])
@@ -42,9 +45,9 @@ const CommentItem = ({ comment, videoId, onCommentDeleted, onReplyAdded, disable
       try {
         await deleteComment(videoId, comment._id)
         onCommentDeleted(comment._id)
-      } catch (error) {
-        console.error("Erro ao excluir comentário/resposta:", error)
-        alert("Falha ao deletar.")
+      } catch (err) {
+        if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+        else notifyError("Falha ao deletar o comentário.")
       }
     }
   }
@@ -53,7 +56,6 @@ const CommentItem = ({ comment, videoId, onCommentDeleted, onReplyAdded, disable
     <div className="bg-lightBg-secondary dark:bg-darkBg-secondary flex flex-col gap-2 p-4 rounded-md">
       <div className="flex items-center gap-2">
         <img src={comment.user.avatarUrl} alt={comment.user.name} className="w-8 h-8 rounded-full" />
-
         <div className="flex gap-1 align-middle justify-center">
           <PurpleLink to={`/profile/${comment.user._id}`}>
             {comment.user.name}
@@ -100,7 +102,6 @@ const CommentItem = ({ comment, videoId, onCommentDeleted, onReplyAdded, disable
               onCommentDeleted={handleDeleteReply}
               onReplyAdded={() => {}}
               disabled={disabled}
-
             />
           ))}
         </>

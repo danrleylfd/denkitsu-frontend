@@ -45,11 +45,8 @@ const VideoDetail = () => {
       const commentsData = await getCommentsForVideo(videoId)
       setComments(commentsData || [])
       setCommentCount(commentsData?.length || 0)
-      if (signed && videoData.likes?.includes(user?._id)) {
-        setIsLiked(true)
-      } else {
-        setIsLiked(false)
-      }
+      if (signed && videoData.likes?.includes(user?._id)) setIsLiked(true)
+      else setIsLiked(false)
     } catch (err) {
       console.error(err)
       notifyError("Falha ao carregar detalhes do vídeo ou comentários.")
@@ -61,9 +58,7 @@ const VideoDetail = () => {
   }, [videoId, signed, user?._id, notifyError])
 
   useEffect(() => {
-    if (videoId) {
-      fetchVideoAndComments()
-    }
+    if (videoId) fetchVideoAndComments()
   }, [videoId, fetchVideoAndComments])
 
   const handleDeleteVideo = async () => {
@@ -130,11 +125,8 @@ const VideoDetail = () => {
       setComments((prevComments) => [newComment, ...prevComments])
       setCommentCount((prev) => prev + 1)
     } catch (err) {
-      if (err.response && err.response.data.error) {
-        notifyError(err.response.data.error.message)
-      } else {
-        notifyError("Falha ao adicionar comentário.")
-      }
+      if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+      else notifyError("Falha ao adicionar comentário.")
       throw err
     }
   }
