@@ -104,15 +104,19 @@ const Profile = () => {
     }
   }
 
+  const handleSignOut = () => {
+    signOut()
+    navigate("/signout")
+  }
+
   const handleDeleteAccount = async () => {
     if (!window.confirm("Tem certeza que deseja excluir sua conta? Esta ação é irreversível e todos os seus dados serão perdidos.")) return
     if (!window.confirm("ÚLTIMO AVISO: Tem certeza absoluta que deseja excluir sua conta?")) return
-
     setLoading(true)
     try {
       await deleteUserAccount()
       signOut()
-      navigate("/")
+      navigate("/signup")
       alert("Conta excluída com sucesso.")
     } catch (err) {
       console.error(err)
@@ -177,7 +181,7 @@ const Profile = () => {
                     </Button>
                   )
                 )}
-                <Button variant="danger" size="icon" $rounded title="Sair" onClick={signOut}><LogOut size={16} /></Button>
+                <Button variant="danger" size="icon" $rounded title="Sair" onClick={handleSignOut}><LogOut size={16} /></Button>
               </div>
             </div>
           )}
