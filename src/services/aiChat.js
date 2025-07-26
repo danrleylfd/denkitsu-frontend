@@ -1,7 +1,5 @@
 import api from "./"
 
-import { useAI } from "../contexts/AIContext"
-
 const sendMessageStream = async (aiKey, aiProvider, model, messages, web, mode, onDelta) => {
   const permission = aiProvider === "groq" ? false : web
   const plugins = permission ? [{ id: "web" }] : undefined
@@ -14,19 +12,21 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, web, mode, 
     stream: true,
     mode
   }
+
   const response = await fetch(`${api.defaults.baseURL}/ai/chat/completions`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...api.defaults.headers.common,
     },
     body: JSON.stringify(payload)
   })
+
   if (!response.ok) {
     const errorData = await response.json()
-    if (errorData.error.code === 401) throw new Error(JSON.stringify({ code: errorData.error.code, message: "Chave de API inválida. Verifique suas credenciais." }))
-    if (errorData.error.code === 429) throw new Error(JSON.stringify({ code: errorData.error.code, message: "Limite de requisições excedido. Tente novamente mais tarde." }))
-    if (errorData.error.code === 502) throw new Error(JSON.stringify({ code: errorData.error.code, message: "Falha na comunicação com o serviço de IA. Tente novamente." }))
-    throw new Error(JSON.stringify({ code: errorData.error.code || "UNKNOWN_ERROR", message: errorData.error.message || "Falha ao conectar com o serviço. Tente novamente." }))
+    const errorToThrow = new Error("Erro na requisição de streaming da API.")
+    errorToThrow.response = { data: errorData }
+    throw errorToThrow
   }
   const reader = response.body.getReader()
   const decoder = new TextDecoder("utf-8")
@@ -38,13 +38,13 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, web, mode, 
     chunk.split("\n").forEach((line) => {
       if (line.startsWith("data: ")) {
         const payload = line.replace("data: ", "")
-        if (payload === "[DONE]") {
-          return
-        }
-        const json = JSON.parse(payload)
-        const delta = json.choices?.[0]?.delta
-        if (delta?.content || delta?.reasoning || delta?.tool_calls) {
-          onDelta(delta)
+        if (payload === "[DONE]") return
+        try {
+          const json = JSON.parse(payload)
+          const delta = json.choices?.[0]?.delta
+          if (delta?.content || delta?.reasoning || delta?.tool_calls) onDelta(delta)
+        } catch (error) {
+          console.error("Error on JSON.parse:", error)
         }
       }
     })
@@ -64,8 +64,7 @@ const sendMessage = async (aiKey, aiProvider, model, models, messages, mode = ""
   if (criptoTool) activeTools.push("getCoinQuote")
   if (genshinTool) activeTools.push("getPlayerBuild")
   if (pokedexTool) activeTools.push("getPokemonDetails")
-  const use_tools = (fullModel.supports_tools && activeTools.length > 0) ? activeTools : undefined
-
+  const use_tools = (fullModel?.supports_tools && activeTools.length > 0) ? activeTools : undefined
   const payload = {
     aiKey,
     aiProvider,
@@ -79,8 +78,8 @@ const sendMessage = async (aiKey, aiProvider, model, models, messages, mode = ""
     const { data } = await api.post("/ai/chat/completions", payload)
     return data
   } catch (error) {
-    const errorData = error.response?.data || { code: "UNKNOWN_ERROR", message: "Falha ao conectar com o serviço. Tente novamente." }
-    throw new Error(JSON.stringify(errorData))
+    console.error("Error on sendMessage:", error.response?.data?.message || error.message)
+    throw error
   }
 }
 
@@ -89,7 +88,7 @@ const getPrompt = async () => {
     const { data } = await api.get("/ai/prompt")
     return data
   } catch (error) {
-    console.error(error.response?.data?.message || error.message)
+    console.error("Error on getPrompt:", error.response?.data?.message || error.message)
     throw new Error(error.response?.data?.message || "Falha ao obter prompts.")
   }
 }
@@ -110,7 +109,7 @@ const getModels = async () => {
       .sort((a, b) => a.id.localeCompare(b.id))
     return { freeModels, payModels, groqModels }
   } catch (error) {
-    console.error(error.message)
+    console.error("Error on getModels:", error.message)
     throw new Error(error.message || "Falha ao obter modelos.")
   }
 }
@@ -120,7 +119,7 @@ const generateNews = async (searchTerm, aiProvider) => {
     const { data } = await api.post("/news/generate", { searchTerm, aiProvider })
     return data
   } catch (error) {
-    console.error(error.response?.data?.message || error.message)
+    console.error("Error on generateNews:", error.response?.data?.message || error.message)
     throw new Error(error.response?.data?.message || "Falha ao gerar notícias.")
   }
 }
