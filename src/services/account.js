@@ -6,7 +6,7 @@ const getUserAccount = async (userId = null) => {
     const response = await api.get(endpoint)
     return response.data.user
   } catch (error) {
-    console.error(`Error fetching user account ${userId || ")(self)"}:`, error.response?.data || error.message)
+    console.error(`Error fetching user account ${userId || "self"}:`, error.response?.data || error.message)
     throw error
   }
 }
