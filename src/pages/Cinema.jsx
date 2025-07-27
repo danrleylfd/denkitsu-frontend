@@ -1,5 +1,5 @@
 import { useState, useCallback, memo } from "react"
-import { FolderSearch, X, Film } from "lucide-react"
+import { FolderSearch, X, Film, Loader2, AlertTriangle } from "lucide-react"
 
 import { useNotification } from "../contexts/NotificationContext"
 
@@ -13,14 +13,74 @@ const ContentView = ({ children }) => (
   </main>
 )
 
+// Função para extrair a thumbnail de um arquivo de vídeo
+const extractVideoThumbnail = (file) => {
+  return new Promise((resolve, reject) => {
+    const video = document.createElement("video")
+    video.muted = true
+    video.playsInline = true
+    video.crossOrigin = "anonymous"
+    video.preload = "metadata"
+
+    const url = URL.createObjectURL(file)
+    video.src = url
+
+    // Quando os metadados do vídeo estiverem carregados, busca um frame
+    video.onloadeddata = () => {
+      // Busca um frame no início do vídeo (ex: 1 segundo)
+      video.currentTime = 1
+    }
+
+    // Quando o frame for encontrado, desenha no canvas
+    video.onseeked = () => {
+      const canvas = document.createElement("canvas")
+      const context = canvas.getContext("2d")
+
+      canvas.width = video.videoWidth
+      canvas.height = video.videoHeight
+
+      context.drawImage(video, 0, 0, canvas.width, canvas.height)
+
+      const thumbnailUrl = canvas.toDataURL("image/jpeg", 0.7) // Qualidade de 70%
+
+      // Limpa a URL do objeto para liberar memória
+      URL.revokeObjectURL(url)
+      resolve(thumbnailUrl)
+    }
+
+    video.onerror = (err) => {
+      console.error("Erro no vídeo:", err)
+      URL.revokeObjectURL(url)
+      reject(new Error("Não foi possível carregar o arquivo de vídeo."))
+    }
+  })
+}
+
 const DvdCover = memo(({ video, onSelect }) => (
   <button
     onClick={() => onSelect(video)}
     className="group relative w-full aspect-[2/3] bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-lg shadow-lg overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-primary-base/20 focus:outline-none focus:ring-2 focus:ring-primary-base"
   >
-    <div className="absolute inset-0 flex items-center justify-center">
-      <Film className="w-16 h-16 text-lightBg-secondary dark:text-darkBg-secondary transition-colors group-hover:text-primary-base" />
-    </div>
+    {/* Estado de Carregamento */}
+    {video.thumbnail === null && (
+      <div className="absolute inset-0 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-lightFg-tertiary dark:text-darkFg-tertiary animate-spin" />
+      </div>
+    )}
+
+    {/* Thumbnail Extraída */}
+    {video.thumbnail && video.thumbnail !== "error" && (
+      <img src={video.thumbnail} alt={video.name} className="absolute inset-0 w-full h-full object-cover" />
+    )}
+
+    {/* Estado de Erro */}
+    {video.thumbnail === "error" && (
+       <div className="absolute inset-0 flex items-center justify-center">
+        <AlertTriangle className="w-8 h-8 text-danger-base" />
+      </div>
+    )}
+
+    {/* Nome do Vídeo */}
     <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
       <p className="font-bold text-white text-sm break-words text-left leading-tight">
         {video.name}
@@ -70,17 +130,13 @@ const Cinema = () => {
     setDirectoryName("")
     try {
       const dirHandle = await window.showDirectoryPicker()
-      const videoFiles = []
+      setDirectoryName(dirHandle.name)
+
+      const videoFilesPromises = []
       const traverseDirectory = async (directoryHandle) => {
         for await (const entry of directoryHandle.values()) {
-          if (entry.kind === "file") {
-            const file = await entry.getFile()
-            if (file.type.startsWith("video/")) {
-              videoFiles.push({
-                name: file.name,
-                url: URL.createObjectURL(file),
-              })
-            }
+          if (entry.kind === "file" && entry.name.match(/\.(mp4|webm|mov|mkv|avi)$/i)) {
+            videoFilesPromises.push(entry.getFile())
           } else if (entry.kind === "directory") {
             await traverseDirectory(entry)
           }
@@ -88,14 +144,42 @@ const Cinema = () => {
       }
 
       await traverseDirectory(dirHandle)
-      setVideos(videoFiles.sort((a, b) => a.name.localeCompare(b.name)))
-      setDirectoryName(dirHandle.name)
+      const files = await Promise.all(videoFilesPromises)
+
+      // Renderiza os vídeos com placeholders de carregamento
+      const initialVideos = files.map(file => ({
+        id: `${file.name}-${file.lastModified}`,
+        name: file.name,
+        url: URL.createObjectURL(file),
+        thumbnail: null, // null indica que está carregando
+      })).sort((a, b) => a.name.localeCompare(b.name))
+
+      setVideos(initialVideos)
+      setIsLoading(false)
+
+      // Gera as thumbnails em segundo plano
+      initialVideos.forEach(async (videoData) => {
+        const file = files.find(f => `${f.name}-${f.lastModified}` === videoData.id)
+        if (!file) return
+
+        try {
+          const thumbnailUrl = await extractVideoThumbnail(file)
+          setVideos(currentVideos =>
+            currentVideos.map(v => v.id === videoData.id ? { ...v, thumbnail: thumbnailUrl } : v)
+          )
+        } catch (error) {
+          console.error(`Falha ao gerar thumbnail para ${videoData.name}:`, error)
+          setVideos(currentVideos =>
+            currentVideos.map(v => v.id === videoData.id ? { ...v, thumbnail: "error" } : v)
+          )
+        }
+      })
+
     } catch (error) {
       if (error.name !== "AbortError") {
         console.error("Erro ao selecionar a pasta:", error)
         notifyError("Não foi possível carregar os vídeos da pasta.")
       }
-    } finally {
       setIsLoading(false)
     }
   }, [notifyError])
@@ -105,7 +189,7 @@ const Cinema = () => {
       <div className="w-full h-full flex flex-col gap-2">
         {videos.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center text-center">
-            <FolderSearch className="w-24 h-24 text-lightFg-tertiary dark:text-darkFg-tertiary mb-6" />
+           <FolderSearch className="w-24 h-24 text-lightFg-tertiary dark:text-darkFg-tertiary mb-6" />
             <h1 className="text-3xl font-bold mb-2 text-lightFg-primary dark:text-darkFg-primary">Seu Cinema Particular</h1>
             <p className="mb-8 text-lightFg-secondary dark:text-darkFg-secondary max-w-md">Selecione uma pasta em seu computador para carregar e assistir aos seus vídeos locais.</p>
             <Button onClick={handleSelectFolder} variant="primary" $rounded loading={isLoading}>
@@ -125,7 +209,7 @@ const Cinema = () => {
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-2">
               {videos.map((video) => (
-                <DvdCover key={video.url} video={video} onSelect={setSelectedVideo} />
+                <DvdCover key={video.id} video={video} onSelect={setSelectedVideo} />
               ))}
             </div>
           </div>

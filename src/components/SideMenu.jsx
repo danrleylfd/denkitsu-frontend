@@ -136,12 +136,12 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
     ]
 
   const menuItemClass = `
-    flex items-center px-4 py-1 rounded-xl w-full
-    bg-transparent hover:bg-lightBg-primary dark:hover:bg-darkBg-primary
-    text-lightFg-primary dark:text-darkFg-primary hover:text-primary-light dark:hover:text-primary-light
-    active:text-primary-dark dark:active:text-primary-dark
-    cursor-pointer transition-colors duration-200
-  `
+    flex items-center px-4 py-1 rounded-xl w-full
+    bg-transparent hover:bg-lightBg-primary dark:hover:bg-darkBg-primary
+    text-lightFg-primary dark:text-darkFg-primary hover:text-primary-light dark:hover:text-primary-light
+    active:text-primary-dark dark:active:text-primary-dark
+    cursor-pointer transition-colors duration-200
+  `
 
   const activeLinkClass = "bg-primary-base/20 text-primary-base"
 
