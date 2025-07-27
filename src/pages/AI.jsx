@@ -30,7 +30,7 @@ const AI = () => {
   const [loading, setLoading] = useState(false)
   const [lousaContent, setLousaContent] = useState(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
-  const [selectedPrompt, setSelectedPrompt] = useState("")
+  const [selectedPrompt, setSelectedPrompt] = useState("Padrão")
 
   useEffect(() => {
     (async () => {

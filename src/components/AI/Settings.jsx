@@ -18,16 +18,16 @@ const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqM
   if (!settingsOpen) return null
 
   const agentOptions = [
-    { value: "", icon: <Bot size={16} />, label: "Padrão" },
-    { value: "Analista", icon: <BarChart2 size={16} />, label: "Analista" },
-    { value: "Blogueiro", icon: <Rss size={16} />, label: "Blogueiro" },
-    { value: "Desenvolvedor", icon: <Code size={16} />, label: "Desenvolvedor" },
-    { value: "Lousa", icon: <Presentation size={16} />, label: "Lousa" },
-    { value: "Moderador", icon: <Shield size={16} />, label: "Moderador" },
-    { value: "Professor", icon: <GraduationCap size={16} />, label: "Professor" },
-    { value: "Prompter", icon: <Lightbulb size={16} />, label: "Prompter" },
-    { value: "Redator", icon: <FileText size={16} />, label: "Redator" },
-    { value: "Secretário", icon: <ClipboardList size={16} />, label: "Secretário" },
+    { value: "Padrão", icon: <Bot size={16} /> },
+    { value: "Analista", icon: <BarChart2 size={16} /> },
+    { value: "Blogueiro", icon: <Rss size={16} /> },
+    { value: "Desenvolvedor", icon: <Code size={16} /> },
+    { value: "Lousa", icon: <Presentation size={16} /> },
+    { value: "Moderador", icon: <Shield size={16} /> },
+    { value: "Professor", icon: <GraduationCap size={16} /> },
+    { value: "Prompter", icon: <Lightbulb size={16} /> },
+    { value: "Redator", icon: <FileText size={16} /> },
+    { value: "Secretário", icon: <ClipboardList size={16} /> },
   ]
 
   return (
