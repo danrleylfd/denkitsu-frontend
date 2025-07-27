@@ -2,9 +2,9 @@ import { useState, useEffect, useCallback } from "react"
 import { Copy, Plus, Pencil, Trash, X, Check } from "lucide-react"
 
 import { useAuth } from "../contexts/AuthContext"
-import { getLinkersByUser, createLinker, deleteLinker, updateLinker } from "../services/linker"
-
 import { useNotification } from "../contexts/NotificationContext"
+
+import { getLinkersByUser, createLinker, deleteLinker, updateLinker } from "../services/linker"
 
 import SideMenu from "../components/SideMenu"
 import Input from "../components/Input"
@@ -38,12 +38,12 @@ const Shortcut = () => {
       const data = await getLinkersByUser()
       setLinkers(data || [])
     } catch (err) {
-      console.error(err)
-      notifyError("Falha ao carregar links encurtados.")
+      if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+      else notifyError("Falha ao carregar seus atalhos.")
     } finally {
       setLoading(false)
     }
-  }, [signed])
+  }, [signed, notifyError])
 
   useEffect(() => {
     fetchLinkers()
@@ -51,20 +51,16 @@ const Shortcut = () => {
 
   const handleCreateLink = async (e) => {
     e.preventDefault()
-    if (!newLabel || !newLink) {
-      notifyError("Por favor, preencha o Rótulo e o Link de destino.")
-      return
-    }
     setFormLoading(true)
     try {
       const created = await createLinker(newLabel, newLink)
       setLinkers([created, ...linkers])
       setNewLabel("")
       setNewLink("")
-      notifyInfo("Link criado com sucesso!")
+      notifyInfo("Atalho criado com sucesso!")
     } catch (err) {
-      console.error(err)
-      notifyError("Falha ao criar link. Verifique se o rótulo já existe.")
+      if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+      else notifyError("Falha ao criar o atalho.")
     } finally {
       setFormLoading(false)
     }
@@ -72,13 +68,8 @@ const Shortcut = () => {
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text).then(
-      () => {
-        notifyInfo(`Link ${text} copiado!`)
-      },
-      (err) => {
-        console.error("Could not copy text: ", err)
-        notifyError("Falha ao copiar link.")
-      }
+      () => notifyInfo(`Link ${text} copiado!`),
+      () => notifyError("Falha ao copiar o link.")
     )
   }
 
@@ -89,25 +80,25 @@ const Shortcut = () => {
     try {
       const updated = await updateLinker(editingLinker.label, editLabel, editLink)
       setLinkers(linkers.map((l) => (l._id === updated._id ? updated : l)))
-      notifyInfo("Link atualizado com sucesso!")
+      notifyInfo("Atalho atualizado com sucesso!")
       cancelEditing()
     } catch (err) {
-      console.error(err)
-      notifyError("Falha ao atualizar link. Verifique se o novo rótulo já existe.")
+      if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+      else notifyError("Falha ao atualizar o atalho.")
     } finally {
       setEditLoading(false)
     }
   }
 
   const handleDeleteLink = async (labelToDelete) => {
-    if (!window.confirm(`Tem certeza que deseja excluir o link com rótulo "${labelToDelete}"?`)) return
+    if (!window.confirm(`Tem certeza que deseja excluir o atalho "${labelToDelete}"?`)) return
     try {
       await deleteLinker(labelToDelete)
       setLinkers(linkers.filter((linker) => linker.label !== labelToDelete))
-      notifyInfo("Link excluído com sucesso!")
+      notifyInfo("Atalho excluído com sucesso!")
     } catch (err) {
-      console.error(err)
-      notifyError("Falha ao excluir link.")
+      if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+      else notifyError("Falha ao excluir o atalho.")
     }
   }
 
