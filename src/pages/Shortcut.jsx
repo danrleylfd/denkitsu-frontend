@@ -43,7 +43,7 @@ const Shortcut = () => {
     } finally {
       setLoading(false)
     }
-  }, [signed, notifyError])
+  }, [signed])
 
   useEffect(() => {
     fetchLinkers()
