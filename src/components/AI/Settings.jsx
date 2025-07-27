@@ -1,5 +1,7 @@
 import { useState } from "react"
-import { X, Brain, Eye, EyeClosed } from "lucide-react"
+import {
+  X, Brain, Eye, EyeOff, BarChart2, Rss, Code, Presentation, Shield, GraduationCap, Lightbulb, FileText, ClipboardList, Bot
+} from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 
@@ -7,8 +9,7 @@ import AIModelSelect from "./ModelSelect"
 import Input from "../Input"
 import AIInput from "./Input"
 import Button from "../Button"
-
-const AVALIABLE_MODES = ["Analista", "Blogueiro", "Desenvolvedor", "Lousa", "Moderador", "Professor", "Prompter", "Redator", "Secretário"]
+import MultiToggle from "../MultiToggle"
 
 const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqModels, selectedPrompt, onSelectPrompt }) => {
   const [showAIKey, setShowAIKey] = useState(false)
@@ -16,17 +17,23 @@ const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqM
 
   if (!settingsOpen) return null
 
-  const gradientColors = ["gradient-green", "gradient-yellow", "gradient-blue", "gradient-red", "gradient-pink", "gradient-orange", "gradient-purple"]
-
-  const modeColorMap = new Map()
-  AVALIABLE_MODES.forEach((modeName, index) => {
-    modeColorMap.set(modeName, gradientColors[index % gradientColors.length])
-  })
+  const agentOptions = [
+    { value: "", icon: <Bot size={16} />, label: "Padrão" },
+    { value: "Analista", icon: <BarChart2 size={16} />, label: "Analista" },
+    { value: "Blogueiro", icon: <Rss size={16} />, label: "Blogueiro" },
+    { value: "Desenvolvedor", icon: <Code size={16} />, label: "Desenvolvedor" },
+    { value: "Lousa", icon: <Presentation size={16} />, label: "Lousa" },
+    { value: "Moderador", icon: <Shield size={16} />, label: "Moderador" },
+    { value: "Professor", icon: <GraduationCap size={16} />, label: "Professor" },
+    { value: "Prompter", icon: <Lightbulb size={16} />, label: "Prompter" },
+    { value: "Redator", icon: <FileText size={16} />, label: "Redator" },
+    { value: "Secretário", icon: <ClipboardList size={16} />, label: "Secretário" },
+  ]
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <div
-        className="relative flex w-full max-w-md flex-col gap-2 rounded-lg bg-lightBg-primary p-4 shadow-2xl dark:bg-darkBg-primary"
+        className="relative flex w-full max-w-md flex-col gap-4 rounded-lg bg-lightBg-primary p-4 shadow-2xl dark:bg-darkBg-primary"
         onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <h3 className="font-bold text-lightFg-primary dark:text-darkFg-primary">Configurações do Denkitsu</h3>
@@ -37,7 +44,7 @@ const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqM
         <label htmlFor="api-key" className="text-lightFg-secondary dark:text-darkFg-secondary">
           Chave da API ({aiProvider})
         </label>
-        <div className="flex gap-2">
+        <div className="flex gap-2 -mt-2">
           <Button
             variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"}
             size="icon"
@@ -54,17 +61,17 @@ const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqM
             value={aiKey}
             onChange={(e) => setAIKey(e.target.value)}>
             <Button type="button" variant="outline" size="icon" $rounded onClick={() => setShowAIKey(!showAIKey)} disabled={loading}>
-              {showAIKey ? <Eye size={16} /> : <EyeClosed size={16} />}
+              {showAIKey ? <Eye size={16} /> : <EyeOff size={16} />}
             </Button>
           </Input>
         </div>
-        <small className="text-xs text-lightFg-tertiary dark:text-darkFg-tertiary">
+        <small className="text-xs -mt-2 text-lightFg-tertiary dark:text-darkFg-tertiary">
           Sua chave é salva localmente no seu navegador e nunca será salva em nossos servidores.
         </small>
         <label htmlFor="model-select" className="text-lightFg-secondary dark:text-darkFg-secondary">
           Modelo
         </label>
-        <div className="flex items-end gap-2">
+        <div className="flex items-end gap-2 -mt-2">
           <Button
             variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"}
             size="icon"
@@ -86,24 +93,12 @@ const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqM
         </div>
         <div className="flex flex-col gap-2">
           <label className="text-lightFg-secondary dark:text-darkFg-secondary">Agentes de AI</label>
-          <div className="flex flex-wrap gap-2">
-            <Button variant={!selectedPrompt ? "primary" : "secondary"} size="xs" $rounded onClick={() => onSelectPrompt("")} disabled={loading}>
-              Padrão
-            </Button>
-            {AVALIABLE_MODES.map((modeName) => {
-              const selectedColor = modeColorMap.get(modeName) || "gradient-blue"
-              return (
-                <Button
-                  key={modeName}
-                  variant={selectedPrompt === `Modo ${modeName}` ? selectedColor : "secondary"}
-                  size="xs"
-                  $rounded
-                  onClick={() => onSelectPrompt(`Modo ${modeName}`)}
-                  disabled={loading}>
-                  {modeName}
-                </Button>
-              )
-            })}
+          <div className="w-full overflow-x-auto pb-2 flex justify-center">
+            <MultiToggle
+              options={agentOptions}
+              value={selectedPrompt}
+              onChange={onSelectPrompt}
+            />
           </div>
         </div>
         <div className="flex flex-col gap-2">
