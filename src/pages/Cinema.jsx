@@ -13,44 +13,35 @@ const ContentView = ({ children }) => (
   </main>
 )
 
-// Função para extrair a thumbnail de um arquivo de vídeo
 const extractVideoThumbnail = (file) => {
   return new Promise((resolve, reject) => {
     const video = document.createElement("video")
+    const url = URL.createObjectURL(file)
     video.muted = true
     video.playsInline = true
     video.crossOrigin = "anonymous"
     video.preload = "metadata"
-
-    const url = URL.createObjectURL(file)
     video.src = url
-
-    // Quando os metadados do vídeo estiverem carregados, busca um frame
+    const cleanup = () => {
+      URL.revokeObjectURL(url)
+      video.remove()
+    }
     video.onloadeddata = () => {
-      // Busca um frame no início do vídeo (ex: 1 segundo)
       video.currentTime = 1
     }
-
-    // Quando o frame for encontrado, desenha no canvas
     video.onseeked = () => {
       const canvas = document.createElement("canvas")
       const context = canvas.getContext("2d")
-
       canvas.width = video.videoWidth
       canvas.height = video.videoHeight
-
       context.drawImage(video, 0, 0, canvas.width, canvas.height)
-
       const thumbnailUrl = canvas.toDataURL("image/jpeg", 0.7) // Qualidade de 70%
-
-      // Limpa a URL do objeto para liberar memória
-      URL.revokeObjectURL(url)
+      cleanup()
       resolve(thumbnailUrl)
     }
-
     video.onerror = (err) => {
       console.error("Erro no vídeo:", err)
-      URL.revokeObjectURL(url)
+      cleanup()
       reject(new Error("Não foi possível carregar o arquivo de vídeo."))
     }
   })
@@ -61,26 +52,19 @@ const DvdCover = memo(({ video, onSelect }) => (
     onClick={() => onSelect(video)}
     className="group relative w-full aspect-[2/3] bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-lg shadow-lg overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-primary-base/20 focus:outline-none focus:ring-2 focus:ring-primary-base"
   >
-    {/* Estado de Carregamento */}
     {video.thumbnail === null && (
       <div className="absolute inset-0 flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-lightFg-tertiary dark:text-darkFg-tertiary animate-spin" />
       </div>
     )}
-
-    {/* Thumbnail Extraída */}
     {video.thumbnail && video.thumbnail !== "error" && (
       <img src={video.thumbnail} alt={video.name} className="absolute inset-0 w-full h-full object-cover" />
     )}
-
-    {/* Estado de Erro */}
     {video.thumbnail === "error" && (
        <div className="absolute inset-0 flex items-center justify-center">
         <AlertTriangle className="w-8 h-8 text-danger-base" />
       </div>
     )}
-
-    {/* Nome do Vídeo */}
     <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
       <p className="font-bold text-white text-sm break-words text-left leading-tight">
         {video.name}
@@ -120,6 +104,7 @@ const Cinema = () => {
   const [directoryName, setDirectoryName] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const { notifyError } = useNotification()
+
   const handleSelectFolder = useCallback(async () => {
     if (!window.showDirectoryPicker) {
       notifyError("Seu navegador não suporta esta funcionalidade. Tente usar Chrome ou Edge.")
@@ -131,50 +116,48 @@ const Cinema = () => {
     try {
       const dirHandle = await window.showDirectoryPicker()
       setDirectoryName(dirHandle.name)
-
-      const videoFilesPromises = []
+      const filesToProcess = []
       const traverseDirectory = async (directoryHandle) => {
         for await (const entry of directoryHandle.values()) {
           if (entry.kind === "file" && entry.name.match(/\.(mp4|webm|mov|mkv|avi)$/i)) {
-            videoFilesPromises.push(entry.getFile())
+            filesToProcess.push(await entry.getFile())
           } else if (entry.kind === "directory") {
             await traverseDirectory(entry)
           }
         }
       }
-
       await traverseDirectory(dirHandle)
-      const files = await Promise.all(videoFilesPromises)
-
-      // Renderiza os vídeos com placeholders de carregamento
-      const initialVideos = files.map(file => ({
+      const initialVideos = filesToProcess.map(file => ({
         id: `${file.name}-${file.lastModified}`,
         name: file.name,
         url: URL.createObjectURL(file),
-        thumbnail: null, // null indica que está carregando
+        thumbnail: null,
       })).sort((a, b) => a.name.localeCompare(b.name))
-
       setVideos(initialVideos)
       setIsLoading(false)
-
-      // Gera as thumbnails em segundo plano
-      initialVideos.forEach(async (videoData) => {
-        const file = files.find(f => `${f.name}-${f.lastModified}` === videoData.id)
-        if (!file) return
-
-        try {
-          const thumbnailUrl = await extractVideoThumbnail(file)
-          setVideos(currentVideos =>
-            currentVideos.map(v => v.id === videoData.id ? { ...v, thumbnail: thumbnailUrl } : v)
-          )
-        } catch (error) {
-          console.error(`Falha ao gerar thumbnail para ${videoData.name}:`, error)
-          setVideos(currentVideos =>
-            currentVideos.map(v => v.id === videoData.id ? { ...v, thumbnail: "error" } : v)
-          )
+      const CONCURRENT_WORKERS = 4
+      const queue = [...filesToProcess]
+      const worker = async () => {
+        while (queue.length > 0) {
+          const file = queue.shift()
+          if (!file) continue
+          const videoId = `${file.name}-${file.lastModified}`
+          try {
+            const thumbnailUrl = await extractVideoThumbnail(file)
+            setVideos(currentVideos =>
+              currentVideos.map(v => v.id === videoId ? { ...v, thumbnail: thumbnailUrl } : v)
+            )
+          } catch (error) {
+            console.error(`Falha ao gerar thumbnail para ${file.name}:`, error)
+            setVideos(currentVideos =>
+              currentVideos.map(v => v.id === videoId ? { ...v, thumbnail: "error" } : v)
+            )
+          }
         }
-      })
-
+      }
+      for (let i = 0; i < CONCURRENT_WORKERS; i++) {
+        worker()
+      }
     } catch (error) {
       if (error.name !== "AbortError") {
         console.error("Erro ao selecionar a pasta:", error)
