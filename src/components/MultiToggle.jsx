@@ -104,7 +104,7 @@ const MultiToggle = ({ options = [], value, onChange, className = "", itemsPerRo
           <div key={rowIndex} className="flex items-center gap-1">
             {row.map((option) => (
               <Button
-                key={option.value}
+                key={option.label}
                 ref={(el) => (optionRefs.current[option.value] = el)}
                 onClick={() => onChange(option.value)}
                 variant="secondary"
