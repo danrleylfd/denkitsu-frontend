@@ -28,56 +28,40 @@ const News = () => {
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
-  const isMounted = useRef(true)
-  const isLoadingRef = useRef(false)
+  const observer = useRef()
 
-  useEffect(() => {
-    isMounted.current = true
-    return () => {
-      isMounted.current = false
+  const loadNews = useCallback(async (currentPage) => {
+    setLoading(true)
+    try {
+      const data = await getNewsPaginate(currentPage)
+      if (data && data.news) {
+        setNews((prevNews) => [...prevNews, ...data.news])
+        setHasMore(data.pagination.hasNextPage)
+        if (data.pagination.hasNextPage) setPage(data.pagination.currentPage + 1)
+      } else setHasMore(false)
+    } catch (err) {
+      if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+      else notifyError("Não foi possível carregar as notícias.")
+    } finally {
+      setLoading(false)
     }
   }, [])
 
-  const loadNews = useCallback(
-    async (currentPage) => {
-      if (isLoadingRef.current || loading || !hasMore || !isMounted.current) return
-      isLoadingRef.current = true
-      setLoading(true)
-      try {
-        const articles = await getNewsPaginate(currentPage)
-        if (!articles || !isMounted.current) return
-        setNews((prevNews) => [...prevNews, ...articles.news])
-        setHasMore(articles.pagination.hasNextPage)
-        articles.pagination.hasNextPage && setPage(articles.pagination.currentPage + 1)
-      } catch (error) {
-        if (!isMounted.current) return
-        notifyError("Não foi possível carregar as notícias")
-      } finally {
-        isMounted.current && setLoading(false)
-        isLoadingRef.current = false
-      }
-    },
-    [loading, hasMore]
-  )
-
   useEffect(() => {
-    loadNews(page)
-  }, [])
+    setNews([])
+    setPage(1)
+    setHasMore(true)
+    loadNews(1)
+  }, [loadNews])
 
-  const handleScroll = useCallback(() => {
-    if (!isMounted.current || isLoadingRef.current || loading || !hasMore) return
-    const { scrollTop, clientHeight, scrollHeight } = document.documentElement
-    const threshold = 10
-    if (scrollHeight - (scrollTop + clientHeight) < threshold && !loading && hasMore) {
-      loadNews(page)
-    }
-  }, [loading, hasMore, loadNews, page])
-
-  useEffect(() => {
-    const scrollHandler = handleScroll
-    window.addEventListener("scroll", scrollHandler)
-    return () => window.removeEventListener("scroll", scrollHandler)
-  }, [handleScroll])
+  const lastNewsElementRef = useCallback(node => {
+    if (loading) return
+    if (observer.current) observer.current.disconnect()
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) loadNews(page)
+    })
+    if (node) observer.current.observe(node)
+  }, [loading, hasMore, page, loadNews])
 
   const handleGenerate = async () => {
     if (!searchTerm) return
@@ -85,9 +69,10 @@ const News = () => {
     try {
       const article = await generateNews(searchTerm, aiProvider)
       setNews([article, ...news])
-    } catch (error) {
-      console.error(error)
-      notifyError("Não foi possível gerar as notícias")
+      setSearchTerm("")
+    } catch (err) {
+      if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+      else notifyError("Não foi possível gerar a notícia.")
     } finally {
       setLoading(false)
     }
@@ -97,40 +82,44 @@ const News = () => {
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
       <Paper>
         <Input
-          placeholder="Pesquise um tópico e deixe a IA gerar a notícia mais recente sobre..."
+          placeholder="Pesquisar um tópico para gerar uma notícia com IA..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}>
           <Button
-            variant="outline"
-            size="icon"
-            $rounded
-            onClick={handleGenerate}
-            loading={loading}
-            disabled={searchTerm.length < 1}
-            title="Pesquisar e Gerar">
+            variant="outline" size="icon" $rounded onClick={handleGenerate}
+            loading={loading} disabled={!searchTerm.trim()} title="Pesquisar e Gerar">
             {!loading && <SearchSlash size={16} />}
           </Button>
           <Button
             variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"}
-            size="icon"
-            $rounded
-            onClick={aiProviderToggle}
-            title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
+            size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
             <Brain size={16} />
           </Button>
         </Input>
       </Paper>
-      {news.map((article) => (
-        <Paper key={article._id}>
-          <Markdown content={article.content} />
-          <small className="text-xs text-lightFg-secondary dark:text-darkFg-secondary">
-            Publicado em {new Date(article.createdAt).toLocaleString()}
-          </small>
-        </Paper>
-      ))}
-      <Button variant="outline" $rounded onClick={loadNews} loading={loading} disabled={!hasMore}>
-        {!hasMore ? "Fim" : !loading ? "Mais" : ""}
-      </Button>
+      {news.map((article, index) => {
+        if (news.length === index + 1) {
+          return (
+            <Paper ref={lastNewsElementRef} key={article._id}>
+              <Markdown content={article.content} />
+              <small className="text-xs text-lightFg-secondary dark:text-darkFg-secondary">
+                Publicado em {new Date(article.createdAt).toLocaleString()}
+              </small>
+            </Paper>
+          )
+        } else {
+          return (
+            <Paper key={article._id}>
+              <Markdown content={article.content} />
+              <small className="text-xs text-lightFg-secondary dark:text-darkFg-secondary">
+                Publicado em {new Date(article.createdAt).toLocaleString()}
+              </small>
+            </Paper>
+          )
+        }
+      })}
+      {loading && <Button variant="outline" $rounded loading={true} disabled />}
+      {!hasMore && news.length > 0 && <p className="text-center text-white">Fim das notícias.</p>}
     </SideMenu>
   )
 }
