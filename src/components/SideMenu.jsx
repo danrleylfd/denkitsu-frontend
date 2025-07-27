@@ -5,25 +5,23 @@ import { Link, useLocation } from "react-router-dom"
 import {
   Menu, X, Sun, Moon, Home, Newspaper, Cloud, Languages, Clock, Code, Bot, Kanban, Link2,
   PersonStanding, LogIn, UserPlus, LogOut, Clapperboard, Edit2, ChevronDown, ChevronRight,
-  Upload, Video, TrendingUp, Play, Star
+  Upload, Video, TrendingUp, Play, Star, Lock, KeyRound
 } from "lucide-react"
 import { useTheme } from "../contexts/ThemeContext"
 import { useAuth } from "../contexts/AuthContext"
 import { useBackground } from "../contexts/BackgroundContext"
 
-// NOVO: Componente para o conteúdo principal, extraído para melhor legibilidade
 const MainContent = ({ children }) => (
   <main className="flex flex-col items-center p-2 gap-2 mx-auto min-h-dvh w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[75%] lg:max-w-[67%] ml-[3.5rem] md:ml-auto">
     {children}
   </main>
 )
 
-// NOVO: Componente interno para gerenciar os submenus
 const SubMenu = ({ isOpen, title, icon: Icon, items, isSubMenuOpen, toggleSubMenu }) => {
   const { pathname } = useLocation()
 
   const menuItemClass = `
-    flex items-center px-4 py-1 mx-1 rounded-xl w-full
+    flex items-center px-4 py-1 rounded-xl w-full
     bg-transparent hover:bg-lightBg-primary dark:hover:bg-darkBg-primary
     text-lightFg-primary dark:text-darkFg-primary hover:text-primary-light dark:hover:text-primary-light
     active:text-primary-dark dark:active:text-primary-dark cursor-pointer
@@ -31,7 +29,6 @@ const SubMenu = ({ isOpen, title, icon: Icon, items, isSubMenuOpen, toggleSubMen
 
   const activeLinkClass = "bg-primary-base/20 text-primary-base"
 
-  // Se o menu principal estiver fechado, mostra apenas o ícone principal do submenu
   if (!isOpen) {
     return (
       <div className="flex flex-col items-center w-full">
@@ -44,7 +41,6 @@ const SubMenu = ({ isOpen, title, icon: Icon, items, isSubMenuOpen, toggleSubMen
     )
   }
 
-  // Se o menu principal estiver aberto, mostra o submenu completo e expansível
   return (
     <div className="flex flex-col w-full">
       <button onClick={toggleSubMenu} className={`${menuItemClass} justify-between`}>
@@ -57,7 +53,7 @@ const SubMenu = ({ isOpen, title, icon: Icon, items, isSubMenuOpen, toggleSubMen
         {isSubMenuOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
       </button>
       {isSubMenuOpen && (
-        <div className="flex flex-col pl-6 mt-1 gap-1">
+        <div className="flex flex-col pl-5 mt-1 gap-1">
           {items.map(({ icon: ItemIcon, label, to }) => (
             <Link
               key={label}
@@ -77,7 +73,6 @@ const SubMenu = ({ isOpen, title, icon: Icon, items, isSubMenuOpen, toggleSubMen
   )
 }
 
-
 const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => {
   const { pathname } = useLocation()
   const { background } = useBackground()
@@ -86,16 +81,28 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
 
   const getInitialMenuState = () => localStorage.getItem("@Denkitsu:menuState") === "opened"
   const [isOpen, setOpen] = useState(getInitialMenuState)
-  const [aiMenuOpen, setAiMenuOpen] = useState(false)
-  const [toolsMenuOpen, setToolsMenuOpen] = useState(false)
-  const [videoMenuOpen, setVideoMenuOpen] = useState(false)
-  const [accountMenuOpen, setAccountMenuOpen] = useState(false)
+
+  // ALTERADO: O estado inicial agora é lido do localStorage
+  const [openSubMenu, setOpenSubMenu] = useState(() => localStorage.getItem("@Denkitsu:openSubMenu") || null)
 
   const toggleMenu = () => setOpen((prev) => !prev)
 
   useEffect(() => {
     localStorage.setItem("@Denkitsu:menuState", isOpen ? "opened" : "closed")
   }, [isOpen])
+
+  // NOVO: useEffect para persistir o estado do submenu
+  useEffect(() => {
+    if (openSubMenu) {
+      localStorage.setItem("@Denkitsu:openSubMenu", openSubMenu)
+    } else {
+      localStorage.removeItem("@Denkitsu:openSubMenu")
+    }
+  }, [openSubMenu])
+
+  const handleSubMenuToggle = (submenuName) => {
+    setOpenSubMenu((prev) => (prev === submenuName ? null : submenuName))
+  }
 
   const aiItems = [
     { icon: Bot, label: "Denkitsu AI", to: "/chat" },
@@ -125,11 +132,13 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
       { icon: PersonStanding, label: "Perfil", to: "/profile" }
     ] : [
       { icon: LogIn, label: "Entrar", to: "/signin" },
-      { icon: UserPlus, label: "Cadastrar", to: "/signup" }
+      { icon: UserPlus, label: "Cadastrar", to: "/signup" },
+      { icon: Lock, label: "Esqueci a senha", to: "/forgot_password" },
+      { icon: KeyRound, label: "Redefinir senha", to: "/reset_password" }
     ]
 
   const menuItemClass = `
-    flex items-center px-4 py-1 mx-1 rounded-xl
+    flex items-center px-4 py-1 rounded-xl w-full
     bg-transparent hover:bg-lightBg-primary dark:hover:bg-darkBg-primary
     text-lightFg-primary dark:text-darkFg-primary hover:text-primary-light dark:hover:text-primary-light
     active:text-primary-dark dark:active:text-primary-dark
@@ -141,11 +150,11 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
   return (
     <div className={`flex ${className || ""}`} style={{ backgroundImage: `url('${background}')` }}>
       <aside
-        className={`transition-all duration-300 ease-in-out z-40 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] border-r ${isOpen ? "w-56" : "w-14"
+        className={`transition-all duration-300 ease-in-out z-40 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] border-r ${isOpen ? "w-60" : "w-14"
           } bg-lightBg-secondary dark:bg-darkBg-secondary border-bLight dark:border-bDark h-dvh ${fixed && "fixed"}`}
       >
-        <nav className="flex flex-col gap-1 h-full">
-          <div className="p-1" /> {/* Spacer */}
+        <nav className="flex flex-col gap-1 h-full px-1">
+          <div className="w-0 h-0 p-0 m-0" />
           <button onClick={toggleMenu} className={`${menuItemClass} ${!isOpen && "justify-center"}`} title={isOpen ? "Fechar Menu" : "Abrir Menu"}>
             <div className="w-6 h-6 flex items-center justify-center">{isOpen ? <X size={16} /> : <Menu size={16} />}</div>
             {isOpen && <span className="ml-1 select-none">Menu</span>}
@@ -154,42 +163,36 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
             <div className="w-6 h-6 flex items-center justify-center"><Home size={16} /></div>
             {isOpen && <span className="ml-1 select-none">Início</span>}
           </Link>
-
-          <hr className="border-bLight dark:border-bDark my-1 mx-2" />
-
           {signed && (
             <SubMenu
               isOpen={isOpen}
               title="Denkitsu AI"
               icon={Bot}
               items={aiItems}
-              isSubMenuOpen={aiMenuOpen}
-              toggleSubMenu={() => setAiMenuOpen(!aiMenuOpen)}
+              isSubMenuOpen={openSubMenu === "ai"}
+              toggleSubMenu={() => handleSubMenuToggle("ai")}
             />
           )}
-
           <SubMenu
             isOpen={isOpen}
             title="Ferramentas"
             icon={Star}
             items={toolItems}
-            isSubMenuOpen={toolsMenuOpen}
-            toggleSubMenu={() => setToolsMenuOpen(!toolsMenuOpen)}
+            isSubMenuOpen={openSubMenu === "tools"}
+            toggleSubMenu={() => handleSubMenuToggle("tools")}
           />
-
           {signed && (
             <SubMenu
               isOpen={isOpen}
               title="Vídeos"
               icon={Play}
               items={videoItems}
-              isSubMenuOpen={videoMenuOpen}
-              toggleSubMenu={() => setVideoMenuOpen(!videoMenuOpen)}
+              isSubMenuOpen={openSubMenu === "video"}
+              toggleSubMenu={() => handleSubMenuToggle("video")}
             />
           )}
-
-          <div className="mt-auto mb-1"> {/* Push to bottom */}
-            <hr className="border-bLight dark:border-bDark my-1 mx-2" />
+          <div className="mt-auto mb-1">
+            <hr className="border-bLight dark:border-bDark my-1" />
             <button onClick={toggleTheme} className={`${menuItemClass} ${!isOpen && "justify-center"}`} title={isOpen ? "Alternar Tema" : "Alternar Tema"}>
               <div className="w-6 h-6 flex items-center justify-center">{theme === "dark" ? <Moon size={16} /> : <Sun size={16} />}</div>
               {isOpen && <span className="ml-1 select-none">Alternar Tema</span>}
@@ -199,8 +202,8 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
               title="Conta"
               icon={PersonStanding}
               items={accountItems}
-              isSubMenuOpen={accountMenuOpen}
-              toggleSubMenu={() => setAccountMenuOpen(!accountMenuOpen)}
+              isSubMenuOpen={openSubMenu === "account"}
+              toggleSubMenu={() => handleSubMenuToggle("account")}
             />
             {signed && (
               <button onClick={signOut} className={`${menuItemClass} ${!isOpen && "justify-center"}`} title={isOpen ? "" : "Sair"}>
