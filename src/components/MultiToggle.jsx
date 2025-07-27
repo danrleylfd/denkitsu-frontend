@@ -110,7 +110,7 @@ const MultiToggle = ({ options = [], value, onChange, className = "", itemsPerRo
                 variant="secondary"
                 size="icon"
                 $rounded
-                title={option.value}
+                title={option.label}
                 className={`
                   !normal-case !font-semibold !text-sm z-10 !bg-transparent
                   transition-colors duration-150
