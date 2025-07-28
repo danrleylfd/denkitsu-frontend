@@ -22,28 +22,24 @@ const UserVideos = () => {
   const { notifyInfo, notifyError } = useNotification()
   const [videos, setVideos] = useState([])
   const [loading, setLoading] = useState(true)
+
   useEffect(() => {
     if (!user?._id) return
     const fetchVideos = async () => {
       try {
         setLoading(true)
         const data = await getVideosByUser(user._id)
-        if (data?.length === 0) notifyInfo("Você ainda não possui vídeos.")
+        if (data?.length === 0) notifyInfo("Você ainda não publicou vídeos.")
         setVideos(data || [])
       } catch (err) {
-        console.error(err)
-        if (err.response?.status === 404){
-          setVideos([])
-          notifyInfo("Você ainda não possui vídeos.")
-          return
-        }
-        notifyError("Falha ao carregar vídeos. Tente novamente mais tarde.")
+        if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+        else notifyError("Falha ao carregar seus vídeos.")
       } finally {
         setLoading(false)
       }
     }
     fetchVideos()
-  }, [user._id])
+  }, [user?._id])
 
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple min-h-screen">

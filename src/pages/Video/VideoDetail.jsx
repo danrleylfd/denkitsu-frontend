@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import { ThumbsUp, ThumbsDown, MessageCircle, Share2, Pencil, Trash } from "lucide-react"
 
 import { useAuth } from "../../contexts/AuthContext"
@@ -24,6 +24,7 @@ const ContentView = ({ children, ...props }) => (
 
 const VideoDetail = () => {
   const { videoId } = useParams()
+  const navigate = useNavigate()
   const { signed, user } = useAuth()
   const { notifySuccess, notifyWarning, notifyError } = useNotification()
   const [video, setVideo] = useState(null)
@@ -48,14 +49,13 @@ const VideoDetail = () => {
       if (signed && videoData.likes?.includes(user?._id)) setIsLiked(true)
       else setIsLiked(false)
     } catch (err) {
-      console.error(err)
-      notifyError("Falha ao carregar detalhes do vídeo ou comentários.")
-      setVideo(null)
-      setComments([])
+      if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+      else notifyError("Falha ao carregar os detalhes do vídeo.")
+      navigate("/")
     } finally {
       setLoading(false)
     }
-  }, [videoId, signed, user?._id, notifyError])
+  }, [videoId, signed, user?._id])
 
   useEffect(() => {
     if (videoId) fetchVideoAndComments()
@@ -63,19 +63,19 @@ const VideoDetail = () => {
 
   const handleDeleteVideo = async () => {
     if (!signed) return notifyWarning("Você precisa estar logado para excluir um vídeo.")
-    const confirmDelete = window.confirm(
-      "Tem certeza que deseja excluir este vídeo? Você perderá todas as curtidas, comentários e compartilhamentes relacionados a este vídeo."
-    )
-    if (!confirmDelete) return
+    if (!window.confirm("Tem certeza que deseja excluir este vídeo?")) return
     setLoading(true)
     try {
       await deleteVideoById(videoId)
       notifySuccess("Vídeo excluído com sucesso!")
-      setLoading(false)
-      window.location.href = "/my-videos"
-    } catch (error) {
-      console.error("Erro ao excluir vídeo:", error)
-      notifyError("Falha ao excluir vídeo.")
+      navigate("/my-videos")
+    } catch (err) {
+      if (err.response && err.response.data.error) {
+        notifyError(err.response.data.error.message)
+      } else {
+        notifyError("Falha ao excluir o vídeo.")
+      }
+    } finally {
       setLoading(false)
     }
   }
