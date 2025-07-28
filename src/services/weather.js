@@ -5,7 +5,7 @@ const getWeatherByLocation = async (location) => {
     const { data } = await api.get(`/weather/location/${location}`)
     return data
   } catch (error) {
-    console.error(`Error fetching weather for ${location}:`, error.response?.data?.error?.message || error.message)
+    console.error(`Error on getWeatherByLocation ${location}:`, error.response?.data?.error?.message || error.message)
     throw error
   }
 }
@@ -15,7 +15,7 @@ const getWeatherByCoordinates = async (lat, lon) => {
     const { data } = await api.get(`/weather/coordinates/${lat}/${lon}`)
     return data
   } catch (error) {
-    console.error(`Error fetching weather for coordinates (${lat}, ${lon}):`, error.response?.data?.error?.message || error.message)
+    console.error(`Error on getWeatherByCoordinates (${lat}, ${lon}):`, error.response?.data?.error?.message || error.message)
     throw error
   }
 }

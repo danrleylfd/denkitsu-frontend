@@ -44,7 +44,7 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, web, mode, 
           const delta = json.choices?.[0]?.delta
           if (delta?.content || delta?.reasoning || delta?.tool_calls) onDelta(delta)
         } catch (error) {
-          console.error("Error on JSON.parse:", error)
+          console.error("Error on sendMessageStream JSON.parse:", error)
         }
       }
     })
@@ -89,7 +89,7 @@ const getPrompt = async () => {
     return data
   } catch (error) {
     console.error("Error on getPrompt:", error.response?.data?.error?.message || error.message)
-    throw new Error(error.response?.data?.message || "Falha ao obter prompts.")
+    throw error
   }
 }
 
@@ -110,7 +110,7 @@ const getModels = async () => {
     return { freeModels, payModels, groqModels }
   } catch (error) {
     console.error("Error on getModels:", error.response?.data?.error?.message || error.message)
-    throw new Error(error.message || "Falha ao obter modelos.")
+    throw error
   }
 }
 
@@ -120,7 +120,7 @@ const generateNews = async (searchTerm, aiProvider) => {
     return data
   } catch (error) {
     console.error("Error on generateNews:", error.response?.data?.message || error.message)
-    throw new Error(error.response?.data?.message || "Falha ao gerar notícias.")
+    throw error
   }
 }
 
