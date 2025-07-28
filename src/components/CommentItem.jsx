@@ -40,15 +40,17 @@ const CommentItem = ({ comment, videoId, onCommentDeleted, onReplyAdded, disable
 
   const handleDelete = async () => {
     if (!isAuthor) return
-    const confirmDelete = window.confirm("Tem certeza que deseja excluir este comentário e todas as suas respostas?")
-    if (confirmDelete) {
-      try {
-        await deleteComment(videoId, comment._id)
-        onCommentDeleted(comment._id)
-      } catch (err) {
-        if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
-        else notifyError("Falha ao deletar o comentário.")
-      }
+    const isReply = !!comment.parent
+    const message = isReply
+      ? "Tem certeza que deseja excluir esta resposta?"
+      : "Tem certeza que deseja excluir este comentário e todas as suas respostas?"
+    if (!window.confirm(message)) return
+    try {
+      await deleteComment(videoId, comment._id)
+      onCommentDeleted(comment._id)
+    } catch (err) {
+      if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+      else notifyError("Falha ao deletar o comentário.")
     }
   }
 
