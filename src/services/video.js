@@ -142,7 +142,7 @@ const getRepliesForComment = async (commentId) => {
     const response = await api.get(`/replys/${commentId}`)
     return response.data
   } catch (error) {
-    console.error(`Error getting replies for comment ${commentId}:`, error.response?.data || error.message)
+    console.error(`Error getting replies for comment ${commentId}:`, error.response?.data?.error?.message || error.message)
     throw error
   }
 }
@@ -151,7 +151,7 @@ const shareVideo = async (videoId) => {
   try {
     await api.post(`/shares/${videoId}`)
   } catch (error) {
-    console.error(`Error sharing video ${videoId}:`, error.response?.data || error.message)
+    console.error(`Error sharing video ${videoId}:`, error.response?.data?.error?.message || error.message)
     throw error
   }
 }
@@ -161,7 +161,7 @@ const getVideoShares = async (videoId) => {
     const response = await api.get(`/shares/${videoId}`)
     return response.data
   } catch (error) {
-    console.error(`Error getting shares for video ${videoId}:`, error.response?.data || error.message)
+    console.error(`Error getting shares for video ${videoId}:`, error.response?.data?.error?.message || error.message)
     throw error
   }
 }

@@ -78,7 +78,7 @@ const sendMessage = async (aiKey, aiProvider, model, models, messages, mode = ""
     const { data } = await api.post("/ai/chat/completions", payload)
     return data
   } catch (error) {
-    console.error("Error on sendMessage:", error.response?.data?.message || error.message)
+    console.error("Error on sendMessage:", error.response?.data?.error?.message || error.message)
     throw error
   }
 }
@@ -88,7 +88,7 @@ const getPrompt = async () => {
     const { data } = await api.get("/ai/prompt")
     return data
   } catch (error) {
-    console.error("Error on getPrompt:", error.response?.data?.message || error.message)
+    console.error("Error on getPrompt:", error.response?.data?.error?.message || error.message)
     throw new Error(error.response?.data?.message || "Falha ao obter prompts.")
   }
 }
@@ -109,7 +109,7 @@ const getModels = async () => {
       .sort((a, b) => a.id.localeCompare(b.id))
     return { freeModels, payModels, groqModels }
   } catch (error) {
-    console.error("Error on getModels:", error.message)
+    console.error("Error on getModels:", error.response?.data?.error?.message || error.message)
     throw new Error(error.message || "Falha ao obter modelos.")
   }
 }
