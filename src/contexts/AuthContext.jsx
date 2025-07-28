@@ -3,32 +3,62 @@ import api from "../services"
 
 const AuthContext = createContext({})
 
+// Detecta se estamos rodando dentro da extensão
+const isExtension = !!(window.chrome && chrome.runtime && chrome.runtime.id)
+
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  const signOut = useCallback(() => {
-    localStorage.removeItem("@Denkitsu:refreshToken")
-    sessionStorage.removeItem("@Denkitsu:token")
-    localStorage.removeItem("@Denkitsu:user")
-    localStorage.removeItem("@Denkitsu:messages")
+  // Armazenamento universal (usa chrome.storage na extensão, localStorage no site)
+  const storage = {
+    getItem: async (key) => {
+      if (isExtension) {
+        const result = await chrome.storage.local.get(key)
+        return result[key] || null
+      }
+      return localStorage.getItem(key)
+    },
+    setItem: async (key, value) => {
+      if (isExtension) {
+        return chrome.storage.local.set({ [key]: value })
+      }
+      return localStorage.setItem(key, value)
+    },
+    removeItem: async (key) => {
+      if (isExtension) {
+        return chrome.storage.local.remove(key)
+      }
+      return localStorage.removeItem(key)
+    }
+  }
+
+  const signOut = useCallback(async () => {
+    await storage.removeItem("@Denkitsu:refreshToken")
+    await storage.removeItem("@Denkitsu:user")
+    // sessionStorage não é compartilhado, então só o removemos se não for extensão
+    if (!isExtension) sessionStorage.removeItem("@Denkitsu:token")
+
     setUser(null)
     delete api.defaults.headers.Authorization
   }, [])
 
-  const completeSignIn = useCallback((token, refreshToken, userData) => {
-    localStorage.setItem("@Denkitsu:user", JSON.stringify(userData))
-    if (refreshToken) localStorage.setItem("@Denkitsu:refreshToken", refreshToken)
-    sessionStorage.setItem("@Denkitsu:token", token)
+  const completeSignIn = useCallback(async (token, refreshToken, userData) => {
+    await storage.setItem("@Denkitsu:user", JSON.stringify(userData))
+    if (refreshToken) await storage.setItem("@Denkitsu:refreshToken", refreshToken)
+
+    // sessionStorage só funciona no contexto do site.
+    if (!isExtension) sessionStorage.setItem("@Denkitsu:token", token)
+
     api.defaults.headers.Authorization = `Bearer ${token}`
     setUser(userData)
   }, [])
 
   useEffect(() => {
     const loadStorageData = async () => {
-      const storagedRefreshToken = localStorage.getItem("@Denkitsu:refreshToken")
-      const storagedToken = sessionStorage.getItem("@Denkitsu:token")
-      const storagedUser = localStorage.getItem("@Denkitsu:user")
+      const storagedUser = await storage.getItem("@Denkitsu:user")
+      const storagedRefreshToken = await storage.getItem("@Denkitsu:refreshToken")
+      const storagedToken = isExtension ? null : sessionStorage.getItem("@Denkitsu:token")
 
       if (storagedToken && storagedUser) {
         api.defaults.headers.Authorization = `Bearer ${storagedToken}`
@@ -37,37 +67,53 @@ const AuthProvider = ({ children }) => {
         try {
           const response = await api.post("/auth/refresh_token", { refreshToken: `Bearer ${storagedRefreshToken}` })
           const { token, refreshToken: newRefreshToken } = response.data
-          completeSignIn(token, newRefreshToken, JSON.parse(storagedUser))
+          await completeSignIn(token, newRefreshToken, JSON.parse(storagedUser))
         } catch (error) {
           console.error("Falha ao atualizar token, deslogando.", error)
-          signOut()
+          await signOut()
         }
       }
       setLoading(false)
     }
     loadStorageData()
+
+    // Adiciona um listener para mudanças no chrome.storage (só na extensão)
+    if (isExtension) {
+        const listener = (changes, area) => {
+            if (area === 'local' && (changes["@Denkitsu:user"] || changes["@Denkitsu:refreshToken"])) {
+                console.log("AuthContext: Detectou mudança no storage, recarregando estado.")
+                loadStorageData()
+            }
+        }
+        chrome.storage.onChanged.addListener(listener)
+        return () => chrome.storage.onChanged.removeListener(listener)
+    }
+
   }, [signOut, completeSignIn])
 
   const signIn = useCallback(async ({ email, password }) => {
     const response = await api.post("/auth/signin", { email, password })
     const { token, refreshToken, user: userData } = response.data
-    completeSignIn(token, refreshToken, userData)
+    await completeSignIn(token, refreshToken, userData)
   }, [completeSignIn])
+
+  // ... (o resto das funções como signUp, etc. devem usar 'await completeSignIn')
 
   const signUp = useCallback(async ({ name, email, password }) => {
     const response = await api.post("/auth/signup", { name, email, password })
     const { token, refreshToken, user: userData } = response.data
-    completeSignIn(token, refreshToken, userData)
+    await completeSignIn(token, refreshToken, userData)
   }, [completeSignIn])
 
-  const completeOAuthSignIn = useCallback(({ token, refreshToken, user }) => {
-    completeSignIn(token, refreshToken, user)
+  const completeOAuthSignIn = useCallback(async ({ token, refreshToken, user }) => {
+    await completeSignIn(token, refreshToken, user)
   }, [completeSignIn])
 
-  const updateUser = useCallback((newUserData) => {
-    localStorage.setItem("@Denkitsu:user", JSON.stringify(newUserData))
+  const updateUser = useCallback(async (newUserData) => {
+    await storage.setItem("@Denkitsu:user", JSON.stringify(newUserData))
     setUser(newUserData)
   }, [])
+
 
   return (
     <AuthContext.Provider value={{ signed: !!user, user, loading, signIn, signUp, signOut, updateUser, completeOAuthSignIn }}>
