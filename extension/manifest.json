@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Denkitsu AI Chat",
+  "version": "1.0",
+  "description": "Acesse o chat Denkitsu na Side Panel e interaja com o contexto da sua página atual.",
+  "permissions": [
+    "sidePanel",
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "icons": {
+    "16": "denkitsu-rounded.png",
+    "48": "denkitsu-rounded.png",
+    "128": "denkitsu-rounded.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Abrir Denkitsu AI"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "side_panel": {
+    "default_path": "src/sidepanel/index.html"
+  }
+}
