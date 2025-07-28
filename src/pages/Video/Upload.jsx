@@ -7,6 +7,7 @@ import { useNotification } from "../../contexts/NotificationContext"
 
 import { sendMessage } from "../../services/aiChat"
 import { createVideo } from "../../services/video"
+
 import { resizeImage } from "../../utils/image"
 
 import SideMenu from "../../components/SideMenu"
@@ -22,7 +23,7 @@ const ContentView = ({ children }) => (
 
 const Upload = () => {
   const { aiKey, model, aiProvider, aiProviderToggle, freeModels, payModels, groqModels } = useAI()
-  const { notifyWarning, notifyError } = useNotification()
+  const { notifyWarning, notifyError, notifyInfo } = useNotification()
   const [content, setContent] = useState("")
   const [thumbnail, setThumbnail] = useState("")
   const [fileUrl, setFileUrl] = useState("")
@@ -35,12 +36,12 @@ const Upload = () => {
     try {
       const userPrompt = { role: "user", content: `Tema: ${content}` }
       const data = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], [userPrompt], "Blogueiro")
-      if (data.error) return notifyError(data.error.message)
       const message = data?.choices?.[0]?.message
-      if (!message) return notifyError("Serviço temporariamente indisponível.")
+      if (!message) throw new Error("Serviço temporariamente indisponível.")
       setContent(message.content)
     } catch (err) {
-      notifyError(err.message)
+      if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+      else notifyError("Falha ao gerar conteúdo com a IA.")
     } finally {
       setLoading(false)
     }
@@ -62,15 +63,17 @@ const Upload = () => {
     }
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault()
     if (!content || !thumbnail || !fileUrl) return notifyWarning("Por favor, preencha todos os campos.")
-
     setLoading(true)
     try {
       await createVideo({ content, thumbnail, fileUrl })
+      notifyInfo("Vídeo enviado com sucesso!")
       navigate("/my-videos")
     } catch (err) {
-      notifyError(err.message)
+      if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+      else notifyError("Falha ao fazer upload do vídeo.")
     } finally {
       setLoading(false)
     }
@@ -106,7 +109,6 @@ const Upload = () => {
             <Brain size={16} />
           </Button>
         </Input>
-
         <div className="flex gap-2">
           <Input
             name="thumbnail"
@@ -116,6 +118,7 @@ const Upload = () => {
             onChange={(e) => setThumbnail(e.target.value)}
             disabled={loading}>
             <Button
+              type="button"
               variant="secondary"
               size="icon"
               $rounded
@@ -127,7 +130,6 @@ const Upload = () => {
           </Input>
           <Input ref={thumbnailRef} type="file" accept="image/*" onChange={handleThumbnailChange} disabled={loading} containerClassName="hidden" />
         </div>
-
         <Input
           name="fileUrl"
           type="text"
@@ -135,9 +137,7 @@ const Upload = () => {
           value={fileUrl}
           onChange={(e) => setFileUrl(e.target.value)}
           disabled={loading}
-
         />
-
         <Button type="submit" $rounded title="Publicar" loading={loading} disabled={!content || !thumbnail || !fileUrl}>
           {!loading && <UploadIcon size={16} />}
           {!loading && "Publicar"}
