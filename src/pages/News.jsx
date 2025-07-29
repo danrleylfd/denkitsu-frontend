@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react"
-import { SearchSlash, Brain } from "lucide-react"
+import { SearchSlash, Brain, Copy, Mic } from "lucide-react"
 
 import { useAI } from "../contexts/AIContext"
 import { useNotification } from "../contexts/NotificationContext"
@@ -22,7 +22,7 @@ const ContentView = ({ children }) => (
 
 const News = () => {
   const { aiProvider, aiProviderToggle } = useAI()
-  const { notifyError } = useNotification()
+  const { notifyError, notifyInfo } = useNotification()
   const [searchTerm, setSearchTerm] = useState("")
   const [news, setNews] = useState([])
   const [page, setPage] = useState(1)
@@ -68,13 +68,28 @@ const News = () => {
     setLoading(true)
     try {
       const article = await generateNews(searchTerm, aiProvider)
-      setNews([article, ...news])
+      setNews([{ ...article, id: Date.now() }, ...news])
       setSearchTerm("")
     } catch (err) {
       if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
       else notifyError("Não foi possível gerar a notícia.")
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleCopyMarkdown = (content) => {
+    navigator.clipboard.writeText(content)
+    notifyInfo("Markdown copiado!")
+  }
+
+  const handleReadAloud = (content) => {
+    if ("speechSynthesis" in window) {
+      const utterance = new SpeechSynthesisUtterance(content)
+      utterance.lang = "pt-BR"
+      window.speechSynthesis.speak(utterance)
+    } else {
+      notifyError("Seu navegador não suporta leitura em voz alta.")
     }
   }
 
@@ -114,6 +129,26 @@ const News = () => {
               <small className="text-xs text-lightFg-secondary dark:text-darkFg-secondary">
                 Publicado em {new Date(article.createdAt).toLocaleString()}
               </small>
+              <div className="flex gap-2 mt-2">
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  $rounded
+                  title="Copiar Markdown"
+                  onClick={() => handleCopyMarkdown(article.content)}
+                >
+                  <Copy size={14} />
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  $rounded
+                  title="Ler em voz alta"
+                  onClick={() => handleReadAloud(article.content)}
+                >
+                  <Mic size={14} />
+                </Button>
+              </div>
             </Paper>
           )
         }
