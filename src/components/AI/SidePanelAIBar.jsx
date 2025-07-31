@@ -4,7 +4,7 @@ import {
   LogIn, UserPlus,
   Settings, SendHorizontal, ImagePlus, ImageOff, Globe, GlobeLock, Newspaper, Shredder, Cloud, CloudOff,
   AudioLines, AudioWaveform, Brain, MessageCirclePlus, BookOpen, BookAlert, Link2, Link2Off, Wrench, Gamepad, Gamepad2,
-  Lock, Server, ServerOff, Mic, MicOff, MoreVertical, Smartphone, Bitcoin, CircleOff
+  Lock, Server, ServerOff, Mic, MicOff, MoreVertical, Smartphone, Bitcoin, CircleOff, ScanText // Ícone adicionado
 } from "lucide-react"
 
 import { useAuth } from "../../contexts/AuthContext"
@@ -14,7 +14,7 @@ import Paper from "../Paper"
 import AIInput from "./Input"
 import Button from "../Button"
 
-const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessage, clearHistory, toggleSettings, loading }) => {
+const SidePanelAIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessage, clearHistory, toggleSettings, loading, onAnalyzePage }) => {
   const { signed } = useAuth()
   const {
     aiProvider, aiProviderToggle, aiKey,
@@ -104,7 +104,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
           <Lock size={16} />
         </Button>
         <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 text-center">
-          <p className="text-lightFg-secondary dark:text-darkFg-secondary">Faça login ou crie sua conta para conversar.</p>
+          <p className="text-lightFg-secondary dark:text-darkFg-secondary">"Faça login ou crie sua conta para conversar."</p>
           <div className="flex gap-2">
             <Link to="/signup">
               <Button variant="outline" size="icon" $rounded>
@@ -125,6 +125,10 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
     <Paper className="relative bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 max-w-[95%] mb-2 mx-auto">
       <div className="w-full flex flex-col gap-2 sm:hidden">
         <div className="flex items-center justify-between flex-wrap gap-2">
+          {/* Botão Adicionado Aqui (Mobile) */}
+          <Button variant="secondary" size="icon" $rounded title="Analisar Página Atual" onClick={onAnalyzePage} disabled={loading}>
+            <ScanText size={16} />
+          </Button>
           <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"} disabled={loading}>
             <Brain size={16} />
           </Button>
@@ -181,15 +185,6 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
           <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
             <MessageCirclePlus size={16} />
           </Button>
-          {/* <div className="relative"> Não apague esse comentário
-            <Button hidden variant="secondary" size="icon" $rounded title="Mais Opções" onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)} disabled={loading}>
-              <MoreVertical size={16} />
-            </Button>
-            {isMoreMenuOpen && (
-              <div className="absolute z-20 left-0 bottom-full mb-4 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark flex flex-col gap-2">
-              </div>
-            )}
-          </div> */}
         </div>
         <div className="flex items-center gap-2 w-full">
           <AIInput
@@ -206,6 +201,10 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
         </div>
       </div>
       <div className="w-full hidden sm:flex items-center gap-2">
+        {/* Botão Adicionado Aqui (Desktop) */}
+        <Button variant="secondary" size="icon" $rounded title="Analisar Página Atual" onClick={onAnalyzePage} disabled={loading}>
+          <ScanText size={16} />
+        </Button>
         <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"} disabled={loading}>
           <Brain size={16} />
         </Button>
@@ -280,4 +279,4 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
   )
 }
 
-export default AIBar
+export default SidePanelAIBar

@@ -10,7 +10,8 @@ import { useNotification } from "../contexts/NotificationContext"
 import { sendMessageStream, sendMessage, getModels } from "../services/aiChat"
 
 // Componentes
-import AIBar from "../components/AI/Bar"
+// A importação foi atualizada para o novo componente
+import SidePanelAIBar from "../components/AI/SidePanelAIBar"
 import AITip from "../components/AI/Tip"
 import ImagePreview from "../components/AI/ImagePreview"
 import AISettings from "../components/AI/Settings"
@@ -28,21 +29,32 @@ const AuthScreen = () => {
     <div className="flex flex-col justify-center items-center h-full p-4">
       <Paper className="flex flex-col items-center gap-4 text-center">
         <img src="/denkitsu-rounded.png" alt="Denkitsu Logo" className="w-24 h-24" />
-        <h2 className="text-xl font-bold">Bem-vindo ao Denkitsu</h2>
+        <h2 className="text-xl font-bold">"Bem-vindo ao Denkitsu"</h2>
         <p className="text-lightFg-secondary dark:text-darkFg-secondary">
-          Para usar a inteligência artificial, por favor, faça login ou crie sua conta.
+          "Para usar a inteligência artificial, por favor, faça login ou crie sua conta."
         </p>
         <div className="flex gap-4 mt-4">
           <Button $rounded variant="secondary" onClick={() => openPage("/signup")}>
             <UserPlus size={16} className="mr-2" />
-            Cadastrar
+            "Cadastrar"
           </Button>
           <Button $rounded variant="primary" onClick={() => openPage("/signin")}>
             <LogIn size={16} className="mr-2" />
-            Entrar
+            "Entrar"
           </Button>
         </div>
       </Paper>
+    </div>
+  )
+}
+
+// O botão de análise foi removido daqui, pois agora está na SidePanelAIBar
+const WelcomeScreen = () => {
+  return (
+    <div className="flex grow justify-center items-center flex-col p-4 text-center">
+      <img src="/denkitsu-rounded.png" alt="Denkitsu Logo" className="w-24 h-24 mb-4" />
+      <h2 className="text-xl font-bold text-lightFg-primary dark:text-darkFg-primary">"Denkitsu AI"</h2>
+      <p className="text-lightFg-secondary dark:text-darkFg-secondary mb-4">"Como posso te ajudar hoje?"</p>
     </div>
   )
 }
@@ -61,7 +73,7 @@ const ChatInterface = () => {
   const [selectedPrompt, setSelectedPrompt] = useState("Padrão")
 
   useEffect(() => {
-    (async () => {
+    const fetchModels = async () => {
       try {
         const { freeModels: loadedFree, payModels: loadedPay, groqModels: loadedGroq } = await getModels()
         setFreeModels(loadedFree || [])
@@ -70,7 +82,8 @@ const ChatInterface = () => {
       } catch (error) {
         notifyError(error.message || "Falha ao carregar modelos de IA.")
       }
-    })()
+    }
+    fetchModels()
   }, [aiKey, setFreeModels, setPayModels, setGroqModels, notifyError])
 
   const onAddImage = () => {
@@ -83,7 +96,7 @@ const ChatInterface = () => {
     img.onerror = () => notifyError("A URL fornecida não parece ser uma imagem válida.")
   }
 
-  const onRemoveImage = index => setImageUrls(prev => prev.filter((_, i) => i !== index))
+  const onRemoveImage = (index) => setImageUrls(prev => prev.filter((_, i) => i !== index))
   const toggleLousa = useCallback((content) => setLousaContent(content), [])
   const toggleSettings = () => setSettingsOpen(prev => !prev)
 
@@ -105,6 +118,7 @@ const ChatInterface = () => {
   const executeSendMessage = useCallback(async (historyToProcess) => {
     setLoading(true)
     const apiMessages = historyToProcess.map(({ role, content }) => (Array.isArray(content) ? { role, content: content.map(item => (item.type === "text" ? { type: "text", text: item.content } : item)) } : { role, content }))
+
     try {
       if (stream) {
         const placeholder = { id: Date.now(), role: "assistant", content: "", reasoning: "", _contentBuffer: "", _reasoningBuffer: "", timestamp: new Date().toISOString() }
@@ -113,7 +127,8 @@ const ChatInterface = () => {
           if (delta.content) placeholder._contentBuffer += delta.content
           if (delta.reasoning) placeholder._reasoningBuffer += delta.reasoning
           if (delta.tool_calls?.[0]?.function?.arguments) placeholder._reasoningBuffer += delta.tool_calls[0].function.arguments
-          const cleanContent = raw => {
+
+          const cleanContent = (raw) => {
             let reasoning = ""
             const content = raw.replace(/(<think>.*?<\/think>|<thinking>.*?<\/thinking>|◁think▷.*?◁\/think▷)/gs, (_, r) => {
               reasoning += r
@@ -121,6 +136,7 @@ const ChatInterface = () => {
             })
             return { content, reasoning }
           }
+
           const { content, reasoning } = cleanContent(placeholder._contentBuffer)
           placeholder.content = content
           placeholder.reasoning = (placeholder._reasoningBuffer + reasoning).trim()
@@ -130,6 +146,7 @@ const ChatInterface = () => {
         const data = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, selectedPrompt, web, browserTool, httpTool, wikiTool, newsTool, weatherTool, criptoTool, genshinTool, pokedexTool)
         const res = data?.choices?.[0]?.message
         if (!res) return
+
         const cleanContent = (raw = "") => {
           let reasoning = ""
           const content = raw.replace(/(<think>.*?<\/think>|<thinking>.*?<\/thinking>|◁think▷.*?◁\/think▷)/gs, (_, r) => {
@@ -138,6 +155,7 @@ const ChatInterface = () => {
           })
           return { content, reasoning }
         }
+
         const { content, reasoning } = cleanContent(res.content)
         setMessages(prev => [...prev, { id: Date.now(), role: "assistant", content, reasoning: (res.reasoning || "") + reasoning, timestamp: new Date().toISOString() }])
       }
@@ -152,7 +170,11 @@ const ChatInterface = () => {
 
   const onSendMessage = useCallback(async () => {
     if (loading || (!userPrompt.trim() && imageUrls.length === 0)) return
-    const newMessage = { role: "user", content: [...(userPrompt.trim() ? [{ type: "text", content: userPrompt.trim() }] : []), ...imageUrls.map(url => ({ type: "image_url", image_url: { url } }))], timestamp: new Date().toISOString() }
+    const newContent = [
+      ...(userPrompt.trim() ? [{ type: "text", content: userPrompt.trim() }] : []),
+      ...imageUrls.map(url => ({ type: "image_url", image_url: { url } }))
+    ]
+    const newMessage = { role: "user", content: newContent, timestamp: new Date().toISOString() }
     const history = [...messages, newMessage]
     setMessages(history)
     setUserPrompt("")
@@ -172,39 +194,36 @@ const ChatInterface = () => {
     await executeSendMessage(historyWithoutLastResponse)
   }, [loading, messages, setMessages, executeSendMessage, notifyWarning])
 
-  const temMensagensDoUsuario = messages.some(msg => msg.role === "user")
+  const hasUserMessages = messages.some(msg => msg.role === "user")
 
   return (
     <>
-      {temMensagensDoUsuario ? (
-        <AIHistory toggleLousa={toggleLousa} onRegenerate={handleRegenerateResponse} />
-      ) : (
-        <div className="flex grow justify-center items-center flex-col p-4 text-center">
-          <img src="/denkitsu-rounded.png" alt="Denkitsu Logo" className="w-24 h-24 mb-4" />
-          <h2 className="text-xl font-bold text-lightFg-primary dark:text-darkFg-primary">Denkitsu AI</h2>
-          <p className="text-lightFg-secondary dark:text-darkFg-secondary mb-4">Como posso te ajudar hoje?</p>
-          {/* <Button variant="gradient-rainbow" onClick={handleAnalyzePage} loading={loading} className="w-full max-w-sm" $rounded>
-            <ScanText size={16} className="mr-2" />
-            Analisar Página Atual
-          </Button> */}
-        </div>
-      )}
-      <Button variant="gradient-rainbow" onClick={handleAnalyzePage} loading={loading} className="w-full max-w-sm" $rounded>
-        <ScanText size={16} className="mr-2" />
-        Analisar Página Atual
-      </Button>
+      {hasUserMessages
+        ? <AIHistory toggleLousa={toggleLousa} onRegenerate={handleRegenerateResponse} />
+        : <WelcomeScreen />
+      }
       <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
-      {!temMensagensDoUsuario && <div className="p-2 border-t border-bLight dark:border-bDark"></div>}
-      <AIBar
-        userPrompt={userPrompt} setUserPrompt={setUserPrompt} onAddImage={onAddImage}
-        imageCount={imageUrls.length} toggleSettings={toggleSettings}
-        onSendMessage={onSendMessage} clearHistory={clearHistory} loading={loading}
+      {/* O componente foi trocado e a nova prop onAnalyzePage foi adicionada */}
+      <SidePanelAIBar
+        userPrompt={userPrompt}
+        setUserPrompt={setUserPrompt}
+        onAddImage={onAddImage}
+        imageCount={imageUrls.length}
+        toggleSettings={toggleSettings}
+        onSendMessage={onSendMessage}
+        clearHistory={clearHistory}
+        loading={loading}
+        onAnalyzePage={handleAnalyzePage}
       />
       <AITip />
       <AISettings
-        settingsOpen={settingsOpen} toggleSettings={toggleSettings}
-        freeModels={freeModels} payModels={payModels} groqModels={groqModels}
-        selectedPrompt={selectedPrompt} onSelectPrompt={setSelectedPrompt}
+        settingsOpen={settingsOpen}
+        toggleSettings={toggleSettings}
+        freeModels={freeModels}
+        payModels={payModels}
+        groqModels={groqModels}
+        selectedPrompt={selectedPrompt}
+        onSelectPrompt={setSelectedPrompt}
       />
       <Lousa content={lousaContent} toggleLousa={toggleLousa} />
     </>
@@ -213,13 +232,17 @@ const ChatInterface = () => {
 
 const App = () => {
   const { signed, loading } = useAuth()
+
   return (
     <div className="flex flex-col h-dvh bg-[#7159C1]">
-      {loading ? (
-        <div className="flex items-center justify-center h-full">
-          <Button variant="secondary" loading={true} disabled $rounded />
-        </div>
-      ) : signed ? <ChatInterface /> : <AuthScreen />}
+      {loading
+        ? (
+          <div className="flex items-center justify-center h-full">
+            <Button variant="secondary" loading={true} disabled $rounded />
+          </div>
+        )
+        : signed ? <ChatInterface /> : <AuthScreen />
+      }
     </div>
   )
 }
