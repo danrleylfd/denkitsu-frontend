@@ -184,6 +184,15 @@ const SidePanelAIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onS
           <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
             <MessageCirclePlus size={16} />
           </Button>
+          {/* <div className="relative"> Não apague esse comentário
+            <Button hidden variant="secondary" size="icon" $rounded title="Mais Opções" onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)} disabled={loading}>
+              <MoreVertical size={16} />
+            </Button>
+            {isMoreMenuOpen && (
+              <div className="absolute z-20 left-0 bottom-full mb-4 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark flex flex-col gap-2">
+              </div>
+            )}
+          </div> */}
         </div>
         <div className="flex items-center gap-2 w-full">
           <AIInput
