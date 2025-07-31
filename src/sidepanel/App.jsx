@@ -48,7 +48,6 @@ const AuthScreen = () => {
   )
 }
 
-// O botão de análise foi removido daqui, pois agora está na SidePanelAIBar
 const WelcomeScreen = () => {
   return (
     <div className="flex grow justify-center items-center flex-col p-4 text-center">
@@ -203,7 +202,6 @@ const ChatInterface = () => {
         : <WelcomeScreen />
       }
       <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
-      {/* O componente foi trocado e a nova prop onAnalyzePage foi adicionada */}
       <SidePanelAIBar
         userPrompt={userPrompt}
         setUserPrompt={setUserPrompt}
