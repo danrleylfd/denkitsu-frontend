@@ -7,6 +7,7 @@
     "dev": "vite --port 80",
     "build": "vite build",
     "build-n-copy": "vite build && npm run copy-extension-files",
+    "bnp": "vite build && npm run copy-extension-files",
     "copy-extension-files": "xcopy extension dist /E /I /Y",
     "lint": "eslint .",
     "preview": "vite preview"
