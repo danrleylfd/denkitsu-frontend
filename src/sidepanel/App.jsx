@@ -183,12 +183,16 @@ const ChatInterface = () => {
           <img src="/denkitsu-rounded.png" alt="Denkitsu Logo" className="w-24 h-24 mb-4" />
           <h2 className="text-xl font-bold text-lightFg-primary dark:text-darkFg-primary">Denkitsu AI</h2>
           <p className="text-lightFg-secondary dark:text-darkFg-secondary mb-4">Como posso te ajudar hoje?</p>
-          <Button variant="gradient-rainbow" onClick={handleAnalyzePage} loading={loading} className="w-full max-w-sm" $rounded>
+          {/* <Button variant="gradient-rainbow" onClick={handleAnalyzePage} loading={loading} className="w-full max-w-sm" $rounded>
             <ScanText size={16} className="mr-2" />
             Analisar Página Atual
-          </Button>
+          </Button> */}
         </div>
       )}
+      <Button variant="gradient-rainbow" onClick={handleAnalyzePage} loading={loading} className="w-full max-w-sm" $rounded>
+        <ScanText size={16} className="mr-2" />
+        Analisar Página Atual
+      </Button>
       <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
       {!temMensagensDoUsuario && <div className="p-2 border-t border-bLight dark:border-bDark"></div>}
       <AIBar
