@@ -52,8 +52,8 @@ const WelcomeScreen = () => {
   return (
     <div className="flex grow justify-center items-center flex-col p-4 text-center">
       <img src="/denkitsu-rounded.png" alt="Denkitsu Logo" className="w-24 h-24 mb-4" />
-      <h2 className="text-xl font-bold text-lightFg-primary dark:text-darkFg-primary">"Denkitsu AI"</h2>
-      <p className="text-lightFg-secondary dark:text-darkFg-secondary mb-4">"Como posso te ajudar hoje?"</p>
+      <h2 className="text-xl font-bold text-lightFg-primary dark:text-darkFg-primary">Denkitsu AI</h2>
+      <p className="text-lightFg-primary dark:text-darkFg-primary">Como posso te ajudar hoje?</p>
     </div>
   )
 }
