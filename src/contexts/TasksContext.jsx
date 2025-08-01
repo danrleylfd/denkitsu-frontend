@@ -64,9 +64,9 @@ const TasksProvider = ({ children }) => {
     }
     try {
       const userPrompt = { role: "user", content: `Objetivo: "${goal}"` }
-      const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], [userPrompt], "Secretário")
+      const data = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], [userPrompt], "Secretário")
       const rawContent = data?.choices?.[0]?.message?.content
-      if (!rawContent || rawContent.trim().length === 0) return notifyError("A resposta da IA veio vazia ou em formato inválido.")
+      if (typeof rawContent !== "string" || !rawContent.trim()) return notifyError("A resposta da IA veio vazia ou em formato inválido.")
       const content = rawContent.replace(/<think>[\s\S]*?<\/think>/g, "").replaceAll("`","").replace("json\n","")
       const codeBlock = extractCodeFromMarkdown(content)
       const finalContentToParse = codeBlock || content
