@@ -20,6 +20,7 @@ const AIProvider = ({ children }) => {
   const storedCriptoTool = JSON.parse(localStorage.getItem("@Denkitsu:CriptoTool"))
   const storedGenshinTool = JSON.parse(localStorage.getItem("@Denkitsu:GenshinTool"))
   const storedPokedexTool = JSON.parse(localStorage.getItem("@Denkitsu:PokedexTool"))
+  const storedNasaTool = JSON.parse(localStorage.getItem("@Denkitsu:NasaTool"))
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
 
   const [aiProvider, setAIProvider] = useState(storedAIProvider || "groq")
@@ -42,6 +43,7 @@ const AIProvider = ({ children }) => {
   const [criptoTool, setCriptoTool] = useState(storedCriptoTool === null? false : storedCriptoTool)
   const [genshinTool, setGenshinTool] = useState(storedGenshinTool === null? false : storedGenshinTool)
   const [pokedexTool, setPokedexTool] = useState(storedPokedexTool === null? false : storedPokedexTool)
+  const [nasaTool, setNasaTool] = useState(storedNasaTool === null ? false : storedNasaTool)
   const [userPrompt, setUserPrompt] = useState("")
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
   const [speaking, setSpeaking] = useState(false)
@@ -75,6 +77,8 @@ const AIProvider = ({ children }) => {
 
   useEffect(() => (localStorage.setItem("@Denkitsu:PokedexTool", pokedexTool)), [pokedexTool])
 
+  useEffect(() => (localStorage.setItem("@Denkitsu:NasaTool", nasaTool)), [nasaTool])
+
   useEffect(() => {
     if (groqKey.trim() === "") return localStorage.removeItem("@Denkitsu:Groq")
     localStorage.setItem("@Denkitsu:Groq", groqKey)
@@ -107,6 +111,7 @@ const AIProvider = ({ children }) => {
   const toggleCripto = useCallback(() => setCriptoTool(c => !c), [])
   const toggleGenshin = useCallback(() => setGenshinTool(g => !g), [])
   const togglePokedex = useCallback(() => setPokedexTool(p => !p), [])
+  const toggleNasa = useCallback(() => setNasaTool(n => !n), [])
 
   const speakResponse = useCallback((text) => {
     if ("speechSynthesis" in window) {
@@ -134,6 +139,7 @@ const AIProvider = ({ children }) => {
     criptoTool, setCriptoTool, toggleCripto,
     genshinTool, setGenshinTool, toggleGenshin,
     pokedexTool, setPokedexTool, togglePokedex,
+    nasaTool, setNasaTool, toggleNasa,
     imageUrls, setImageUrls,
     aiProvider, setAIProvider, aiProviderToggle,
     aiKey: aiProvider === "groq" ? groqKey : openRouterKey,
@@ -159,6 +165,7 @@ const AIProvider = ({ children }) => {
     criptoTool, toggleCripto,
     genshinTool, toggleGenshin,
     pokedexTool, togglePokedex,
+    nasaTool, toggleNasa,
     imageUrls,
     aiProvider, aiProviderToggle,
     groqKey, openRouterKey,

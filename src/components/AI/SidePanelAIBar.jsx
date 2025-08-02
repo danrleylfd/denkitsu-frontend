@@ -30,6 +30,7 @@ const SidePanelAIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onS
     criptoTool, toggleCripto,
     genshinTool, toggleGenshin,
     pokedexTool, togglePokedex,
+    nasaTool, toggleNasa,
   } = useAI()
 
   const [isToolsOpen, setIsToolsOpen] = useState(false)
@@ -171,6 +172,9 @@ const SidePanelAIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onS
                   <Button variant={isToolsSupported && !stream && pokedexTool ? "outline" : "secondary"} size="icon" $rounded title="Pokedex (Beta)" onClick={togglePokedex} disabled={!isToolsSupported || stream || loading}>
                     {isToolsSupported && !stream ? <Smartphone size={16} /> : <Smartphone size={16} />}
                   </Button>
+                  <Button variant={isToolsSupported && !stream && nasaTool ? "outline" : "secondary"} size="icon" $rounded title="NASA APOD" onClick={toggleNasa} disabled={!isToolsSupported || stream || loading}>
+                    <Rocket size={16} />
+                  </Button>
                 </div>
               )}
             </div>
@@ -254,6 +258,9 @@ const SidePanelAIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onS
                 </Button>
                 <Button variant={isToolsSupported && !stream && pokedexTool ? "outline" : "secondary"} size="icon" $rounded title="Pokedex (Beta)" onClick={togglePokedex} disabled={!isToolsSupported || stream || loading}>
                   {isToolsSupported && !stream ? <Smartphone size={16} /> : <Smartphone size={16} />}
+                </Button>
+                <Button variant={isToolsSupported && !stream && nasaTool ? "outline" : "secondary"} size="icon" $rounded title="NASA APOD" onClick={toggleNasa} disabled={!isToolsSupported || stream || loading}>
+                  <Rocket size={16} />
                 </Button>
               </div>
             )}

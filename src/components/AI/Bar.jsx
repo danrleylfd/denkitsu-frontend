@@ -4,7 +4,7 @@ import {
   LogIn, UserPlus,
   Settings, SendHorizontal, ImagePlus, ImageOff, Globe, GlobeLock, Newspaper, Shredder, Cloud, CloudOff,
   AudioLines, AudioWaveform, Brain, MessageCirclePlus, BookOpen, BookAlert, Link2, Link2Off, Wrench, Gamepad, Gamepad2,
-  Lock, Server, ServerOff, Mic, MicOff, MoreVertical, Smartphone, Bitcoin, CircleOff
+  Lock, Server, ServerOff, Mic, MicOff, MoreVertical, Smartphone, Bitcoin, CircleOff, Rocket,
 } from "lucide-react"
 
 import { useAuth } from "../../contexts/AuthContext"
@@ -30,6 +30,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
     criptoTool, toggleCripto,
     genshinTool, toggleGenshin,
     pokedexTool, togglePokedex,
+    nasaTool, toggleNasa,
   } = useAI()
 
   const [isToolsOpen, setIsToolsOpen] = useState(false)
@@ -168,6 +169,9 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
                   <Button variant={isToolsSupported && !stream && pokedexTool ? "outline" : "secondary"} size="icon" $rounded title="Pokedex (Beta)" onClick={togglePokedex} disabled={!isToolsSupported || stream || loading}>
                     {isToolsSupported && !stream ? <Smartphone size={16} /> : <Smartphone size={16} />}
                   </Button>
+                  <Button variant={isToolsSupported && !stream && nasaTool ? "outline" : "secondary"} size="icon" $rounded title="NASA APOD" onClick={toggleNasa} disabled={!isToolsSupported || stream || loading}>
+                    <Rocket size={16} />
+                  </Button>
                 </div>
               )}
             </div>
@@ -248,6 +252,9 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
                 </Button>
                 <Button variant={isToolsSupported && !stream && pokedexTool ? "outline" : "secondary"} size="icon" $rounded title="Pokedex (Beta)" onClick={togglePokedex} disabled={!isToolsSupported || stream || loading}>
                   {isToolsSupported && !stream ? <Smartphone size={16} /> : <Smartphone size={16} />}
+                </Button>
+                <Button variant={isToolsSupported && !stream && nasaTool ? "outline" : "secondary"} size="icon" $rounded title="NASA APOD" onClick={toggleNasa} disabled={!isToolsSupported || stream || loading}>
+                  <Rocket size={16} />
                 </Button>
               </div>
             )}
