@@ -14,7 +14,7 @@ const BackgroundProvider = ({ children }) => {
       return
     }
     try {
-      const response = await fetch(`${unsplashApiUrl}?query=wallpaper&orientation=landscape&client_id=${unsplashAccessKey}`)
+      const response = await fetch(`${unsplashApiUrl}?query=minimalist+wallpaper&orientation=landscape&client_id=${unsplashAccessKey}`)
       if (!response.ok) throw new Error(`Erro na API do Unsplash: ${response.statusText}`)
       const data = await response.json()
       const regularUrl = data.urls.regular
