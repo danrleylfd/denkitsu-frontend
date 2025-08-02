@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from "react"
 import { Link } from "react-router-dom"
 import {
   LogIn, UserPlus,
-  Settings, SendHorizontal, ImagePlus, ImageOff, Globe, GlobeLock, Newspaper, Shredder, Cloud, CloudOff,
-  AudioLines, AudioWaveform, Brain, MessageCirclePlus, BookOpen, BookAlert, Link2, Link2Off, Wrench, Gamepad, Gamepad2,
-  Lock, Server, ServerOff, Mic, MicOff, MoreVertical, Smartphone, Bitcoin, CircleOff, Rocket,
+  Settings, Send, ImagePlus, Globe, Newspaper, Cloud,
+  AudioLines, AudioWaveform, Brain, MessageCirclePlus, BookOpen, Link2, Wrench, Gamepad2,
+  Lock, Server, Mic, MoreVertical, Smartphone, Bitcoin, Rocket,
 } from "lucide-react"
 
 import { useAuth } from "../../contexts/AuthContext"
@@ -194,7 +194,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
             className="resize-y"
           />
           <Button variant="gradient-rainbow" size="icon" $rounded title="Enviar" onClick={() => { setListening(false); onSendMessage() }} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
-            {!loading && <SendHorizontal size={16} />}
+            {!loading && <Send size={16} />}
           </Button>
         </div>
       </div>
@@ -227,7 +227,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
                 <Button variant={isToolsSupported && !stream && criptoTool ? "outline" : "secondary"} size="icon" $rounded title="Cripto (Beta)" onClick={toggleCripto} disabled={!isToolsSupported || stream || loading}>
                   <Bitcoin size={16} />
                 </Button>
-                <Button variant={isToolsSupported && !stream && nasaTool ? "outline" : "secondary"} size="icon" $rounded title="NASA APOD" onClick={toggleNasa} disabled={!isToolsSupported || stream || loading}>
+                <Button variant={isToolsSupported && !stream && nasaTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Imagem do dia" onClick={toggleNasa} disabled={!isToolsSupported || stream || loading}>
                   <Rocket size={16} />
                 </Button>
                 <Button variant={isToolsSupported && !stream && newsTool ? "outline" : "secondary"} size="icon" $rounded title="Buscar Notícias" onClick={toggleNews} disabled={!isToolsSupported || stream || loading}>
@@ -262,14 +262,14 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
             <AudioWaveform size={16} />
           </Button>
           <Button variant={listening ? "gradient-red" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>
-            {listening ? <Mic size={16} /> : <MicOff size={16} />}
+            <Mic size={16} />
           </Button>
           <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
             <MessageCirclePlus size={16} />
           </Button>
         </div>
         <Button variant="gradient-rainbow" size="icon" $rounded title="Enviar" onClick={() => { setListening(false); onSendMessage() }} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
-          {!loading && <SendHorizontal size={16} />}
+          {!loading && <Send size={16} />}
         </Button>
       </div>
     </Paper>
