@@ -24,13 +24,13 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
     web, toggleWeb,
     browserTool, toggleBrowser,
     httpTool, toggleHttp,
-    wikiTool, toggleWiki,
+    criptoTool, toggleCripto,
+    nasaTool, toggleNasa,
     newsTool, toggleNews,
     weatherTool, toggleWeather,
-    criptoTool, toggleCripto,
+    wikiTool, toggleWiki,
     genshinTool, toggleGenshin,
     pokedexTool, togglePokedex,
-    nasaTool, toggleNasa,
   } = useAI()
 
   const [isToolsOpen, setIsToolsOpen] = useState(false)
