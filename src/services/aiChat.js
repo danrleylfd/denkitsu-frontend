@@ -51,35 +51,17 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, web, mode, 
   }
 }
 
-const sendMessage = async (aiKey, aiProvider, model, models, messages, mode = "", web = false, browserTool = false, httpTool = false, wikiTool = false, newsTool = false, weatherTool = false, criptoTool = false, genshinTool = false, pokedexTool = false, nasaTool = false) => {
+const sendMessage = async (aiKey, aiProvider, model, models, messages, mode = "Padrão", web = false, tools = {}) => {
   const permission = aiProvider === "groq" ? false : web
   const plugins = permission ? [{ id: "web" }] : undefined
   const fullModel = models.find((item) => item.id === model)
-  const activeTools = []
-  if (browserTool) activeTools.push("browseUrl")
-  if (httpTool) activeTools.push("executeHttpRequest")
-  if (wikiTool) activeTools.push("searchWikipedia")
-  if (newsTool) activeTools.push("searchNews")
-  if (weatherTool) activeTools.push("getWeather")
-  if (criptoTool) activeTools.push("getCoinQuote")
-  if (genshinTool) activeTools.push("getPlayerBuild")
-  if (pokedexTool) activeTools.push("getPokemonDetails")
-  if (nasaTool) activeTools.push("nasaDailyPicture")
+  const activeTools = Object.keys(tools).filter((key) => tools[key] === true)
   const use_tools = (fullModel?.supports_tools && activeTools.length > 0) ? activeTools : undefined
-  const payload = {
-    aiKey,
-    aiProvider,
-    model,
-    plugins,
-    use_tools,
-    messages: [...messages],
-    mode
-  }
+  const payload = { aiKey, aiProvider, model, plugins, use_tools, messages: [...messages], mode }
   try {
-    const { data } = await api.post("/ai/chat/completions", payload)
-    return data
+    return await api.post("/ai/chat/completions", payload)
   } catch (error) {
-    console.error("Error on sendMessage:", error.response?.data?.error?.message || error.message)
+    console.error(`Error on sendMessage: ${error.response?.data?.error?.message || error.message}`)
     throw error
   }
 }

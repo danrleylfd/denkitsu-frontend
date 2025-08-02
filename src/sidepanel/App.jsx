@@ -142,10 +142,9 @@ const ChatInterface = () => {
           setMessages((prev) => prev.map(msg => (msg.id === placeholder.id ? { ...placeholder } : msg)))
         })
       } else {
-        const data = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, selectedPrompt, web, browserTool, httpTool, wikiTool, newsTool, weatherTool, criptoTool, genshinTool, pokedexTool)
+        const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, selectedPrompt, web, { browserTool, httpTool, wikiTool, newsTool, weatherTool, criptoTool, genshinTool, pokedexTool })
         const res = data?.choices?.[0]?.message
         if (!res) return
-
         const cleanContent = (raw = "") => {
           let reasoning = ""
           const content = raw.replace(/(<think>.*?<\/think>|<thinking>.*?<\/thinking>|◁think▷.*?◁\/think▷)/gs, (_, r) => {

@@ -94,7 +94,7 @@ const AI = () => {
           setMessages((prev) => prev.map(msg => (msg.id === placeholder.id ? { ...placeholder } : msg)))
         })
       } else {
-        const data = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, selectedPrompt, web, browserTool, httpTool, wikiTool, newsTool, weatherTool, criptoTool, genshinTool, pokedexTool, nasaTool)
+        const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, selectedPrompt, web, { browserTool, httpTool, wikiTool, newsTool, weatherTool, criptoTool, genshinTool, pokedexTool, nasaTool })
         const res = data?.choices?.[0]?.message
         if (!res) return
         const cleanContent = (raw = "") => {
