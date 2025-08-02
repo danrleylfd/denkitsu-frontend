@@ -4,7 +4,7 @@ import {
   LogIn, UserPlus,
   Settings, Send, ImagePlus, Globe, Newspaper, Cloud,
   AudioLines, AudioWaveform, Brain, MessageCirclePlus, BookOpen, Link2, Wrench, Gamepad2,
-  Lock, Server, Mic, MoreVertical, Smartphone, Bitcoin, Rocket, ScanText
+  Lock, Server, Mic, MoreVertical, Smartphone, Bitcoin, Satellite, ScanText
 } from "lucide-react"
 
 import { useAuth } from "../../contexts/AuthContext"
@@ -158,7 +158,7 @@ const SidePanelAIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onS
                     <Bitcoin size={16} />
                   </Button>
                   <Button variant={isToolsSupported && !stream && nasaTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Imagem do dia" onClick={toggleNasa} disabled={!isToolsSupported || stream || loading}>
-                    <Rocket size={16} />
+                    <Satellite size={16} />
                   </Button>
                   <Button variant={isToolsSupported && !stream && newsTool ? "outline" : "secondary"} size="icon" $rounded title="Buscar Notícias" onClick={toggleNews} disabled={!isToolsSupported || stream || loading}>
                     <Newspaper size={16} />
@@ -245,7 +245,7 @@ const SidePanelAIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onS
                   <Bitcoin size={16} />
                 </Button>
                 <Button variant={isToolsSupported && !stream && nasaTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Imagem do dia" onClick={toggleNasa} disabled={!isToolsSupported || stream || loading}>
-                  <Rocket size={16} />
+                  <Satellite size={16} />
                 </Button>
                 <Button variant={isToolsSupported && !stream && newsTool ? "outline" : "secondary"} size="icon" $rounded title="Buscar Notícias" onClick={toggleNews} disabled={!isToolsSupported || stream || loading}>
                   <Newspaper size={16} />
