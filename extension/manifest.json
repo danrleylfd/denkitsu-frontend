@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Denkitsu AI Chat",
+  "name": "Denkitsu AI",
   "version": "1.0",
   "description": "Acesse o chat Denkitsu na Side Panel e interaja com o contexto da sua página atual.",
   "permissions": [
