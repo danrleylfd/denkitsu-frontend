@@ -31,7 +31,7 @@ const AITools= ({ isOpen, loading }) => {
       mb-2 py-2 gap-2 rounded-lg shadow-lg
       absolute z-20 left-1/2 -translate-x-1/2 bottom-full max-w-[95%]
       grid grid-cols-5 sm:grid-cols-10
-      md:flex`}
+      md:flex md:static md:left-auto md:translate-x-0 md:bottom-auto`}
     >
       <Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Profunda" onClick={toggleWeb} disabled={!isToolsSupported || aiProvider === "groq" || loading}>
         <Globe size={16} />
