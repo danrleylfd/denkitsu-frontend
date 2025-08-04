@@ -215,6 +215,7 @@ const AI = () => {
           />
           <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
           <div className="w-full relative">
+            <AITools isOpen={isToolsOpen} loading={loading} />
             <AIBar
               userPrompt={userPrompt}
               setUserPrompt={setUserPrompt}
@@ -227,7 +228,6 @@ const AI = () => {
               isToolsOpen={isToolsOpen}
               toggleToolsPopup={toggleToolsPopup}
             />
-            <AITools isOpen={isToolsOpen} loading={loading} />
           </div>
           <AITip />
           <AISettings
