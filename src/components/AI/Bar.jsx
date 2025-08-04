@@ -14,33 +14,21 @@ import Paper from "../Paper"
 import AIInput from "./Input"
 import Button from "../Button"
 
-const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessage, clearHistory, toggleSettings, loading }) => {
+const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessage, clearHistory, toggleSettings, loading, isToolsOpen, toggleToolsPopup }) => {
   const { signed } = useAuth()
   const {
     aiProvider, aiProviderToggle, aiKey,
     model, freeModels, payModels, groqModels,
     stream, toggleStream,
     listening, setListening, toggleListening,
-    web, toggleWeb,
-    browserTool, toggleBrowser,
-    httpTool, toggleHttp,
-    criptoTool, toggleCripto,
-    nasaTool, toggleNasa,
-    newsTool, toggleNews,
-    weatherTool, toggleWeather,
-    wikiTool, toggleWiki,
-    genshinTool, toggleGenshin,
-    pokedexTool, togglePokedex,
   } = useAI()
 
-  const [isToolsOpen, setIsToolsOpen] = useState(false)
-  const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false)
   const recognitionRef = useRef(null)
+  const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false)
 
   const allModels = [...freeModels, ...payModels, ...groqModels]
   const selectedModel = allModels.find(m => m.id === model)
   const isImageSupported = selectedModel?.supports_images ?? false
-  const isToolsSupported = selectedModel?.supports_tools ?? false
 
   useEffect(() => {
     if (!("webkitSpeechRecognition" in window)) {
@@ -111,6 +99,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
       </Paper>
     )
   }
+
   return (
     <Paper className="relative bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 max-w-[95%] mb-2 mx-auto">
       <div className="w-full flex flex-col gap-2 sm:hidden">
@@ -126,46 +115,12 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
           </Button>
           {aiKey.length > 0 && (
             <div className="relative">
-              <Button variant={isToolsOpen ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={() => setIsToolsOpen(!isToolsOpen)} disabled={loading}>
+              <Button variant={isToolsOpen ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsPopup} disabled={loading}>
                 <Wrench size={16} />
               </Button>
-              {isToolsOpen && (
-                <div className="absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-7 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4">
-                  <Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Profunda" onClick={toggleWeb} disabled={!isToolsSupported || aiProvider === "groq" || loading}>
-                    <Globe size={16} />
-                  </Button>
-                  <Button variant={isToolsSupported && !stream && browserTool ? "outline" : "secondary"} size="icon" $rounded title="Acessar Site Específico" onClick={toggleBrowser} disabled={!isToolsSupported || stream || loading}>
-                    <Link2 size={16} />
-                  </Button>
-                  <Button variant={isToolsSupported && !stream && httpTool ? "outline" : "secondary"} size="icon" $rounded title="Requisição HTTP" onClick={toggleHttp} disabled={!isToolsSupported || stream || loading}>
-                    <Server size={16} />
-                  </Button>
-                  <Button variant={isToolsSupported && !stream && criptoTool ? "outline" : "secondary"} size="icon" $rounded title="Cripto (Beta)" onClick={toggleCripto} disabled={!isToolsSupported || stream || loading}>
-                    <Bitcoin size={16} />
-                  </Button>
-                  <Button variant={isToolsSupported && !stream && nasaTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Imagem do dia" onClick={toggleNasa} disabled={!isToolsSupported || stream || loading}>
-                    <Satellite size={16} />
-                  </Button>
-                  <Button variant={isToolsSupported && !stream && newsTool ? "outline" : "secondary"} size="icon" $rounded title="Buscar Notícias" onClick={toggleNews} disabled={!isToolsSupported || stream || loading}>
-                    <Newspaper size={16} />
-                  </Button>
-                  <Button variant={isToolsSupported && !stream && weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Prever Clima" onClick={toggleWeather} disabled={!isToolsSupported || stream || loading}>
-                    <Cloud size={16} />
-                  </Button>
-                  <Button variant={isToolsSupported && !stream && wikiTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Wikipédia" onClick={toggleWiki} disabled={!isToolsSupported || stream || loading}>
-                    <BookOpen size={16} />
-                  </Button>
-                  <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>
-                    <Gamepad2 size={16} />
-                  </Button>
-                  <Button variant={isToolsSupported && !stream && pokedexTool ? "outline" : "secondary"} size="icon" $rounded title="Pokedex (Beta)" onClick={togglePokedex} disabled={!isToolsSupported || stream || loading}>
-                    <Smartphone size={16} />
-                  </Button>
-                </div>
-              )}
             </div>
           )}
-          <Button variant={stream ? "gradient-purple" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={browserTool || httpTool || wikiTool || newsTool || weatherTool || genshinTool || pokedexTool || loading}>
+          <Button variant={stream ? "gradient-purple" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={loading}>
             <AudioWaveform size={16} />
           </Button>
           <Button variant={listening ? "gradient-red" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>
@@ -174,15 +129,6 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
           <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
             <MessageCirclePlus size={16} />
           </Button>
-          {/* <div className="relative"> Não apague esse comentário
-            <Button hidden variant="secondary" size="icon" $rounded title="Mais Opções" onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)} disabled={loading}>
-              <MoreVertical size={16} />
-            </Button>
-            {isMoreMenuOpen && (
-              <div className="absolute z-20 left-0 bottom-full mb-4 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark flex flex-col gap-2">
-              </div>
-            )}
-          </div> */}
         </div>
         <div className="flex items-center gap-2 w-full">
           <AIInput
@@ -210,43 +156,9 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
         </Button>
         {aiKey.length > 0 && (
           <div className="relative">
-            <Button variant={isToolsOpen ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={() => setIsToolsOpen(!isToolsOpen)} disabled={loading}>
+            <Button variant={isToolsOpen ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsPopup} disabled={loading}>
               <Wrench size={16} />
             </Button>
-            {isToolsOpen && (
-              <div className="absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-5 sm:grid-cols-7 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4">
-                <Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Profunda" onClick={toggleWeb} disabled={!isToolsSupported || aiProvider === "groq" || loading}>
-                  <Globe size={16} />
-                </Button>
-                <Button variant={isToolsSupported && !stream && browserTool ? "outline" : "secondary"} size="icon" $rounded title="Acessar Site Específico" onClick={toggleBrowser} disabled={!isToolsSupported || stream || loading}>
-                  <Link2 size={16} />
-                </Button>
-                <Button variant={isToolsSupported && !stream && httpTool ? "outline" : "secondary"} size="icon" $rounded title="Requisição HTTP" onClick={toggleHttp} disabled={!isToolsSupported || stream || loading}>
-                  <Server size={16} />
-                </Button>
-                <Button variant={isToolsSupported && !stream && criptoTool ? "outline" : "secondary"} size="icon" $rounded title="Cripto (Beta)" onClick={toggleCripto} disabled={!isToolsSupported || stream || loading}>
-                  <Bitcoin size={16} />
-                </Button>
-                <Button variant={isToolsSupported && !stream && nasaTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Imagem do dia" onClick={toggleNasa} disabled={!isToolsSupported || stream || loading}>
-                  <Satellite size={16} />
-                </Button>
-                <Button variant={isToolsSupported && !stream && newsTool ? "outline" : "secondary"} size="icon" $rounded title="Buscar Notícias" onClick={toggleNews} disabled={!isToolsSupported || stream || loading}>
-                  <Newspaper size={16} />
-                </Button>
-                <Button variant={isToolsSupported && !stream && weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Prever Clima" onClick={toggleWeather} disabled={!isToolsSupported || stream || loading}>
-                  <Cloud size={16} />
-                </Button>
-                <Button variant={isToolsSupported && !stream && wikiTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Wikipédia" onClick={toggleWiki} disabled={!isToolsSupported || stream || loading}>
-                  <BookOpen size={16} />
-                </Button>
-                <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>
-                  <Gamepad2 size={16} />
-                </Button>
-                <Button variant={isToolsSupported && !stream && pokedexTool ? "outline" : "secondary"} size="icon" $rounded title="Pokedex (Beta)" onClick={togglePokedex} disabled={!isToolsSupported || stream || loading}>
-                  <Smartphone size={16} />
-                </Button>
-              </div>
-            )}
           </div>
         )}
         <AIInput
@@ -258,7 +170,7 @@ const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessag
           className="resize-y"
         />
         <div className="flex items-center gap-2">
-          <Button variant={stream ? "gradient-purple" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={newsTool || weatherTool || wikiTool || browserTool || genshinTool || httpTool || loading}>
+          <Button variant={stream ? "gradient-purple" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={loading}>
             <AudioWaveform size={16} />
           </Button>
           <Button variant={listening ? "gradient-red" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>

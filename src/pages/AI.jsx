@@ -12,25 +12,28 @@ import ImagePreview from "../components/AI/ImagePreview"
 import AISettings from "../components/AI/Settings"
 import AIHistory from "../components/AI/History"
 import Lousa from "../components/AI/Lousa"
+import AITools from "../components/AI/Tools"
 
 const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-dvh mx-auto">{children}</main>
 
 const AI = () => {
+  const aiContext = useAI()
   const {
-    aiProvider, aiKey, model,
-    stream, web, browserTool, httpTool, wikiTool, newsTool, weatherTool, criptoTool, genshinTool, pokedexTool, nasaTool,
+    aiProvider, aiKey, model, stream, web,
     imageUrls, setImageUrls,
     freeModels, setFreeModels,
     payModels, setPayModels,
     groqModels, setGroqModels,
     userPrompt, setUserPrompt,
     messages, setMessages, clearHistory,
-  } = useAI()
+  } = aiContext
+
   const { notifyWarning, notifyError } = useNotification()
   const [loading, setLoading] = useState(false)
   const [lousaContent, setLousaContent] = useState(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [selectedPrompt, setSelectedPrompt] = useState("Padrão")
+  const [isToolsOpen, setIsToolsOpen] = useState(false)
 
   useEffect(() => {
     (async () => {
@@ -94,15 +97,25 @@ const AI = () => {
           setMessages((prev) => prev.map(msg => (msg.id === placeholder.id ? { ...placeholder } : msg)))
         })
       } else {
-        const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, selectedPrompt, web, { browserTool, httpTool, wikiTool, newsTool, weatherTool, criptoTool, genshinTool, pokedexTool, nasaTool })
+        const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, selectedPrompt, web, {
+          browserTool: aiContext.browserTool,
+          httpTool: aiContext.httpTool,
+          wikiTool: aiContext.wikiTool,
+          newsTool: aiContext.newsTool,
+          weatherTool: aiContext.weatherTool,
+          criptoTool: aiContext.criptoTool,
+          genshinTool: aiContext.genshinTool,
+          pokedexTool: aiContext.pokedexTool,
+          nasaTool: aiContext.nasaTool
+        })
         const res = data?.choices?.[0]?.message
         if (!res) return
         const cleanContent = (raw = "") => {
           let reasoning = ""
           const content = raw.replace(/(<think>.*?<\/think>|<thinking>.*?<\/thinking>|◁think▷.*?◁\/think▷)/gs, (_, r) => {
-            reasoning += r;
+            reasoning += r
             return ""
-          });
+          })
           return { content, reasoning }
         }
         const { content, reasoning } = cleanContent(res.content)
@@ -124,7 +137,7 @@ const AI = () => {
     } finally {
       setLoading(false)
     }
-  }, [aiProvider, aiKey, model, stream, web, browserTool, httpTool, wikiTool, newsTool, weatherTool, criptoTool, genshinTool, pokedexTool, nasaTool, freeModels, payModels, groqModels, selectedPrompt, setMessages, notifyError])
+  }, [aiProvider, aiKey, model, stream, web, freeModels, payModels, groqModels, selectedPrompt, setMessages, notifyError, aiContext])
 
   const onSendMessage = useCallback(async () => {
     if (loading || (!userPrompt.trim() && imageUrls.length === 0)) return
@@ -156,6 +169,10 @@ const AI = () => {
   }, [loading, messages, setMessages, executeSendMessage, notifyWarning])
 
   const toggleLousa = useCallback((content) => setLousaContent(content), [])
+  const toggleToolsPopup = () => setIsToolsOpen(prev => !prev)
+
+  const allModels = [...freeModels, ...payModels, ...groqModels]
+  const selectedModel = allModels.find(m => m.id === model)
 
   const temMensagensDoUsuario = messages.some(msg => msg.role === "user")
 
@@ -164,16 +181,21 @@ const AI = () => {
       {!temMensagensDoUsuario ? (
         <div className="flex grow justify-center items-center flex-col">
           <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
-          <AIBar
-            userPrompt={userPrompt}
-            setUserPrompt={setUserPrompt}
-            onAddImage={onAddImage}
-            imageCount={imageUrls.length}
-            toggleSettings={() => setSettingsOpen(!settingsOpen)}
-            onSendMessage={onSendMessage}
-            clearHistory={clearHistory}
-            loading={loading}
-          />
+          <div className="w-full relative">
+            <AITools isOpen={isToolsOpen} loading={loading} />
+            <AIBar
+              userPrompt={userPrompt}
+              setUserPrompt={setUserPrompt}
+              onAddImage={onAddImage}
+              imageCount={imageUrls.length}
+              toggleSettings={() => setSettingsOpen(!settingsOpen)}
+              onSendMessage={onSendMessage}
+              clearHistory={clearHistory}
+              loading={loading}
+              isToolsOpen={isToolsOpen}
+              toggleToolsPopup={toggleToolsPopup}
+            />
+          </div>
           <AITip />
           <AISettings
             settingsOpen={settingsOpen}
@@ -192,16 +214,21 @@ const AI = () => {
             onRegenerate={handleRegenerateResponse}
           />
           <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
-          <AIBar
-            userPrompt={userPrompt}
-            setUserPrompt={setUserPrompt}
-            onAddImage={onAddImage}
-            imageCount={imageUrls.length}
-            toggleSettings={() => setSettingsOpen(!settingsOpen)}
-            onSendMessage={onSendMessage}
-            clearHistory={clearHistory}
-            loading={loading}
-          />
+          <div className="w-full relative">
+            <AIBar
+              userPrompt={userPrompt}
+              setUserPrompt={setUserPrompt}
+              onAddImage={onAddImage}
+              imageCount={imageUrls.length}
+              toggleSettings={() => setSettingsOpen(!settingsOpen)}
+              onSendMessage={onSendMessage}
+              clearHistory={clearHistory}
+              loading={loading}
+              isToolsOpen={isToolsOpen}
+              toggleToolsPopup={toggleToolsPopup}
+            />
+            <AITools isOpen={isToolsOpen} loading={loading} />
+          </div>
           <AITip />
           <AISettings
             settingsOpen={settingsOpen}
