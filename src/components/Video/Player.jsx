@@ -1,21 +1,17 @@
 import { useRef, useState, useEffect, useCallback } from "react"
 import { Play, Pause, Volume2, VolumeX, Expand, RefreshCw, Minimize, Camera } from "lucide-react"
 
-// NOVO: Função para formatar o tempo de segundos para HH:MM:SS ou MM:SS
 const formatTime = (timeInSeconds) => {
   const time = Math.round(timeInSeconds)
   const hours = Math.floor(time / 3600)
   const minutes = Math.floor((time % 3600) / 60)
   const seconds = time % 60
-
   const paddedSeconds = String(seconds).padStart(2, "0")
   const paddedMinutes = String(minutes).padStart(2, "0")
-
   if (hours > 0) {
     const paddedHours = String(hours).padStart(2, "0")
     return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`
   }
-
   return `${paddedMinutes}:${paddedSeconds}`
 }
 

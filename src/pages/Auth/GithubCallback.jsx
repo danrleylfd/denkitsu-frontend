@@ -16,12 +16,9 @@ const GithubCallback = () => {
 
     if (token && userParam) {
       const user = JSON.parse(decodeURIComponent(userParam))
-      // Chama a função do contexto para salvar os dados e logar o usuário
       completeOAuthSignIn({ token, refreshToken, user })
-      // Redireciona para a página inicial, agora logado
       navigate("/")
     } else {
-      // Se deu algo errado no backend, volta para a página de login
       navigate("/signin?error=auth_failed")
     }
   }, [searchParams, navigate, completeOAuthSignIn])

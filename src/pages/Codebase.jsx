@@ -10,13 +10,10 @@ import { useNotification } from "../contexts/NotificationContext"
 import { useAuth } from "../contexts/AuthContext"
 import api from "../services"
 
-// --- Constantes ---
 const RECENTS_KEY = "codebase_recents"
 const MAX_RECENTS = 3
 const DB_NAME = "CodebaseDB"
 const STORE_NAME = "DirectoryHandles"
-
-// --- Funções Auxiliares (Armazenamento) ---
 
 const openDB = () => {
   return new Promise((resolve, reject) => {
@@ -176,8 +173,6 @@ const buildFileTree = (files) => {
   })
   return root.children
 }
-
-// --- Componentes de UI ---
 
 const FileViewer = memo(({ file, onClose }) => {
   if (!file) return null
@@ -401,8 +396,6 @@ const FileExplorer = memo(({ fileTree, allFiles, selectedFiles, setSelectedFiles
         </div>
     )
 })
-
-// --- Componente Principal ---
 
 const Codebase = () => {
   const [step, setStep] = useState("input")

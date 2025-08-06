@@ -162,7 +162,7 @@ const Editor = () => {
       const url = URL.createObjectURL(blob)
       const link = document.createElement("a")
       link.href = url
-      link.download = `denkitsu-editor-${Date.now()}.md` // O fallback sugere .md por padrão
+      link.download = `denkitsu-editor-${Date.now()}.md`
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)

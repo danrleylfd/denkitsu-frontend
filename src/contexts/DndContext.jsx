@@ -89,7 +89,6 @@ const DndProvider = ({ children }) => {
     return closestCorners({ ...args, droppableContainers: args.droppableContainers.filter((c) => c.id !== "trash") })
   }
 
-  // 3. Expõe apenas os valores e funções de DnD
   const value = {
     activeTask,
     isOverTrash,

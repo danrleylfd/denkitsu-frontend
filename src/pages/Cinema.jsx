@@ -13,38 +13,32 @@ const ContentView = ({ children }) => (
   </main>
 )
 
-// Função otimizada para extrair a thumbnail de um arquivo de vídeo
 const extractVideoThumbnail = (file) => {
   return new Promise((resolve, reject) => {
     const video = document.createElement("video")
     const url = URL.createObjectURL(file)
-
     video.muted = true
     video.playsInline = true
     video.crossOrigin = "anonymous"
     video.preload = "metadata"
     video.src = url
-
     const cleanup = () => {
       URL.revokeObjectURL(url)
-      video.remove() // Remove o elemento de vídeo da memória
+      video.remove()
     }
-
     video.onloadeddata = () => {
-      video.currentTime = 1 // Busca um frame no início do vídeo
+      video.currentTime = 1
     }
-
     video.onseeked = () => {
       const canvas = document.createElement("canvas")
       const context = canvas.getContext("2d")
       canvas.width = video.videoWidth
       canvas.height = video.videoHeight
       context.drawImage(video, 0, 0, canvas.width, canvas.height)
-      const thumbnailUrl = canvas.toDataURL("image/jpeg", 0.7) // Qualidade de 70%
+      const thumbnailUrl = canvas.toDataURL("image/jpeg", 1)
       cleanup()
       resolve(thumbnailUrl)
     }
-
     video.onerror = (err) => {
       console.error("Erro no vídeo:", err)
       cleanup()
@@ -58,26 +52,19 @@ const DvdCover = memo(({ video, onSelect }) => (
     onClick={() => onSelect(video)}
     className="group relative w-full aspect-[2/3] bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-lg shadow-lg overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-primary-base/20 focus:outline-none focus:ring-2 focus:ring-primary-base"
   >
-    {/* Estado de Carregamento */}
     {video.thumbnail === null && (
       <div className="absolute inset-0 flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-lightFg-tertiary dark:text-darkFg-tertiary animate-spin" />
       </div>
     )}
-
-    {/* Thumbnail Extraída */}
     {video.thumbnail && video.thumbnail !== "error" && (
       <img src={video.thumbnail} alt={video.name} className="absolute inset-0 w-full h-full object-cover" />
     )}
-
-    {/* Estado de Erro */}
     {video.thumbnail === "error" && (
        <div className="absolute inset-0 flex items-center justify-center">
         <AlertTriangle className="w-8 h-8 text-danger-base" />
       </div>
     )}
-
-    {/* Nome do Vídeo */}
     <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
       <p className="font-bold text-white text-sm break-words text-left leading-tight">
         {video.name}

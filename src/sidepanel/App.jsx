@@ -1,16 +1,12 @@
 import { useState, useEffect, useCallback } from "react"
 import { ScanText, LogIn, UserPlus } from "lucide-react"
 
-// Hooks
 import { useAuth } from "../contexts/AuthContext"
 import { useAI } from "../contexts/AIContext"
 import { useNotification } from "../contexts/NotificationContext"
 
-// Serviços
 import { sendMessageStream, sendMessage, getModels } from "../services/aiChat"
 
-// Componentes
-// A importação foi atualizada para o novo componente
 import SidePanelAIBar from "../components/AI/SidePanelAIBar"
 import AITip from "../components/AI/Tip"
 import ImagePreview from "../components/AI/ImagePreview"
