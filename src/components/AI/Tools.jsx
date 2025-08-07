@@ -58,7 +58,7 @@ const AITools= ({ isOpen, loading }) => {
       <Button variant={isToolsSupported && !stream && wikiTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Wikipédia" onClick={toggleWiki} disabled={!isToolsSupported || stream || loading}>
         <BookOpen size={16} />
       </Button>
-      <Button variant={isToolsSupported && !stream && mediaTool ? "outline" : "secondary"} size="icon" $rounded title="Cinema (Beta)" onClick={toggleMedia} disabled={!isToolsSupported || stream || loading}>
+      <Button variant={isToolsSupported && !stream && cinemaTool ? "outline" : "secondary"} size="icon" $rounded title="Cinema (Beta)" onClick={toggleCinema} disabled={!isToolsSupported || stream || loading}>
         <Film size={16} />
       </Button>
       <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>
