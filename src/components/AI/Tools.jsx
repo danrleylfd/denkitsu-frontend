@@ -58,13 +58,13 @@ const AITools= ({ isOpen, loading }) => {
       <Button variant={isToolsSupported && !stream && wikiTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Wikipédia" onClick={toggleWiki} disabled={!isToolsSupported || stream || loading}>
         <BookOpen size={16} />
       </Button>
-      <Button variant={isToolsSupported && !stream && cinemaTool ? "outline" : "secondary"} size="icon" $rounded title="Cinema (Beta)" onClick={toggleCinema} disabled={!isToolsSupported || stream || loading}>
+      <Button variant={isToolsSupported && !stream && cinemaTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Cinematográfica" onClick={toggleCinema} disabled={!isToolsSupported || stream || loading}>
         <Clapperboard size={16} />
       </Button>
-      <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>
+      <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Análise Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>
         <Gamepad2 size={16} />
       </Button>
-      <Button variant={isToolsSupported && !stream && pokedexTool ? "outline" : "secondary"} size="icon" $rounded title="Pokedex (Beta)" onClick={togglePokedex} disabled={!isToolsSupported || stream || loading}>
+      <Button variant={isToolsSupported && !stream && pokedexTool ? "outline" : "secondary"} size="icon" $rounded title="Pokédex" onClick={togglePokedex} disabled={!isToolsSupported || stream || loading}>
         <Smartphone size={16} />
       </Button>
     </Paper>
