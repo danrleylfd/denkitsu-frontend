@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import {
   Menu, X, Sun, Moon, Home, Newspaper, Cloud, Languages, Clock, Code, Bot, Kanban, Link2,
-  PersonStanding, LogIn, UserPlus, LogOut, Clapperboard, Edit2, ChevronDown, ChevronRight,
+  PersonStanding, LogIn, UserPlus, LogOut, Film, Edit2, ChevronDown, ChevronRight,
   Upload, Video, TrendingUp, Play, Star, Lock, KeyRound
 } from "lucide-react"
 import { useTheme } from "../contexts/ThemeContext"
@@ -112,7 +112,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
     { icon: Clock, label: "Pomodoro", to: "/pomodoro" },
     { icon: Cloud, label: "Clima", to: "/clima" },
     { icon: Languages, label: "Tradutor", to: "/translator" },
-    { icon: Clapperboard, label: "Cinema", to: "/cinema" },
+    { icon: Film, label: "Cinema", to: "/cinema" },
   ]
 
   const videoItems = [

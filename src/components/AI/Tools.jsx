@@ -1,4 +1,4 @@
-import { Globe, Link2, Server, Bitcoin, Satellite, Newspaper, Cloud, BookOpen, Gamepad2, Smartphone, Film } from "lucide-react"
+import { Globe, Link2, Server, Bitcoin, Satellite, Newspaper, Cloud, BookOpen, Gamepad2, Smartphone, Clapperboard } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 
@@ -59,7 +59,7 @@ const AITools= ({ isOpen, loading }) => {
         <BookOpen size={16} />
       </Button>
       <Button variant={isToolsSupported && !stream && cinemaTool ? "outline" : "secondary"} size="icon" $rounded title="Cinema (Beta)" onClick={toggleCinema} disabled={!isToolsSupported || stream || loading}>
-        <Film size={16} />
+        <Clapperboard size={16} />
       </Button>
       <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>
         <Gamepad2 size={16} />
