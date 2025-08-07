@@ -104,6 +104,7 @@ const AI = () => {
           newsTool: aiContext.newsTool,
           weatherTool: aiContext.weatherTool,
           criptoTool: aiContext.criptoTool,
+          cinemaTool: aiContext.cinemaTool,
           genshinTool: aiContext.genshinTool,
           pokedexTool: aiContext.pokedexTool,
           nasaTool: aiContext.nasaTool
