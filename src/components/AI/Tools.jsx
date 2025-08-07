@@ -1,4 +1,4 @@
-import { Globe, Link2, Server, Bitcoin, Satellite, Newspaper, Cloud, BookOpen, Gamepad2, Smartphone } from "lucide-react"
+import { Globe, Link2, Server, Bitcoin, Satellite, Newspaper, Cloud, BookOpen, Gamepad2, Smartphone, Film } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 
@@ -19,6 +19,7 @@ const AITools= ({ isOpen, loading }) => {
     newsTool, toggleNews,
     weatherTool, toggleWeather,
     wikiTool, toggleWiki,
+    cinemaTool, toggleCinema,
     genshinTool, toggleGenshin,
     pokedexTool, togglePokedex,
   } = useAI()
@@ -56,6 +57,9 @@ const AITools= ({ isOpen, loading }) => {
       </Button>
       <Button variant={isToolsSupported && !stream && wikiTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Wikipédia" onClick={toggleWiki} disabled={!isToolsSupported || stream || loading}>
         <BookOpen size={16} />
+      </Button>
+      <Button variant={isToolsSupported && !stream && mediaTool ? "outline" : "secondary"} size="icon" $rounded title="Cinema (Beta)" onClick={toggleMedia} disabled={!isToolsSupported || stream || loading}>
+        <Film size={16} />
       </Button>
       <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>
         <Gamepad2 size={16} />

@@ -18,6 +18,7 @@ const AIProvider = ({ children }) => {
   const storedNewsTool = JSON.parse(localStorage.getItem("@Denkitsu:NewsTool"))
   const storedWeatherTool = JSON.parse(localStorage.getItem("@Denkitsu:WeatherTool"))
   const storedCriptoTool = JSON.parse(localStorage.getItem("@Denkitsu:CriptoTool"))
+  const storedCinemaTool = JSON.parse(localStorage.getItem("@Denkitsu:CinemaTool"))
   const storedGenshinTool = JSON.parse(localStorage.getItem("@Denkitsu:GenshinTool"))
   const storedPokedexTool = JSON.parse(localStorage.getItem("@Denkitsu:PokedexTool"))
   const storedNasaTool = JSON.parse(localStorage.getItem("@Denkitsu:NasaTool"))
@@ -39,8 +40,9 @@ const AIProvider = ({ children }) => {
   const [httpTool, setHttpTool] = useState(storedHttpTool === null? false : storedHttpTool)
   const [wikiTool, setWikiTool] = useState(storedWikiTool === null? false : storedWikiTool)
   const [newsTool, setNewsTool] = useState(storedNewsTool === null ? false : storedNewsTool)
-  const [weatherTool, setWeatherTool] = useState(storedWeatherTool === null? false : storedWeatherTool)
-  const [criptoTool, setCriptoTool] = useState(storedCriptoTool === null? false : storedCriptoTool)
+  const [weatherTool, setWeatherTool] = useState(storedWeatherTool === null ? false : storedWeatherTool)
+  const [criptoTool, setCriptoTool] = useState(storedCriptoTool === null ? false : storedCriptoTool)
+  const [cinemaTool, setCinemaTool] = useState(storedCinemaTool === null ? false : storedCinemaTool)
   const [genshinTool, setGenshinTool] = useState(storedGenshinTool === null? false : storedGenshinTool)
   const [pokedexTool, setPokedexTool] = useState(storedPokedexTool === null? false : storedPokedexTool)
   const [nasaTool, setNasaTool] = useState(storedNasaTool === null ? false : storedNasaTool)
@@ -72,6 +74,8 @@ const AIProvider = ({ children }) => {
   useEffect(() => (localStorage.setItem("@Denkitsu:WeatherTool", weatherTool)), [weatherTool])
 
   useEffect(() => (localStorage.setItem("@Denkitsu:CriptoTool", criptoTool)), [criptoTool])
+
+  useEffect(() => (localStorage.setItem("@Denkitsu:CinemaTool", cinemaTool)), [cinemaTool])
 
   useEffect(() => (localStorage.setItem("@Denkitsu:GenshinTool", genshinTool)), [genshinTool])
 
@@ -109,6 +113,7 @@ const AIProvider = ({ children }) => {
   const toggleNews = useCallback(() => setNewsTool(n => !n), [])
   const toggleWeather = useCallback(() => setWeatherTool(w => !w), [])
   const toggleCripto = useCallback(() => setCriptoTool(c => !c), [])
+  const toggleCinema = useCallback(() => setCinemaTool(c => !c), [])
   const toggleGenshin = useCallback(() => setGenshinTool(g => !g), [])
   const togglePokedex = useCallback(() => setPokedexTool(p => !p), [])
   const toggleNasa = useCallback(() => setNasaTool(n => !n), [])
@@ -137,6 +142,7 @@ const AIProvider = ({ children }) => {
     newsTool, setNewsTool, toggleNews,
     weatherTool, setWeatherTool, toggleWeather,
     criptoTool, setCriptoTool, toggleCripto,
+    cinemaTool, setCinemaTool, toggleCinema,
     genshinTool, setGenshinTool, toggleGenshin,
     pokedexTool, setPokedexTool, togglePokedex,
     nasaTool, setNasaTool, toggleNasa,
@@ -163,6 +169,7 @@ const AIProvider = ({ children }) => {
     newsTool, toggleNews,
     weatherTool, toggleWeather,
     criptoTool, toggleCripto,
+    cinemaTool, toggleCinema,
     genshinTool, toggleGenshin,
     pokedexTool, togglePokedex,
     nasaTool, toggleNasa,
