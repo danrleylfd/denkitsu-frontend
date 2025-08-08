@@ -62,7 +62,7 @@ const AITools= ({ isOpen, loading }) => {
       <Button variant={isToolsSupported && !stream && cinemaTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Cinematográfica" onClick={toggleCinema} disabled={!isToolsSupported || stream || loading}>
         <Clapperboard size={16} />
       </Button>
-      <Button variant={isToolsSupported && !stream && gamesTool ? "outline" : "secondary"} size="icon" $rounded title="Games (Beta)" onClick={toggleGames} disabled={!isToolsSupported || stream || loading}>
+      <Button variant={isToolsSupported && !stream && gamesTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar Jogos" onClick={toggleGames} disabled={!isToolsSupported || stream || loading}>
         <Gamepad size={16} />
       </Button>
       <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Análise Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>
