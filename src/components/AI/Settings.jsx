@@ -11,7 +11,7 @@ import AIInput from "./Input"
 import Button from "../Button"
 import MultiToggle from "../MultiToggle"
 
-const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqModels, selectedPrompt, onSelectPrompt }) => {
+const AISettings = ({ settingsOpen, toggleSettings, selectedPrompt, onSelectPrompt }) => {
   const [showAIKey, setShowAIKey] = useState(false)
   const { aiKey, model, aiProvider, customPrompt, loading, setAIKey, setModel, setAIProvider, aiProviderToggle, setCustomPrompt } = useAI()
 
@@ -86,9 +86,6 @@ const AISettings = ({ settingsOpen, toggleSettings, freeModels, payModels, groqM
             model={model}
             setModel={setModel}
             loading={loading}
-            freeModels={freeModels}
-            payModels={payModels}
-            groqModels={groqModels}
           />
         </div>
         <div className="flex flex-col gap-2">

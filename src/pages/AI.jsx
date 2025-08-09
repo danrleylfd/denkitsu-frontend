@@ -18,15 +18,6 @@ const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-dv
 
 const AI = () => {
   const aiContext = useAI()
-  // const {
-  //   aiProvider, aiKey, model, stream, web,
-  //   imageUrls, setImageUrls,
-  //   freeModels, setFreeModels,
-  //   payModels, setPayModels,
-  //   groqModels, setGroqModels,
-  //   userPrompt, setUserPrompt,
-  //   messages, setMessages, clearHistory,
-  // } = aiContext
 
   const { notifyWarning, notifyError } = useNotification()
   const [loading, setLoading] = useState(false)
@@ -202,9 +193,6 @@ const AI = () => {
           <AISettings
             settingsOpen={settingsOpen}
             toggleSettings={() => setSettingsOpen(!settingsOpen)}
-            freeModels={aiContext.freeModels}
-            payModels={aiContext.payModels}
-            groqModels={aiContext.groqModels}
             selectedPrompt={selectedPrompt}
             onSelectPrompt={setSelectedPrompt}
           />
@@ -235,9 +223,6 @@ const AI = () => {
           <AISettings
             settingsOpen={settingsOpen}
             toggleSettings={() => setSettingsOpen(!settingsOpen)}
-            freeModels={aiContext.freeModels}
-            payModels={aiContext.payModels}
-            groqModels={aiContext.groqModels}
             selectedPrompt={selectedPrompt}
             onSelectPrompt={setSelectedPrompt}
           />
