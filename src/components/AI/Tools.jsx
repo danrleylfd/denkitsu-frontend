@@ -5,7 +5,7 @@ import { useAI } from "../../contexts/AIContext"
 import Paper from "../Paper"
 import Button from "../Button"
 
-const AITools= ({ toolsDoor, loading }) => {
+const AITools= ({ loading, toolsDoor }) => {
   if (!toolsDoor) return null
   const {
     aiProvider,

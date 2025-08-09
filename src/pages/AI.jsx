@@ -170,15 +170,15 @@ const AI = () => {
         <div className="flex grow justify-center items-center flex-col">
           <ImagePreview />
           <div className="w-full relative">
-            <AITools toolsDoor={toolsDoor} loading={loading} />
+            <AITools loading={loading} toolsDoor={toolsDoor} />
             <AIBar
-              onAddImage={onAddImage}
-              imageCount={aiContext.imageUrls.length}
-              toggleSettingsDoor={() => setSettingsDoor(!settingsDoor)}
-              onSendMessage={onSendMessage}
               loading={loading}
+              toggleSettingsDoor={() => setSettingsDoor(!settingsDoor)}
               toolsDoor={toolsDoor}
               toggleToolsDoor={toggleToolsDoor}
+              onAddImage={onAddImage}
+              imageCount={aiContext.imageUrls.length}
+              onSendMessage={onSendMessage}
             />
           </div>
           <AITip />
@@ -197,15 +197,15 @@ const AI = () => {
           />
           <ImagePreview />
           <div className="w-full relative">
-            <AITools toolsDoor={toolsDoor} loading={loading} />
+            <AITools loading={loading} toolsDoor={toolsDoor} />
             <AIBar
-              onAddImage={onAddImage}
-              imageCount={aiContext.imageUrls.length}
-              toggleSettingsDoor={() => setSettingsDoor(!settingsDoor)}
-              onSendMessage={onSendMessage}
               loading={loading}
+              toggleSettingsDoor={() => setSettingsDoor(!settingsDoor)}
               toolsDoor={toolsDoor}
               toggleToolsDoor={toggleToolsDoor}
+              onAddImage={onAddImage}
+              imageCount={aiContext.imageUrls.length}
+              onSendMessage={onSendMessage}
             />
           </div>
           <AITip />
