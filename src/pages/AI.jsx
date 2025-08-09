@@ -161,59 +161,30 @@ const AI = () => {
 
   const toggleLousa = useCallback((content) => setLousaContent(content), [])
 
-  const temMensagensDoUsuario = aiContext.messages.some(msg => msg.role === "user")
-
   return (
     <SideMenu ContentView={ContentView} className="bg-brand-purple bg-cover bg-center">
-      {!temMensagensDoUsuario ? (
-        <div className="flex grow justify-center items-center flex-col">
-          <ImagePreview />
-          <div className="w-full relative">
-            <AITools loading={loading} toolsDoor={toolsDoor} />
-            <AIBar
-              loading={loading}
-              toggleSettingsDoor={() => setSettingsDoor(!settingsDoor)}
-              toolsDoor={toolsDoor}
-              toggleToolsDoor={() => setToolsDoor(prev => !prev)}
-              onAddImage={onAddImage}
-              imageCount={aiContext.imageUrls.length}
-              onSendMessage={onSendMessage}
-            />
-          </div>
-          <AITip />
-          <AISettings
-            settingsDoor={settingsDoor}
-            toggleSettingsDoor={() => setSettingsDoor(!settingsDoor)}
-            selectedPrompt={selectedPrompt}
-            onSelectPrompt={setSelectedPrompt}
-          />
-        </div>
-      ) : (
-        <>
-          <AIHistory toggleLousa={toggleLousa} onRegenerate={handleRegenerateResponse} />
-          <ImagePreview />
-          <div className="w-full relative">
-            <AITools loading={loading} toolsDoor={toolsDoor} />
-            <AIBar
-              loading={loading}
-              toggleSettingsDoor={() => setSettingsDoor(!settingsDoor)}
-              toolsDoor={toolsDoor}
-              toggleToolsDoor={() => setToolsDoor(prev => !prev)}
-              onAddImage={onAddImage}
-              imageCount={aiContext.imageUrls.length}
-              onSendMessage={onSendMessage}
-            />
-          </div>
-          <AITip />
-          <AISettings
-            settingsDoor={settingsDoor}
-            toggleSettingsDoor={() => setSettingsDoor(!settingsDoor)}
-            selectedPrompt={selectedPrompt}
-            onSelectPrompt={setSelectedPrompt}
-          />
-          <Lousa content={lousaContent} toggleLousa={toggleLousa} />
-        </>
-      )}
+      <AIHistory toggleLousa={toggleLousa} onRegenerate={handleRegenerateResponse} />
+      <ImagePreview />
+      <div className="w-full relative">
+        <AITools loading={loading} toolsDoor={toolsDoor} />
+        <AIBar
+          loading={loading}
+          toggleSettingsDoor={() => setSettingsDoor(!settingsDoor)}
+          toolsDoor={toolsDoor}
+          toggleToolsDoor={() => setToolsDoor(prev => !prev)}
+          onAddImage={onAddImage}
+          imageCount={aiContext.imageUrls.length}
+          onSendMessage={onSendMessage}
+        />
+      </div>
+      <AITip />
+      <AISettings
+        settingsDoor={settingsDoor}
+        toggleSettingsDoor={() => setSettingsDoor(!settingsDoor)}
+        selectedPrompt={selectedPrompt}
+        onSelectPrompt={setSelectedPrompt}
+      />
+      <Lousa content={lousaContent} toggleLousa={toggleLousa} />
     </SideMenu>
   )
 }
