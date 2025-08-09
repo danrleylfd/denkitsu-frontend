@@ -153,7 +153,7 @@ const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettingsDoor, load
         </Button>
         {aiKey.length > 0 && (
           <div className="relative">
-            <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor} disabled={loading}>
+            <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor}>
               <Wrench size={16} />
             </Button>
           </div>
