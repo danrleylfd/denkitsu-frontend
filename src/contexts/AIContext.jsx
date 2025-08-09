@@ -124,7 +124,12 @@ const AIProvider = ({ children }) => {
 
   const speakResponse = useCallback((text) => {
     if ("speechSynthesis" in window) {
-      const utterance = new SpeechSynthesisUtterance(text)
+      const utterance = new SpeechSynthesisUtterance(
+        text
+          .replace(/[^a-zA-Z0-9À-ÿ,.\-!?;\s]/g, "")
+          .replace(/!\[([^\]]*)\]\([^)]*\)/g, "$1")
+          .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+      )
       utterance.lang = "pt-BR"
       utterance.onstart = () => setSpeaking(true)
       utterance.onend = () => setSpeaking(false)

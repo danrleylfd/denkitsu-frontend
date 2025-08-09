@@ -21,7 +21,7 @@ const ContentView = ({ children }) => (
 )
 
 const News = () => {
-  const { aiProvider, aiProviderToggle } = useAI()
+  const { aiProvider, aiProviderToggle, speakResponse } = useAI()
   const { notifyError, notifyInfo } = useNotification()
   const [searchTerm, setSearchTerm] = useState("")
   const [news, setNews] = useState([])
@@ -83,15 +83,15 @@ const News = () => {
     notifyInfo("Markdown copiado!")
   }
 
-  const handleReadAloud = (content) => {
-    if ("speechSynthesis" in window) {
-      const utterance = new SpeechSynthesisUtterance(content.replace(/[^a-zA-Z0-9À-ÿ,.\-!?;\s]/g, ""))
-      utterance.lang = "pt-BR"
-      window.speechSynthesis.speak(utterance)
-    } else {
-      notifyError("Seu navegador não suporta leitura em voz alta.")
-    }
-  }
+  // const handleReadAloud = (content) => {
+  //   if ("speechSynthesis" in window) {
+  //     const utterance = new SpeechSynthesisUtterance(content.replace(/[^a-zA-Z0-9À-ÿ,.\-!?;\s]/g, ""))
+  //     utterance.lang = "pt-BR"
+  //     window.speechSynthesis.speak(utterance)
+  //   } else {
+  //     notifyError("Seu navegador não suporta leitura em voz alta.")
+  //   }
+  // }
 
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
@@ -144,7 +144,7 @@ const News = () => {
                   size="icon"
                   $rounded
                   title="Ler em voz alta"
-                  onClick={() => handleReadAloud(article.content)}
+                  onClick={() => speakResponse(article.content)}
                 >
                   <Mic size={14} />
                 </Button>
