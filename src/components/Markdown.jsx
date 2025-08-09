@@ -27,7 +27,7 @@ const Markdown = ({ loading, content, think }) => {
 // - If think is true and loading is true -> collapsed is false (show content while loading)
 // - If think is true and loading is false -> collapsed is true (hide content after loading)
 // - If think is false -> collapsed is false (always show content)
-const [collapsed, setCollapsed] = useState(think ? (!loading ? false : true) : false)
+const [collapsed, setCollapsed] = useState(think ? !loading : false)
 
   const toggleCollapse = () => setCollapsed((prev) => !prev)
 
