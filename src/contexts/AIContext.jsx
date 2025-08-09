@@ -12,6 +12,7 @@ const AIProvider = ({ children }) => {
   const storedStream = JSON.parse(localStorage.getItem("@Denkitsu:Stream"))
   const storedWeb = JSON.parse(localStorage.getItem("@Denkitsu:Web"))
   const storedBrowserTool = JSON.parse(localStorage.getItem("@Denkitsu:BrowserTool"))
+  const storedDuckduckgoTool = JSON.parse(localStorage.getItem("@Denkitsu:DuckduckgoTool"))
   const storedHttpTool = JSON.parse(localStorage.getItem("@Denkitsu:HttpTool"))
   const storedWikiTool = JSON.parse(localStorage.getItem("@Denkitsu:WikiTool"))
   const storedNewsTool = JSON.parse(localStorage.getItem("@Denkitsu:NewsTool"))
@@ -37,6 +38,7 @@ const AIProvider = ({ children }) => {
   const [imageUrls, setImageUrls] = useState([])
   const [web, setWeb] = useState(storedWeb === null ? false : storedWeb)
   const [browserTool, setBrowserTool] = useState(storedBrowserTool === null ? false : storedBrowserTool)
+  const [duckduckgoTool, setDuckduckgoTool] = useState(storedDuckduckgoTool === null ? false : storedDuckduckgoTool)
   const [httpTool, setHttpTool] = useState(storedHttpTool === null? false : storedHttpTool)
   const [wikiTool, setWikiTool] = useState(storedWikiTool === null? false : storedWikiTool)
   const [newsTool, setNewsTool] = useState(storedNewsTool === null ? false : storedNewsTool)
@@ -65,6 +67,8 @@ const AIProvider = ({ children }) => {
   useEffect(() => (localStorage.setItem("@Denkitsu:Web", web)), [web])
 
   useEffect(() => (localStorage.setItem("@Denkitsu:BrowserTool", browserTool)), [browserTool])
+
+  useEffect(() => (localStorage.setItem("@Denkitsu:DuckduckgoTool", duckduckgoTool)), [duckduckgoTool])
 
   useEffect(() => (localStorage.setItem("@Denkitsu:HttpTool", httpTool)), [httpTool])
 
@@ -111,6 +115,7 @@ const AIProvider = ({ children }) => {
   const toggleListening = useCallback(() => setListening(l => !l), [])
   const toggleWeb = useCallback(() => setWeb(w => !w), [])
   const toggleBrowser = useCallback(() => setBrowserTool(b => !b), [])
+  const toggleDuckduckgo = useCallback(() => setDuckduckgoTool(d => !d), [])
   const toggleHttp = useCallback(() => setHttpTool(h => !h), [])
   const toggleWiki = useCallback(() => setWikiTool(w => !w), [])
   const toggleNews = useCallback(() => setNewsTool(n => !n), [])
@@ -146,6 +151,7 @@ const AIProvider = ({ children }) => {
     listening, setListening, toggleListening,
     web, setWeb, toggleWeb,
     browserTool, setBrowserTool, toggleBrowser,
+    duckduckgoTool, setDuckduckgoTool, toggleDuckduckgo,
     httpTool, setHttpTool, toggleHttp,
     wikiTool, setWikiTool, toggleWiki,
     newsTool, setNewsTool, toggleNews,
@@ -174,6 +180,7 @@ const AIProvider = ({ children }) => {
     listening, toggleListening,
     web, toggleWeb,
     browserTool, toggleBrowser,
+    duckduckgoTool, toggleDuckduckgo,
     httpTool, toggleHttp,
     wikiTool, toggleWiki,
     newsTool, toggleNews,

@@ -1,4 +1,4 @@
-import { Globe, Link2, Server, Bitcoin, Satellite, Newspaper, Cloud, BookOpen, Gamepad, Gamepad2, Smartphone, Clapperboard } from "lucide-react"
+import { Globe, Link2, Search, Server, Bitcoin, Satellite, Newspaper, Cloud, BookOpen, Gamepad, Gamepad2, Smartphone, Clapperboard } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 
@@ -13,6 +13,7 @@ const AITools= ({ loading, toolsDoor }) => {
     stream,
     web, toggleWeb,
     browserTool, toggleBrowser,
+    duckduckgoTool, toggleDuckduckgo,
     httpTool, toggleHttp,
     criptoTool, toggleCripto,
     nasaTool, toggleNasa,
@@ -41,6 +42,9 @@ const AITools= ({ loading, toolsDoor }) => {
       <Button variant={isToolsSupported && !stream && browserTool ? "outline" : "secondary"} size="icon" $rounded title="Acessar Site Específico" onClick={toggleBrowser} disabled={!isToolsSupported || stream || loading}>
         <Link2 size={16} />
       </Button>
+      <Button variant={isToolsSupported && !stream && duckduckgoTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar no DuckDuckGo" onClick={toggleDuckduckgo} disabled={!isToolsSupported || stream || loading}>
+        <Search size={16} />
+      </Button>
       <Button variant={isToolsSupported && !stream && httpTool ? "outline" : "secondary"} size="icon" $rounded title="Requisição HTTP" onClick={toggleHttp} disabled={!isToolsSupported || stream || loading}>
         <Server size={16} />
       </Button>
