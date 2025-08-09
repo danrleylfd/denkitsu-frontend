@@ -22,7 +22,7 @@ const AI = () => {
   const { notifyWarning, notifyError } = useNotification()
   const [loading, setLoading] = useState(false)
   const [lousaContent, setLousaContent] = useState(null)
-  const [settingsOpen, setSettingsOpen] = useState(false)
+  const [settingsDoor, setSettingsDoor] = useState(false)
   const [selectedPrompt, setSelectedPrompt] = useState("Padrão")
   const [toolsDoor, setToolsDoor] = useState(false)
 
@@ -174,7 +174,7 @@ const AI = () => {
             <AIBar
               onAddImage={onAddImage}
               imageCount={aiContext.imageUrls.length}
-              toggleSettings={() => setSettingsOpen(!settingsOpen)}
+              toggleSettingsDoor={() => setSettingsDoor(!settingsDoor)}
               onSendMessage={onSendMessage}
               loading={loading}
               toolsDoor={toolsDoor}
@@ -183,8 +183,8 @@ const AI = () => {
           </div>
           <AITip />
           <AISettings
-            settingsOpen={settingsOpen}
-            toggleSettings={() => setSettingsOpen(!settingsOpen)}
+            settingsDoor={settingsDoor}
+            toggleSettingsDoor={() => setSettingsDoor(!settingsDoor)}
             selectedPrompt={selectedPrompt}
             onSelectPrompt={setSelectedPrompt}
           />
@@ -201,7 +201,7 @@ const AI = () => {
             <AIBar
               onAddImage={onAddImage}
               imageCount={aiContext.imageUrls.length}
-              toggleSettings={() => setSettingsOpen(!settingsOpen)}
+              toggleSettingsDoor={() => setSettingsDoor(!settingsDoor)}
               onSendMessage={onSendMessage}
               loading={loading}
               toolsDoor={toolsDoor}
@@ -210,8 +210,8 @@ const AI = () => {
           </div>
           <AITip />
           <AISettings
-            settingsOpen={settingsOpen}
-            toggleSettings={() => setSettingsOpen(!settingsOpen)}
+            settingsDoor={settingsDoor}
+            toggleSettingsDoor={() => setSettingsDoor(!settingsDoor)}
             selectedPrompt={selectedPrompt}
             onSelectPrompt={setSelectedPrompt}
           />

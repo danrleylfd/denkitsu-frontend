@@ -9,7 +9,7 @@ import Paper from "../Paper"
 import AIInput from "./Input"
 import Button from "../Button"
 
-const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettings, loading, toolsDoor, toggleToolsDoor }) => {
+const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettingsDoor, loading, toolsDoor, toggleToolsDoor }) => {
   const { signed } = useAuth()
   const {
     aiProvider, aiProviderToggle, aiKey,
@@ -104,7 +104,7 @@ const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettings, loading,
           <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"} disabled={loading}>
             <Brain size={16} />
           </Button>
-          <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettings} disabled={loading}>
+          <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loading}>
             <Settings size={16} />
           </Button>
           <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={isImageSupported === false || aiProvider === "groq" || loading}>
@@ -145,7 +145,7 @@ const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettings, loading,
         <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"} disabled={loading}>
           <Brain size={16} />
         </Button>
-        <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettings} disabled={loading}>
+        <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loading}>
           <Settings size={16} />
         </Button>
         <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={isImageSupported === false || aiProvider === "groq" || loading}>

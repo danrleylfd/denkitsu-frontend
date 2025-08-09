@@ -11,11 +11,11 @@ import AIInput from "./Input"
 import Button from "../Button"
 import MultiToggle from "../MultiToggle"
 
-const AISettings = ({ settingsOpen, toggleSettings, selectedPrompt, onSelectPrompt }) => {
+const AISettings = ({ settingsDoor, toggleSettingsDoor, selectedPrompt, onSelectPrompt }) => {
   const [showAIKey, setShowAIKey] = useState(false)
   const { aiKey, aiProvider, customPrompt, loading, setAIKey, aiProviderToggle, setCustomPrompt } = useAI()
 
-  if (!settingsOpen) return null
+  if (!settingsDoor) return null
 
   const agentOptions = [
     { value: "Padrão", icon: <Bot size={16} /> },
@@ -37,7 +37,7 @@ const AISettings = ({ settingsOpen, toggleSettings, selectedPrompt, onSelectProm
         onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <h3 className="font-bold text-lightFg-primary dark:text-darkFg-primary">Configurações do Denkitsu</h3>
-          <Button variant="danger" size="icon" $rounded onClick={toggleSettings}>
+          <Button variant="danger" size="icon" $rounded onClick={toggleSettingsDoor}>
             <X size={16} />
           </Button>
         </div>
