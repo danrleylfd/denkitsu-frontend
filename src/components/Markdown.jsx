@@ -22,8 +22,8 @@ const getTweetId = (url) => {
   return match ? match[1] : null
 }
 
-const Markdown = ({ content, think }) => {
-  const [collapsed, setCollapsed] = useState(false)
+const Markdown = ({ loading, content, think }) => {
+  const [collapsed, setCollapsed] = useState(!loading)
 
   const toggleCollapse = () => setCollapsed((prev) => !prev)
 

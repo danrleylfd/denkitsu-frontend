@@ -37,7 +37,7 @@ const AIMessage = ({ msg, user, toggleLousa, loading, onRegenerate, isLastMessag
         <img src="/denkitsu.png" alt="Denkitsu" className="w-8 h-8 rounded-full object-cover" />
       )}
       <div className="max-w-[90%] md:max-w-[67%] break-words rounded-md px-4 py-2 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] text-lightFg-secondary dark:text-darkFg-secondary bg-lightBg-secondary dark:bg-darkBg-secondary opacity-75 dark:opacity-90">
-        {isAssistant && msg.reasoning && <Markdown content={msg.reasoning} think />}
+        {isAssistant && msg.reasoning && <Markdown loading={loading} content={msg.reasoning} think />}
         {loading && !msg.content ? <Button variant="outline" size="icon" $rounded loading={true} disabled /> : renderContent()}
         {msg.timestamp && (
           <small className="ml-auto pl-2 text-xs text-lightFg-secondary dark:text-darkFg-secondary whitespace-nowrap">
