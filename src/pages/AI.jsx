@@ -160,7 +160,6 @@ const AI = () => {
   }, [loading, aiContext.messages, aiContext.setMessages, executeSendMessage, notifyWarning])
 
   const toggleLousa = useCallback((content) => setLousaContent(content), [])
-  const toggleToolsDoor = () => setToolsDoor(prev => !prev)
 
   const temMensagensDoUsuario = aiContext.messages.some(msg => msg.role === "user")
 
@@ -175,7 +174,7 @@ const AI = () => {
               loading={loading}
               toggleSettingsDoor={() => setSettingsDoor(!settingsDoor)}
               toolsDoor={toolsDoor}
-              toggleToolsDoor={toggleToolsDoor}
+              toggleToolsDoor={() => setToolsDoor(prev => !prev)}
               onAddImage={onAddImage}
               imageCount={aiContext.imageUrls.length}
               onSendMessage={onSendMessage}
@@ -191,10 +190,7 @@ const AI = () => {
         </div>
       ) : (
         <>
-          <AIHistory
-            toggleLousa={toggleLousa}
-            onRegenerate={handleRegenerateResponse}
-          />
+          <AIHistory toggleLousa={toggleLousa} onRegenerate={handleRegenerateResponse} />
           <ImagePreview />
           <div className="w-full relative">
             <AITools loading={loading} toolsDoor={toolsDoor} />
@@ -202,7 +198,7 @@ const AI = () => {
               loading={loading}
               toggleSettingsDoor={() => setSettingsDoor(!settingsDoor)}
               toolsDoor={toolsDoor}
-              toggleToolsDoor={toggleToolsDoor}
+              toggleToolsDoor={() => setToolsDoor(prev => !prev)}
               onAddImage={onAddImage}
               imageCount={aiContext.imageUrls.length}
               onSendMessage={onSendMessage}
