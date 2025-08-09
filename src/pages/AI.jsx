@@ -162,9 +162,6 @@ const AI = () => {
   const toggleLousa = useCallback((content) => setLousaContent(content), [])
   const toggleToolsPopup = () => setIsToolsOpen(prev => !prev)
 
-  const allModels = [...aiContext.freeModels, ...aiContext.payModels, ...aiContext.groqModels]
-  const selectedModel = allModels.find(m => m.id === aiContext.model)
-
   const temMensagensDoUsuario = aiContext.messages.some(msg => msg.role === "user")
 
   return (
