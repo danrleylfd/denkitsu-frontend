@@ -18,15 +18,15 @@ const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-dv
 
 const AI = () => {
   const aiContext = useAI()
-  const {
-    aiProvider, aiKey, model, stream, web,
-    imageUrls, setImageUrls,
-    freeModels, setFreeModels,
-    payModels, setPayModels,
-    groqModels, setGroqModels,
-    userPrompt, setUserPrompt,
-    messages, setMessages, clearHistory,
-  } = aiContext
+  // const {
+  //   aiProvider, aiKey, model, stream, web,
+  //   imageUrls, setImageUrls,
+  //   freeModels, setFreeModels,
+  //   payModels, setPayModels,
+  //   groqModels, setGroqModels,
+  //   userPrompt, setUserPrompt,
+  //   messages, setMessages, clearHistory,
+  // } = aiContext
 
   const { notifyWarning, notifyError } = useNotification()
   const [loading, setLoading] = useState(false)
@@ -39,26 +39,26 @@ const AI = () => {
     (async () => {
       try {
         const { freeModels: loadedFree, payModels: loadedPay, groqModels: loadedGroq } = await getModels()
-        setFreeModels(loadedFree || [])
-        if (aiKey) setPayModels(loadedPay || [])
-        setGroqModels(loadedGroq || [])
+        aiContext.setFreeModels(loadedFree || [])
+        if (aiContext.aiKey) aiContext.setPayModels(loadedPay || [])
+        aiContext.setGroqModels(loadedGroq || [])
       } catch (error) {
         notifyError(error.message || "Falha ao carregar modelos de IA.")
       }
     })()
-  }, [aiKey, setFreeModels, setPayModels, setGroqModels, notifyError])
+  }, [aiContext.aiKey, aiContext.setFreeModels, aiContext.setPayModels, aiContext.setGroqModels, notifyError])
 
   const onAddImage = () => {
-    if (imageUrls.length >= 3) return notifyWarning("Você pode adicionar no máximo 3 imagens.")
+    if (aiContext.imageUrls.length >= 3) return notifyWarning("Você pode adicionar no máximo 3 imagens.")
     const url = window.prompt("Cole a URL da imagem:")
     if (!url) return
     const img = new Image()
     img.src = url
-    img.onload = () => setImageUrls(prev => [...prev, url])
+    img.onload = () => aiContext.setImageUrls(prev => [...prev, url])
     img.onerror = () => notifyError("A URL fornecida não parece ser uma imagem válida ou não pode ser acessada.")
   }
 
-  const onRemoveImage = index => setImageUrls(prev => prev.filter((_, i) => i !== index))
+  const onRemoveImage = index => aiContext.setImageUrls(prev => prev.filter((_, i) => i !== index))
 
   const executeSendMessage = useCallback(async (historyToProcess) => {
     setLoading(true)
@@ -68,7 +68,7 @@ const AI = () => {
         : { role, content }
     )
     try {
-      if (stream) {
+      if (aiContext.stream) {
         const placeholder = {
           id: Date.now(),
           role: "assistant",
@@ -78,8 +78,8 @@ const AI = () => {
           _reasoningBuffer: "",
           timestamp: new Date().toISOString()
         }
-        setMessages(prev => [...prev, placeholder])
-        await sendMessageStream(aiKey, aiProvider, model, apiMessages, web, selectedPrompt, delta => {
+        aiContext.setMessages(prev => [...prev, placeholder])
+        await sendMessageStream(aiContext.aiKey, aiContext.aiProvider, aiContext.model, apiMessages, aiContext.web, selectedPrompt, delta => {
           if (delta.content) placeholder._contentBuffer += delta.content
           if (delta.reasoning) placeholder._reasoningBuffer += delta.reasoning
           if (delta.tool_calls?.[0]?.function?.arguments) placeholder._reasoningBuffer += delta.tool_calls[0].function.arguments
@@ -94,10 +94,10 @@ const AI = () => {
           const { content, reasoning } = cleanContent(placeholder._contentBuffer)
           placeholder.content = content
           placeholder.reasoning = (placeholder._reasoningBuffer + reasoning).trim()
-          setMessages((prev) => prev.map(msg => (msg.id === placeholder.id ? { ...placeholder } : msg)))
+          aiContext.setMessages((prev) => prev.map(msg => (msg.id === placeholder.id ? { ...placeholder } : msg)))
         })
       } else {
-        const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, selectedPrompt, web, {
+        const { data } = await sendMessage(aiContext.aiKey, aiContext.aiProvider, aiContext.model, [...aiContext.freeModels, ...aiContext.payModels, ...aiContext.groqModels], apiMessages, selectedPrompt, aiContext.web, {
           browserTool: aiContext.browserTool,
           httpTool: aiContext.httpTool,
           wikiTool: aiContext.wikiTool,
@@ -121,7 +121,7 @@ const AI = () => {
           return { content, reasoning }
         }
         const { content, reasoning } = cleanContent(res.content)
-        setMessages(prev => [
+        aiContext.setMessages(prev => [
           ...prev,
           {
             id: Date.now(),
@@ -135,64 +135,64 @@ const AI = () => {
     } catch (err) {
       if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
       else notifyError("Falha na comunicação com o servidor de IA.")
-      setMessages(prev => prev.filter(msg => msg.content !== "" || msg.id !== err.id))
+      aiContext.setMessages(prev => prev.filter(msg => msg.content !== "" || msg.id !== err.id))
     } finally {
       setLoading(false)
     }
-  }, [aiProvider, aiKey, model, stream, web, freeModels, payModels, groqModels, selectedPrompt, setMessages, notifyError, aiContext])
+  }, [aiContext.aiProvider, aiContext.aiKey, aiContext.model, aiContext.stream, aiContext.web, aiContext.freeModels, aiContext.payModels, aiContext.groqModels, selectedPrompt, aiContext.setMessages, notifyError, aiContext])
 
   const onSendMessage = useCallback(async () => {
-    if (loading || (!userPrompt.trim() && imageUrls.length === 0)) return
+    if (loading || (!aiContext.userPrompt.trim() && aiContext.imageUrls.length === 0)) return
     const newMessage = {
       role: "user",
       content: [
-        ...(userPrompt.trim() ? [{ type: "text", content: userPrompt.trim() }] : []),
-        ...imageUrls.map(url => ({ type: "image_url", image_url: { url } }))
+        ...(aiContext.userPrompt.trim() ? [{ type: "text", content: aiContext.userPrompt.trim() }] : []),
+        ...aiContext.imageUrls.map(url => ({ type: "image_url", image_url: { url } }))
       ],
       timestamp: new Date().toISOString()
     }
-    const history = [...messages, newMessage]
-    setMessages(history)
-    setUserPrompt("")
-    setImageUrls([])
+    const history = [...aiContext.messages, newMessage]
+    aiContext.setMessages(history)
+    aiContext.setUserPrompt("")
+    aiContext.setImageUrls([])
     await executeSendMessage(history)
-  }, [loading, userPrompt, imageUrls, messages, setMessages, setUserPrompt, setImageUrls, executeSendMessage])
+  }, [loading, aiContext.userPrompt, aiContext.imageUrls, aiContext.messages, aiContext.setMessages, aiContext.setUserPrompt, aiContext.setImageUrls, executeSendMessage])
 
   const handleRegenerateResponse = useCallback(async () => {
     if (loading) return
-    const lastMessage = messages[messages.length - 1]
+    const lastMessage = aiContext.messages[aiContext.messages.length - 1]
     if (lastMessage?.role !== "assistant") {
       notifyWarning("Apenas a última resposta da IA pode ser regenerada.")
       return
     }
-    const historyWithoutLastResponse = messages.slice(0, -1)
-    setMessages(historyWithoutLastResponse)
+    const historyWithoutLastResponse = aiContext.messages.slice(0, -1)
+    aiContext.setMessages(historyWithoutLastResponse)
     await executeSendMessage(historyWithoutLastResponse)
-  }, [loading, messages, setMessages, executeSendMessage, notifyWarning])
+  }, [loading, aiContext.messages, aiContext.setMessages, executeSendMessage, notifyWarning])
 
   const toggleLousa = useCallback((content) => setLousaContent(content), [])
   const toggleToolsPopup = () => setIsToolsOpen(prev => !prev)
 
-  const allModels = [...freeModels, ...payModels, ...groqModels]
-  const selectedModel = allModels.find(m => m.id === model)
+  const allModels = [...aiContext.freeModels, ...aiContext.payModels, ...aiContext.groqModels]
+  const selectedModel = allModels.find(m => m.id === aiContext.model)
 
-  const temMensagensDoUsuario = messages.some(msg => msg.role === "user")
+  const temMensagensDoUsuario = aiContext.messages.some(msg => msg.role === "user")
 
   return (
     <SideMenu ContentView={ContentView} className="bg-brand-purple bg-cover bg-center">
       {!temMensagensDoUsuario ? (
         <div className="flex grow justify-center items-center flex-col">
-          <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
+          <ImagePreview imageUrls={aiContext.imageUrls} onRemoveImage={onRemoveImage} />
           <div className="w-full relative">
             <AITools isOpen={isToolsOpen} loading={loading} />
             <AIBar
-              userPrompt={userPrompt}
-              setUserPrompt={setUserPrompt}
+              userPrompt={aiContext.userPrompt}
+              setUserPrompt={aiContext.setUserPrompt}
               onAddImage={onAddImage}
-              imageCount={imageUrls.length}
+              imageCount={aiContext.imageUrls.length}
               toggleSettings={() => setSettingsOpen(!settingsOpen)}
               onSendMessage={onSendMessage}
-              clearHistory={clearHistory}
+              clearHistory={aiContext.clearHistory}
               loading={loading}
               isToolsOpen={isToolsOpen}
               toggleToolsPopup={toggleToolsPopup}
@@ -202,9 +202,9 @@ const AI = () => {
           <AISettings
             settingsOpen={settingsOpen}
             toggleSettings={() => setSettingsOpen(!settingsOpen)}
-            freeModels={freeModels}
-            payModels={payModels}
-            groqModels={groqModels}
+            freeModels={aiContext.freeModels}
+            payModels={aiContext.payModels}
+            groqModels={aiContext.groqModels}
             selectedPrompt={selectedPrompt}
             onSelectPrompt={setSelectedPrompt}
           />
@@ -215,17 +215,17 @@ const AI = () => {
             toggleLousa={toggleLousa}
             onRegenerate={handleRegenerateResponse}
           />
-          <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
+          <ImagePreview imageUrls={aiContext.imageUrls} onRemoveImage={onRemoveImage} />
           <div className="w-full relative">
             <AITools isOpen={isToolsOpen} loading={loading} />
             <AIBar
-              userPrompt={userPrompt}
-              setUserPrompt={setUserPrompt}
+              userPrompt={aiContext.userPrompt}
+              setUserPrompt={aiContext.setUserPrompt}
               onAddImage={onAddImage}
-              imageCount={imageUrls.length}
+              imageCount={aiContext.imageUrls.length}
               toggleSettings={() => setSettingsOpen(!settingsOpen)}
               onSendMessage={onSendMessage}
-              clearHistory={clearHistory}
+              clearHistory={aiContext.clearHistory}
               loading={loading}
               isToolsOpen={isToolsOpen}
               toggleToolsPopup={toggleToolsPopup}
@@ -235,9 +235,9 @@ const AI = () => {
           <AISettings
             settingsOpen={settingsOpen}
             toggleSettings={() => setSettingsOpen(!settingsOpen)}
-            freeModels={freeModels}
-            payModels={payModels}
-            groqModels={groqModels}
+            freeModels={aiContext.freeModels}
+            payModels={aiContext.payModels}
+            groqModels={aiContext.groqModels}
             selectedPrompt={selectedPrompt}
             onSelectPrompt={setSelectedPrompt}
           />

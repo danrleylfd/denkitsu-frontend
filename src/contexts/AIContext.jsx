@@ -3,7 +3,6 @@ import { createContext, useState, useEffect, useContext, useMemo, useCallback } 
 const AIContext = createContext()
 
 const AIProvider = ({ children }) => {
-  localStorage.removeItem("@Denkitsu:BrowseTool")
   const storedAIProvider = localStorage.getItem("@Denkitsu:aiProvider")
   const storedModelGroq = localStorage.getItem("@Denkitsu:GroqModel")
   const storedOpenRouterModel = localStorage.getItem("@Denkitsu:OpenRouterModel")
