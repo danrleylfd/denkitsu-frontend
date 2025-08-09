@@ -1,7 +1,7 @@
 import { useAI } from "../../contexts/AIContext"
 
-const AIModelSelect = ({ setAIProvider, model, setModel, loading, }) => {
-  const { freeModels, payModels, groqModels } = useAI()
+const AIModelSelect = ({ loading }) => {
+  const { setAIProvider, freeModels, payModels, groqModels, model, setModel } = useAI()
   const findProviderByModel = (model) => {
     if (freeModels.find((m) => m.id === model)) return "openrouter"
     if (payModels.find((m) => m.id === model)) return "openrouter"

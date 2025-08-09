@@ -13,7 +13,7 @@ import MultiToggle from "../MultiToggle"
 
 const AISettings = ({ settingsOpen, toggleSettings, selectedPrompt, onSelectPrompt }) => {
   const [showAIKey, setShowAIKey] = useState(false)
-  const { aiKey, model, aiProvider, customPrompt, loading, setAIKey, setModel, setAIProvider, aiProviderToggle, setCustomPrompt } = useAI()
+  const { aiKey, aiProvider, customPrompt, loading, setAIKey, aiProviderToggle, setCustomPrompt } = useAI()
 
   if (!settingsOpen) return null
 
@@ -80,13 +80,7 @@ const AISettings = ({ settingsOpen, toggleSettings, selectedPrompt, onSelectProm
             title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
             <Brain size={16} />
           </Button>
-          <AIModelSelect
-            aiProvider={aiProvider}
-            setAIProvider={setAIProvider}
-            model={model}
-            setModel={setModel}
-            loading={loading}
-          />
+          <AIModelSelect loading={loading} />
         </div>
         <div className="flex flex-col gap-2">
           <label className="text-lightFg-secondary dark:text-darkFg-secondary">Agentes de AI</label>
