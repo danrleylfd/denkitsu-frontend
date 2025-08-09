@@ -1,7 +1,7 @@
 import { useAI } from "../../contexts/AIContext"
 
 const AIModelSelect = ({ loading }) => {
-  const { setAIProvider, freeModels, payModels, groqModels, model, setModel } = useAI()
+  const { aiProvider, setAIProvider, freeModels, payModels, groqModels, model, setModel } = useAI()
   const findProviderByModel = (model) => {
     if (freeModels.find((m) => m.id === model)) return "openrouter"
     if (payModels.find((m) => m.id === model)) return "openrouter"
@@ -26,7 +26,7 @@ const AIModelSelect = ({ loading }) => {
       <option className="text-lightFg-primary dark:text-darkFg-primary" disabled value="">
         OpenRouter Gratuito
       </option>
-      {freeModels.map((model) => (
+      {aiProvider === "openrouter" && freeModels.map((model) => (
         <option key={model.id} value={model.id} className="text-lightFg-secondary dark:text-darkFg-secondary">
           {model.id}
           {model.supports_tools && " 🛠️"}
@@ -37,7 +37,7 @@ const AIModelSelect = ({ loading }) => {
       <option className="text-lightFg-primary dark:text-darkFg-primary" disabled value="">
         OpenRouter Premium
       </option>
-      {payModels.map((model) => (
+      {aiProvider === "openrouter" && payModels.map((model) => (
         <option key={model.id} value={model.id} className="text-lightFg-secondary dark:text-darkFg-secondary">
           {model.id}
           {model.supports_tools && " 🛠️"}
@@ -48,7 +48,7 @@ const AIModelSelect = ({ loading }) => {
       <option className="text-lightFg-primary dark:text-darkFg-primary" disabled value="">
         Groq Gratuito
       </option>
-      {groqModels.map((model) => (
+      {aiProvider === "groq" && groqModels.map((model) => (
         <option key={model.id} value={model.id} className="text-lightFg-secondary dark:text-darkFg-secondary">
           {model.id}
           {model.supports_tools && " 🛠️"}
