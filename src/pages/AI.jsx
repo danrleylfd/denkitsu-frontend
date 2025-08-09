@@ -24,7 +24,7 @@ const AI = () => {
   const [lousaContent, setLousaContent] = useState(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [selectedPrompt, setSelectedPrompt] = useState("Padrão")
-  const [isToolsOpen, setIsToolsOpen] = useState(false)
+  const [toolsDoor, setToolsDoor] = useState(false)
 
   useEffect(() => {
     (async () => {
@@ -160,7 +160,7 @@ const AI = () => {
   }, [loading, aiContext.messages, aiContext.setMessages, executeSendMessage, notifyWarning])
 
   const toggleLousa = useCallback((content) => setLousaContent(content), [])
-  const toggleToolsPopup = () => setIsToolsOpen(prev => !prev)
+  const toggleToolsDoor = () => setToolsDoor(prev => !prev)
 
   const temMensagensDoUsuario = aiContext.messages.some(msg => msg.role === "user")
 
@@ -170,15 +170,15 @@ const AI = () => {
         <div className="flex grow justify-center items-center flex-col">
           <ImagePreview />
           <div className="w-full relative">
-            <AITools isOpen={isToolsOpen} loading={loading} />
+            <AITools toolsDoor={toolsDoor} loading={loading} />
             <AIBar
               onAddImage={onAddImage}
               imageCount={aiContext.imageUrls.length}
               toggleSettings={() => setSettingsOpen(!settingsOpen)}
               onSendMessage={onSendMessage}
               loading={loading}
-              isToolsOpen={isToolsOpen}
-              toggleToolsPopup={toggleToolsPopup}
+              toolsDoor={toolsDoor}
+              toggleToolsDoor={toggleToolsDoor}
             />
           </div>
           <AITip />
@@ -197,15 +197,15 @@ const AI = () => {
           />
           <ImagePreview />
           <div className="w-full relative">
-            <AITools isOpen={isToolsOpen} loading={loading} />
+            <AITools toolsDoor={toolsDoor} loading={loading} />
             <AIBar
               onAddImage={onAddImage}
               imageCount={aiContext.imageUrls.length}
               toggleSettings={() => setSettingsOpen(!settingsOpen)}
               onSendMessage={onSendMessage}
               loading={loading}
-              isToolsOpen={isToolsOpen}
-              toggleToolsPopup={toggleToolsPopup}
+              toolsDoor={toolsDoor}
+              toggleToolsDoor={toggleToolsDoor}
             />
           </div>
           <AITip />

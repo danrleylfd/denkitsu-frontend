@@ -5,8 +5,8 @@ import { useAI } from "../../contexts/AIContext"
 import Paper from "../Paper"
 import Button from "../Button"
 
-const AITools= ({ isOpen, loading }) => {
-  if (!isOpen) return null
+const AITools= ({ toolsDoor, loading }) => {
+  if (!toolsDoor) return null
   const {
     aiProvider,
     model, freeModels, payModels, groqModels,

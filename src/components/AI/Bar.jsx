@@ -9,7 +9,7 @@ import Paper from "../Paper"
 import AIInput from "./Input"
 import Button from "../Button"
 
-const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettings, loading, isToolsOpen, toggleToolsPopup }) => {
+const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettings, loading, toolsDoor, toggleToolsDoor }) => {
   const { signed } = useAuth()
   const {
     aiProvider, aiProviderToggle, aiKey,
@@ -112,7 +112,7 @@ const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettings, loading,
           </Button>
           {aiKey.length > 0 && (
             <div className="relative">
-              <Button variant={isToolsOpen ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsPopup} disabled={loading}>
+              <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor} disabled={loading}>
                 <Wrench size={16} />
               </Button>
             </div>
@@ -153,7 +153,7 @@ const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettings, loading,
         </Button>
         {aiKey.length > 0 && (
           <div className="relative">
-            <Button variant={isToolsOpen ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsPopup} disabled={loading}>
+            <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor} disabled={loading}>
               <Wrench size={16} />
             </Button>
           </div>
