@@ -1,11 +1,6 @@
 import { useState, useEffect, useRef } from "react"
 import { Link } from "react-router-dom"
-import {
-  LogIn, UserPlus,
-  Settings, Send, ImagePlus, Globe, Newspaper, Cloud,
-  AudioLines, AudioWaveform, Brain, MessageCirclePlus, BookOpen, Link2, Wrench, Gamepad2,
-  Lock, Server, Mic, MoreVertical, Smartphone, Bitcoin, Satellite,
-} from "lucide-react"
+import { Lock, Brain, Settings, ImagePlus, Wrench, AudioWaveform, Mic, MessageCirclePlus, Send, } from "lucide-react"
 
 import { useAuth } from "../../contexts/AuthContext"
 import { useAI } from "../../contexts/AIContext"
