@@ -1,18 +1,8 @@
 import { useAI } from "../../contexts/AIContext"
 
 const AIModelSelect = ({ loading }) => {
-  const { aiProvider, setAIProvider, freeModels, payModels, groqModels, model, setModel } = useAI()
-  const findProviderByModel = (model) => {
-    if (freeModels.find((m) => m.id === model)) return "openrouter"
-    if (payModels.find((m) => m.id === model)) return "openrouter"
-    if (groqModels.find((m) => m.id === model)) return "groq"
-    return null
-  }
-  const handleChange = (e) => {
-    setModel(e.target.value)
-    const provider = findProviderByModel(e.target.value)
-    setAIProvider(provider)
-  }
+  const { aiProvider, freeModels, payModels, groqModels, model, setModel } = useAI()
+  const handleChange = (e) => setModel(e.target.value)
   return (
     <select
       id="model-select"
