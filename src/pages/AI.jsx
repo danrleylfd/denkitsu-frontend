@@ -49,8 +49,6 @@ const AI = () => {
     img.onerror = () => notifyError("A URL fornecida não parece ser uma imagem válida ou não pode ser acessada.")
   }
 
-  const onRemoveImage = index => aiContext.setImageUrls(prev => prev.filter((_, i) => i !== index))
-
   const executeSendMessage = useCallback(async (historyToProcess) => {
     setLoading(true)
     const apiMessages = historyToProcess.map(({ role, content }) =>
@@ -173,17 +171,14 @@ const AI = () => {
     <SideMenu ContentView={ContentView} className="bg-brand-purple bg-cover bg-center">
       {!temMensagensDoUsuario ? (
         <div className="flex grow justify-center items-center flex-col">
-          <ImagePreview imageUrls={aiContext.imageUrls} onRemoveImage={onRemoveImage} />
+          <ImagePreview />
           <div className="w-full relative">
             <AITools isOpen={isToolsOpen} loading={loading} />
             <AIBar
-              userPrompt={aiContext.userPrompt}
-              setUserPrompt={aiContext.setUserPrompt}
               onAddImage={onAddImage}
               imageCount={aiContext.imageUrls.length}
               toggleSettings={() => setSettingsOpen(!settingsOpen)}
               onSendMessage={onSendMessage}
-              clearHistory={aiContext.clearHistory}
               loading={loading}
               isToolsOpen={isToolsOpen}
               toggleToolsPopup={toggleToolsPopup}
@@ -203,17 +198,14 @@ const AI = () => {
             toggleLousa={toggleLousa}
             onRegenerate={handleRegenerateResponse}
           />
-          <ImagePreview imageUrls={aiContext.imageUrls} onRemoveImage={onRemoveImage} />
+          <ImagePreview />
           <div className="w-full relative">
             <AITools isOpen={isToolsOpen} loading={loading} />
             <AIBar
-              userPrompt={aiContext.userPrompt}
-              setUserPrompt={aiContext.setUserPrompt}
               onAddImage={onAddImage}
               imageCount={aiContext.imageUrls.length}
               toggleSettings={() => setSettingsOpen(!settingsOpen)}
               onSendMessage={onSendMessage}
-              clearHistory={aiContext.clearHistory}
               loading={loading}
               isToolsOpen={isToolsOpen}
               toggleToolsPopup={toggleToolsPopup}

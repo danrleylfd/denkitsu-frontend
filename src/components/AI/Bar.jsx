@@ -14,10 +14,12 @@ import Paper from "../Paper"
 import AIInput from "./Input"
 import Button from "../Button"
 
-const AIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessage, clearHistory, toggleSettings, loading, isToolsOpen, toggleToolsPopup }) => {
+const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettings, loading, isToolsOpen, toggleToolsPopup }) => {
   const { signed } = useAuth()
   const {
     aiProvider, aiProviderToggle, aiKey,
+    userPrompt, setUserPrompt,
+    clearHistory,
     model, freeModels, payModels, groqModels,
     stream, toggleStream,
     listening, setListening, toggleListening,

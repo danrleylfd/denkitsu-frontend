@@ -2,12 +2,11 @@ import { useAI } from "../../contexts/AIContext"
 
 const AIModelSelect = ({ loading }) => {
   const { aiProvider, freeModels, payModels, groqModels, model, setModel } = useAI()
-  const handleChange = (e) => setModel(e.target.value)
   return (
     <select
       id="model-select"
       value={model}
-      onChange={handleChange}
+      onChange={(e) => setModel(e.target.value)}
       disabled={loading}
       className="bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary text-sm py-2 w-full rounded-full">
       <option className="text-lightFg-primary dark:text-darkFg-primary" disabled value="">
