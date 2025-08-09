@@ -127,7 +127,7 @@ const AIProvider = ({ children }) => {
       const utterance = new SpeechSynthesisUtterance(
         text
           .replace(/[^a-zA-Z0-9À-ÿ,.\-!?;\s]/g, "")
-          .replace(/!\[([^\]]*)\]\([^)]*\)/g, "$1")
+          .replace(/!\[([^\]]*)\]\([^)]*\)/g, "")
           .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
       )
       utterance.lang = "pt-BR"
