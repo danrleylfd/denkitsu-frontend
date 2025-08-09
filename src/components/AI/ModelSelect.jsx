@@ -23,6 +23,9 @@ const AIModelSelect = ({ loading }) => {
       <option className="text-lightFg-primary dark:text-darkFg-primary" disabled value="">
         Selecionar Modelo
       </option>
+      {aiProvider === "openrouter" && <option className="text-lightFg-primary dark:text-darkFg-primary" disabled value="">
+        OpenRouter Gratuito:
+      </option>}
       {aiProvider === "openrouter" && freeModels.map((model) => (
         <option key={model.id} value={model.id} className="text-lightFg-secondary dark:text-darkFg-secondary">
           {model.id}
@@ -31,6 +34,9 @@ const AIModelSelect = ({ loading }) => {
           {model.supports_files && " 📄"}
         </option>
       ))}
+      {aiProvider === "openrouter" && <option className="text-lightFg-primary dark:text-darkFg-primary" disabled value="">
+        OpenRouter Premium:
+      </option>}
       {aiProvider === "openrouter" && payModels.map((model) => (
         <option key={model.id} value={model.id} className="text-lightFg-secondary dark:text-darkFg-secondary">
           {model.id}
@@ -39,6 +45,9 @@ const AIModelSelect = ({ loading }) => {
           {model.supports_files && " 📄"}
         </option>
       ))}
+      {aiProvider === "groq" && <option className="text-lightFg-primary dark:text-darkFg-primary" disabled value="">
+        Groq Gratuito:
+      </option>}
       {aiProvider === "groq" && groqModels.map((model) => (
         <option key={model.id} value={model.id} className="text-lightFg-secondary dark:text-darkFg-secondary">
           {model.id}
