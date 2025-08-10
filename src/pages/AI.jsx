@@ -89,6 +89,7 @@ const AI = () => {
         const { data } = await sendMessage(aiContext.aiKey, aiContext.aiProvider, aiContext.model, [...aiContext.freeModels, ...aiContext.payModels, ...aiContext.groqModels], apiMessages, selectedPrompt, aiContext.web, {
           browserTool: aiContext.browserTool,
           httpTool: aiContext.httpTool,
+          duckduckgoTool: aiContext.duckduckgoTool,
           wikiTool: aiContext.wikiTool,
           newsTool: aiContext.newsTool,
           weatherTool: aiContext.weatherTool,
