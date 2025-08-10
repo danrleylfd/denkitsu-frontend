@@ -94,7 +94,7 @@ const AI = () => {
           apiMessages,
           selectedPrompt,
           aiContext.web,
-          { ...aiContext.tools }
+          aiContext.tools
         )
         const res = data?.choices?.[0]?.message
         if (!res) return
