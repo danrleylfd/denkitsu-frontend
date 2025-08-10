@@ -7,6 +7,8 @@ const AIInput = ({
   rows = 1,
   maxLength = 2048,
   suggestions = ["/site ","/duckduckgo ","/http ","/cripto ","/nasa ","/notícias ","/clima ","wikipedia ","/cinema ","/jogos ","/albion ","/genshin ","/pokédex "],
+  value: externalValue,
+  onChange: externalOnChange,
   ...props
 }) => {
   const [internalValue, setInternalValue] = useState("");
