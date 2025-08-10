@@ -86,21 +86,16 @@ const AI = () => {
           aiContext.setMessages((prev) => prev.map(msg => (msg.id === placeholder.id ? { ...placeholder } : msg)))
         })
       } else {
-        const { data } = await sendMessage(aiContext.aiKey, aiContext.aiProvider, aiContext.model, [...aiContext.freeModels, ...aiContext.payModels, ...aiContext.groqModels], apiMessages, selectedPrompt, aiContext.web, {
-          browserTool: aiContext.browserTool,
-          httpTool: aiContext.httpTool,
-          duckduckgoTool: aiContext.duckduckgoTool,
-          wikiTool: aiContext.wikiTool,
-          newsTool: aiContext.newsTool,
-          weatherTool: aiContext.weatherTool,
-          criptoTool: aiContext.criptoTool,
-          cinemaTool: aiContext.cinemaTool,
-          gamesTool: aiContext.gamesTool,
-          albionTool: aiContext.albionTool,
-          genshinTool: aiContext.genshinTool,
-          pokedexTool: aiContext.pokedexTool,
-          nasaTool: aiContext.nasaTool
-        })
+        const { data } = await sendMessage(
+          aiContext.aiKey,
+          aiContext.aiProvider,
+          aiContext.model,
+          [...aiContext.freeModels, ...aiContext.payModels, ...aiContext.groqModels],
+          apiMessages,
+          selectedPrompt,
+          aiContext.web,
+          { ...aiContext.tools }
+        )
         const res = data?.choices?.[0]?.message
         if (!res) return
         const cleanContent = (raw = "") => {
