@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react"
 
 const AIInput = ({
   node,
@@ -9,48 +9,45 @@ const AIInput = ({
   suggestions = ["/site ","/duckduckgo ","/http ","/cripto ","/nasa ","/notícias ","/clima ","wikipedia ","/cinema ","/jogos ","/albion ","/genshin ","/pokédex "],
   ...props
 }) => {
-  const [value, setValue] = useState("");
-  const [filtered, setFiltered] = useState([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const containerRef = useRef(null);
+  const [value, setValue] = useState("")
+  const [filtered, setFiltered] = useState([])
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const containerRef = useRef(null)
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (containerRef.current && !containerRef.current.contains(event.target)) {
-        setShowSuggestions(false);
+        setShowSuggestions(false)
       }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
 
   const handleChange = (e) => {
-    const inputValue = e.target.value;
-    setValue(inputValue);
+    const inputValue = e.target.value
+    setValue(inputValue)
 
     if (inputValue.trim().length > 0) {
       const filteredSuggestions = suggestions.filter((item) =>
         item.toLowerCase().includes(inputValue.toLowerCase())
-      );
-      setFiltered(filteredSuggestions);
-      setShowSuggestions(true);
+      )
+      setFiltered(filteredSuggestions)
+      setShowSuggestions(true)
     } else {
-      setShowSuggestions(false);
+      setShowSuggestions(false)
     }
-  };
+  }
 
   const handleSelect = (suggestion) => {
-    setValue(suggestion);
-    setShowSuggestions(false);
-  };
+    setValue(suggestion)
+    setShowSuggestions(false)
+  }
 
   return (
     <div ref={containerRef} className="relative w-full">
       <textarea
-        className={
-          "flex-1 resize-none min-h-[1.25rem] max-h-[11rem] max-w-full overflow-y-auto p-2 rounded-md font-mono text-sm bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary " +
-          className
-        }
+        className={"flex-1 resize-none min-h-[1.25rem] max-h-[11rem] max-w-full overflow-y-auto p-2 rounded-md font-mono text-sm bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary " + className}
         rows={rows}
         maxLength={maxLength}
         placeholder={!disabled ? "Escreva seu prompt" : "Pensando..."}
@@ -74,7 +71,7 @@ const AIInput = ({
         </ul>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default AIInput;
+export default AIInput
