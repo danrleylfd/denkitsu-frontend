@@ -83,16 +83,6 @@ const News = () => {
     notifyInfo("Markdown copiado!")
   }
 
-  // const handleReadAloud = (content) => {
-  //   if ("speechSynthesis" in window) {
-  //     const utterance = new SpeechSynthesisUtterance(content.replace(/[^a-zA-Z0-9À-ÿ,.\-!?;\s]/g, ""))
-  //     utterance.lang = "pt-BR"
-  //     window.speechSynthesis.speak(utterance)
-  //   } else {
-  //     notifyError("Seu navegador não suporta leitura em voz alta.")
-  //   }
-  // }
-
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
       <Paper>
