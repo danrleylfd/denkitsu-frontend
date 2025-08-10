@@ -20,6 +20,7 @@ const AIProvider = ({ children }) => {
   const storedCriptoTool = JSON.parse(localStorage.getItem("@Denkitsu:CriptoTool"))
   const storedCinemaTool = JSON.parse(localStorage.getItem("@Denkitsu:CinemaTool"))
   const storedGamesTool = JSON.parse(localStorage.getItem("@Denkitsu:GamesTool"))
+  const storedAlbionTool = JSON.parse(localStorage.getItem("@Denkitsu:AlbionTool"))
   const storedGenshinTool = JSON.parse(localStorage.getItem("@Denkitsu:GenshinTool"))
   const storedPokedexTool = JSON.parse(localStorage.getItem("@Denkitsu:PokedexTool"))
   const storedNasaTool = JSON.parse(localStorage.getItem("@Denkitsu:NasaTool"))
@@ -46,6 +47,7 @@ const AIProvider = ({ children }) => {
   const [criptoTool, setCriptoTool] = useState(storedCriptoTool === null ? false : storedCriptoTool)
   const [cinemaTool, setCinemaTool] = useState(storedCinemaTool === null ? false : storedCinemaTool)
   const [gamesTool, setGamesTool] = useState(storedGamesTool === null ? false : storedGamesTool)
+  const [albionTool, setAlbionTool] = useState(storedAlbionTool === null ? false : storedAlbionTool)
   const [genshinTool, setGenshinTool] = useState(storedGenshinTool === null? false : storedGenshinTool)
   const [pokedexTool, setPokedexTool] = useState(storedPokedexTool === null? false : storedPokedexTool)
   const [nasaTool, setNasaTool] = useState(storedNasaTool === null ? false : storedNasaTool)
@@ -55,39 +57,23 @@ const AIProvider = ({ children }) => {
   const [listening, setListening] = useState(false)
 
   useEffect(() => (localStorage.setItem("@Denkitsu:aiProvider", aiProvider)), [aiProvider])
-
   useEffect(() => (localStorage.setItem("@Denkitsu:GroqModel", groqModel)), [groqModel])
-
   useEffect(() => (localStorage.setItem("@Denkitsu:OpenRouterModel", openRouterModel)), [openRouterModel])
-
   useEffect(() => (localStorage.setItem("@Denkitsu:customPrompt", customPrompt)), [customPrompt])
-
   useEffect(() => (localStorage.setItem("@Denkitsu:Stream", stream)), [stream])
-
   useEffect(() => (localStorage.setItem("@Denkitsu:Web", web)), [web])
-
   useEffect(() => (localStorage.setItem("@Denkitsu:BrowserTool", browserTool)), [browserTool])
-
   useEffect(() => (localStorage.setItem("@Denkitsu:DuckduckgoTool", duckduckgoTool)), [duckduckgoTool])
-
   useEffect(() => (localStorage.setItem("@Denkitsu:HttpTool", httpTool)), [httpTool])
-
   useEffect(() => (localStorage.setItem("@Denkitsu:WikiTool", wikiTool)), [wikiTool])
-
   useEffect(() => (localStorage.setItem("@Denkitsu:NewsTool", newsTool)), [newsTool])
-
   useEffect(() => (localStorage.setItem("@Denkitsu:WeatherTool", weatherTool)), [weatherTool])
-
   useEffect(() => (localStorage.setItem("@Denkitsu:CriptoTool", criptoTool)), [criptoTool])
-
   useEffect(() => (localStorage.setItem("@Denkitsu:CinemaTool", cinemaTool)), [cinemaTool])
-
   useEffect(() => (localStorage.setItem("@Denkitsu:GamesTool", gamesTool)), [gamesTool])
-
+  useEffect(() => (localStorage.setItem("@Denkitsu:AlbionTool", albionTool)), [albionTool])
   useEffect(() => (localStorage.setItem("@Denkitsu:GenshinTool", genshinTool)), [genshinTool])
-
   useEffect(() => (localStorage.setItem("@Denkitsu:PokedexTool", pokedexTool)), [pokedexTool])
-
   useEffect(() => (localStorage.setItem("@Denkitsu:NasaTool", nasaTool)), [nasaTool])
 
   useEffect(() => {
@@ -123,6 +109,7 @@ const AIProvider = ({ children }) => {
   const toggleCripto = useCallback(() => setCriptoTool(c => !c), [])
   const toggleCinema = useCallback(() => setCinemaTool(c => !c), [])
   const toggleGames = useCallback(() => setGamesTool(g => !g), [])
+  const toggleAlbion = useCallback(() => setAlbionTool(a => !a), [])
   const toggleGenshin = useCallback(() => setGenshinTool(g => !g), [])
   const togglePokedex = useCallback(() => setPokedexTool(p => !p), [])
   const toggleNasa = useCallback(() => setNasaTool(n => !n), [])
@@ -159,6 +146,7 @@ const AIProvider = ({ children }) => {
     criptoTool, setCriptoTool, toggleCripto,
     cinemaTool, setCinemaTool, toggleCinema,
     gamesTool, setGamesTool, toggleGames,
+    albionTool, setAlbionTool, toggleAlbion,
     genshinTool, setGenshinTool, toggleGenshin,
     pokedexTool, setPokedexTool, togglePokedex,
     nasaTool, setNasaTool, toggleNasa,
@@ -188,6 +176,7 @@ const AIProvider = ({ children }) => {
     criptoTool, toggleCripto,
     cinemaTool, toggleCinema,
     gamesTool, toggleGames,
+    albionTool, toggleAlbion,
     genshinTool, toggleGenshin,
     pokedexTool, togglePokedex,
     nasaTool, toggleNasa,
