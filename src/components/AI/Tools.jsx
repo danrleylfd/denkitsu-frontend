@@ -44,8 +44,8 @@ const AITools= ({ loading, toolsDoor }) => {
         <Link2 size={16} />
       </Button>
       <Button variant={isToolsSupported && !stream && duckduckgoTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar no DuckDuckGo" onClick={toggleDuckduckgo} disabled={!isToolsSupported || stream || loading}>
-        <Search size={16} />
-      </Button>
+        <Search size={16} />
+      </Button>
       <Button variant={isToolsSupported && !stream && httpTool ? "outline" : "secondary"} size="icon" $rounded title="Requisição HTTP" onClick={toggleHttp} disabled={!isToolsSupported || stream || loading}>
         <Server size={16} />
       </Button>
@@ -71,8 +71,8 @@ const AITools= ({ loading, toolsDoor }) => {
         <Gamepad size={16} />
       </Button>
       <Button variant={isToolsSupported && !stream && albionTool ? "outline" : "secondary"} size="icon" $rounded title="Albion Online Gold (Beta)" onClick={toggleAlbion} disabled={!isToolsSupported || stream || loading}>
-        <Shield size={16} />
-      </Button>
+        <Shield size={16} />
+      </Button>
       <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Análise Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>
         <Gamepad2 size={16} />
       </Button>
