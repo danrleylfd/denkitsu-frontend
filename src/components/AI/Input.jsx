@@ -9,40 +9,48 @@ const AIInput = ({
   suggestions = ["/site ","/duckduckgo ","/http ","/cripto ","/nasa ","/notícias ","/clima ","wikipedia ","/cinema ","/jogos ","/albion ","/genshin ","/pokédex "],
   ...props
 }) => {
-  const [value, setValue] = useState("")
-  const [filtered, setFiltered] = useState([])
-  const [showSuggestions, setShowSuggestions] = useState(false)
-  const containerRef = useRef(null)
+  const [internalValue, setInternalValue] = useState("");
+  const [filtered, setFiltered] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const containerRef = useRef(null);
+
+  const value = externalValue !== undefined ? externalValue : internalValue;
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (containerRef.current && !containerRef.current.contains(event.target)) {
-        setShowSuggestions(false)
+        setShowSuggestions(false);
       }
-    }
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [])
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleChange = (e) => {
-    const inputValue = e.target.value
-    setValue(inputValue)
+    const inputValue = e.target.value;
+
+    if (externalOnChange) externalOnChange(e);
+    else setInternalValue(inputValue);
 
     if (inputValue.trim().length > 0) {
       const filteredSuggestions = suggestions.filter((item) =>
         item.toLowerCase().includes(inputValue.toLowerCase())
-      )
-      setFiltered(filteredSuggestions)
-      setShowSuggestions(true)
+      );
+      setFiltered(filteredSuggestions);
+      setShowSuggestions(filteredSuggestions.length > 0);
     } else {
-      setShowSuggestions(false)
+      setShowSuggestions(false);
     }
-  }
+  };
 
   const handleSelect = (suggestion) => {
-    setValue(suggestion)
-    setShowSuggestions(false)
-  }
+    if (externalOnChange) {
+      externalOnChange({ target: { value: suggestion } });
+    } else {
+      setInternalValue(suggestion);
+    }
+    setShowSuggestions(false);
+  };
 
   return (
     <div ref={containerRef} className="relative w-full">
@@ -57,8 +65,8 @@ const AIInput = ({
         {...props}
       />
 
-      {showSuggestions && filtered.length > 0 && (
-        <ul className="absolute left-0 right-0 mt-1 bg-white dark:bg-darkBg-secondary border border-gray-300 dark:border-gray-700 rounded-md shadow-lg z-50 max-h-40 overflow-auto">
+      {showSuggestions && (
+        <ul className="absolute top-full left-0 w-full mt-1 bg-white dark:bg-darkBg-secondary border border-gray-300 dark:border-gray-700 rounded-md shadow-lg z-50 max-h-40 overflow-auto">
           {filtered.map((item, index) => (
             <li
               key={index}
