@@ -7,11 +7,8 @@ import Button from "../Button"
 
 const AITools= ({ loading, toolsDoor }) => {
   if (!toolsDoor) return null
+  const { aiProvider, model, freeModels, payModels, groqModels, stream, web, toggleWeb, tools, } = useAI()
   const {
-    aiProvider,
-    model, freeModels, payModels, groqModels,
-    stream,
-    web, toggleWeb,
     browserTool, toggleBrowser,
     duckduckgoTool, toggleDuckduckgo,
     httpTool, toggleHttp,
@@ -25,7 +22,7 @@ const AITools= ({ loading, toolsDoor }) => {
     albionTool, toggleAlbion,
     genshinTool, toggleGenshin,
     pokedexTool, togglePokedex,
-  } = useAI()
+  } = tools
   const allModels = [...freeModels, ...payModels, ...groqModels]
   const selectedModel = allModels.find(m => m.id === model)
   const isToolsSupported = selectedModel?.supports_tools ?? false
