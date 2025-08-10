@@ -56,19 +56,8 @@ const AIInput = ({
 
   return (
     <div ref={containerRef} className="relative w-full">
-      <textarea
-        className={"flex-1 resize-none min-h-[1.25rem] max-h-[11rem] w-full overflow-y-auto p-2 rounded-md font-mono text-sm bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary " + className}
-        rows={rows}
-        maxLength={maxLength}
-        placeholder={!disabled ? "Escreva seu prompt" : "Pensando..."}
-        value={value}
-        onChange={handleChange}
-        disabled={disabled}
-        {...props}
-      />
-
       {showSuggestions && (
-        <ul className="absolute top-full left-0 w-full mt-1 bg-white dark:bg-darkBg-secondary border border-gray-300 dark:border-gray-700 rounded-md shadow-lg z-50 max-h-40 overflow-auto">
+        <ul className="absolute bottom-full left-0 w-full mb-1 bg-white dark:bg-darkBg-secondary border border-gray-300 dark:border-gray-700 rounded-md shadow-lg z-50 max-h-40 overflow-auto">
           {filtered.map((item, index) => (
             <li
               key={index}
@@ -80,6 +69,16 @@ const AIInput = ({
           ))}
         </ul>
       )}
+      <textarea
+        className={"flex-1 resize-none min-h-[1.25rem] max-h-[11rem] w-full overflow-y-auto p-2 rounded-md font-mono text-sm bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary " + className}
+        rows={rows}
+        maxLength={maxLength}
+        placeholder={!disabled ? "Escreva seu prompt" : "Pensando..."}
+        value={value}
+        onChange={handleChange}
+        disabled={disabled}
+        {...props}
+      />
     </div>
   )
 }
