@@ -57,11 +57,11 @@ const AIInput = ({
   return (
     <div ref={containerRef} className="relative w-full">
       {showSuggestions && (
-        <ul className="absolute bottom-full left-0 w-full mb-1 bg-white dark:bg-darkBg-secondary border border-gray-300 dark:border-gray-700 rounded-md shadow-lg z-50 max-h-40 overflow-auto">
+        <ul className="absolute bottom-full left-0 w-full mb-2 bg-lightBg-primary dark:bg-darkBg-primary border border-gray-300 dark:border-gray-700 rounded-md shadow-lg z-50 max-h-40 overflow-auto">
           {filtered.map((item, index) => (
             <li
               key={index}
-              className="p-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600"
+              className="p-2 cursor-pointer hover:bg-lightBg-secondary dark:hover:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary"
               onClick={() => handleSelect(item)}
             >
               {item}
