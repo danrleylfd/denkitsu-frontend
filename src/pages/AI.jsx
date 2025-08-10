@@ -95,6 +95,7 @@ const AI = () => {
           criptoTool: aiContext.criptoTool,
           cinemaTool: aiContext.cinemaTool,
           gamesTool: aiContext.gamesTool,
+          albionTool: aiContext.albionTool,
           genshinTool: aiContext.genshinTool,
           pokedexTool: aiContext.pokedexTool,
           nasaTool: aiContext.nasaTool
