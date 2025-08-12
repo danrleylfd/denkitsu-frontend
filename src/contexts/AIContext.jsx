@@ -110,7 +110,7 @@ const AIProvider = ({ children }) => {
       try {
         const [userPromptsData, systemPromptsData] = await Promise.all([
           getSystemPrompts(),
-          signed && getUserPrompts(),
+          signed ? getUserPrompts() : Promise.resolve([]),
         ])
         setUserPrompts(userPromptsData || [])
         setSystemPrompts(systemPromptsData || [])
@@ -118,7 +118,8 @@ const AIProvider = ({ children }) => {
         console.error("Falha ao buscar os prompts:", error)
       }
     }
-    if (signed) fetchAllPrompts()
+    fetchAllPrompts()
+    if (!signed) setUserPrompts([])
   }, [signed])
 
 
