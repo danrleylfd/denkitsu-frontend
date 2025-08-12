@@ -108,12 +108,12 @@ const AIProvider = ({ children }) => {
   useEffect(() => {
     const fetchAllPrompts = async () => {
       try {
-        const [userPromptsData, systemPromptsData] = await Promise.all([
+        const [systemPromptsData, userPromptsData] = await Promise.all([
           getSystemPrompts(),
           signed ? getUserPrompts() : Promise.resolve([]),
         ])
-        setUserPrompts(userPromptsData || [])
         setSystemPrompts(systemPromptsData || [])
+        setUserPrompts(userPromptsData || [])
       } catch (error) {
         console.error("Falha ao buscar os prompts:", error)
       }
