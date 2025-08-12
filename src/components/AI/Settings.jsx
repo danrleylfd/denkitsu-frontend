@@ -9,7 +9,7 @@ import AIPromptManager from "./PromptManager"
 const getModeName = (content) => {
   if (!content || typeof content !== 'string') return "Prompt"
   const trimmedContent = content.trim()
-  if (trimmedContent.startsWith("\nModo ")) {
+  if (trimmedContent.startsWith("Modo ")) {
     const firstLine = trimmedContent.split('\n')[0]
     return firstLine.substring(5).trim()
   }
