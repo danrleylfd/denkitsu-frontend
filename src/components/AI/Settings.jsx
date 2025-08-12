@@ -112,7 +112,7 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
             <option value="Padrão">Padrão (Recomendado)</option>
             {/* Adiciona um grupo para os prompts do usuário */}
             <optgroup label="Seus Prompts Salvos">
-              {userPrompts.map(p => (
+              {(userPrompts || []).map(p => (
                 <option key={p._id} value={p.content}>{p.title}</option>
               ))}
             </optgroup>
