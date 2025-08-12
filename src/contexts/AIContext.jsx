@@ -122,7 +122,6 @@ const AIProvider = ({ children }) => {
     if (!signed) setUserPrompts([])
   }, [signed])
 
-
   const aiProviderToggle = useCallback(() => setAIProvider((prev) => (prev === "groq" ? "openrouter" : "groq")), [])
   const clearHistory = useCallback(() => setMessages([{ role: "system", content: selectedPrompt }]), [selectedPrompt])
   const toggleStream = useCallback(() => setStream(s => !s), [])

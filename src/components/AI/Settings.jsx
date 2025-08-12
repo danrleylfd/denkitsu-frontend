@@ -8,8 +8,8 @@ import AIPromptManager from "./PromptManager"
 
 const getModeName = (content) => {
   if (!content) return "Prompt"
-  const match = content.match(/Modo\s(\w+)/);
-  return match ? match[1] : "Prompt";
+  const match = content.match(/\nModo\s(\w+)/)
+  return match ? match[1] : "Prompt"
 }
 
 const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
