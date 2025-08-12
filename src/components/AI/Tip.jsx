@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef, useCallback } from "react"
 import Marquee from "react-fast-marquee"
 
 import Paper from "../Paper"
