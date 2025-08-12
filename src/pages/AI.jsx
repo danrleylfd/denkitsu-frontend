@@ -18,6 +18,7 @@ const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-dv
 
 const AI = () => {
   const {
+    freeModels, payModels, groqModels,
     setFreeModels, setPayModels, setGroqModels, aiKey, imageUrls,
     stream, aiProvider, model, web, tools, messages, setMessages,
     userPrompt, setUserPrompt, setImageUrls, selectedPrompt
