@@ -23,6 +23,7 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
     aiKey, aiProvider, loading, setAIKey, aiProviderToggle,
     userPrompts, setUserPrompts, systemPrompts, selectedPrompt, setSelectedPrompt
   } = useAI()
+  console.log(systemPrompts.length)
 
   if (!settingsDoor) return null
 
