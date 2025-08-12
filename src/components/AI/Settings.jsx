@@ -6,14 +6,16 @@ import {
 import { useAI } from "../../contexts/AIContext"
 
 import AIModelSelect from "./ModelSelect"
-import Input from "../Input"
 import AIInput from "./Input"
+import AIPromptManager from "./PromptManager"
+import Input from "../Input"
 import Button from "../Button"
 import MultiToggle from "../MultiToggle"
 
-const AISettings = ({ settingsDoor, toggleSettingsDoor, selectedPrompt, onSelectPrompt }) => {
+const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
   const [showAIKey, setShowAIKey] = useState(false)
-  const { aiKey, aiProvider, customPrompt, loading, setAIKey, aiProviderToggle, setCustomPrompt } = useAI()
+  const [showPromptManager, setShowPromptManager] = useState(false)
+  const { aiKey, aiProvider, customPrompt, loading, setAIKey, aiProviderToggle, setCustomPrompt, userPrompts, setUserPrompts, selectedPrompt, setSelectedPrompt } = useAI()
 
   if (!settingsDoor) return null
 
@@ -82,7 +84,7 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor, selectedPrompt, onSelect
           </Button>
           <AIModelSelect loading={loading} />
         </div>
-        <div className="flex flex-col gap-2">
+        {/* <div className="flex flex-col gap-2">
           <label className="text-lightFg-secondary dark:text-darkFg-secondary">Agentes de AI</label>
           <div className="w-full overflow-x-auto pb-2 flex justify-center">
             <MultiToggle
@@ -91,6 +93,28 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor, selectedPrompt, onSelect
               onChange={onSelectPrompt}
             />
           </div>
+        </div> */}
+        <div className="flex flex-col gap-2">
+          <div className="flex justify-between items-center">
+            <label htmlFor="prompt-select" className="text-lightFg-secondary dark:text-darkFg-secondary">
+              Agente de IA (Prompt)
+            </label>
+            <Button variant="outline" $rounded size="sm" onClick={() => setShowPromptManager(true)}>
+              Gerenciar
+            </Button>
+          </div>
+          <select
+            id="prompt-select"
+            value={selectedPrompt}
+            onChange={(e) => setSelectedPrompt(e.target.value)}
+            disabled={loading}
+            className="bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary text-sm py-2 w-full rounded-full"
+          >
+            <option value="Padrão">Padrão (Recomendado)</option>
+            <optgroup label="Seus Prompts">
+              {userPrompts.map(p => <option key={p._id} value={p.content}>{p.title}</option>)}
+            </optgroup>
+          </select>
         </div>
         <div className="flex flex-col gap-2">
           <label htmlFor="custom-prompt" className="text-lightFg-secondary dark:text-darkFg-secondary">
@@ -108,6 +132,13 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor, selectedPrompt, onSelect
           <small className="text-right text-xs text-lightFg-tertiary dark:text-darkFg-tertiary self-end">{customPrompt.length} / 6144 caracteres.</small>
         </div>
       </div>
+      {showPromptManager && (
+        <PromptManager
+          prompts={userPrompts}
+          setPrompts={setUserPrompts}
+          onClose={() => setShowPromptManager(false)}
+        />
+      )}
     </div>
   )
 }

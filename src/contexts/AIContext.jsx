@@ -1,8 +1,14 @@
 import { createContext, useState, useEffect, useContext, useMemo, useCallback } from "react"
 
+import { useAuth } from "./AuthContext"
+
+import { getPrompts } from "../services/prompt"
+
 const AIContext = createContext()
 
 const AIProvider = ({ children }) => {
+  const { signed } = useAuth()
+
   const storedAIProvider = localStorage.getItem("@Denkitsu:aiProvider")
   const storedModelGroq = localStorage.getItem("@Denkitsu:GroqModel")
   const storedOpenRouterModel = localStorage.getItem("@Denkitsu:OpenRouterModel")
@@ -51,7 +57,8 @@ const AIProvider = ({ children }) => {
   const [genshinTool, setGenshinTool] = useState(storedGenshinTool === null? false : storedGenshinTool)
   const [pokedexTool, setPokedexTool] = useState(storedPokedexTool === null? false : storedPokedexTool)
   const [nasaTool, setNasaTool] = useState(storedNasaTool === null ? false : storedNasaTool)
-  const [userPrompt, setUserPrompt] = useState("")
+  const [userPrompts, setUserPrompts] = useState([])
+  const [userPrompt, setUserPrompt] = useState("Padrão")
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
   const [speaking, setSpeaking] = useState(false)
   const [listening, setListening] = useState(false)
@@ -85,6 +92,18 @@ const AIProvider = ({ children }) => {
     if (openRouterKey.trim() === "") return localStorage.removeItem("@Denkitsu:OpenRouter")
     localStorage.setItem("@Denkitsu:OpenRouter", openRouterKey)
   }, [openRouterKey])
+
+  useEffect(() => {
+    const fetchUserPrompts = async () => {
+      try {
+        const prompts = await getPrompts()
+        setUserPrompts(prompts || [])
+      } catch (error) {
+        console.error("Failed to fetch user prompts")
+      }
+    }
+    if (signed) fetchUserPrompts()
+  }, [signed])
 
   useEffect(() => {
     setMessages((prev) => {
