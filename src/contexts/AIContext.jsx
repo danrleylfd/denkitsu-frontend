@@ -1,18 +1,12 @@
 import { createContext, useState, useEffect, useContext, useMemo, useCallback } from "react"
 
-import { useAuth } from "./AuthContext"
-
-import { getPrompts as getUserPrompts } from "../services/prompt"
-import { getPrompt as getSystemPrompts } from "../services/aiChat"
-
 const AIContext = createContext()
 
 const AIProvider = ({ children }) => {
-  const { signed } = useAuth()
-
   const storedAIProvider = localStorage.getItem("@Denkitsu:aiProvider")
   const storedModelGroq = localStorage.getItem("@Denkitsu:GroqModel")
   const storedOpenRouterModel = localStorage.getItem("@Denkitsu:OpenRouterModel")
+  const storedCustomPrompt = localStorage.getItem("@Denkitsu:customPrompt")
   const storedGroqKey = localStorage.getItem("@Denkitsu:Groq")
   const storedOpenRouterKey = localStorage.getItem("@Denkitsu:OpenRouter")
   const storedStream = JSON.parse(localStorage.getItem("@Denkitsu:Stream"))
@@ -38,6 +32,7 @@ const AIProvider = ({ children }) => {
   const [freeModels, setFreeModels] = useState([])
   const [payModels, setPayModels] = useState([])
   const [groqModels, setGroqModels] = useState([])
+  const [customPrompt, setCustomPrompt] = useState(storedCustomPrompt || `Responda em ${navigator.language}`)
   const [groqKey, setGroqKey] = useState(storedGroqKey || "")
   const [openRouterKey, setOpenRouterKey] = useState(storedOpenRouterKey || "")
   const [stream, setStream] = useState(storedStream === null ? false : storedStream)
@@ -45,29 +40,26 @@ const AIProvider = ({ children }) => {
   const [web, setWeb] = useState(storedWeb === null ? false : storedWeb)
   const [browserTool, setBrowserTool] = useState(storedBrowserTool === null ? false : storedBrowserTool)
   const [duckduckgoTool, setDuckduckgoTool] = useState(storedDuckduckgoTool === null ? false : storedDuckduckgoTool)
-  const [httpTool, setHttpTool] = useState(storedHttpTool === null ? false : storedHttpTool)
-  const [wikiTool, setWikiTool] = useState(storedWikiTool === null ? false : storedWikiTool)
+  const [httpTool, setHttpTool] = useState(storedHttpTool === null? false : storedHttpTool)
+  const [wikiTool, setWikiTool] = useState(storedWikiTool === null? false : storedWikiTool)
   const [newsTool, setNewsTool] = useState(storedNewsTool === null ? false : storedNewsTool)
   const [weatherTool, setWeatherTool] = useState(storedWeatherTool === null ? false : storedWeatherTool)
   const [criptoTool, setCriptoTool] = useState(storedCriptoTool === null ? false : storedCriptoTool)
   const [cinemaTool, setCinemaTool] = useState(storedCinemaTool === null ? false : storedCinemaTool)
   const [gamesTool, setGamesTool] = useState(storedGamesTool === null ? false : storedGamesTool)
   const [albionTool, setAlbionTool] = useState(storedAlbionTool === null ? false : storedAlbionTool)
-  const [genshinTool, setGenshinTool] = useState(storedGenshinTool === null ? false : storedGenshinTool)
-  const [pokedexTool, setPokedexTool] = useState(storedPokedexTool === null ? false : storedPokedexTool)
+  const [genshinTool, setGenshinTool] = useState(storedGenshinTool === null? false : storedGenshinTool)
+  const [pokedexTool, setPokedexTool] = useState(storedPokedexTool === null? false : storedPokedexTool)
   const [nasaTool, setNasaTool] = useState(storedNasaTool === null ? false : storedNasaTool)
   const [userPrompt, setUserPrompt] = useState("")
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
   const [speaking, setSpeaking] = useState(false)
   const [listening, setListening] = useState(false)
 
-  const [systemPrompts, setSystemPrompts] = useState([])
-  const [userPrompts, setUserPrompts] = useState([])
-  const [selectedPrompt, setSelectedPrompt] = useState("Padrão")
-
   useEffect(() => (localStorage.setItem("@Denkitsu:aiProvider", aiProvider)), [aiProvider])
   useEffect(() => (localStorage.setItem("@Denkitsu:GroqModel", groqModel)), [groqModel])
   useEffect(() => (localStorage.setItem("@Denkitsu:OpenRouterModel", openRouterModel)), [openRouterModel])
+  useEffect(() => (localStorage.setItem("@Denkitsu:customPrompt", customPrompt)), [customPrompt])
   useEffect(() => (localStorage.setItem("@Denkitsu:Stream", stream)), [stream])
   useEffect(() => (localStorage.setItem("@Denkitsu:Web", web)), [web])
   useEffect(() => (localStorage.setItem("@Denkitsu:BrowserTool", browserTool)), [browserTool])
@@ -95,35 +87,16 @@ const AIProvider = ({ children }) => {
   }, [openRouterKey])
 
   useEffect(() => {
-    const basePrompt = { role: "system", content: "Padrão" }
-    const currentSystemMessage = messages.find(msg => msg.role === 'system')
-    if (!currentSystemMessage) {
-      setMessages([basePrompt, ...messages])
-    } else if (currentSystemMessage.content !== selectedPrompt) {
-      setMessages(prev => prev.map(msg => msg.role === 'system' ? { ...msg, content: selectedPrompt } : msg))
-    }
+    setMessages((prev) => {
+      const hasSystemMessage = prev.some((msg) => msg.role === "system")
+      if (!hasSystemMessage) return [{ role: "system", content: customPrompt }]
+      return prev
+    })
     localStorage.setItem("@Denkitsu:messages", JSON.stringify(messages))
-  }, [messages, selectedPrompt])
-
-  useEffect(() => {
-    const fetchAllPrompts = async () => {
-      try {
-        const [systemPromptsData, userPromptsData] = await Promise.all([
-          getSystemPrompts(),
-          signed ? getUserPrompts() : Promise.resolve([]),
-        ])
-        setSystemPrompts(systemPromptsData || [])
-        setUserPrompts(userPromptsData || [])
-      } catch (error) {
-        console.error("Falha ao buscar os prompts:", error)
-      }
-    }
-    fetchAllPrompts()
-    if (!signed) setUserPrompts([])
-  }, [signed])
+  }, [messages, customPrompt])
 
   const aiProviderToggle = useCallback(() => setAIProvider((prev) => (prev === "groq" ? "openrouter" : "groq")), [])
-  const clearHistory = useCallback(() => setMessages([{ role: "system", content: selectedPrompt }]), [selectedPrompt])
+  const clearHistory = useCallback(() => setMessages([{ role: "system", content: customPrompt }]), [customPrompt])
   const toggleStream = useCallback(() => setStream(s => !s), [])
   const toggleListening = useCallback(() => setListening(l => !l), [])
   const toggleWeb = useCallback(() => setWeb(w => !w), [])
@@ -188,22 +161,34 @@ const AIProvider = ({ children }) => {
     freeModels, setFreeModels,
     payModels, setPayModels,
     groqModels, setGroqModels,
+    customPrompt, setCustomPrompt,
     userPrompt, setUserPrompt,
     messages, setMessages, clearHistory,
-    systemPrompts, setSystemPrompts,
-    userPrompts, setUserPrompts,
-    selectedPrompt, setSelectedPrompt,
   }), [
-    stream, toggleStream, speaking, speakResponse, listening, toggleListening, web, toggleWeb,
-    browserTool, toggleBrowser, duckduckgoTool, toggleDuckduckgo, httpTool, toggleHttp,
-    wikiTool, toggleWiki, newsTool, toggleNews, weatherTool, toggleWeather, criptoTool, toggleCripto,
-    cinemaTool, toggleCinema, gamesTool, toggleGames, albionTool, toggleAlbion,
-    genshinTool, toggleGenshin, pokedexTool, togglePokedex, nasaTool, toggleNasa,
-    imageUrls, aiProvider, aiProviderToggle, groqKey, openRouterKey,
-    groqModel, openRouterModel, freeModels, payModels, groqModels,
-    userPrompt, messages, clearHistory, userPrompts, systemPrompts, selectedPrompt
+    stream, toggleStream,
+    speaking, speakResponse,
+    listening, toggleListening,
+    web, toggleWeb,
+    browserTool, toggleBrowser,
+    duckduckgoTool, toggleDuckduckgo,
+    httpTool, toggleHttp,
+    wikiTool, toggleWiki,
+    newsTool, toggleNews,
+    weatherTool, toggleWeather,
+    criptoTool, toggleCripto,
+    cinemaTool, toggleCinema,
+    gamesTool, toggleGames,
+    albionTool, toggleAlbion,
+    genshinTool, toggleGenshin,
+    pokedexTool, togglePokedex,
+    nasaTool, toggleNasa,
+    imageUrls,
+    aiProvider, aiProviderToggle,
+    groqKey, openRouterKey,
+    groqModel, openRouterModel,
+    freeModels, payModels, groqModels, customPrompt, userPrompt,
+    messages, clearHistory
   ])
-
   return (
     <AIContext.Provider value={values}>
       {children}
