@@ -133,7 +133,7 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
         </div>
       </div>
       {showPromptManager && (
-        <PromptManager
+        <AIPromptManager
           prompts={userPrompts}
           setPrompts={setUserPrompts}
           onClose={() => setShowPromptManager(false)}
