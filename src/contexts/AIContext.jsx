@@ -1,10 +1,15 @@
 import { createContext, useState, useEffect, useContext, useMemo, useCallback } from "react"
+
+import { useAuth } from "./AuthContext"
+
 import { getPrompts as getUserPrompts } from "../services/prompt"
 import { getPrompt as getSystemPrompts } from "../services/aiChat"
 
 const AIContext = createContext()
 
 const AIProvider = ({ children }) => {
+  const { signed } = useAuth()
+
   const storedAIProvider = localStorage.getItem("@Denkitsu:aiProvider")
   const storedModelGroq = localStorage.getItem("@Denkitsu:GroqModel")
   const storedOpenRouterModel = localStorage.getItem("@Denkitsu:OpenRouterModel")
@@ -113,8 +118,8 @@ const AIProvider = ({ children }) => {
         console.error("Falha ao buscar os prompts:", error)
       }
     }
-    fetchAllPrompts()
-  }, [])
+    if (!signed) fetchAllPrompts()
+  }, [signed])
 
 
   const aiProviderToggle = useCallback(() => setAIProvider((prev) => (prev === "groq" ? "openrouter" : "groq")), [])
