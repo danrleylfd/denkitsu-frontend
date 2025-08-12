@@ -11,6 +11,7 @@ const getModeName = (content) => {
   const trimmedContent = content.trim()
   if (trimmedContent.startsWith("Modo ")) {
     const firstLine = trimmedContent.split('\n')[0]
+    console.log(`"${firstLine.substring(5).trim()}"`)
     return firstLine.substring(5).trim()
   }
   return "Prompt"
@@ -73,7 +74,7 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
               {(systemPrompts || [])
                 .filter(p => p && p.role === 'system' && getModeName(p.content) !== 'Padrão')
                 .map((p, index) => (
-                  <option key={`system-${index}`} value={p.content}>
+                  <option key={`system-${index}`} value={getModeName(p.content)}>
                     {getModeName(p.content)}
                   </option>
                 ))}
