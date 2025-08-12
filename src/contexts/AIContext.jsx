@@ -109,8 +109,8 @@ const AIProvider = ({ children }) => {
     const fetchAllPrompts = async () => {
       try {
         const [userPromptsData, systemPromptsData] = await Promise.all([
-          getUserPrompts(),
-          getSystemPrompts()
+          getSystemPrompts(),
+          signed && getUserPrompts(),
         ])
         setUserPrompts(userPromptsData || [])
         setSystemPrompts(systemPromptsData || [])
