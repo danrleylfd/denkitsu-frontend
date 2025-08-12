@@ -7,9 +7,13 @@ import Button from "../Button"
 import AIPromptManager from "./PromptManager"
 
 const getModeName = (content) => {
-  if (!content) return "Prompt"
-  const match = content.match(/\nModo\s(\w+)/)
-  return match ? match[1] : "Prompt"
+  if (!content || typeof content !== 'string') return "Prompt"
+  const trimmedContent = content.trim()
+  if (trimmedContent.startsWith("\nModo ")) {
+    const firstLine = trimmedContent.split('\n')[0]
+    return firstLine.substring(5).trim()
+  }
+  return "Prompt"
 }
 
 const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
