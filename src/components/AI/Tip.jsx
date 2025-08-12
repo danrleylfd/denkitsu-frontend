@@ -6,14 +6,15 @@ import Paper from "../Paper"
 const TIPS = [
   "Clique no ícone de cérebro para alternar entre os provedores de IA Groq & OpenRouter.",
   "Configure as chaves de API dos provedores Groq e OpenRouter nas configurações para desbloquear a análise de imagens e as ferramentas.",
-  "A análise de imagens exige o provedor OpenRouter e um modelo compatível ex: qwen/qwen2.5-vl-72b-instruct:free. Máximo 3 imagens.",
-  "As ferramentas exigem o provedor OpenRouter e um modelo compatível ex: deepseek/deepseek-chat-v3-0324:free.",
+  "A análise de imagens exige um modelo compatível ex: qwen/qwen2.5-vl-72b-instruct:free. Máximo 3 imagens.",
+  "As ferramentas exigem um modelo compatível ex: deepseek/deepseek-chat-v3-0324:free.",
   "Explore diferentes modos de IA nas configurações para tarefas específicas.",
-  "Descreva como Denkitsu AI deve se comportar em configurações.",
+  "Descreva como Denkitsu deve se comportar em configurações.",
   "Pressione Shift + Enter para quebrar a linha no campo de prompt.",
   "Salve seu UID do Genshin no prompt personalizado, assim toda vez que precisar de uma analise, só precisará mencionar o nome do personagem.",
-  "Use o ícone de ferramentas para ativar a pesquisa web, wikipédia, clima, notícias e mais.",
-  "Limpe a conversa a qualquer momento clicando no ícone de nova mensagem."
+  "Use as ferramentas para contextualizar o Denkitsu.",
+  "Limpe a conversa a qualquer momento clicando no ícone de nova mensagem.",
+  "Para usar os comandos ative as ferramentas necessárias e digite / e uma lista de comandos aparecerá."
 ]
 
 const AITip = () => {
