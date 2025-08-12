@@ -67,39 +67,42 @@ const AIPromptManager = ({ prompts, setPrompts, onClose }) => {
 
         {/* Formulário de Criação */}
         <div className="flex flex-col gap-2 p-2 border border-bLight dark:border-bDark rounded-md">
-            <Input placeholder="Título do Novo Prompt" value={newTitle} onChange={e => setNewTitle(e.target.value)} disabled={loading} />
-            <textarea placeholder="Conteúdo do Novo Prompt..." value={newContent} onChange={e => setNewContent(e.target.value)} disabled={loading} className="w-full h-24 p-2 rounded-md resize-y bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary" />
-            <Button onClick={handleCreate} loading={loading} $rounded>
-                <Plus size={16} className="mr-2"/> Criar Prompt
-            </Button>
+          <Input placeholder="Título do Novo Prompt" value={newTitle} onChange={e => setNewTitle(e.target.value)} disabled={loading} />
+          <textarea placeholder="Conteúdo do Novo Prompt..." value={newContent} onChange={e => setNewContent(e.target.value)} disabled={loading} className="w-full h-24 p-2 rounded-md resize-y bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary" />
+          <Button onClick={handleCreate} loading={loading} $rounded>
+            <Plus size={16} className="mr-2" /> Criar Prompt
+          </Button>
         </div>
 
         {/* Lista de Prompts */}
         <div className="flex-1 overflow-y-auto space-y-2">
-            {prompts.map(prompt => (
-                <div key={prompt._id} className="p-2 border border-bLight dark:border-bDark rounded-md">
-                    {editingPrompt?._id === prompt._id ? (
-                        <div className="flex flex-col gap-2">
-                             <Input value={editingPrompt.title} onChange={e => setEditingPrompt({...editingPrompt, title: e.target.value})} disabled={loading} />
-                             <textarea value={editingPrompt.content} onChange={e => setEditingPrompt({...editingPrompt, content: e.target.value})} disabled={loading} className="w-full h-24 p-2 rounded-md resize-y bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary" />
-                             <div className="flex justify-end gap-2">
-                                <Button variant="secondary" size="icon" $rounded onClick={() => setEditingPrompt(null)}><X size={16}/></Button>
-                                <Button variant="success" size="icon" $rounded onClick={handleUpdate} loading={loading}><Check size={16}/></Button>
-                             </div>
-                        </div>
-                    ) : (
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="font-bold">{prompt.title}</p>
-                                <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary truncate">{prompt.content}</p>
-                            </div>
-                            <div className="flex gap-2">
-                                <Button variant="warning" size="icon" $rounded onClick={() => setEditingPrompt(prompt)}><Edit size={16}/></Button>
-                                <Button variant="danger" size="icon" $rounded onClick={() => handleDelete(prompt._id)}><Trash2 size={16}/></Button>
-                            </div>
-                        </div>
-                    )}
-                </div>
+          {(prompts || [])
+            // CORREÇÃO APLICADA AQUI: Garante que só itens válidos sejam renderizados
+            .filter(p => p && p._id)
+            .map(prompt => (
+              <div key={prompt._id} className="p-2 border border-bLight dark:border-bDark rounded-md">
+                {editingPrompt?._id === prompt._id ? (
+                  <div className="flex flex-col gap-2">
+                    <Input value={editingPrompt.title} onChange={e => setEditingPrompt({ ...editingPrompt, title: e.target.value })} disabled={loading} />
+                    <textarea value={editingPrompt.content} onChange={e => setEditingPrompt({ ...editingPrompt, content: e.target.value })} disabled={loading} className="w-full h-24 p-2 rounded-md resize-y bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary" />
+                    <div className="flex justify-end gap-2">
+                      <Button variant="secondary" size="icon" $rounded onClick={() => setEditingPrompt(null)}><X size={16} /></Button>
+                      <Button variant="success" size="icon" $rounded onClick={handleUpdate} loading={loading}><Check size={16} /></Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-bold">{prompt.title}</p>
+                      <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary truncate">{prompt.content}</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button variant="warning" size="icon" $rounded onClick={() => setEditingPrompt(prompt)}><Edit size={16} /></Button>
+                      <Button variant="danger" size="icon" $rounded onClick={() => handleDelete(prompt._id)}><Trash2 size={16} /></Button>
+                    </div>
+                  </div>
+                )}
+              </div>
             ))}
         </div>
       </div>
