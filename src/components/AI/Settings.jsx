@@ -11,7 +11,6 @@ const getModeName = (content) => {
   const trimmedContent = content.trim()
   if (trimmedContent.startsWith("Modo ")) {
     const firstLine = trimmedContent.split('\n')[0]
-    console.log(`"${firstLine.substring(5).trim()}"`)
     return firstLine.substring(5).trim()
   }
   return "Prompt"
@@ -24,7 +23,6 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
     aiKey, aiProvider, loading, setAIKey, aiProviderToggle,
     userPrompts, setUserPrompts, systemPrompts, selectedPrompt, setSelectedPrompt
   } = useAI()
-  console.log(systemPrompts.length)
 
   if (!settingsDoor) return null
 
