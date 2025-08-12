@@ -118,7 +118,7 @@ const AIProvider = ({ children }) => {
         console.error("Falha ao buscar os prompts:", error)
       }
     }
-    if (!signed) fetchAllPrompts()
+    if (signed) fetchAllPrompts()
   }, [signed])
 
 
