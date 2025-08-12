@@ -66,8 +66,7 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
             disabled={loading}
             className="bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary text-sm py-2 w-full rounded-full"
           >
-            <option value="Padrão">Padrão (Recomendado)</option>
-
+            <option value="Padrão">Padrão</option>
             <optgroup label="Prompts Predefinidos">
               {(systemPrompts || [])
                 .filter(p => p && p.role === 'system' && getModeName(p.content) !== 'Padrão')
@@ -77,7 +76,6 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
                   </option>
                 ))}
             </optgroup>
-
             <optgroup label="Meus Prompts Salvos">
               {(userPrompts || [])
                 .filter(p => p && p._id)
@@ -88,7 +86,6 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
           </select>
         </div>
       </div>
-
       {showPromptManager && (
         <AIPromptManager
           prompts={userPrompts}
