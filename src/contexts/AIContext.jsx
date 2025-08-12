@@ -182,6 +182,7 @@ const AIProvider = ({ children }) => {
     groqModels, setGroqModels,
     customPrompt, setCustomPrompt,
     userPrompt, setUserPrompt,
+    userPrompts, setUserPrompts,
     messages, setMessages, clearHistory,
   }), [
     stream, toggleStream,
@@ -205,7 +206,7 @@ const AIProvider = ({ children }) => {
     aiProvider, aiProviderToggle,
     groqKey, openRouterKey,
     groqModel, openRouterModel,
-    freeModels, payModels, groqModels, customPrompt, userPrompt,
+    freeModels, payModels, groqModels, customPrompt, userPrompt, userPrompts,
     messages, clearHistory
   ])
   return (
