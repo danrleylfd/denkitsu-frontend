@@ -61,8 +61,8 @@ const AIProvider = ({ children }) => {
   const [speaking, setSpeaking] = useState(false)
   const [listening, setListening] = useState(false)
 
-  const [userPrompts, setUserPrompts] = useState([])
   const [systemPrompts, setSystemPrompts] = useState([])
+  const [userPrompts, setUserPrompts] = useState([])
   const [selectedPrompt, setSelectedPrompt] = useState("Padrão")
 
   useEffect(() => (localStorage.setItem("@Denkitsu:aiProvider", aiProvider)), [aiProvider])
@@ -190,8 +190,8 @@ const AIProvider = ({ children }) => {
     groqModels, setGroqModels,
     userPrompt, setUserPrompt,
     messages, setMessages, clearHistory,
+    systemPrompts, setSystemPrompts,
     userPrompts, setUserPrompts,
-    systemPrompts,
     selectedPrompt, setSelectedPrompt,
   }), [
     stream, toggleStream, speaking, speakResponse, listening, toggleListening, web, toggleWeb,
