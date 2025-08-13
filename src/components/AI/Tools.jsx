@@ -40,23 +40,14 @@ const AITools= ({ loading, toolsDoor }) => {
       <Button variant={isToolsSupported && !stream && browserTool ? "outline" : "secondary"} size="icon" $rounded title="Acessar Site Específico" onClick={toggleBrowser} disabled={!isToolsSupported || stream || loading}>
         <Link2 size={16} />
       </Button>
-      <Button variant={isToolsSupported && !stream && duckduckgoTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar no DuckDuckGo" onClick={toggleDuckduckgo} disabled={!isToolsSupported || stream || loading}>
-        <Search size={16} />
-      </Button>
       <Button variant={isToolsSupported && !stream && httpTool ? "outline" : "secondary"} size="icon" $rounded title="Requisição HTTP" onClick={toggleHttp} disabled={!isToolsSupported || stream || loading}>
         <Server size={16} />
       </Button>
-      <Button variant={isToolsSupported && !stream && criptoTool ? "outline" : "secondary"} size="icon" $rounded title="Cripto (Beta)" onClick={toggleCripto} disabled={!isToolsSupported || stream || loading}>
-        <Bitcoin size={16} />
-      </Button>
-      <Button variant={isToolsSupported && !stream && nasaTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Imagem do dia" onClick={toggleNasa} disabled={!isToolsSupported || stream || loading}>
-        <Satellite size={16} />
+      <Button variant={isToolsSupported && !stream && duckduckgoTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar no DuckDuckGo" onClick={toggleDuckduckgo} disabled={!isToolsSupported || stream || loading}>
+        <Search size={16} />
       </Button>
       <Button variant={isToolsSupported && !stream && newsTool ? "outline" : "secondary"} size="icon" $rounded title="Buscar Notícias" onClick={toggleNews} disabled={!isToolsSupported || stream || loading}>
         <Newspaper size={16} />
-      </Button>
-      <Button variant={isToolsSupported && !stream && weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Prever Clima" onClick={toggleWeather} disabled={!isToolsSupported || stream || loading}>
-        <Cloud size={16} />
       </Button>
       <Button variant={isToolsSupported && !stream && wikiTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar na Wikipédia" onClick={toggleWiki} disabled={!isToolsSupported || stream || loading}>
         <BookOpen size={16} />
@@ -67,14 +58,23 @@ const AITools= ({ loading, toolsDoor }) => {
       <Button variant={isToolsSupported && !stream && gamesTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar Jogos" onClick={toggleGames} disabled={!isToolsSupported || stream || loading}>
         <Gamepad size={16} />
       </Button>
+      <Button variant={isToolsSupported && !stream && weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Prever Clima" onClick={toggleWeather} disabled={!isToolsSupported || stream || loading}>
+        <Cloud size={16} />
+      </Button>
+      <Button variant={isToolsSupported && !stream && nasaTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Imagem do dia" onClick={toggleNasa} disabled={!isToolsSupported || stream || loading}>
+        <Satellite size={16} />
+      </Button>
+      <Button variant={isToolsSupported && !stream && criptoTool ? "outline" : "secondary"} size="icon" $rounded title="Cripto (Beta)" onClick={toggleCripto} disabled={!isToolsSupported || stream || loading}>
+        <Bitcoin size={16} />
+      </Button>
       <Button variant={isToolsSupported && !stream && albionTool ? "outline" : "secondary"} size="icon" $rounded title="Albion Online Ouro (Beta)" onClick={toggleAlbion} disabled={!isToolsSupported || stream || loading}>
         <Coins size={16} />
       </Button>
-      <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Análise Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>
-        <Gamepad2 size={16} />
-      </Button>
       <Button variant={isToolsSupported && !stream && pokedexTool ? "outline" : "secondary"} size="icon" $rounded title="Pokédex" onClick={togglePokedex} disabled={!isToolsSupported || stream || loading}>
         <Smartphone size={16} />
+      </Button>
+      <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Análise Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>
+        <Gamepad2 size={16} />
       </Button>
     </Paper>
   )
