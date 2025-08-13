@@ -62,7 +62,7 @@ const DvdCover = memo(({ video, onSelect }) => (
     )}
     {video.thumbnail === "error" && (
        <div className="absolute inset-0 flex items-center justify-center">
-        <AlertTriangle className="w-8 h-8 text-danger-base" />
+        <AlertTriangle className="w-8 h-8 text-red-base" />
       </div>
     )}
     <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">

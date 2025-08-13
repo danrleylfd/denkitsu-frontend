@@ -16,7 +16,7 @@ const ContentView = ({ children }) => (
 )
 
 const Spinner = () => (
-  <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary-base/20 border-t-primary-base dark:border-warning-light/20 dark:border-t-warning-light" />
+  <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary-base/20 border-t-primary-base dark:border-amber-light/20 dark:border-t-amber-light" />
 )
 
 const Weather = () => {
@@ -123,7 +123,7 @@ const Weather = () => {
                   {weatherData.weather[0].description}
                 </div>
               </div>
-              <div className="mb-2 text-5xl font-light leading-none text-warning-light dark:text-primary-base">
+              <div className="mb-2 text-5xl font-light leading-none text-amber-light dark:text-primary-base">
                 {Math.round(weatherData.main.temp)}°C
               </div>
               <img

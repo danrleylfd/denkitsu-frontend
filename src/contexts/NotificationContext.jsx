@@ -22,10 +22,10 @@ const NotificationProvider = ({ children }) => {
       {children}
       {notification && (
         <div
-          className={`fixed top-4 right-4 z-50 ${notification.type === "success" ? "bg-success-base" :
-            notification.type === "error" ? "bg-danger-base" :
+          className={`fixed top-4 right-4 z-50 ${notification.type === "success" ? "bg-green-base" :
+            notification.type === "error" ? "bg-red-base" :
             notification.type === "info" ? "bg-lightBg-secondary dark:bg-darkBg-secondary" :
-            "bg-warning-base"}
+            "bg-amber-base"}
             shadow-lg rounded-lg px-4 py-3 min-w-[200px] max-w-[90vw]
             animate-fade-in-down transition-all duration-300`}
         >

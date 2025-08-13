@@ -55,7 +55,7 @@ const TaskCard = ({ task, showControls = true }) => {
           <button onClick={handleCancel} className="text-primary-base hover:text-primary-light active:text-primary-dark p-1 transition-colors">
             <X size={18} />
           </button>
-          <button onClick={handleSave} className="text-success-base hover:text-success-light active:text-success-dark p-1 transition-colors">
+          <button onClick={handleSave} className="text-green-base hover:text-green-light active:text-green-dark p-1 transition-colors">
             <Check size={18} />
           </button>
         </div>
@@ -83,7 +83,7 @@ const TaskCard = ({ task, showControls = true }) => {
           </button>
           <button
             onClick={() => deleteTask(task.id)}
-            className="text-danger-base hover:text-danger-light active:text-danger-dark p-1 transition-colors">
+            className="text-red-base hover:text-red-light active:text-red-dark p-1 transition-colors">
             <Trash size={16} />
           </button>
         </div>

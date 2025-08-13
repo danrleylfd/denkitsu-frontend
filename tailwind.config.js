@@ -44,22 +44,22 @@ export default {
           base: "#252525",
           dark: "#212121"
         },
-        info: {
+        blue: {
           light: "#42a5f5",
           base: "#1e88e5",
           dark: "#1565c0",
         },
-        success: {
-          light: "#9ccc65",
-          base: "#7cb342",
-          dark: "#558b2f"
+        green: {
+          light: "#66bb6a",
+          base: "#43a047",
+          dark: "#2e7d32"
         },
-        warning: {
-          light: "#ffee58",
-          base: "#fdd835",
-          dark: "#f9a825"
+        amber: {
+          light: "#ffca28",
+          base: "#ffb300",
+          dark: "#ff8f00"
         },
-        danger: {
+        red: {
           light: "#ef5350",
           base: "#e53935",
           dark: "#c62828"
