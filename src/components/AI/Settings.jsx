@@ -30,7 +30,7 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
         </label>
         <div className="flex gap-2 -mt-2">
           <Button
-            variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"}
+            variant={aiProvider === "groq" ? "warning" : "info"}
             size="icon"
             $rounded
             onClick={aiProviderToggle}
@@ -57,7 +57,7 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
         </label>
         <div className="flex items-end gap-2 -mt-2">
           <Button
-            variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"}
+            variant={aiProvider === "groq" ? "warning" : "info"}
             size="icon"
             $rounded
             onClick={aiProviderToggle}
@@ -74,7 +74,7 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
             id="custom-prompt"
             value={customPrompt}
             onChange={(e) => setCustomPrompt(e.target.value)}
-            rows={10}
+            rows={15}
             maxLength={6144}
             placeholder="Escreva seu prompt de sistema"
             disabled={loading}
