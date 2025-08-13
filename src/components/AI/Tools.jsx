@@ -66,7 +66,7 @@ const AITools= ({ loading, toolsDoor }) => {
       <Button variant={isToolsSupported && !stream && nasaTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Imagem do dia" onClick={toggleNasa} disabled={!isToolsSupported || stream || loading}>
         <Telescope size={16} />
       </Button>
-      <Button variant={isToolsSupported && !stream && epicTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Imagens da Terra" onClick={toggleEpic} disabled={!isToolsSupported || stream || loading}>
+      <Button variant={isToolsSupported && !stream && earthTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Imagens da Terra" onClick={toggleEarth} disabled={!isToolsSupported || stream || loading}>
         <Earth size={16} />
       </Button>
       <Button variant={isToolsSupported && !stream && marsRoverTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Fotos de Marte" onClick={toggleMarsRover} disabled={!isToolsSupported || stream || loading}>
