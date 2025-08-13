@@ -27,7 +27,7 @@ const TaskCreator = () => {
           {!loading && <Sparkle size={16} />}
         </Button>
         <Button
-          variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"}
+          variant={aiProvider === "groq" ? "warning" : "info"}
           size="icon"
           $rounded
           onClick={aiProviderToggle}

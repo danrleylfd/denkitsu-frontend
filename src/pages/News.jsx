@@ -96,7 +96,7 @@ const News = () => {
             {!loading && <SearchSlash size={16} />}
           </Button>
           <Button
-            variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"}
+            variant={aiProvider === "groq" ? "warning" : "info"}
             size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
             <Brain size={16} />
           </Button>
