@@ -45,6 +45,11 @@ export default {
           base: "#252525",
           dark: "#212121"
         },
+        info: {
+          light: "#42a5f5",
+          base: "#1e88e5",
+          dark: "#1565c0",
+        },
         success: {
           light: "#04D361",
           base: "#1B873F",
