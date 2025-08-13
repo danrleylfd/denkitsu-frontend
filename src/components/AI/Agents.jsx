@@ -1,10 +1,10 @@
 import { BarChart2, Rss, Code, Presentation, Shield, GraduationCap, Lightbulb, FileText, ClipboardList, Bot } from "lucide-react"
 
-import Paper from "../Paper";
-import Button from "../Button";
+import Paper from "../Paper"
+import Button from "../Button"
 
 const AIAgents = ({ selectedAgent, onSelectAgent, agentsDoor }) => {
-  if (!agentsDoor) return null;
+  if (!agentsDoor) return null
 
   const agentOptions = [
     { value: "Padrão", icon: <Bot size={16} /> },
@@ -17,7 +17,7 @@ const AIAgents = ({ selectedAgent, onSelectAgent, agentsDoor }) => {
     { value: "Prompter", icon: <Lightbulb size={16} /> },
     { value: "Redator", icon: <FileText size={16} /> },
     { value: "Secretário", icon: <ClipboardList size={16} /> },
-  ];
+  ]
 
   return (
     <Paper className={`bg-lightBg-primary dark:bg-darkBg-primary text-lightFg-primary dark:text-darkFg-primary
@@ -28,19 +28,12 @@ const AIAgents = ({ selectedAgent, onSelectAgent, agentsDoor }) => {
       md:flex md:static md:mx-auto md:left-auto md:translate-x-0 md:bottom-auto`}
     >
       {agentOptions.map((agent) => (
-        <Button
-          key={agent.value}
-          variant={selectedAgent === agent.value ? "outline" : "secondary"}
-          size="icon"
-          $rounded
-          title={agent.value}
-          onClick={() => onSelectAgent(agent.value)}
-        >
+        <Button key={agent.value} variant={selectedAgent === agent.value ? "outline" : "secondary"} size="icon" $rounded title={agent.value} onClick={() => onSelectAgent(agent.value)}>
           {agent.icon}
         </Button>
       ))}
     </Paper>
-  );
-};
+  )
+}
 
-export default AIAgents;
+export default AIAgents
