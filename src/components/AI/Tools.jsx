@@ -64,12 +64,12 @@ const AITools= ({ loading, toolsDoor }) => {
       <Button variant={isToolsSupported && !stream && weatherTool ? "outline" : "secondary"} size="icon" $rounded title="Prever Clima" onClick={toggleWeather} disabled={!isToolsSupported || stream || loading}>
         <Cloud size={16} />
       </Button>
-      <Button variant={isToolsSupported && !stream && nasaTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Imagem do dia" onClick={toggleNasa} disabled={!isToolsSupported || stream || loading}>
-        <Telescope size={16} />
-      </Button>
       <Button variant={isToolsSupported && !stream && nasaLibraryTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Biblioteca de Mídia" onClick={toggleNasaLibrary} disabled={!isToolsSupported || stream || loading}>
         <Satellite size={16} />
       </Button>
+      <Button variant={isToolsSupported && !stream && nasaTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Imagem do dia" onClick={toggleNasa} disabled={!isToolsSupported || stream || loading}>
+        <Telescope size={16} />
+      </Button>
       <Button variant={isToolsSupported && !stream && earthTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Imagens da Terra" onClick={toggleEarth} disabled={!isToolsSupported || stream || loading}>
         <Earth size={16} />
       </Button>
