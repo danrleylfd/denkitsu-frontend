@@ -24,6 +24,7 @@ const AIProvider = ({ children }) => {
   const storedGenshinTool = JSON.parse(localStorage.getItem("@Denkitsu:GenshinTool"))
   const storedPokedexTool = JSON.parse(localStorage.getItem("@Denkitsu:PokedexTool"))
   const storedNasaTool = JSON.parse(localStorage.getItem("@Denkitsu:NasaTool"))
+  const storedMarsRoverTool = JSON.parse(localStorage.getItem("@Denkitsu:MarsRoverTool"))
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
 
   const [aiProvider, setAIProvider] = useState(storedAIProvider || "groq")
@@ -51,6 +52,7 @@ const AIProvider = ({ children }) => {
   const [genshinTool, setGenshinTool] = useState(storedGenshinTool === null? false : storedGenshinTool)
   const [pokedexTool, setPokedexTool] = useState(storedPokedexTool === null? false : storedPokedexTool)
   const [nasaTool, setNasaTool] = useState(storedNasaTool === null ? false : storedNasaTool)
+  const [marsRoverTool, setMarsRoverTool] = useState(storedMarsRoverTool === null ? false : storedMarsRoverTool)
   const [userPrompt, setUserPrompt] = useState("")
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
   const [speaking, setSpeaking] = useState(false)
@@ -75,6 +77,7 @@ const AIProvider = ({ children }) => {
   useEffect(() => (localStorage.setItem("@Denkitsu:GenshinTool", genshinTool)), [genshinTool])
   useEffect(() => (localStorage.setItem("@Denkitsu:PokedexTool", pokedexTool)), [pokedexTool])
   useEffect(() => (localStorage.setItem("@Denkitsu:NasaTool", nasaTool)), [nasaTool])
+  useEffect(() => (localStorage.setItem("@Denkitsu:MarsRoverTool", marsRoverTool)), [marsRoverTool])
 
   useEffect(() => {
     if (groqKey.trim() === "") return localStorage.removeItem("@Denkitsu:Groq")
@@ -113,6 +116,7 @@ const AIProvider = ({ children }) => {
   const toggleGenshin = useCallback(() => setGenshinTool(g => !g), [])
   const togglePokedex = useCallback(() => setPokedexTool(p => !p), [])
   const toggleNasa = useCallback(() => setNasaTool(n => !n), [])
+  const toggleMarsRover = useCallback(() => setMarsRoverTool(m => !m), [])
 
   const speakResponse = useCallback((text) => {
     if ("speechSynthesis" in window) {
@@ -151,6 +155,7 @@ const AIProvider = ({ children }) => {
       genshinTool, setGenshinTool, toggleGenshin,
       pokedexTool, setPokedexTool, togglePokedex,
       nasaTool, setNasaTool, toggleNasa,
+      marsRoverTool, setMarsRoverTool, toggleMarsRover,
     },
     imageUrls, setImageUrls,
     aiProvider, setAIProvider, aiProviderToggle,
@@ -182,6 +187,7 @@ const AIProvider = ({ children }) => {
     genshinTool, toggleGenshin,
     pokedexTool, togglePokedex,
     nasaTool, toggleNasa,
+    marsRoverTool, toggleMarsRover,
     imageUrls,
     aiProvider, aiProviderToggle,
     groqKey, openRouterKey,

@@ -14,6 +14,7 @@ const AITools= ({ loading, toolsDoor }) => {
     httpTool, toggleHttp,
     criptoTool, toggleCripto,
     nasaTool, toggleNasa,
+    marsRoverTool, toggleMarsRover,
     newsTool, toggleNews,
     weatherTool, toggleWeather,
     wikiTool, toggleWiki,
@@ -64,6 +65,9 @@ const AITools= ({ loading, toolsDoor }) => {
       <Button variant={isToolsSupported && !stream && nasaTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Imagem do dia" onClick={toggleNasa} disabled={!isToolsSupported || stream || loading}>
         <Telescope size={16} />
       </Button>
+      <Button variant={isToolsSupported && !stream && marsRoverTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Fotos de Marte" onClick={toggleMarsRover} disabled={!isToolsSupported || stream || loading}>
+        <Satellite size={16} />
+      </Button>
       <Button variant={isToolsSupported && !stream && criptoTool ? "outline" : "secondary"} size="icon" $rounded title="Cotação: Cripto (Beta)" onClick={toggleCripto} disabled={!isToolsSupported || stream || loading}>
         <Bitcoin size={16} />
       </Button>
