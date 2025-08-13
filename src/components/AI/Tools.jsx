@@ -66,20 +66,20 @@ const AITools= ({ loading, toolsDoor }) => {
         <Cloud size={16} />
       </Button>
       <Button variant={isToolsSupported && !stream && nasaLibraryTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Biblioteca de Mídia" onClick={toggleNasaLibrary} disabled={!isToolsSupported || stream || loading}>
-        <Satellite size={16} />
-      </Button>
+        <Satellite size={16} />
+      </Button>
       <Button variant={isToolsSupported && !stream && nasaTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Imagem do dia" onClick={toggleNasa} disabled={!isToolsSupported || stream || loading}>
         <Eclipse size={16} />
       </Button>
       <Button variant={isToolsSupported && !stream && asteroidsTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Rastrear Asteroides" onClick={toggleAsteroids} disabled={!isToolsSupported || stream || loading}>
-        <Telescope size={16} />
-      </Button>
+        <Telescope size={16} />
+      </Button>
       <Button variant={isToolsSupported && !stream && earthTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Imagens da Terra" onClick={toggleEarth} disabled={!isToolsSupported || stream || loading}>
-        <Earth size={16} />
-      </Button>
+        <Earth size={16} />
+      </Button>
       <Button variant={isToolsSupported && !stream && marsRoverTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Imagens de Marte" onClick={toggleMarsRover} disabled={!isToolsSupported || stream || loading}>
-        <Orbit size={16} />
-      </Button>
+        <Orbit size={16} />
+      </Button>
       <Button variant={isToolsSupported && !stream && criptoTool ? "outline" : "secondary"} size="icon" $rounded title="Cotação: Cripto (Beta)" onClick={toggleCripto} disabled={!isToolsSupported || stream || loading}>
         <Bitcoin size={16} />
       </Button>
