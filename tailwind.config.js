@@ -64,6 +64,11 @@ export default {
           base: "#e53935",
           dark: "#c62828"
         },
+        orange: {
+          light: "#ff7043",
+          base: "#ff5722",
+          dark: "#d84315"
+        },
         lightBg: {
           primary: "#ffffff",
           secondary: "#ececec",
