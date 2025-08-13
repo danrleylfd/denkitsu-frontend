@@ -1,4 +1,4 @@
-import { Globe, Link2, Search, Server, Bitcoin, Telescope, Satellite, Newspaper, Cloud, BookOpen, Gamepad, Coins, Gamepad2, Smartphone, Clapperboard } from "lucide-react"
+import { Globe, Link2, Search, Server, Bitcoin, Telescope, Satellite, Orbit, Newspaper, Cloud, BookOpen, Gamepad, Coins, Gamepad2, Smartphone, Clapperboard } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 
@@ -66,7 +66,7 @@ const AITools= ({ loading, toolsDoor }) => {
         <Telescope size={16} />
       </Button>
       <Button variant={isToolsSupported && !stream && marsRoverTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Fotos de Marte" onClick={toggleMarsRover} disabled={!isToolsSupported || stream || loading}>
-        <Satellite size={16} />
+        <Orbit size={16} />
       </Button>
       <Button variant={isToolsSupported && !stream && criptoTool ? "outline" : "secondary"} size="icon" $rounded title="Cotação: Cripto (Beta)" onClick={toggleCripto} disabled={!isToolsSupported || stream || loading}>
         <Bitcoin size={16} />
