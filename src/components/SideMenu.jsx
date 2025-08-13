@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import {
   Menu, X, Sun, Moon, Home, Newspaper, Cloud, Languages, Clock, Code, Bot, Kanban, Link2,
-  PersonStanding, LogIn, UserPlus, LogOut, Film, Edit2, ChevronDown, ChevronRight,
+  User, LogIn, UserPlus, LogOut, Film, Edit2, ChevronDown, ChevronRight,
   Upload, Video, TrendingUp, Play, Star, Lock, KeyRound
 } from "lucide-react"
 import { useTheme } from "../contexts/ThemeContext"
@@ -124,7 +124,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
 
   const accountItems = signed
     ? [
-      { icon: PersonStanding, label: "Perfil", to: "/profile" },
+      { icon: User, label: "Perfil", to: "/profile" },
       { icon: Link2, label: "Atalho", to: "/atalho" },
     ] : [
       { icon: LogIn, label: "Entrar", to: "/signin" },
@@ -196,7 +196,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
             <SubMenu
               isOpen={isOpen}
               title="Conta"
-              icon={PersonStanding}
+              icon={User}
               items={accountItems}
               isSubMenuOpen={openSubMenu === "account"}
               toggleSubMenu={() => handleSubMenuToggle("account")}
