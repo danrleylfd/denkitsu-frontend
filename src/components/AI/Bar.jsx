@@ -116,10 +116,10 @@ const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettingsDoor, load
           <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={isImageSupported === false || aiProvider === "groq" || loading}>
             <ImagePlus size={16} />
           </Button>
-          <Button variant={stream ? "gradient-purple" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={loading}>
+          <Button variant={stream ? "primary" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={loading}>
             <AudioWaveform size={16} />
           </Button>
-          <Button variant={listening ? "gradient-red" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>
+          <Button variant={listening ? "danger" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>
             <Mic size={16} />
           </Button>
           <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
@@ -135,7 +135,7 @@ const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettingsDoor, load
             disabled={loading}
             className="resize-y"
           />
-          <Button variant="gradient-rainbow" size="icon" $rounded title="Enviar" onClick={() => { setListening(false); onSendMessage() }} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
+          <Button size="icon" $rounded title="Enviar" onClick={() => { setListening(false); onSendMessage() }} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
             {!loading && <Send size={16} />}
           </Button>
         </div>
@@ -165,17 +165,17 @@ const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettingsDoor, load
           className="resize-y"
         />
         <div className="flex items-center gap-2">
-          <Button variant={stream ? "gradient-purple" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={loading}>
+          <Button variant={stream ? "primary" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={loading}>
             <AudioWaveform size={16} />
           </Button>
-          <Button variant={listening ? "gradient-red" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>
+          <Button variant={listening ? "danger" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>
             <Mic size={16} />
           </Button>
           <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
             <MessageCirclePlus size={16} />
           </Button>
         </div>
-        <Button variant="gradient-rainbow" size="icon" $rounded title="Enviar" onClick={() => { setListening(false); onSendMessage() }} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
+        <Button variant="primary" size="icon" $rounded title="Enviar" onClick={() => { setListening(false); onSendMessage() }} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
           {!loading && <Send size={16} />}
         </Button>
       </div>

@@ -23,22 +23,6 @@ const Button = forwardRef(({
     success: "bg-transparent hover:bg-success-light active:bg-success-dark text-success-base hover:text-white active:text-white transform transition-transform hover:scale-105 active:scale-95",
     warning: "bg-transparent hover:bg-warning-light active:bg-warning-dark text-warning-base hover:text-white active:text-white transform transition-transform hover:scale-105 active:scale-95",
     danger: "bg-transparent hover:bg-danger-light active:bg-danger-dark text-danger-base hover:text-white active:text-white transform transition-transform hover:scale-105 active:scale-95",
-    "gradient-orange":
-      "text-white bg-gradient-to-br from-red-500 to-yellow-500 hover:from-red-400 hover:to-yellow-400 active:from-red-600 active:to-yellow-600 transform transition-transform hover:scale-105 active:scale-95",
-    "gradient-blue":
-      "text-white bg-gradient-to-br from-blue-500 to-cyan-400 hover:from-blue-400 hover:to-cyan-300 active:from-blue-600 active:to-cyan-500 transform transition-transform hover:scale-105 active:scale-95",
-    "gradient-green":
-      "text-white bg-gradient-to-br from-emerald-500 to-lime-400 hover:from-emerald-400 hover:to-lime-300 active:from-emerald-600 active:to-lime-500 transform transition-transform hover:scale-105 active:scale-95",
-    "gradient-red":
-      "text-white bg-gradient-to-br from-red-500 to-pink-500 hover:from-red-400 hover:to-pink-400 active:from-red-600 active:to-pink-600 transform transition-transform hover:scale-105 active:scale-95",
-    "gradient-yellow":
-      "text-white bg-gradient-to-br from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 active:from-yellow-500 active:to-amber-600 transform transition-transform hover:scale-105 active:scale-95",
-    "gradient-pink":
-      "text-white bg-gradient-to-br from-pink-500 to-fuchsia-500 hover:from-pink-400 hover:to-fuchsia-400 active:from-pink-600 active:to-fuchsia-600 transform transition-transform hover:scale-105 active:scale-95",
-    "gradient-purple":
-      "text-white bg-gradient-to-br from-purple-500 to-violet-700 hover:from-purple-400 hover:to-violet-600 active:from-purple-600 active:to-violet-800 transform transition-transform hover:scale-105 active:scale-95",
-    "gradient-rainbow":
-      "text-white bg-gradient-rainbow transform transition-all hover:scale-105 active:scale-95",
   }
   const sizeClasses = {
     icon: "h-8 px-2 text-xs",
