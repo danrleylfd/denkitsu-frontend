@@ -13,6 +13,7 @@ import AISettings from "../components/AI/Settings"
 import AIHistory from "../components/AI/History"
 import Lousa from "../components/AI/Lousa"
 import AITools from "../components/AI/Tools"
+import AIAgents from "../components/AI/Agents"
 
 const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-dvh mx-auto">{children}</main>
 
@@ -24,6 +25,7 @@ const AI = () => {
   const [lousaContent, setLousaContent] = useState(null)
   const [settingsDoor, setSettingsDoor] = useState(false)
   const [selectedPrompt, setSelectedPrompt] = useState("Padrão")
+  const [agentsDoor, setAgentsDoor] = useState(false)
   const [toolsDoor, setToolsDoor] = useState(false)
 
   useEffect(() => {
@@ -163,9 +165,12 @@ const AI = () => {
       <AIHistory toggleLousa={toggleLousa} onRegenerate={handleRegenerateResponse} />
       <ImagePreview />
       <div className="w-full relative">
+        <AIAgents agentsDoor={agentsDoor} selectedAgent={selectedPrompt} onSelectAgent={setSelectedPrompt} />
         <AITools loading={loading} toolsDoor={toolsDoor} />
         <AIBar
           loading={loading}
+          agentsDoor={agentsDoor}
+          toggleAgents={() => setAgentsDoor(!agentsDoor)}
           toggleSettingsDoor={() => setSettingsDoor(!settingsDoor)}
           toolsDoor={toolsDoor}
           toggleToolsDoor={() => setToolsDoor(prev => !prev)}

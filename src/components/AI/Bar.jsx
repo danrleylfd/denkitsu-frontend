@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react"
 import { Link } from "react-router-dom"
-import { Lock, Brain, Settings, ImagePlus, Wrench, AudioWaveform, Mic, MessageCirclePlus, Send, } from "lucide-react"
+import { Lock, Brain, Settings, ImagePlus, Wrench, AudioWaveform, Mic, MessageCirclePlus, Send, Bot, } from "lucide-react"
 
 import { useAuth } from "../../contexts/AuthContext"
 import { useAI } from "../../contexts/AIContext"
@@ -9,7 +9,7 @@ import Paper from "../Paper"
 import AIInput from "./Input"
 import Button from "../Button"
 
-const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettingsDoor, loading, toolsDoor, toggleToolsDoor }) => {
+const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettingsDoor, loading, agentsDoor, toggleAgents, toolsDoor, toggleToolsDoor }) => {
   const { signed } = useAuth()
   const {
     aiProvider, aiProviderToggle, aiKey,
@@ -106,6 +106,9 @@ const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettingsDoor, load
           </Button>
           <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loading}>
             <Settings size={16} />
+          </Button>
+          <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={() => setAgentsDoor(!agentsDoor)} disabled={loading}>
+            <Bot size={16} />
           </Button>
           <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={isImageSupported === false || aiProvider === "groq" || loading}>
             <ImagePlus size={16} />
