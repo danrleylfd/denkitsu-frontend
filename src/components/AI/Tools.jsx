@@ -1,4 +1,4 @@
-import { Globe, Link2, Search, Server, Bitcoin, Satellite, Newspaper, Cloud, BookOpen, Gamepad, Shield, Gamepad2, Smartphone, Clapperboard } from "lucide-react"
+import { Globe, Link2, Search, Server, Bitcoin, Satellite, Newspaper, Cloud, BookOpen, Gamepad, Coins, Gamepad2, Smartphone, Clapperboard } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 
@@ -67,8 +67,8 @@ const AITools= ({ loading, toolsDoor }) => {
       <Button variant={isToolsSupported && !stream && gamesTool ? "outline" : "secondary"} size="icon" $rounded title="Pesquisar Jogos" onClick={toggleGames} disabled={!isToolsSupported || stream || loading}>
         <Gamepad size={16} />
       </Button>
-      <Button variant={isToolsSupported && !stream && albionTool ? "outline" : "secondary"} size="icon" $rounded title="Albion Online Gold (Beta)" onClick={toggleAlbion} disabled={!isToolsSupported || stream || loading}>
-        <Shield size={16} />
+      <Button variant={isToolsSupported && !stream && albionTool ? "outline" : "secondary"} size="icon" $rounded title="Albion Online Ouro (Beta)" onClick={toggleAlbion} disabled={!isToolsSupported || stream || loading}>
+        <Coins size={16} />
       </Button>
       <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Análise Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>
         <Gamepad2 size={16} />
