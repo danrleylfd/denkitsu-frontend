@@ -1,4 +1,4 @@
-import { Globe, Link2, Search, Server, Bitcoin, Telescope, Earth, Eclipse, Zap, Satellite, Orbit, Newspaper, Cloud, BookOpen, Gamepad, Coins, Gamepad2, Smartphone, Clapperboard } from "lucide-react"
+import { Globe, Link2, Search, Server, Bitcoin, Telescope, Earth, Eclipse, Zap, Thermometer, Satellite, Orbit, Newspaper, Cloud, BookOpen, Gamepad, Coins, Gamepad2, Smartphone, Clapperboard } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 
@@ -19,6 +19,7 @@ const AITools= ({ loading, toolsDoor }) => {
     marsRoverTool, toggleMarsRover,
     asteroidsTool, toggleAsteroids,
     spaceWeatherTool, toggleSpaceWeather,
+    marsWeatherTool, toggleMarsWeather,
     newsTool, toggleNews,
     weatherTool, toggleWeather,
     wikiTool, toggleWiki,
@@ -82,8 +83,11 @@ const AITools= ({ loading, toolsDoor }) => {
         <Orbit size={16} />
       </Button>
       <Button variant={isToolsSupported && !stream && spaceWeatherTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Clima Espacial" onClick={toggleSpaceWeather} disabled={!isToolsSupported || stream || loading}>
-        <Zap size={16} />
-      </Button>
+        <Zap size={16} />
+      </Button>
+      <Button variant={isToolsSupported && !stream && marsWeatherTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Clima em Marte" onClick={toggleMarsWeather} disabled={!isToolsSupported || stream || loading}>
+        <Thermometer size={16} />
+      </Button>
       <Button variant={isToolsSupported && !stream && criptoTool ? "outline" : "secondary"} size="icon" $rounded title="Cotação: Cripto (Beta)" onClick={toggleCripto} disabled={!isToolsSupported || stream || loading}>
         <Bitcoin size={16} />
       </Button>
