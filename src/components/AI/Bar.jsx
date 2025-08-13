@@ -119,7 +119,7 @@ const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettingsDoor, load
           <Button variant={stream ? "primary" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={loading}>
             <AudioWaveform size={16} />
           </Button>
-          <Button variant={listening ? "danger" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>
+          <Button variant={listening ? "mic" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>
             <Mic size={16} />
           </Button>
           <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
