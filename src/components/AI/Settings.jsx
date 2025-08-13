@@ -1,7 +1,5 @@
 import { useState } from "react"
-import {
-  X, Brain, Eye, EyeClosed, BarChart2, Rss, Code, Presentation, Shield, GraduationCap, Lightbulb, FileText, ClipboardList, Bot
-} from "lucide-react"
+import { X, Brain, Waypoints, Eye, EyeClosed, } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 
@@ -34,8 +32,8 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
             size="icon"
             $rounded
             onClick={aiProviderToggle}
-            title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
-            <Brain size={16} />
+            title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"}>
+            <Waypoints size={16} />
           </Button>
           <Input
             id="api-key"
@@ -61,8 +59,8 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
             size="icon"
             $rounded
             onClick={aiProviderToggle}
-            title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
-            <Brain size={16} />
+            title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"}>
+            <Waypoints size={16} />
           </Button>
           <AIModelSelect loading={loading} />
         </div>

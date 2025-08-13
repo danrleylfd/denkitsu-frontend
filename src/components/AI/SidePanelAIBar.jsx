@@ -126,7 +126,7 @@ const SidePanelAIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onS
     <Paper className="relative bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 max-w-[95%] mb-2 mx-auto">
       <div className="w-full flex flex-col gap-2 sm:hidden">
         <div className="flex items-center justify-between flex-wrap gap-2">
-          <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"} disabled={loading}>
+          <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"} disabled={loading}>
             <Brain size={16} />
           </Button>
           <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettings} disabled={loading}>
@@ -213,7 +213,7 @@ const SidePanelAIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onS
         </div>
       </div>
       <div className="w-full hidden sm:flex items-center gap-2">
-        <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"} disabled={loading}>
+        <Button variant={aiProvider === "groq" ? "gradient-orange" : "gradient-blue"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"} disabled={loading}>
           <Brain size={16} />
         </Button>
         <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettings} disabled={loading}>

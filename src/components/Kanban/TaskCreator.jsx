@@ -1,4 +1,4 @@
-import { Plus, Sparkle, Brain } from "lucide-react"
+import { Plus, Sparkle, Brain, Waypoints, } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 import { useTasks } from "../../contexts/TasksContext"
@@ -31,8 +31,9 @@ const TaskCreator = () => {
           size="icon"
           $rounded
           onClick={aiProviderToggle}
-          title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
-          <Brain size={16} />
+          title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"}
+        >
+          <Waypoints size={16} />
         </Button>
       </Input>
     </Paper>

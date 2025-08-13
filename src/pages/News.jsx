@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react"
-import { SearchSlash, Brain, Copy, Mic } from "lucide-react"
+import { SearchSlash, Brain, Waypoints, Copy, Mic } from "lucide-react"
 
 import { useAI } from "../contexts/AIContext"
 import { useNotification } from "../contexts/NotificationContext"
@@ -97,8 +97,8 @@ const News = () => {
           </Button>
           <Button
             variant={aiProvider === "groq" ? "warning" : "info"}
-            size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
-            <Brain size={16} />
+            size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"}>
+            <Waypoints size={16} />
           </Button>
         </Input>
       </Paper>

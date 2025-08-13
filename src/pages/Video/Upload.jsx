@@ -1,6 +1,6 @@
 import { useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
-import { ImagePlus, UploadIcon, Sparkle, Brain } from "lucide-react"
+import { ImagePlus, UploadIcon, Sparkle, Brain, Waypoints, } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 import { useNotification } from "../../contexts/NotificationContext"
@@ -105,8 +105,9 @@ const Upload = () => {
             size="icon"
             $rounded
             onClick={aiProviderToggle}
-            title={aiProvider === "groq" ? "Groq" : "OpenRouter"}>
-            <Brain size={16} />
+            title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"}
+          >
+            <Waypoints size={16} />
           </Button>
         </Input>
         <div className="flex gap-2">
