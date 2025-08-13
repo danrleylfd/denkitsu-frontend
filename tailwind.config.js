@@ -65,6 +65,11 @@ export default {
           dark: "#c62828"
         },
         orange: {
+          light: "#ffca28",
+          base: "#ffb300",
+          dark: "#ff8f00"
+        },
+        deep_orange: {
           light: "#ff7043",
           base: "#ff5722",
           dark: "#d84315"
