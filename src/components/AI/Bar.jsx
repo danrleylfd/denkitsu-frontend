@@ -110,16 +110,12 @@ const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettingsDoor, load
           <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgents} disabled={loading}>
             <Bot size={16} />
           </Button>
+          <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor} hidden={aiKey.length === 0}>
+            <Wrench size={16} />
+          </Button>
           <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={isImageSupported === false || aiProvider === "groq" || loading}>
             <ImagePlus size={16} />
           </Button>
-          {aiKey.length > 0 && (
-            <div className="relative">
-              <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor}>
-                <Wrench size={16} />
-              </Button>
-            </div>
-          )}
           <Button variant={stream ? "gradient-purple" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={loading}>
             <AudioWaveform size={16} />
           </Button>
@@ -154,16 +150,12 @@ const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettingsDoor, load
         <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgents} disabled={loading}>
           <Bot size={16} />
         </Button>
+        <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor} hidden={aiKey.length === 0}>
+          <Wrench size={16} />
+        </Button>
         <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={isImageSupported === false || aiProvider === "groq" || loading}>
           <ImagePlus size={16} />
         </Button>
-        {aiKey.length > 0 && (
-          <div className="relative">
-            <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor}>
-              <Wrench size={16} />
-            </Button>
-          </div>
-        )}
         <AIInput
           id="prompt-input-desktop"
           value={userPrompt}
