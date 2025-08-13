@@ -24,7 +24,7 @@ const Button = forwardRef(({
     warning: "bg-transparent hover:bg-warning-light active:bg-warning-dark text-warning-base hover:text-white active:text-white transform transition-transform hover:scale-105 active:scale-95",
     danger: "bg-transparent hover:bg-danger-light active:bg-danger-dark text-danger-base hover:text-white active:text-white transform transition-transform hover:scale-105 active:scale-95",
     orange: "bg-transparent hover:bg-orange-light active:bg-orange-dark text-orange-base hover:text-white active:text-white transform transition-transform hover:scale-105 active:scale-95",
-    orange: "bg-transparent hover:bg-deep_orange-light active:bg-deep_orange-dark text-deep_orange-base hover:text-white active:text-white transform transition-transform hover:scale-105 active:scale-95",
+    deep_orange: "bg-transparent hover:bg-deep_orange-light active:bg-deep_orange-dark text-deep_orange-base hover:text-white active:text-white transform transition-transform hover:scale-105 active:scale-95",
   }
   const sizeClasses = {
     icon: "h-8 px-2 text-xs",
