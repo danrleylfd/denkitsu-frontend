@@ -183,8 +183,6 @@ const AI = () => {
       <AISettings
         settingsDoor={settingsDoor}
         toggleSettingsDoor={() => setSettingsDoor(!settingsDoor)}
-        selectedPrompt={selectedPrompt}
-        onSelectPrompt={setSelectedPrompt}
       />
       <Lousa content={lousaContent} toggleLousa={toggleLousa} />
     </SideMenu>

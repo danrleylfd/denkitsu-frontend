@@ -9,27 +9,11 @@ import AIModelSelect from "./ModelSelect"
 import Input from "../Input"
 import AIInput from "./Input"
 import Button from "../Button"
-import MultiToggle from "../MultiToggle"
 
-const AISettings = ({ settingsDoor, toggleSettingsDoor, selectedPrompt, onSelectPrompt }) => {
+const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
   const [showAIKey, setShowAIKey] = useState(false)
   const { aiKey, aiProvider, customPrompt, loading, setAIKey, aiProviderToggle, setCustomPrompt } = useAI()
-
   if (!settingsDoor) return null
-
-  const agentOptions = [
-    { value: "Padrão", icon: <Bot size={16} /> },
-    { value: "Analista", icon: <BarChart2 size={16} /> },
-    { value: "Blogueiro", icon: <Rss size={16} /> },
-    { value: "Desenvolvedor", icon: <Code size={16} /> },
-    { value: "Lousa", icon: <Presentation size={16} /> },
-    { value: "Moderador", icon: <Shield size={16} /> },
-    { value: "Professor", icon: <GraduationCap size={16} /> },
-    { value: "Prompter", icon: <Lightbulb size={16} /> },
-    { value: "Redator", icon: <FileText size={16} /> },
-    { value: "Secretário", icon: <ClipboardList size={16} /> },
-  ]
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <div
@@ -81,16 +65,6 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor, selectedPrompt, onSelect
             <Brain size={16} />
           </Button>
           <AIModelSelect loading={loading} />
-        </div>
-        <div className="flex flex-col gap-2">
-          <label className="text-lightFg-secondary dark:text-darkFg-secondary">Agentes de AI</label>
-          <div className="w-full overflow-x-auto pb-2 flex justify-center">
-            <MultiToggle
-              options={agentOptions}
-              value={selectedPrompt}
-              onChange={onSelectPrompt}
-            />
-          </div>
         </div>
         <div className="flex flex-col gap-2">
           <label htmlFor="custom-prompt" className="text-lightFg-secondary dark:text-darkFg-secondary">
