@@ -64,10 +64,10 @@ const AITools= ({ loading, toolsDoor }) => {
       <Button variant={isToolsSupported && !stream && nasaTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Imagem do dia" onClick={toggleNasa} disabled={!isToolsSupported || stream || loading}>
         <Telescope size={16} />
       </Button>
-      <Button variant={isToolsSupported && !stream && criptoTool ? "outline" : "secondary"} size="icon" $rounded title="Cripto (Beta)" onClick={toggleCripto} disabled={!isToolsSupported || stream || loading}>
+      <Button variant={isToolsSupported && !stream && criptoTool ? "outline" : "secondary"} size="icon" $rounded title="Cotação: Cripto (Beta)" onClick={toggleCripto} disabled={!isToolsSupported || stream || loading}>
         <Bitcoin size={16} />
       </Button>
-      <Button variant={isToolsSupported && !stream && albionTool ? "outline" : "secondary"} size="icon" $rounded title="Albion Online Ouro (Beta)" onClick={toggleAlbion} disabled={!isToolsSupported || stream || loading}>
+      <Button variant={isToolsSupported && !stream && albionTool ? "outline" : "secondary"} size="icon" $rounded title="Cotação: Albion Online Ouro (Beta)" onClick={toggleAlbion} disabled={!isToolsSupported || stream || loading}>
         <Coins size={16} />
       </Button>
       <Button variant={isToolsSupported && !stream && pokedexTool ? "outline" : "secondary"} size="icon" $rounded title="Pokédex" onClick={togglePokedex} disabled={!isToolsSupported || stream || loading}>
