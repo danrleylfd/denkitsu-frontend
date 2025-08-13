@@ -57,7 +57,7 @@ const AIInput = ({
   return (
     <div ref={containerRef} className="relative w-full">
       {showSuggestions && (
-        <ul className="absolute bottom-full left-0 w-full mb-4 bg-lightBg-primary dark:bg-darkBg-primary border border-gray-300 dark:border-gray-700 rounded-md shadow-lg z-50 max-h-40 overflow-auto">
+        <ul className="absolute bottom-full left-0 w-full mb-4 bg-lightBg-primary dark:bg-darkBg-primary border border-gray-300 dark:border-gray-700 rounded-md shadow-lg z-50 max-h-32 overflow-auto">
           {filtered.map((item, index) => (
             <li
               key={index}
