@@ -1,4 +1,7 @@
-import { useAI } from "../../contexts/AIContext";
+import {
+  BarChart2, Rss, Code, Presentation, Shield, GraduationCap, Lightbulb, FileText, ClipboardList, Bot
+} from "lucide-react"
+
 import Paper from "../Paper";
 import Button from "../Button";
 
