@@ -28,6 +28,7 @@ const AIProvider = ({ children }) => {
   const storedEarthTool = JSON.parse(localStorage.getItem("@Denkitsu:EarthTool"))
   const storedMarsRoverTool = JSON.parse(localStorage.getItem("@Denkitsu:MarsRoverTool"))
   const storedAsteroidsTool = JSON.parse(localStorage.getItem("@Denkitsu:AsteroidsTool"))
+  const storedSpaceWeatherTool = JSON.parse(localStorage.getItem("@Denkitsu:SpaceWeatherTool"))
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
 
   const [aiProvider, setAIProvider] = useState(storedAIProvider || "groq")
@@ -59,6 +60,7 @@ const AIProvider = ({ children }) => {
   const [earthTool, setEarthTool] = useState(storedEarthTool === null ? false : storedEarthTool)
   const [marsRoverTool, setMarsRoverTool] = useState(storedMarsRoverTool === null ? false : storedMarsRoverTool)
   const [asteroidsTool, setAsteroidsTool] = useState(storedAsteroidsTool === null ? false : storedAsteroidsTool)
+  const [spaceWeatherTool, setSpaceWeatherTool] = useState(storedSpaceWeatherTool === null ? false : storedSpaceWeatherTool)
   const [userPrompt, setUserPrompt] = useState("")
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
   const [speaking, setSpeaking] = useState(false)
@@ -87,6 +89,7 @@ const AIProvider = ({ children }) => {
   useEffect(() => (localStorage.setItem("@Denkitsu:EarthTool", earthTool)), [earthTool])
   useEffect(() => (localStorage.setItem("@Denkitsu:MarsRoverTool", marsRoverTool)), [marsRoverTool])
   useEffect(() => (localStorage.setItem("@Denkitsu:AsteroidsTool", asteroidsTool)), [asteroidsTool])
+  useEffect(() => (localStorage.setItem("@Denkitsu:SpaceWeatherTool", spaceWeatherTool)), [spaceWeatherTool])
 
   useEffect(() => {
     if (groqKey.trim() === "") return localStorage.removeItem("@Denkitsu:Groq")
@@ -129,6 +132,7 @@ const AIProvider = ({ children }) => {
   const toggleEarth = useCallback(() => setEarthTool(e => !e), [])
   const toggleMarsRover = useCallback(() => setMarsRoverTool(m => !m), [])
   const toggleAsteroids = useCallback(() => setAsteroidsTool(a => !a), [])
+  const toggleSpaceWeather = useCallback(() => setSpaceWeatherTool(s => !s), [])
 
   const speakResponse = useCallback((text) => {
     if ("speechSynthesis" in window) {
@@ -171,6 +175,7 @@ const AIProvider = ({ children }) => {
       earthTool, setEarthTool, toggleEarth,
       marsRoverTool, setMarsRoverTool, toggleMarsRover,
       asteroidsTool, setAsteroidsTool, toggleAsteroids,
+      spaceWeatherTool, setSpaceWeatherTool, toggleSpaceWeather,
     },
     imageUrls, setImageUrls,
     aiProvider, setAIProvider, aiProviderToggle,
@@ -206,6 +211,7 @@ const AIProvider = ({ children }) => {
     earthTool, toggleEarth,
     marsRoverTool, toggleMarsRover,
     asteroidsTool, toggleAsteroids,
+    spaceWeatherTool, toggleSpaceWeather,
     imageUrls,
     aiProvider, aiProviderToggle,
     groqKey, openRouterKey,
