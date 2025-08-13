@@ -1,6 +1,6 @@
 import { useState } from "react"
 import {
-  X, Brain, Eye, EyeOff, BarChart2, Rss, Code, Presentation, Shield, GraduationCap, Lightbulb, FileText, ClipboardList, Bot
+  X, Brain, Eye, EyeClosed, BarChart2, Rss, Code, Presentation, Shield, GraduationCap, Lightbulb, FileText, ClipboardList, Bot
 } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
@@ -45,7 +45,7 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
             value={aiKey}
             onChange={(e) => setAIKey(e.target.value)}>
             <Button type="button" variant="outline" size="icon" $rounded onClick={() => setShowAIKey(!showAIKey)} disabled={loading}>
-              {showAIKey ? <Eye size={16} /> : <EyeOff size={16} />}
+              {showAIKey ? <Eye size={16} /> : <EyeClosed size={16} />}
             </Button>
           </Input>
         </div>
