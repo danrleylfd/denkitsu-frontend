@@ -101,7 +101,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
   }
 
   const aiItems = [
-    { icon: Bot, label: "Denkitsu AI", to: "/chat" },
+    { icon: Bot, label: "Chat AI", to: "/chat" },
     { icon: Code, label: "Codebase", to: "/codebase" },
     { icon: Edit2, label: "Editor", to: "/editor" },
     { icon: Kanban, label: "Kanban", to: "/kanban" },
