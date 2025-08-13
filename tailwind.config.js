@@ -44,25 +44,20 @@ export default {
           base: "#252525",
           dark: "#212121"
         },
-        blue: {
-          light: "#42a5f5",
-          base: "#1e88e5",
-          dark: "#1565c0",
-        },
         green: {
           light: "#66bb6a",
           base: "#43a047",
           dark: "#2e7d32"
         },
+        yellow: {
+          light: "#ffee58",
+          base: "#fdd835",
+          dark: "#f9a825"
+        },
         amber: {
           light: "#ffca28",
           base: "#ffb300",
           dark: "#ff8f00"
-        },
-        red: {
-          light: "#ef5350",
-          base: "#e53935",
-          dark: "#c62828"
         },
         orange: {
           light: "#ffca28",
@@ -73,6 +68,21 @@ export default {
           light: "#ff7043",
           base: "#ff5722",
           dark: "#d84315"
+        },
+        blue: {
+          light: "#42a5f5",
+          base: "#1e88e5",
+          dark: "#1565c0",
+        },
+        red: {
+          light: "#ef5350",
+          base: "#e53935",
+          dark: "#c62828"
+        },
+        pink: {
+          light: "#ec407a",
+          base: "#d81b60",
+          dark: "#ad1457"
         },
         lightBg: {
           primary: "#ffffff",
