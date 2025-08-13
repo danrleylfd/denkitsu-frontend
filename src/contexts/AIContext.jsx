@@ -24,6 +24,7 @@ const AIProvider = ({ children }) => {
   const storedGenshinTool = JSON.parse(localStorage.getItem("@Denkitsu:GenshinTool"))
   const storedPokedexTool = JSON.parse(localStorage.getItem("@Denkitsu:PokedexTool"))
   const storedNasaTool = JSON.parse(localStorage.getItem("@Denkitsu:NasaTool"))
+  const storedNasaLibraryTool = JSON.parse(localStorage.getItem("@Denkitsu:NasaLibraryTool"))
   const storedEarthTool = JSON.parse(localStorage.getItem("@Denkitsu:EarthTool"))
   const storedMarsRoverTool = JSON.parse(localStorage.getItem("@Denkitsu:MarsRoverTool"))
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
@@ -53,6 +54,7 @@ const AIProvider = ({ children }) => {
   const [genshinTool, setGenshinTool] = useState(storedGenshinTool === null? false : storedGenshinTool)
   const [pokedexTool, setPokedexTool] = useState(storedPokedexTool === null? false : storedPokedexTool)
   const [nasaTool, setNasaTool] = useState(storedNasaTool === null ? false : storedNasaTool)
+  const [nasaLibraryTool, setNasaLibraryTool] = useState(storedNasaLibraryTool === null ? false : storedNasaLibraryTool)
   const [earthTool, setEarthTool] = useState(storedEarthTool === null ? false : storedEarthTool)
   const [marsRoverTool, setMarsRoverTool] = useState(storedMarsRoverTool === null ? false : storedMarsRoverTool)
   const [userPrompt, setUserPrompt] = useState("")
@@ -79,6 +81,7 @@ const AIProvider = ({ children }) => {
   useEffect(() => (localStorage.setItem("@Denkitsu:GenshinTool", genshinTool)), [genshinTool])
   useEffect(() => (localStorage.setItem("@Denkitsu:PokedexTool", pokedexTool)), [pokedexTool])
   useEffect(() => (localStorage.setItem("@Denkitsu:NasaTool", nasaTool)), [nasaTool])
+  useEffect(() => (localStorage.setItem("@Denkitsu:NasaLibraryTool", nasaLibraryTool)), [nasaLibraryTool])
   useEffect(() => (localStorage.setItem("@Denkitsu:EarthTool", earthTool)), [earthTool])
   useEffect(() => (localStorage.setItem("@Denkitsu:MarsRoverTool", marsRoverTool)), [marsRoverTool])
 
@@ -119,6 +122,7 @@ const AIProvider = ({ children }) => {
   const toggleGenshin = useCallback(() => setGenshinTool(g => !g), [])
   const togglePokedex = useCallback(() => setPokedexTool(p => !p), [])
   const toggleNasa = useCallback(() => setNasaTool(n => !n), [])
+  const toggleNasaLibrary = useCallback(() => setNasaLibraryTool(n => !n), [])
   const toggleEarth = useCallback(() => setEarthTool(e => !e), [])
   const toggleMarsRover = useCallback(() => setMarsRoverTool(m => !m), [])
 
@@ -159,6 +163,7 @@ const AIProvider = ({ children }) => {
       genshinTool, setGenshinTool, toggleGenshin,
       pokedexTool, setPokedexTool, togglePokedex,
       nasaTool, setNasaTool, toggleNasa,
+      nasaLibraryTool, setNasaLibraryTool, toggleNasaLibrary,
       earthTool, setEarthTool, toggleEarth,
       marsRoverTool, setMarsRoverTool, toggleMarsRover,
     },
@@ -192,6 +197,7 @@ const AIProvider = ({ children }) => {
     genshinTool, toggleGenshin,
     pokedexTool, togglePokedex,
     nasaTool, toggleNasa,
+    nasaLibraryTool, toggleNasaLibrary,
     earthTool, toggleEarth,
     marsRoverTool, toggleMarsRover,
     imageUrls,
