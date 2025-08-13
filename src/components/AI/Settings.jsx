@@ -74,7 +74,7 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
             id="custom-prompt"
             value={customPrompt}
             onChange={(e) => setCustomPrompt(e.target.value)}
-            rows={15}
+            rows={11}
             maxLength={6144}
             placeholder="Escreva seu prompt de sistema"
             disabled={loading}
