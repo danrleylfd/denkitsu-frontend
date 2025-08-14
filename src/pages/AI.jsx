@@ -127,7 +127,7 @@ const AI = () => {
     } finally {
       setLoading(false)
     }
-  }, [notifyError, aiContext, selectedPrompt, aiContext.activeTools, aiContext.aiProvider, aiContext.aiKey, aiContext.model, aiContext.stream, aiContext.web, aiContext.freeModels, aiContext.payModels, aiContext.groqModels])
+  }, [notifyError, aiContext, selectedPrompt, aiContext.aiProvider, aiContext.aiKey, aiContext.model, aiContext.stream, aiContext.web, aiContext.freeModels, aiContext.payModels, aiContext.groqModels])
 
   const onSendMessage = useCallback(async () => {
     if (loading || (!aiContext.userPrompt.trim() && aiContext.imageUrls.length === 0)) return

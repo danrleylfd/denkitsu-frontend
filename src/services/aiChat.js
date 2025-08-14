@@ -47,7 +47,6 @@ const sendMessage = async (aiKey, aiProvider, model, models, messages, mode = "P
   const plugins = web ? [{ id: "web" }] : undefined
   const regularTools = Array.from(activeTools).filter(tool => tool !== "web")
   const fullModel = models.find((item) => item.id === model)
-  console.log(web, activeTools, aiKey.length > 0, fullModel?.supports_tools, regularTools.length > 0)
   const use_tools = (aiKey.length > 0 && fullModel?.supports_tools && regularTools.length > 0) ? regularTools : undefined
   const payload = { aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages: [...messages], plugins, use_tools, mode }
   try {

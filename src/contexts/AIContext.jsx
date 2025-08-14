@@ -1,5 +1,7 @@
 import { createContext, useState, useEffect, useContext, useMemo, useCallback } from "react"
 
+import { TOOL_DEFINITIONS } from "../constants/tools"
+
 const AIContext = createContext()
 
 const AIProvider = ({ children }) => {
@@ -23,11 +25,20 @@ const AIProvider = ({ children }) => {
   const [openRouterKey, setOpenRouterKey] = useState(storedOpenRouterKey || "")
   const [stream, setStream] = useState(storedStream === null ? false : storedStream)
   const [imageUrls, setImageUrls] = useState([])
-  const [activeTools, setActiveTools] = useState(() => new Set())
   const [userPrompt, setUserPrompt] = useState("")
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
   const [speaking, setSpeaking] = useState(false)
   const [listening, setListening] = useState(false)
+  const [activeTools, setActiveTools] = useState(() => {
+    const initialTools = new Set()
+    TOOL_DEFINITIONS.forEach((tool) => {
+      try {
+        const storedValue = localStorage.getItem(`@Denkitsu:${tool.key}`)
+        if (JSON.parse(storedValue) === true) initialTools.add(tool.key)
+      } catch {}
+    })
+    return initialTools
+  })
 
   useEffect(() => (localStorage.setItem("@Denkitsu:aiProvider", aiProvider)), [aiProvider])
   useEffect(() => (localStorage.setItem("@Denkitsu:GroqModel", groqModel)), [groqModel])
