@@ -8,12 +8,10 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
 
   const agentOptions = [
     { value: "Padrão", icon: <Bot size={16} /> },
-    // { value: "Analista", icon: <BarChart2 size={16} /> },
+    { value: "Analista", icon: <BarChart2 size={16} /> },
     { value: "Blogueiro", icon: <Rss size={16} /> },
     { value: "Desenvolvedor", icon: <Code size={16} /> },
     { value: "Lousa", icon: <Presentation size={16} /> },
-    // { value: "Moderador", icon: <Shield size={16} /> },
-    // { value: "Professor", icon: <GraduationCap size={16} /> },
     { value: "Prompter", icon: <Lightbulb size={16} /> },
     { value: "Redator", icon: <Newspaper size={16} /> },
     { value: "Secretário", icon: <ListTree size={16} /> },
