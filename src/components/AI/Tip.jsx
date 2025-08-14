@@ -15,7 +15,8 @@ const TIPS = [
   "Pressione Shift + Enter para quebrar a linha no campo de prompt.",
   "Para usar os comandos ative as ferramentas necessárias e digite / e uma lista de comandos aparecerá.",
   "Limpe a conversa a qualquer momento clicando no ícone de nova mensagem.",
-  "Entregue a ferramentar Buscar Notícias ao Agente Redator e veja a mágica acontecer",
+  "Entregue a ferramenta Buscar Notícias ao Agente Redator e veja a mágica acontecer",
+  "Experimente também entregar as ferramentas de cotação albion e cripto ao Agente Analista",
 ]
 
 const AITip = () => {
