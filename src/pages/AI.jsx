@@ -6,14 +6,15 @@ import { useNotification } from "../contexts/NotificationContext"
 import { sendMessageStream, sendMessage, getModels } from "../services/aiChat"
 
 import SideMenu from "../components/SideMenu"
+
 import AIBar from "../components/AI/Bar"
 import AITip from "../components/AI/Tip"
 import ImagePreview from "../components/AI/ImagePreview"
 import AISettings from "../components/AI/Settings"
+import AIAgents from "../components/AI/Agents"
+import AITools from "../components/AI/Tools"
 import AIHistory from "../components/AI/History"
 import Lousa from "../components/AI/Lousa"
-import AITools from "../components/AI/Tools"
-import AIAgents from "../components/AI/Agents"
 
 const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-dvh mx-auto">{children}</main>
 
@@ -39,7 +40,7 @@ const AI = () => {
         notifyError(error.message || "Falha ao carregar modelos de IA.")
       }
     })()
-  }, [aiContext.aiKey, aiContext.setFreeModels, aiContext.setPayModels, aiContext.setGroqModels, notifyError])
+  }, [aiContext.aiKey, notifyError])
 
   const onAddImage = () => {
     if (aiContext.imageUrls.length >= 3) return notifyWarning("Você pode adicionar no máximo 3 imagens.")
@@ -126,7 +127,7 @@ const AI = () => {
     } finally {
       setLoading(false)
     }
-  }, [aiContext.aiProvider, aiContext.aiKey, aiContext.model, aiContext.stream, aiContext.web, aiContext.freeModels, aiContext.payModels, aiContext.groqModels, selectedPrompt, aiContext.setMessages, notifyError, aiContext])
+  }, [aiContext.aiProvider, aiContext.aiKey, aiContext.model, aiContext.stream, aiContext.web, aiContext.freeModels, aiContext.payModels, aiContext.groqModels, selectedPrompt, notifyError, aiContext])
 
   const onSendMessage = useCallback(async () => {
     if (loading || (!aiContext.userPrompt.trim() && aiContext.imageUrls.length === 0)) return
@@ -143,7 +144,7 @@ const AI = () => {
     aiContext.setUserPrompt("")
     aiContext.setImageUrls([])
     await executeSendMessage(history)
-  }, [loading, aiContext.userPrompt, aiContext.imageUrls, aiContext.messages, aiContext.setMessages, aiContext.setUserPrompt, aiContext.setImageUrls, executeSendMessage])
+  }, [loading, aiContext.userPrompt, aiContext.imageUrls, aiContext.messages, executeSendMessage])
 
   const handleRegenerateResponse = useCallback(async () => {
     if (loading) return
@@ -155,7 +156,7 @@ const AI = () => {
     const historyWithoutLastResponse = aiContext.messages.slice(0, -1)
     aiContext.setMessages(historyWithoutLastResponse)
     await executeSendMessage(historyWithoutLastResponse)
-  }, [loading, aiContext.messages, aiContext.setMessages, executeSendMessage, notifyWarning])
+  }, [loading, aiContext.messages, executeSendMessage, notifyWarning])
 
   const toggleLousa = useCallback((content) => setLousaContent(content), [])
 
