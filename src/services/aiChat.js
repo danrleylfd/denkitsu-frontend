@@ -4,15 +4,7 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, activeTools
   const isWebEnabled = activeTools.has("web")
   const permission = aiKey.length > 0 && aiProvider !== "groq" && isWebEnabled
   const plugins = permission ? [{ id: "web" }] : undefined
-  const payload = {
-    aiProvider,
-    aiKey,
-    model,
-    messages,
-    plugins,
-    stream: true,
-    mode
-  }
+  const payload = { aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages, plugins, stream: true, mode }
   const response = await fetch(`${api.defaults.baseURL}/ai/chat/completions`, {
     method: "POST",
     headers: {
@@ -56,7 +48,7 @@ const sendMessage = async (aiKey, aiProvider, model, models, messages, mode = "P
   const regularTools = aiKey.length > 0 ? Array.from(activeTools).filter(tool => tool !== "web") : []
   const fullModel = models.find((item) => item.id === model)
   const use_tools = (aiKey.length > 0 && fullModel?.supports_tools && regularTools.length > 0) ? regularTools : undefined
-  const payload = { aiKey, aiProvider, model, plugins, use_tools, messages: [...messages], mode }
+  const payload = { aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages: [...messages], plugins, use_tools, mode }
   try {
     return await api.post("/ai/chat/completions", payload)
   } catch (error) {
