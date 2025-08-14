@@ -1,4 +1,4 @@
-import { Globe, Link2, Search, Server, Bitcoin, Telescope, Earth, Eclipse, Zap, Thermometer, Satellite, Orbit, Newspaper, Cloud, BookOpen, Gamepad, Coins, Gamepad2, Smartphone, Clapperboard } from "lucide-react"
+import { Globe, Link2, Search, Server, Bitcoin, Telescope, Earth, Eclipse, Zap, Thermometer, Satellite, Orbit, Newspaper, Cloud, BookOpen, Gamepad, Coins, Gamepad2, Smartphone, Clapperboard, SquareLibrary } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 
@@ -68,13 +68,13 @@ const AITools= ({ loading, toolsDoor }) => {
         <Cloud size={16} />
       </Button>
       <Button variant={isToolsSupported && !stream && nasaLibraryTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Biblioteca de Mídia" onClick={toggleNasaLibrary} disabled={!isToolsSupported || stream || loading}>
-        <Satellite size={16} />
+        <SquareLibrary size={16} />
       </Button>
       <Button variant={isToolsSupported && !stream && nasaTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Imagem do dia" onClick={toggleNasa} disabled={!isToolsSupported || stream || loading}>
-        <Eclipse size={16} />
+        <Telescope size={16} />
       </Button>
       <Button variant={isToolsSupported && !stream && asteroidsTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Rastrear Asteroides" onClick={toggleAsteroids} disabled={!isToolsSupported || stream || loading}>
-        <Telescope size={16} />
+        <Satellite size={16} />
       </Button>
       <Button variant={isToolsSupported && !stream && earthTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Imagens da Terra" onClick={toggleEarth} disabled={!isToolsSupported || stream || loading}>
         <Earth size={16} />
