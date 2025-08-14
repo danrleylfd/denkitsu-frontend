@@ -32,10 +32,9 @@ const SidePanelAIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onS
   const isToolsSupported = selectedModel?.supports_tools ?? false
 
   const sidePanelTools = useMemo(() => {
-    const sidePanelToolKeys = new Set(["web", "browserTool", "httpTool", "criptoTool", "nasaTool", "newsTool", "weatherTool", "wikiTool", "genshinTool", "pokedexTool"])
-
+    // const sidePanelToolKeys = new Set(["web", "browserTool", "httpTool", "criptoTool", "nasaTool", "newsTool", "weatherTool", "wikiTool", "genshinTool", "pokedexTool"])
     return TOOL_DEFINITIONS
-      .filter(tool => sidePanelToolKeys.has(tool.key))
+      // .filter(tool => sidePanelToolKeys.has(tool.key))
       .map(tool => {
         let isDisabled = false
         if (tool.key === "web") {
