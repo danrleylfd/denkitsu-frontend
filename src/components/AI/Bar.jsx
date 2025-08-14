@@ -148,7 +148,7 @@ const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettingsDoor, load
           <Waypoints size={16} />
         </Button>
         <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgents}>
-          <Bot size={16} />
+          <Speech size={16} />
         </Button>
         <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor} hidden={aiKey.length === 0}>
           <Wrench size={16} />
