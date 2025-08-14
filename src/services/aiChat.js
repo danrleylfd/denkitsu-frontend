@@ -2,7 +2,7 @@ import api from "./"
 
 const sendMessageStream = async (aiKey, aiProvider, model, messages, activeTools, mode, onDelta) => {
   const isWebEnabled = activeTools.has("web")
-  const permission = aiProvider === "groq" ? false : isWebEnabled
+  const permission = aiKey.length > 0 && aiProvider !== "groq" && isWebEnabled
   const plugins = permission ? [{ id: "web" }] : undefined
   const payload = {
     aiProvider,
@@ -51,11 +51,11 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, activeTools
 }
 
 const sendMessage = async (aiKey, aiProvider, model, models, messages, mode = "Padrão", activeTools = new Set()) => {
-  const isWebEnabled = activeTools.has("web")
-  const plugins = (aiProvider !== "groq" && isWebEnabled) ? [{ id: "web" }] : undefined
-  const regularTools = Array.from(activeTools).filter(tool => tool !== "web")
+  const isWebEnabled = aiKey.length > 0 && activeTools.has("web")
+  const plugins = (aiKey.length > 0 && aiProvider !== "groq" && isWebEnabled) ? [{ id: "web" }] : undefined
+  const regularTools = aiKey.length > 0 ? Array.from(activeTools).filter(tool => tool !== "web") : []
   const fullModel = models.find((item) => item.id === model)
-  const use_tools = (fullModel?.supports_tools && regularTools.length > 0) ? regularTools : undefined
+  const use_tools = (aiKey.length > 0 && fullModel?.supports_tools && regularTools.length > 0) ? regularTools : undefined
   const payload = { aiKey, aiProvider, model, plugins, use_tools, messages: [...messages], mode }
   try {
     return await api.post("/ai/chat/completions", payload)
