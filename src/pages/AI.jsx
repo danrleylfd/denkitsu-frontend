@@ -165,7 +165,7 @@ const AI = () => {
       <AIHistory toggleLousa={toggleLousa} onRegenerate={handleRegenerateResponse} />
       <ImagePreview />
       <div className="w-full relative">
-        <AIAgents agentsDoor={agentsDoor} selectedAgent={selectedPrompt} onSelectAgent={setSelectedPrompt} />
+        <AIAgents loading={loading} agentsDoor={agentsDoor} selectedAgent={selectedPrompt} onSelectAgent={setSelectedPrompt} />
         <AITools loading={loading} toolsDoor={toolsDoor} />
         <AIBar
           loading={loading}

@@ -3,7 +3,7 @@ import { BarChart2, Rss, Code, Presentation, Shield, GraduationCap, Lightbulb, N
 import Paper from "../Paper"
 import Button from "../Button"
 
-const AIAgents = ({ selectedAgent, onSelectAgent, agentsDoor }) => {
+const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
   if (!agentsDoor) return null
 
   const agentOptions = [
@@ -28,7 +28,7 @@ const AIAgents = ({ selectedAgent, onSelectAgent, agentsDoor }) => {
       md:flex md:static md:mx-auto md:left-auto md:translate-x-0 md:bottom-auto`}
     >
       {agentOptions.map((agent) => (
-        <Button key={agent.value} variant={selectedAgent === agent.value ? "outline" : "secondary"} size="icon" $rounded title={agent.value} onClick={() => onSelectAgent(agent.value)}>
+        <Button key={agent.value} variant={selectedAgent === agent.value ? "outline" : "secondary"} size="icon" $rounded title={agent.value} onClick={() => onSelectAgent(agent.value)} disabled={loading}>
           {agent.icon}
         </Button>
       ))}
