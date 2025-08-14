@@ -43,8 +43,8 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, activeTools
 }
 
 const sendMessage = async (aiKey, aiProvider, model, models, messages, mode = "Padrão", activeTools = new Set()) => {
-  const isWebEnabled = aiKey.length > 0 && activeTools.has("web")
-  const plugins = (aiKey.length > 0 && aiProvider !== "groq" && isWebEnabled) ? [{ id: "web" }] : undefined
+  const web = aiKey.length > 0 && aiProvider !== "groq" && activeTools.has("web")
+  const plugins = web ? [{ id: "web" }] : undefined
   const regularTools = Array.from(activeTools).filter(tool => tool !== "web")
   const fullModel = models.find((item) => item.id === model)
   const use_tools = (aiKey.length > 0 && fullModel?.supports_tools && regularTools.length > 0) ? regularTools : undefined
