@@ -70,7 +70,7 @@ const AI = () => {
           timestamp: new Date().toISOString()
         }
         aiContext.setMessages(prev => [...prev, placeholder])
-        await sendMessageStream(aiContext.aiKey, aiContext.aiProvider, aiContext.model, apiMessages, aiContext.web, selectedPrompt, delta => {
+        await sendMessageStream(aiContext.aiKey, aiContext.aiProvider, aiContext.model, apiMessages, aiContext.activeTools, selectedPrompt, delta => {// aiContext.web
           if (delta.content) placeholder._contentBuffer += delta.content
           if (delta.reasoning) placeholder._reasoningBuffer += delta.reasoning
           if (delta.tool_calls?.[0]?.function?.arguments) placeholder._reasoningBuffer += delta.tool_calls[0].function.arguments
@@ -95,8 +95,8 @@ const AI = () => {
           [...aiContext.freeModels, ...aiContext.payModels, ...aiContext.groqModels],
           apiMessages,
           selectedPrompt,
-          aiContext.web,
-          aiContext.tools
+          // aiContext.web,
+          aiContext.activeTools //.tools
         )
         const res = data?.choices?.[0]?.message
         if (!res) return

@@ -1,34 +1,46 @@
-import { Globe, Link2, Search, Server, Bitcoin, Telescope, Earth, Eclipse, SunMoon, Thermometer, Satellite, Orbit, Newspaper, Cloud, BookOpen, Gamepad, Coins, Gamepad2, Smartphone, Clapperboard, SquareLibrary } from "lucide-react"
+import { useMemo } from "react"
+// import { Globe, Link2, Search, Server, Bitcoin, Telescope, Earth, Eclipse, SunMoon, Thermometer, Satellite, Orbit, Newspaper, Cloud, BookOpen, Gamepad, Coins, Gamepad2, Smartphone, Clapperboard, SquareLibrary } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 
+import { TOOL_DEFINITIONS } from "../../constants/tools"
+
 import Paper from "../Paper"
-import Button from "../Button"
+// import Button from "../Button"
+import ToolButton from "./ToolButton"
 
 const AITools= ({ loading, toolsDoor }) => {
   if (!toolsDoor) return null
-  const { aiProvider, model, freeModels, payModels, groqModels, stream, web, toggleWeb, tools, } = useAI()
-  const {
-    browserTool, toggleBrowser,
-    duckduckgoTool, toggleDuckduckgo,
-    httpTool, toggleHttp,
-    criptoTool, toggleCripto,
-    nasaTool, toggleNasa,
-    nasaLibraryTool, toggleNasaLibrary,
-    earthTool, toggleEarth,
-    marsRoverTool, toggleMarsRover,
-    asteroidsTool, toggleAsteroids,
-    spaceWeatherTool, toggleSpaceWeather,
-    marsWeatherTool, toggleMarsWeather,
-    newsTool, toggleNews,
-    weatherTool, toggleWeather,
-    wikiTool, toggleWiki,
-    cinemaTool, toggleCinema,
-    gamesTool, toggleGames,
-    albionTool, toggleAlbion,
-    genshinTool, toggleGenshin,
-    pokedexTool, togglePokedex,
-  } = tools
+  const { aiProvider, model, freeModels, payModels, groqModels, stream, } = useAI() // web, toggleWeb, tools,
+  // const {
+  //   browserTool, toggleBrowser,
+  //   duckduckgoTool, toggleDuckduckgo,
+  //   httpTool, toggleHttp,
+  //   criptoTool, toggleCripto,
+  //   nasaTool, toggleNasa,
+  //   nasaLibraryTool, toggleNasaLibrary,
+  //   earthTool, toggleEarth,
+  //   marsRoverTool, toggleMarsRover,
+  //   asteroidsTool, toggleAsteroids,
+  //   spaceWeatherTool, toggleSpaceWeather,
+  //   marsWeatherTool, toggleMarsWeather,
+  //   newsTool, toggleNews,
+  //   weatherTool, toggleWeather,
+  //   wikiTool, toggleWiki,
+  //   cinemaTool, toggleCinema,
+  //   gamesTool, toggleGames,
+  //   albionTool, toggleAlbion,
+  //   genshinTool, toggleGenshin,
+  //   pokedexTool, togglePokedex,
+  // } = tools
+  const tools = useMemo(() => {
+    return TOOL_DEFINITIONS.map(tool => {
+      let isDisabled = false
+      if (tool.key === "web") isDisabled = !isToolsSupported || aiProvider === "groq" || loading
+      else isDisabled = !isToolsSupported || stream || loading
+      return { ...tool, isDisabled }
+    })
+  }, [isToolsSupported, aiProvider, loading, stream])
   const allModels = [...freeModels, ...payModels, ...groqModels]
   const selectedModel = allModels.find(m => m.id === model)
   const isToolsSupported = selectedModel?.supports_tools ?? false
@@ -40,7 +52,12 @@ const AITools= ({ loading, toolsDoor }) => {
       grid grid-cols-5 sm:grid-cols-10
       md:flex md:static md:mx-auto md:left-auto md:translate-x-0 md:bottom-auto`}
     >
-      <Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Profunda" onClick={toggleWeb} disabled={!isToolsSupported || aiProvider === "groq" || loading}>
+      {tools.map(({ key, title, Icon, isDisabled }) => (
+        <ToolButton key={key} toolKey={key} title={title} onToggle={handleToolToggle} disabled={isDisabled}>
+          <Icon size={16} />
+        </ToolButton>
+      ))}
+      {/**<Button variant={isToolsSupported && aiProvider === "openrouter" && web ? "outline" : "secondary"} size="icon" $rounded title="Pesquisa Profunda" onClick={toggleWeb} disabled={!isToolsSupported || aiProvider === "groq" || loading}>
         <Globe size={16} />
       </Button>
       <Button variant={isToolsSupported && !stream && browserTool ? "outline" : "secondary"} size="icon" $rounded title="Acessar Site Específico" onClick={toggleBrowser} disabled={!isToolsSupported || stream || loading}>
@@ -99,7 +116,7 @@ const AITools= ({ loading, toolsDoor }) => {
       </Button>
       <Button variant={isToolsSupported && !stream && genshinTool ? "outline" : "secondary"} size="icon" $rounded title="Análise Genshin Impact (Beta)" onClick={toggleGenshin} disabled={!isToolsSupported || stream || loading}>
         <Gamepad2 size={16} />
-      </Button>
+      </Button>**/}
     </Paper>
   )
 }

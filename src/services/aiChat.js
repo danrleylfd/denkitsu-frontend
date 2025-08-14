@@ -1,8 +1,12 @@
 import api from "./"
 
-const sendMessageStream = async (aiKey, aiProvider, model, messages, web, mode, onDelta) => {
-  const permission = aiProvider === "groq" ? false : web
+const sendMessageStream = async (aiKey, aiProvider, model, messages, activeTools, mode, onDelta) => {// web
+  // const permission = aiProvider === "groq" ? false : web
+  // const plugins = permission ? [{ id: "web" }] : undefined
+  const isWebEnabled = activeTools.has("web")
+  const permission = aiProvider === "groq" ? false : isWebEnabled
   const plugins = permission ? [{ id: "web" }] : undefined
+
   const payload = {
     aiProvider,
     aiKey,
@@ -51,12 +55,17 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, web, mode, 
   }
 }
 
-const sendMessage = async (aiKey, aiProvider, model, models, messages, mode = "Padrão", web = false, tools = {}) => {
-  const permission = aiProvider === "groq" ? false : web
-  const plugins = permission ? [{ id: "web" }] : undefined
+const sendMessage = async (aiKey, aiProvider, model, models, messages, mode = "Padrão", activeTools = new Set()) => { // web = false, tools = {}
+  // const permission = aiProvider === "groq" ? false : web
+  const isWebEnabled = activeTools.has("web")
+  // const plugins = permission ? [{ id: "web" }] : undefined
+  const plugins = (aiProvider !== "groq" && isWebEnabled) ? [{ id: "web" }] : undefined
+  const regularTools = Array.from(activeTools).filter(tool => tool !== "web")
   const fullModel = models.find((item) => item.id === model)
-  const activeTools = Object.keys(tools).filter((key) => tools[key] === true)
-  const use_tools = (fullModel?.supports_tools && activeTools.length > 0) ? activeTools : undefined
+  // const activeTools = Object.keys(tools).filter((key) => tools[key] === true)
+  // const use_tools = (fullModel?.supports_tools && activeTools.length > 0) ? activeTools : undefined
+  const use_tools = (fullModel?.supports_tools && regularTools.length > 0) ? regularTools : undefined
+
   const payload = { aiKey, aiProvider, model, plugins, use_tools, messages: [...messages], mode }
   try {
     return await api.post("/ai/chat/completions", payload)
