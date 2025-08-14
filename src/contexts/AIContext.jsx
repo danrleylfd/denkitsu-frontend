@@ -38,11 +38,8 @@ const AIProvider = ({ children }) => {
   const handleToolToggle = useCallback((toolKey, isActive) => {
     setActiveTools(prev => {
       const newActiveTools = new Set(prev)
-      if (isActive) {
-        newActiveTools.add(toolKey)
-      } else {
-        newActiveTools.delete(toolKey)
-      }
+      if (isActive) newActiveTools.add(toolKey)
+      else newActiveTools.delete(toolKey)
       return newActiveTools
     })
   }, [])
