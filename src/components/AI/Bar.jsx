@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react"
 import { Link } from "react-router-dom"
-import { Lock, Brain, Waypoints, Settings, ImagePlus, Wrench, AudioWaveform, Mic, MessageCirclePlus, Send, Bot, } from "lucide-react"
+import { Lock, Brain, Waypoints, Settings, ImagePlus, Wrench, AudioWaveform, Mic, MessageCirclePlus, Send, Bot, Speech } from "lucide-react"
 
 import { useAuth } from "../../contexts/AuthContext"
 import { useAI } from "../../contexts/AIContext"
@@ -108,7 +108,7 @@ const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettingsDoor, load
             <Waypoints size={16} />
           </Button>
           <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgents} disabled={loading}>
-            <Bot size={16} />
+            <Speech size={16} />
           </Button>
           <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor} hidden={aiKey.length === 0}>
             <Wrench size={16} />

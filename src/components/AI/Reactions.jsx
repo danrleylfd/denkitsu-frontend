@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react"
-import { Code, Copy, Kanban, Newspaper, Presentation, Download, Mic, RefreshCw } from "lucide-react"
+import { Code, Copy, Kanban, Newspaper, Presentation, Download, Mic, RefreshCw, Speech } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 import { useTasks } from "../../contexts/TasksContext"
@@ -150,7 +150,7 @@ const AIReactions = ({ message, toggleLousa, onRegenerate, isLastMessage }) => {
         onClick={() => speakResponse(message.content.replace(/[^a-zA-Z0-9À-ÿ,.\-!?;\s]/g, ""))}
         title="Ler em voz alta"
         loading={loadingType === "speak" && loading}>
-        {loadingType !== "speak" && <Mic size={16} />}
+        {loadingType !== "speak" && <Speech size={16} />}
       </Button>
 
       {isLastMessage && (
