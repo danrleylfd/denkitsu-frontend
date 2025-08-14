@@ -9,7 +9,7 @@ import Paper from "../Paper"
 import AIInput from "./Input"
 import Button from "../Button"
 
-const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettingsDoor, loading, agentsDoor, toggleAgents, toolsDoor, toggleToolsDoor }) => {
+const AIBar = ({ loading, onAddImage, imageCount, onSendMessage, toggleSettingsDoor, agentsDoor, toggleAgentsDoor, toolsDoor, toggleToolsDoor }) => {
   const { signed } = useAuth()
   const {
     aiProvider, aiProviderToggle, aiKey,
@@ -107,7 +107,7 @@ const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettingsDoor, load
           <Button variant={aiProvider === "groq" ? "orange" : "info"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"} disabled={loading}>
             <Waypoints size={16} />
           </Button>
-          <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgents} disabled={loading}>
+          <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgentsDoor} disabled={loading}>
             <Speech size={16} />
           </Button>
           <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor} hidden={aiKey.length === 0}>
@@ -127,14 +127,7 @@ const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettingsDoor, load
           </Button>
         </div>
         <div className="flex items-center gap-2 w-full">
-          <AIInput
-            id="prompt-input-mobile"
-            value={userPrompt}
-            onChange={(e) => setUserPrompt(e.target.value)}
-            onKeyDown={handleKeyDown}
-            disabled={loading}
-            className="resize-y"
-          />
+          <AIInput id="prompt-input-mobile" value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} onKeyDown={handleKeyDown} className="resize-y" disabled={loading} />
           <Button size="icon" $rounded title="Enviar" onClick={() => { setListening(false); onSendMessage() }} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
             {!loading && <Send size={16} />}
           </Button>
@@ -147,7 +140,7 @@ const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettingsDoor, load
         <Button variant={aiProvider === "groq" ? "orange" : "info"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"} disabled={loading}>
           <Waypoints size={16} />
         </Button>
-        <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgents}>
+        <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgentsDoor}>
           <Speech size={16} />
         </Button>
         <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor} hidden={aiKey.length === 0}>
@@ -156,14 +149,7 @@ const AIBar = ({ onAddImage, imageCount, onSendMessage, toggleSettingsDoor, load
         <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={isImageSupported === false || aiProvider === "groq" || loading}>
           <ImagePlus size={16} />
         </Button>
-        <AIInput
-          id="prompt-input-desktop"
-          value={userPrompt}
-          onChange={(e) => setUserPrompt(e.target.value)}
-          onKeyDown={handleKeyDown}
-          disabled={loading}
-          className="resize-y"
-        />
+        <AIInput id="prompt-input-desktop" value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} onKeyDown={handleKeyDown} className="resize-y" disabled={loading} />
         <div className="flex items-center gap-2">
           <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={loading}>
             <AudioWaveform size={16} />

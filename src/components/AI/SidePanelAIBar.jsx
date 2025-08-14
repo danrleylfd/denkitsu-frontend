@@ -1,50 +1,34 @@
 import { useState, useEffect, useRef, useMemo } from "react"
 import {
-  LogIn, UserPlus, Settings, Send, ImagePlus, Wrench,
-  AudioWaveform, Brain, MessageCirclePlus, Mic, ScanText, Lock
+  LogIn, UserPlus, Settings, Send, ImagePlus, Wrench, Speech,
+  AudioWaveform, Brain, Waypoints, MessageCirclePlus, Mic, ScanText, Lock
 } from "lucide-react"
 
 import { useAuth } from "../../contexts/AuthContext"
 import { useAI } from "../../contexts/AIContext"
-import { TOOL_DEFINITIONS } from "../../constants/tools"
 
 import Paper from "../Paper"
 import AIInput from "./Input"
 import Button from "../Button"
-import ToolButton from "./ToolButton"
 
-const SidePanelAIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onSendMessage, clearHistory, toggleSettings, loading, onAnalyzePage }) => {
+const SidePanelAIBar = ({ loading, onAddImage, imageCount, onSendMessage, toggleSettingsDoor, agentsDoor, toggleAgentsDoor, toolsDoor, toggleToolsDoor, onAnalyzePage }) => {
   const { signed } = useAuth()
   const {
     aiProvider, aiProviderToggle, aiKey,
+    userPrompt, setUserPrompt,
+    clearHistory,
     model, freeModels, payModels, groqModels,
     stream, toggleStream,
     listening, setListening, toggleListening,
-    handleToolToggle
   } = useAI()
 
-  const [isToolsOpen, setIsToolsOpen] = useState(false)
   const recognitionRef = useRef(null)
+  const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false)
 
   const allModels = [...freeModels, ...payModels, ...groqModels]
   const selectedModel = allModels.find(m => m.id === model)
   const isImageSupported = selectedModel?.supports_images ?? false
   const isToolsSupported = selectedModel?.supports_tools ?? false
-
-  const sidePanelTools = useMemo(() => {
-    // const sidePanelToolKeys = new Set(["web", "browserTool", "httpTool", "criptoTool", "nasaTool", "newsTool", "weatherTool", "wikiTool", "genshinTool", "pokedexTool"])
-    return TOOL_DEFINITIONS
-      // .filter(tool => sidePanelToolKeys.has(tool.key))
-      .map(tool => {
-        let isDisabled = false
-        if (tool.key === "web") {
-          isDisabled = !isToolsSupported || aiProvider === "groq" || loading
-        } else {
-          isDisabled = !isToolsSupported || stream || loading
-        }
-        return { ...tool, isDisabled }
-      })
-  }, [isToolsSupported, aiProvider, loading, stream])
 
   useEffect(() => {
     if (!("webkitSpeechRecognition" in window)) {
@@ -93,7 +77,6 @@ const SidePanelAIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onS
     }
   }, [listening])
 
-
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
@@ -122,49 +105,37 @@ const SidePanelAIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onS
     )
   }
 
-  const renderTools = () => (
-    <div className="absolute z-20 p-2 rounded-lg shadow-lg bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90 border border-bLight dark:border-bDark grid grid-cols-5 sm:grid-cols-7 gap-2 w-max left-1/2 -translate-x-1/2 bottom-full mb-4">
-      {sidePanelTools.map(({ key, title, Icon, isDisabled }) => (
-        <ToolButton key={key} toolKey={key} title={title} disabled={isDisabled} onToggle={handleToolToggle}>
-          <Icon size={16} />
-        </ToolButton>
-      ))}
-    </div>
-  )
-
   return (
     <Paper className="relative bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 max-w-[95%] mb-2 mx-auto">
       <div className="w-full flex flex-col gap-2 sm:hidden">
         <div className="flex items-center justify-between flex-wrap gap-2">
-            <Button variant={aiProvider === "groq" ? "orange" : "info"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"} disabled={loading}>
-                <Brain size={16} />
-            </Button>
-            <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettings} disabled={loading}>
-                <Settings size={16} />
-            </Button>
-            <Button variant="secondary" size="icon" $rounded title="Analisar Página Atual" onClick={onAnalyzePage} disabled={loading}>
-                <ScanText size={16} />
-            </Button>
-            <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={isImageSupported === false || aiProvider === "groq" || loading}>
-                <ImagePlus size={16} />
-            </Button>
-            {aiKey.length > 0 && (
-            <div className="relative">
-                <Button variant={isToolsOpen ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={() => setIsToolsOpen(!isToolsOpen)} disabled={loading}>
-                <Wrench size={16} />
-                </Button>
-                {isToolsOpen && renderTools()}
-            </div>
-            )}
-            <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={loading}>
-                <AudioWaveform size={16} />
-            </Button>
-            <Button variant={listening ? "mic" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>
-                <Mic size={16} />
-            </Button>
-            <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
-                <MessageCirclePlus size={16} />
-            </Button>
+          <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loading}>
+            <Settings size={16} />
+          </Button>
+          <Button variant={aiProvider === "groq" ? "orange" : "info"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"} disabled={loading}>
+            <Waypoints size={16} />
+          </Button>
+          <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgentsDoor} disabled={loading}>
+            <Speech size={16} />
+          </Button>
+          <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor} hidden={aiKey.length === 0}>
+            <Wrench size={16} />
+          </Button>
+          <Button variant="secondary" size="icon" $rounded title="Analisar Página Atual" onClick={onAnalyzePage} disabled={loading}>
+            <ScanText size={16} />
+          </Button>
+          <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={isImageSupported === false || aiProvider === "groq" || loading}>
+            <ImagePlus size={16} />
+          </Button>
+          <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={loading}>
+            <AudioWaveform size={16} />
+          </Button>
+          <Button variant={listening ? "mic" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>
+            <Mic size={16} />
+          </Button>
+          <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
+            <MessageCirclePlus size={16} />
+          </Button>
         </div>
         <div className="flex items-center gap-2 w-full">
           <AIInput id="prompt-input-mobile" value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} onKeyDown={handleKeyDown} disabled={loading} className="resize-y" />
@@ -175,36 +146,31 @@ const SidePanelAIBar = ({ userPrompt, setUserPrompt, onAddImage, imageCount, onS
       </div>
       <div className="w-full hidden sm:flex items-center gap-2">
         <Button variant={aiProvider === "groq" ? "orange" : "info"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"} disabled={loading}>
-            <Brain size={16} />
+          <Brain size={16} />
         </Button>
-        <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettings} disabled={loading}>
-            <Settings size={16} />
+        <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loading}>
+          <Settings size={16} />
         </Button>
         <Button variant="secondary" size="icon" $rounded title="Analisar Página Atual" onClick={onAnalyzePage} disabled={loading}>
-            <ScanText size={16} />
+          <ScanText size={16} />
         </Button>
         <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={isImageSupported === false || aiProvider === "groq" || loading}>
-            <ImagePlus size={16} />
+          <ImagePlus size={16} />
         </Button>
-        {aiKey.length > 0 && (
-          <div className="relative">
-            <Button variant={isToolsOpen ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={() => setIsToolsOpen(!isToolsOpen)} disabled={loading}>
-              <Wrench size={16} />
-            </Button>
-            {isToolsOpen && renderTools()}
-          </div>
-        )}
+        <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor} hidden={aiKey.length === 0}>
+          <Wrench size={16} />
+        </Button>
         <AIInput id="prompt-input-desktop" value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} onKeyDown={handleKeyDown} disabled={loading} className="resize-y" />
         <div className="flex items-center gap-2">
-            <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={loading}>
-                <AudioWaveform size={16} />
-            </Button>
-            <Button variant={listening ? "mic" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>
-                <Mic size={16} />
-            </Button>
-            <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
-                <MessageCirclePlus size={16} />
-            </Button>
+          <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={loading}>
+            <AudioWaveform size={16} />
+          </Button>
+          <Button variant={listening ? "mic" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir"} onClick={toggleListening} disabled={loading}>
+            <Mic size={16} />
+          </Button>
+          <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}>
+            <MessageCirclePlus size={16} />
+          </Button>
         </div>
         <Button variant="primary" size="icon" $rounded title="Enviar" onClick={() => { setListening(false); onSendMessage() }} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0)}>
           {!loading && <Send size={16} />}
