@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
-import { ScanText, LogIn, UserPlus } from "lucide-react"
+import { LogIn, UserPlus } from "lucide-react"
 
 import { useAuth } from "../contexts/AuthContext"
 import { useAI } from "../contexts/AIContext"
@@ -56,7 +56,7 @@ const WelcomeScreen = () => {
 
 const ChatInterface = () => {
   const {
-    aiProvider, aiKey, model, stream, web, browserTool, httpTool, wikiTool, newsTool, weatherTool, criptoTool, genshinTool, pokedexTool,
+    aiProvider, aiKey, model, stream, activeTools,
     imageUrls, setImageUrls, freeModels, setFreeModels, payModels, setPayModels, groqModels, setGroqModels,
     userPrompt, setUserPrompt, messages, setMessages, clearHistory,
   } = useAI()
@@ -65,7 +65,7 @@ const ChatInterface = () => {
   const [loading, setLoading] = useState(false)
   const [lousaContent, setLousaContent] = useState(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
-  const [selectedPrompt, setSelectedPrompt] = useState("Padrão")
+  const [selectedPrompt] = useState("Padrão")
 
   useEffect(() => {
     const fetchModels = async () => {
@@ -91,7 +91,6 @@ const ChatInterface = () => {
     img.onerror = () => notifyError("A URL fornecida não parece ser uma imagem válida.")
   }
 
-  const onRemoveImage = (index) => setImageUrls(prev => prev.filter((_, i) => i !== index))
   const toggleLousa = useCallback((content) => setLousaContent(content), [])
   const toggleSettings = () => setSettingsOpen(prev => !prev)
 
@@ -118,7 +117,7 @@ const ChatInterface = () => {
       if (stream) {
         const placeholder = { id: Date.now(), role: "assistant", content: "", reasoning: "", _contentBuffer: "", _reasoningBuffer: "", timestamp: new Date().toISOString() }
         setMessages(prev => [...prev, placeholder])
-        await sendMessageStream(aiKey, aiProvider, model, apiMessages, web, selectedPrompt, delta => {
+        await sendMessageStream(aiKey, aiProvider, model, apiMessages, activeTools, selectedPrompt, delta => {
           if (delta.content) placeholder._contentBuffer += delta.content
           if (delta.reasoning) placeholder._reasoningBuffer += delta.reasoning
           if (delta.tool_calls?.[0]?.function?.arguments) placeholder._reasoningBuffer += delta.tool_calls[0].function.arguments
@@ -138,7 +137,7 @@ const ChatInterface = () => {
           setMessages((prev) => prev.map(msg => (msg.id === placeholder.id ? { ...placeholder } : msg)))
         })
       } else {
-        const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, selectedPrompt, web, { browserTool, httpTool, wikiTool, newsTool, weatherTool, criptoTool, genshinTool, pokedexTool })
+        const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, selectedPrompt, activeTools)
         const res = data?.choices?.[0]?.message
         if (!res) return
         const cleanContent = (raw = "") => {
@@ -160,7 +159,7 @@ const ChatInterface = () => {
     } finally {
       setLoading(false)
     }
-  }, [aiProvider, aiKey, model, stream, web, browserTool, httpTool, wikiTool, newsTool, weatherTool, criptoTool, genshinTool, pokedexTool, freeModels, payModels, groqModels, selectedPrompt, setMessages, notifyError])
+  }, [aiProvider, aiKey, model, stream, activeTools, freeModels, payModels, groqModels, selectedPrompt, setMessages, notifyError])
 
   const onSendMessage = useCallback(async () => {
     if (loading || (!userPrompt.trim() && imageUrls.length === 0)) return
@@ -196,7 +195,7 @@ const ChatInterface = () => {
         ? <AIHistory toggleLousa={toggleLousa} onRegenerate={handleRegenerateResponse} />
         : <WelcomeScreen />
       }
-      <ImagePreview imageUrls={imageUrls} onRemoveImage={onRemoveImage} />
+      <ImagePreview />
       <SidePanelAIBar
         userPrompt={userPrompt}
         setUserPrompt={setUserPrompt}
@@ -210,13 +209,8 @@ const ChatInterface = () => {
       />
       <AITip />
       <AISettings
-        settingsOpen={settingsOpen}
-        toggleSettings={toggleSettings}
-        freeModels={freeModels}
-        payModels={payModels}
-        groqModels={groqModels}
-        selectedPrompt={selectedPrompt}
-        onSelectPrompt={setSelectedPrompt}
+        settingsDoor={settingsOpen}
+        toggleSettingsDoor={toggleSettings}
       />
       <Lousa content={lousaContent} toggleLousa={toggleLousa} />
     </>
