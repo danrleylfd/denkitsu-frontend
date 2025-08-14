@@ -1,4 +1,4 @@
-import { Globe, Link2, Search, Server, Bitcoin, Telescope, Earth, Eclipse, Zap, Thermometer, Satellite, Orbit, Newspaper, Cloud, BookOpen, Gamepad, Coins, Gamepad2, Smartphone, Clapperboard, SquareLibrary } from "lucide-react"
+import { Globe, Link2, Search, Server, Bitcoin, Telescope, Earth, Eclipse, SunMoon, Thermometer, Satellite, Orbit, Newspaper, Cloud, BookOpen, Gamepad, Coins, Gamepad2, Smartphone, Clapperboard, SquareLibrary } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 
@@ -83,7 +83,7 @@ const AITools= ({ loading, toolsDoor }) => {
         <Orbit size={16} />
       </Button>
       <Button variant={isToolsSupported && !stream && spaceWeatherTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Clima Espacial" onClick={toggleSpaceWeather} disabled={!isToolsSupported || stream || loading}>
-        <Zap size={16} />
+        <SunMoon size={16} />
       </Button>
       <Button variant={isToolsSupported && !stream && marsWeatherTool ? "outline" : "secondary"} size="icon" $rounded title="NASA: Clima em Marte" onClick={toggleMarsWeather} disabled={!isToolsSupported || stream || loading}>
         <Thermometer size={16} />
