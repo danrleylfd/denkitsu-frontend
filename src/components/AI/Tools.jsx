@@ -9,15 +9,15 @@ import ToolButton from "./ToolButton"
 
 const AITools= ({ loading, toolsDoor }) => {
   if (!toolsDoor) return null
-  const { aiProvider, model, freeModels, payModels, groqModels, stream, handleToolToggle, } = useAI()
+  const { aiKey, aiProvider, model, freeModels, payModels, groqModels, stream, handleToolToggle, } = useAI()
   const allModels = [...freeModels, ...payModels, ...groqModels]
   const selectedModel = allModels.find(m => m.id === model)
   const isToolsSupported = selectedModel?.supports_tools ?? false
   const tools = useMemo(() => {
     return TOOL_DEFINITIONS.map(tool => {
       let isDisabled = false
-      if (tool.key === "web") isDisabled = !isToolsSupported || aiProvider === "groq" || loading
-      else isDisabled = !isToolsSupported || stream || loading
+      if (tool.key === "web") isDisabled = aiProvider === "groq" || aiKey.length === 0 || !isToolsSupported
+      else isDisabled = !isToolsSupported || stream
       return { ...tool, isDisabled }
     })
   }, [isToolsSupported, aiProvider, loading, stream])

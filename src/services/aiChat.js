@@ -1,9 +1,8 @@
 import api from "./"
 
 const sendMessageStream = async (aiKey, aiProvider, model, messages, activeTools, mode, onDelta) => {
-  const isWebEnabled = activeTools.has("web")
-  const permission = aiKey.length > 0 && aiProvider !== "groq" && isWebEnabled
-  const plugins = permission ? [{ id: "web" }] : undefined
+  const web = aiProvider !== "groq" && aiKey.length > 0 && activeTools.has("web")
+  const plugins = web ? [{ id: "web" }] : undefined
   const payload = { aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages, plugins, stream: true, mode }
   const response = await fetch(`${api.defaults.baseURL}/ai/chat/completions`, {
     method: "POST",
@@ -43,7 +42,7 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, activeTools
 }
 
 const sendMessage = async (aiKey, aiProvider, model, models, messages, mode = "Padrão", activeTools = new Set()) => {
-  const web = aiKey.length > 0 && aiProvider !== "groq" && activeTools.has("web")
+  const web = aiProvider !== "groq" && aiKey.length > 0 && activeTools.has("web")
   const plugins = web ? [{ id: "web" }] : undefined
   const regularTools = Array.from(activeTools).filter(tool => tool !== "web")
   const fullModel = models.find((item) => item.id === model)
