@@ -20,7 +20,6 @@ const AuthScreen = () => {
   const openPage = (path) => {
     chrome.tabs.create({ url: `https://denkitsu.vercel.app${path}` })
   }
-
   return (
     <div className="flex flex-col justify-center items-center h-full p-4">
       <Paper className="flex flex-col items-center gap-4 text-center">
@@ -58,13 +57,15 @@ const ChatInterface = () => {
   const {
     aiProvider, aiKey, model, stream, activeTools,
     imageUrls, setImageUrls, freeModels, setFreeModels, payModels, setPayModels, groqModels, setGroqModels,
-    userPrompt, setUserPrompt, messages, setMessages, clearHistory,
+    userPrompt, setUserPrompt, messages, setMessages,
   } = useAI()
   const { notifyWarning, notifyError, notifyInfo } = useNotification()
 
   const [loading, setLoading] = useState(false)
   const [lousaContent, setLousaContent] = useState(null)
-  const [settingsOpen, setSettingsOpen] = useState(false)
+  const [settingsDoor, setSettingsDoor] = useState(false)
+  const [agentsDoor, setAgentsDoor] = useState(false)
+  const [toolsDoor, setToolsDoor] = useState(false)
   const [selectedPrompt] = useState("Padrão")
 
   useEffect(() => {
@@ -92,7 +93,6 @@ const ChatInterface = () => {
   }
 
   const toggleLousa = useCallback((content) => setLousaContent(content), [])
-  const toggleSettings = () => setSettingsOpen(prev => !prev)
 
   const handleAnalyzePage = useCallback(() => {
     setLoading(true)
@@ -197,19 +197,20 @@ const ChatInterface = () => {
       }
       <ImagePreview />
       <SidePanelAIBar
-        userPrompt={userPrompt}
-        setUserPrompt={setUserPrompt}
+        loading={loading}
         onAddImage={onAddImage}
         imageCount={imageUrls.length}
-        toggleSettings={toggleSettings}
         onSendMessage={onSendMessage}
-        clearHistory={clearHistory}
-        loading={loading}
+        agentsDoor={agentsDoor}
+        toolsDoor={toolsDoor}
+        toggleAgentsDoor={() => setAgentsDoor(prev => !prev)}
+        toggleToolsDoor={() => setToolsDoor(prev => !prev)}
+        toggleSettingsDoor={() => setSettingsDoor(prev => !prev)}
         onAnalyzePage={handleAnalyzePage}
       />
       <AITip />
       <AISettings
-        settingsDoor={settingsOpen}
+        settingsDoor={settingsDoor}
         toggleSettingsDoor={toggleSettings}
       />
       <Lousa content={lousaContent} toggleLousa={toggleLousa} />

@@ -23,10 +23,10 @@ const AI = () => {
   const { notifyWarning, notifyError } = useNotification()
   const [loading, setLoading] = useState(false)
   const [lousaContent, setLousaContent] = useState(null)
-  const [settingsDoor, setSettingsDoor] = useState(false)
-  const [selectedPrompt, setSelectedPrompt] = useState("Padrão")
   const [agentsDoor, setAgentsDoor] = useState(false)
   const [toolsDoor, setToolsDoor] = useState(false)
+  const [settingsDoor, setSettingsDoor] = useState(false)
+  const [selectedPrompt, setSelectedPrompt] = useState("Padrão")
 
   useEffect(() => {
     (async () => {
@@ -168,20 +168,20 @@ const AI = () => {
         <AITools loading={loading} toolsDoor={toolsDoor} />
         <AIBar
           loading={loading}
-          agentsDoor={agentsDoor}
-          toggleAgents={() => setAgentsDoor(!agentsDoor)}
-          toggleSettingsDoor={() => setSettingsDoor(!settingsDoor)}
-          toolsDoor={toolsDoor}
-          toggleToolsDoor={() => setToolsDoor(prev => !prev)}
           onAddImage={onAddImage}
           imageCount={aiContext.imageUrls.length}
           onSendMessage={onSendMessage}
+          agentsDoor={agentsDoor}
+          toolsDoor={toolsDoor}
+          toggleAgentsDoor={() => setAgentsDoor(prev => !prev)}
+          toggleToolsDoor={() => setToolsDoor(prev => !prev)}
+          toggleSettingsDoor={() => setSettingsDoor(prev => !prev)}
         />
       </div>
       <AITip />
       <AISettings
         settingsDoor={settingsDoor}
-        toggleSettingsDoor={() => setSettingsDoor(!settingsDoor)}
+        toggleSettingsDoor={() => setSettingsDoor(prev => !prev)}
       />
       <Lousa content={lousaContent} toggleLousa={toggleLousa} />
     </SideMenu>
