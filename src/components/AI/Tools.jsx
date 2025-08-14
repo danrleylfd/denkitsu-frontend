@@ -11,7 +11,7 @@ import ToolButton from "./ToolButton"
 
 const AITools= ({ loading, toolsDoor }) => {
   if (!toolsDoor) return null
-  const { aiProvider, model, freeModels, payModels, groqModels, stream, } = useAI() // web, toggleWeb, tools,
+  const { aiProvider, model, freeModels, payModels, groqModels, stream, handleToolToggle, } = useAI() // web, toggleWeb, tools,
   // const {
   //   browserTool, toggleBrowser,
   //   duckduckgoTool, toggleDuckduckgo,
@@ -33,6 +33,9 @@ const AITools= ({ loading, toolsDoor }) => {
   //   genshinTool, toggleGenshin,
   //   pokedexTool, togglePokedex,
   // } = tools
+  const allModels = [...freeModels, ...payModels, ...groqModels]
+  const selectedModel = allModels.find(m => m.id === model)
+  const isToolsSupported = selectedModel?.supports_tools ?? false
   const tools = useMemo(() => {
     return TOOL_DEFINITIONS.map(tool => {
       let isDisabled = false
@@ -41,9 +44,7 @@ const AITools= ({ loading, toolsDoor }) => {
       return { ...tool, isDisabled }
     })
   }, [isToolsSupported, aiProvider, loading, stream])
-  const allModels = [...freeModels, ...payModels, ...groqModels]
-  const selectedModel = allModels.find(m => m.id === model)
-  const isToolsSupported = selectedModel?.supports_tools ?? false
+
   return (
     <Paper className={`bg-lightBg-primary dark:bg-darkBg-primary text-lightFg-primary dark:text-darkFg-primary
       opacity-80 dark:opacity-90
