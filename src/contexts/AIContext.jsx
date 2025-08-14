@@ -10,26 +10,6 @@ const AIProvider = ({ children }) => {
   const storedGroqKey = localStorage.getItem("@Denkitsu:Groq")
   const storedOpenRouterKey = localStorage.getItem("@Denkitsu:OpenRouter")
   const storedStream = JSON.parse(localStorage.getItem("@Denkitsu:Stream"))
-  // const storedWeb = JSON.parse(localStorage.getItem("@Denkitsu:Web"))
-  // const storedBrowserTool = JSON.parse(localStorage.getItem("@Denkitsu:BrowserTool"))
-  // const storedDuckduckgoTool = JSON.parse(localStorage.getItem("@Denkitsu:DuckduckgoTool"))
-  // const storedHttpTool = JSON.parse(localStorage.getItem("@Denkitsu:HttpTool"))
-  // const storedWikiTool = JSON.parse(localStorage.getItem("@Denkitsu:WikiTool"))
-  // const storedNewsTool = JSON.parse(localStorage.getItem("@Denkitsu:NewsTool"))
-  // const storedWeatherTool = JSON.parse(localStorage.getItem("@Denkitsu:WeatherTool"))
-  // const storedCriptoTool = JSON.parse(localStorage.getItem("@Denkitsu:CriptoTool"))
-  // const storedCinemaTool = JSON.parse(localStorage.getItem("@Denkitsu:CinemaTool"))
-  // const storedGamesTool = JSON.parse(localStorage.getItem("@Denkitsu:GamesTool"))
-  // const storedAlbionTool = JSON.parse(localStorage.getItem("@Denkitsu:AlbionTool"))
-  // const storedGenshinTool = JSON.parse(localStorage.getItem("@Denkitsu:GenshinTool"))
-  // const storedPokedexTool = JSON.parse(localStorage.getItem("@Denkitsu:PokedexTool"))
-  // const storedNasaTool = JSON.parse(localStorage.getItem("@Denkitsu:NasaTool"))
-  // const storedNasaLibraryTool = JSON.parse(localStorage.getItem("@Denkitsu:NasaLibraryTool"))
-  // const storedEarthTool = JSON.parse(localStorage.getItem("@Denkitsu:EarthTool"))
-  // const storedMarsRoverTool = JSON.parse(localStorage.getItem("@Denkitsu:MarsRoverTool"))
-  // const storedAsteroidsTool = JSON.parse(localStorage.getItem("@Denkitsu:AsteroidsTool"))
-  // const storedSpaceWeatherTool = JSON.parse(localStorage.getItem("@Denkitsu:SpaceWeatherTool"))
-  // const storedMarsWeatherTool = JSON.parse(localStorage.getItem("@Denkitsu:MarsWeatherTool"))
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
 
   const [aiProvider, setAIProvider] = useState(storedAIProvider || "groq")
@@ -43,28 +23,7 @@ const AIProvider = ({ children }) => {
   const [openRouterKey, setOpenRouterKey] = useState(storedOpenRouterKey || "")
   const [stream, setStream] = useState(storedStream === null ? false : storedStream)
   const [imageUrls, setImageUrls] = useState([])
-  // const [web, setWeb] = useState(storedWeb === null ? false : storedWeb)
-  // const [browserTool, setBrowserTool] = useState(storedBrowserTool === null ? false : storedBrowserTool)
-  // const [duckduckgoTool, setDuckduckgoTool] = useState(storedDuckduckgoTool === null ? false : storedDuckduckgoTool)
-  // const [httpTool, setHttpTool] = useState(storedHttpTool === null? false : storedHttpTool)
-  // const [wikiTool, setWikiTool] = useState(storedWikiTool === null? false : storedWikiTool)
-  // const [newsTool, setNewsTool] = useState(storedNewsTool === null ? false : storedNewsTool)
-  // const [weatherTool, setWeatherTool] = useState(storedWeatherTool === null ? false : storedWeatherTool)
-  // const [criptoTool, setCriptoTool] = useState(storedCriptoTool === null ? false : storedCriptoTool)
-  // const [cinemaTool, setCinemaTool] = useState(storedCinemaTool === null ? false : storedCinemaTool)
-  // const [gamesTool, setGamesTool] = useState(storedGamesTool === null ? false : storedGamesTool)
-  // const [albionTool, setAlbionTool] = useState(storedAlbionTool === null ? false : storedAlbionTool)
-  // const [genshinTool, setGenshinTool] = useState(storedGenshinTool === null? false : storedGenshinTool)
-  // const [pokedexTool, setPokedexTool] = useState(storedPokedexTool === null? false : storedPokedexTool)
-  // const [nasaTool, setNasaTool] = useState(storedNasaTool === null ? false : storedNasaTool)
-  // const [nasaLibraryTool, setNasaLibraryTool] = useState(storedNasaLibraryTool === null ? false : storedNasaLibraryTool)
-  // const [earthTool, setEarthTool] = useState(storedEarthTool === null ? false : storedEarthTool)
-  // const [marsRoverTool, setMarsRoverTool] = useState(storedMarsRoverTool === null ? false : storedMarsRoverTool)
-  // const [asteroidsTool, setAsteroidsTool] = useState(storedAsteroidsTool === null ? false : storedAsteroidsTool)
-  // const [spaceWeatherTool, setSpaceWeatherTool] = useState(storedSpaceWeatherTool === null ? false : storedSpaceWeatherTool)
-  // const [marsWeatherTool, setMarsWeatherTool] = useState(storedMarsWeatherTool === null ? false : storedMarsWeatherTool)
   const [activeTools, setActiveTools] = useState(() => new Set())
-
   const [userPrompt, setUserPrompt] = useState("")
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
   const [speaking, setSpeaking] = useState(false)
@@ -75,26 +34,6 @@ const AIProvider = ({ children }) => {
   useEffect(() => (localStorage.setItem("@Denkitsu:OpenRouterModel", openRouterModel)), [openRouterModel])
   useEffect(() => (localStorage.setItem("@Denkitsu:customPrompt", customPrompt)), [customPrompt])
   useEffect(() => (localStorage.setItem("@Denkitsu:Stream", stream)), [stream])
-  // useEffect(() => (localStorage.setItem("@Denkitsu:Web", web)), [web])
-  // useEffect(() => (localStorage.setItem("@Denkitsu:BrowserTool", browserTool)), [browserTool])
-  // useEffect(() => (localStorage.setItem("@Denkitsu:DuckduckgoTool", duckduckgoTool)), [duckduckgoTool])
-  // useEffect(() => (localStorage.setItem("@Denkitsu:HttpTool", httpTool)), [httpTool])
-  // useEffect(() => (localStorage.setItem("@Denkitsu:WikiTool", wikiTool)), [wikiTool])
-  // useEffect(() => (localStorage.setItem("@Denkitsu:NewsTool", newsTool)), [newsTool])
-  // useEffect(() => (localStorage.setItem("@Denkitsu:WeatherTool", weatherTool)), [weatherTool])
-  // useEffect(() => (localStorage.setItem("@Denkitsu:CriptoTool", criptoTool)), [criptoTool])
-  // useEffect(() => (localStorage.setItem("@Denkitsu:CinemaTool", cinemaTool)), [cinemaTool])
-  // useEffect(() => (localStorage.setItem("@Denkitsu:GamesTool", gamesTool)), [gamesTool])
-  // useEffect(() => (localStorage.setItem("@Denkitsu:AlbionTool", albionTool)), [albionTool])
-  // useEffect(() => (localStorage.setItem("@Denkitsu:GenshinTool", genshinTool)), [genshinTool])
-  // useEffect(() => (localStorage.setItem("@Denkitsu:PokedexTool", pokedexTool)), [pokedexTool])
-  // useEffect(() => (localStorage.setItem("@Denkitsu:NasaTool", nasaTool)), [nasaTool])
-  // useEffect(() => (localStorage.setItem("@Denkitsu:NasaLibraryTool", nasaLibraryTool)), [nasaLibraryTool])
-  // useEffect(() => (localStorage.setItem("@Denkitsu:EarthTool", earthTool)), [earthTool])
-  // useEffect(() => (localStorage.setItem("@Denkitsu:MarsRoverTool", marsRoverTool)), [marsRoverTool])
-  // useEffect(() => (localStorage.setItem("@Denkitsu:AsteroidsTool", asteroidsTool)), [asteroidsTool])
-  // useEffect(() => (localStorage.setItem("@Denkitsu:SpaceWeatherTool", spaceWeatherTool)), [spaceWeatherTool])
-  // useEffect(() => (localStorage.setItem("@Denkitsu:MarsWeatherTool", marsWeatherTool)), [marsWeatherTool])
 
   const handleToolToggle = useCallback((toolKey, isActive) => {
     setActiveTools(prev => {
@@ -131,27 +70,6 @@ const AIProvider = ({ children }) => {
   const clearHistory = useCallback(() => setMessages([{ role: "system", content: customPrompt }]), [customPrompt])
   const toggleStream = useCallback(() => setStream(s => !s), [])
   const toggleListening = useCallback(() => setListening(l => !l), [])
-  // const toggleWeb = useCallback(() => setWeb(w => !w), [])
-  // const toggleBrowser = useCallback(() => setBrowserTool(b => !b), [])
-  // const toggleDuckduckgo = useCallback(() => setDuckduckgoTool(d => !d), [])
-  // const toggleHttp = useCallback(() => setHttpTool(h => !h), [])
-  // const toggleWiki = useCallback(() => setWikiTool(w => !w), [])
-  // const toggleNews = useCallback(() => setNewsTool(n => !n), [])
-  // const toggleWeather = useCallback(() => setWeatherTool(w => !w), [])
-  // const toggleCripto = useCallback(() => setCriptoTool(c => !c), [])
-  // const toggleCinema = useCallback(() => setCinemaTool(c => !c), [])
-  // const toggleGames = useCallback(() => setGamesTool(g => !g), [])
-  // const toggleAlbion = useCallback(() => setAlbionTool(a => !a), [])
-  // const toggleGenshin = useCallback(() => setGenshinTool(g => !g), [])
-  // const togglePokedex = useCallback(() => setPokedexTool(p => !p), [])
-  // const toggleNasa = useCallback(() => setNasaTool(n => !n), [])
-  // const toggleNasaLibrary = useCallback(() => setNasaLibraryTool(n => !n), [])
-  // const toggleEarth = useCallback(() => setEarthTool(e => !e), [])
-  // const toggleMarsRover = useCallback(() => setMarsRoverTool(m => !m), [])
-  // const toggleAsteroids = useCallback(() => setAsteroidsTool(a => !a), [])
-  // const toggleSpaceWeather = useCallback(() => setSpaceWeatherTool(s => !s), [])
-  // const toggleMarsWeather = useCallback(() => setMarsWeatherTool(m => !m), [])
-
 
   const speakResponse = useCallback((text) => {
     if ("speechSynthesis" in window) {
@@ -188,53 +106,11 @@ const AIProvider = ({ children }) => {
     customPrompt, setCustomPrompt,
     userPrompt, setUserPrompt,
     messages, setMessages, clearHistory,
-    // web, setWeb, toggleWeb,
-    // tools: {
-    //   browserTool, setBrowserTool, toggleBrowser,
-    //   duckduckgoTool, setDuckduckgoTool, toggleDuckduckgo,
-    //   httpTool, setHttpTool, toggleHttp,
-    //   wikiTool, setWikiTool, toggleWiki,
-    //   newsTool, setNewsTool, toggleNews,
-    //   weatherTool, setWeatherTool, toggleWeather,
-    //   criptoTool, setCriptoTool, toggleCripto,
-    //   cinemaTool, setCinemaTool, toggleCinema,
-    //   gamesTool, setGamesTool, toggleGames,
-    //   albionTool, setAlbionTool, toggleAlbion,
-    //   genshinTool, setGenshinTool, toggleGenshin,
-    //   pokedexTool, setPokedexTool, togglePokedex,
-    //   nasaTool, setNasaTool, toggleNasa,
-    //   nasaLibraryTool, setNasaLibraryTool, toggleNasaLibrary,
-    //   earthTool, setEarthTool, toggleEarth,
-    //   marsRoverTool, setMarsRoverTool, toggleMarsRover,
-    //   asteroidsTool, setAsteroidsTool, toggleAsteroids,
-    //   spaceWeatherTool, setSpaceWeatherTool, toggleSpaceWeather,
-    //   marsWeatherTool, setMarsWeatherTool, toggleMarsWeather,
-    // },
   }), [
     stream, speaking, listening, activeTools, handleToolToggle, imageUrls,
     aiProvider, groqKey, openRouterKey, groqModel, openRouterModel,
     freeModels, payModels, groqModels, customPrompt, userPrompt, messages,
     toggleStream, speakResponse, toggleListening, aiProviderToggle, clearHistory,
-    // web, toggleWeb,
-    // browserTool, toggleBrowser,
-    // duckduckgoTool, toggleDuckduckgo,
-    // httpTool, toggleHttp,
-    // wikiTool, toggleWiki,
-    // newsTool, toggleNews,
-    // weatherTool, toggleWeather,
-    // criptoTool, toggleCripto,
-    // cinemaTool, toggleCinema,
-    // gamesTool, toggleGames,
-    // albionTool, toggleAlbion,
-    // genshinTool, toggleGenshin,
-    // pokedexTool, togglePokedex,
-    // nasaTool, toggleNasa,
-    // nasaLibraryTool, toggleNasaLibrary,
-    // earthTool, toggleEarth,
-    // marsRoverTool, toggleMarsRover,
-    // asteroidsTool, toggleAsteroids,
-    // spaceWeatherTool, toggleSpaceWeather,
-    // marsWeatherTool, toggleMarsWeather,
   ])
   return (
     <AIContext.Provider value={values}>

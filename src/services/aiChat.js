@@ -1,12 +1,9 @@
 import api from "./"
 
-const sendMessageStream = async (aiKey, aiProvider, model, messages, activeTools, mode, onDelta) => {// web
-  // const permission = aiProvider === "groq" ? false : web
-  // const plugins = permission ? [{ id: "web" }] : undefined
+const sendMessageStream = async (aiKey, aiProvider, model, messages, activeTools, mode, onDelta) => {
   const isWebEnabled = activeTools.has("web")
   const permission = aiProvider === "groq" ? false : isWebEnabled
   const plugins = permission ? [{ id: "web" }] : undefined
-
   const payload = {
     aiProvider,
     aiKey,
@@ -16,7 +13,6 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, activeTools
     stream: true,
     mode
   }
-
   const response = await fetch(`${api.defaults.baseURL}/ai/chat/completions`, {
     method: "POST",
     headers: {
@@ -25,7 +21,6 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, activeTools
     },
     body: JSON.stringify(payload)
   })
-
   if (!response.ok) {
     const errorData = await response.json()
     const errorToThrow = new Error("Erro na requisição de streaming da API.")
@@ -55,17 +50,12 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, activeTools
   }
 }
 
-const sendMessage = async (aiKey, aiProvider, model, models, messages, mode = "Padrão", activeTools = new Set()) => { // web = false, tools = {}
-  // const permission = aiProvider === "groq" ? false : web
+const sendMessage = async (aiKey, aiProvider, model, models, messages, mode = "Padrão", activeTools = new Set()) => {
   const isWebEnabled = activeTools.has("web")
-  // const plugins = permission ? [{ id: "web" }] : undefined
   const plugins = (aiProvider !== "groq" && isWebEnabled) ? [{ id: "web" }] : undefined
   const regularTools = Array.from(activeTools).filter(tool => tool !== "web")
   const fullModel = models.find((item) => item.id === model)
-  // const activeTools = Object.keys(tools).filter((key) => tools[key] === true)
-  // const use_tools = (fullModel?.supports_tools && activeTools.length > 0) ? activeTools : undefined
   const use_tools = (fullModel?.supports_tools && regularTools.length > 0) ? regularTools : undefined
-
   const payload = { aiKey, aiProvider, model, plugins, use_tools, messages: [...messages], mode }
   try {
     return await api.post("/ai/chat/completions", payload)
