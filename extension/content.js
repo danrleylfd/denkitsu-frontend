@@ -1,4 +1,4 @@
-console.log("Content Script injetado e rodando.");
+console.log("Content Script injetado e rodando.")
 
 const scrapePageContent = () => {
   const mainContentSelectors = [
@@ -9,36 +9,38 @@ const scrapePageContent = () => {
     ".content",
     "#main",
     ".main"
-  ];
+  ]
 
-  let mainContentElement = null;
+  let mainContentElement = null
   for (const selector of mainContentSelectors) {
-    mainContentElement = document.querySelector(selector);
-    if (mainContentElement) break;
+    mainContentElement = document.querySelector(selector)
+    if (mainContentElement) break
   }
 
   if (!mainContentElement) {
-    mainContentElement = document.body;
+    mainContentElement = document.body
   }
 
-  const elementsToRemove = mainContentElement.querySelectorAll("nav, footer, script, style, aside, form, header");
-  elementsToRemove.forEach(el => el.remove());
+  const contentClone = mainContentElement.cloneNode(true)
 
-  const text = mainContentElement.innerText.replace(/\s\s+/g, ' ').trim();
-  const title = document.title;
-  const url = window.location.href;
+  const elementsToRemove = contentClone.querySelectorAll("nav, footer, script, style, aside, form, header")
+  elementsToRemove.forEach(el => el.remove())
 
-  const limitedText = text.substring(0, 8000);
+  const text = contentClone.innerText.replace(/\s\s+/g, " ").trim()
+  const title = document.title
+  const url = window.location.href
 
-  return { title, url, content: limitedText };
-};
+  const limitedText = text.substring(0, 8000)
+
+  return { title, url, content: limitedText }
+}
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log("Content Script: Mensagem recebida.", message);
+  console.log("Content Script: Mensagem recebida.", message)
   if (message.type === "EXTRACT_CONTENT") {
-    console.log("Content Script: Extraindo conteúdo da página...");
-    const pageData = scrapePageContent();
-    console.log("Content Script: Conteúdo extraído. Enviando resposta...", pageData);
-    sendResponse(pageData);
+    console.log("Content Script: Extraindo conteúdo da página...")
+    const pageData = scrapePageContent()
+    console.log("Content Script: Conteúdo extraído. Enviando resposta...", pageData)
+    sendResponse(pageData)
   }
-});
+})
