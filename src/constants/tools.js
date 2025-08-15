@@ -1,10 +1,11 @@
 import {
   Globe, Link2, Search, Server, Bitcoin, Telescope, Earth, SunMoon,
   Thermometer, Satellite, Orbit, Newspaper, Cloud, BookOpen, Gamepad,
-  Coins, Gamepad2, Smartphone, Clapperboard, SquareLibrary
+  Coins, Gamepad2, Smartphone, Clapperboard, SquareLibrary, BookOpenText,
 } from "lucide-react"
 
 const TOOL_DEFINITIONS = [
+  { key: "bibleTool", title: "Pesquisar na Bíblia", Icon: BookOpenText },
   { key: "web", title: "Pesquisa Profunda", Icon: Globe },
   { key: "browserTool", title: "Acessar Site Específico", Icon: Link2 },
   { key: "httpTool", title: "Requisição HTTP", Icon: Server },
