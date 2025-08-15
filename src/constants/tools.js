@@ -19,7 +19,7 @@ const TOOL_DEFINITIONS = [
   { key: "genshinTool", title: "Análise Genshin Impact (Beta)", Icon: Gamepad2 },
   { key: "criptoTool", title: "Cotação: Cripto (Beta)", Icon: Bitcoin },
   { key: "albionTool", title: "Cotação: Albion Online Ouro (Beta)", Icon: Coins },
-  { key: "weatherTool", title: "Prever Clima", Icon: Cloud },
+  { key: "weatherTool", title: "Clima na Terra", Icon: Cloud },
 
   { key: "spaceWeatherTool", title: "NASA: Clima Espacial", Icon: SunMoon },
   { key: "marsWeatherTool", title: "NASA: Clima em Marte", Icon: Thermometer },
