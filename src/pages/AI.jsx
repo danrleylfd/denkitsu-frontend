@@ -152,7 +152,7 @@ const AI = () => {
         const transcription = await transcribeAudio(audioFile)
         const transcriptionUserMessage = {
           role: "user",
-          content: transcription,
+          content: `Se a transcrição de áudio for uma música, diga o nome da música, se não, faça um resumo do texto. Transcrição de Áudio:\n${transcription}`,
           timestamp: new Date().toISOString()
         }
         const historyWithTranscription = [...aiContext.messages.slice(0, -1), transcriptionUserMessage]
