@@ -4,6 +4,7 @@ import { useAI } from "../contexts/AIContext"
 import { useNotification } from "../contexts/NotificationContext"
 
 import { sendMessageStream, sendMessage, getModels } from "../services/aiChat"
+import { transcribeAudio } from "../services/audio"
 
 import SideMenu from "../components/SideMenu"
 
@@ -33,9 +34,9 @@ const AI = () => {
     (async () => {
       try {
         const { freeModels: loadedFree, payModels: loadedPay, groqModels: loadedGroq } = await getModels()
-        aiContext.setFreeModels(loadedFree || [])
-        if (aiContext.aiKey) aiContext.setPayModels(loadedPay || [])
-        aiContext.setGroqModels(loadedGroq || [])
+        aiContext.setFreeModels(loadedFree?.filter(model => !model.id.includes("whisper")) || [])
+        if (aiContext.aiKey) aiContext.setPayModels(loadedPay?.filter(model => !model.id.includes("whisper")) || [])
+        aiContext.setGroqModels(loadedGroq?.filter(model => !model.id.includes("whisper")) || [])
       } catch (error) {
         notifyError(error.message || "Falha ao carregar modelos de IA.")
       }
@@ -109,7 +110,7 @@ const AI = () => {
           return { content, reasoning }
         }
         const { content, reasoning } = cleanContent(res.content)
-        aiContext.setMessages(prev => [...prev,{
+        aiContext.setMessages(prev => [...prev, {
           id: Date.now(),
           role: "assistant",
           content,
@@ -126,12 +127,46 @@ const AI = () => {
     }
   }, [notifyError, aiContext, selectedPrompt])
 
-  const onSendMessage = useCallback(async (forceSend = false) => {
-    if (loading || (!aiContext.userPrompt.trim() && aiContext.imageUrls.length === 0 && !forceSend)) return
-    const promptContent = aiContext.userPrompt.trim()
+  const onSendMessage = useCallback(async () => {
+    if (loading) return
+    const promptText = aiContext.userPrompt.trim()
+    const audioFile = aiContext.audioFile
+    const imageUrls = aiContext.imageUrls
+    if (!promptText && !audioFile && imageUrls.length === 0) return
+    if (audioFile && !promptText && imageUrls.length === 0) {
+      setLoading(true)
+      const newMessage = {
+        role: "user",
+        content: `[Arquivo de áudio: ${audioFile.name || "Gravação"}]`,
+        timestamp: new Date().toISOString()
+      }
+      aiContext.setMessages(prev => [...prev, newMessage])
+      aiContext.setAudioFile(null)
+      try {
+        const transcription = await transcribeAudio(audioFile)
+        const assistantMessage = {
+          id: Date.now(),
+          role: "assistant",
+          content: `**Transcrição do áudio:**\n\n> ${transcription}`,
+          timestamp: new Date().toISOString()
+        }
+        aiContext.setMessages(prev => [...prev, assistantMessage])
+      } catch (err) {
+        if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+        else notifyError("Falha ao transcrever o áudio.")
+        aiContext.setMessages(prev => prev.slice(0, -1))
+      } finally {
+        setLoading(false)
+      }
+      return
+    }
     const newContent = []
-    if (promptContent) newContent.push({ type: "text", content: promptContent })
-    if (aiContext.imageUrls.length > 0) newContent.push(...aiContext.imageUrls.map(url => ({ type: "image_url", image_url: { url } })))
+    if (promptText) {
+      newContent.push({ type: "text", content: promptText })
+    }
+    if (imageUrls.length > 0) {
+      newContent.push(...imageUrls.map(url => ({ type: "image_url", image_url: { url } })))
+    }
     const newMessage = {
       role: "user",
       content: newContent,
@@ -141,8 +176,10 @@ const AI = () => {
     aiContext.setMessages(history)
     aiContext.setUserPrompt("")
     aiContext.setImageUrls([])
+    aiContext.setAudioFile(null)
     await executeSendMessage(history)
-  }, [loading, aiContext, executeSendMessage])
+
+  }, [loading, aiContext, executeSendMessage, notifyError])
 
   const handleRegenerateResponse = useCallback(async () => {
     if (loading) return
@@ -178,7 +215,10 @@ const AI = () => {
         />
       </div>
       <AITip />
-      <AISettings settingsDoor={settingsDoor} toggleSettingsDoor={() => setSettingsDoor(prev => !prev)} />
+      <AISettings
+        settingsDoor={settingsDoor}
+        toggleSettingsDoor={() => setSettingsDoor(prev => !prev)}
+      />
       <Lousa content={lousaContent} toggleLousa={toggleLousa} />
     </SideMenu>
   )

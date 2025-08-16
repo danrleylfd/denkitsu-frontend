@@ -29,16 +29,17 @@ const AIProvider = ({ children }) => {
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
   const [speaking, setSpeaking] = useState(false)
   const [listening, setListening] = useState(false)
+  const [audioFile, setAudioFile] = useState(null)
   const [activeTools, setActiveTools] = useState(() => {
-    const initialTools = new Set()
-    TOOL_DEFINITIONS.forEach((tool) => {
-      try {
-        const storedValue = localStorage.getItem(`@Denkitsu:${tool.key}`)
-        if (JSON.parse(storedValue) === true) initialTools.add(tool.key)
-      } catch {}
-    })
-    return initialTools
-  })
+    const initialTools = new Set()
+    TOOL_DEFINITIONS.forEach((tool) => {
+      try {
+        const storedValue = localStorage.getItem(`@Denkitsu:${tool.key}`)
+        if (JSON.parse(storedValue) === true) initialTools.add(tool.key)
+      } catch {}
+    })
+    return initialTools
+  })
 
   useEffect(() => (localStorage.setItem("@Denkitsu:aiProvider", aiProvider)), [aiProvider])
   useEffect(() => (localStorage.setItem("@Denkitsu:GroqModel", groqModel)), [groqModel])
@@ -103,6 +104,7 @@ const AIProvider = ({ children }) => {
     listening, setListening, toggleListening,
     activeTools, handleToolToggle,
     imageUrls, setImageUrls,
+    audioFile, setAudioFile,
     aiProvider, setAIProvider, aiProviderToggle,
     aiKey: aiProvider === "groq" ? groqKey : openRouterKey,
     setAIKey: aiProvider === "groq" ? setGroqKey : setOpenRouterKey,
@@ -115,7 +117,7 @@ const AIProvider = ({ children }) => {
     userPrompt, setUserPrompt,
     messages, setMessages, clearHistory,
   }), [
-    stream, speaking, listening, activeTools, handleToolToggle, imageUrls,
+    stream, speaking, listening, activeTools, handleToolToggle, imageUrls, audioFile,
     aiProvider, groqKey, openRouterKey, groqModel, openRouterModel,
     freeModels, payModels, groqModels, customPrompt, userPrompt, messages,
     toggleStream, speakResponse, toggleListening, aiProviderToggle, clearHistory,
