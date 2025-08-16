@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react"
 import { Link } from "react-router-dom"
-import { Lock, Brain, Waypoints, Settings, ImagePlus, Wrench, AudioWaveform, Mic, MessageCirclePlus, Send, Bot, Speech, Square, Upload, UserPlus, LogIn } from "lucide-react"
+import { Lock, Brain, Waypoints, Settings, ImagePlus, Wrench, AudioWaveform, AudioLines, Mic, MessageCirclePlus, Send, Bot, Speech, Square, Upload, UserPlus, LogIn } from "lucide-react"
 
 import { useAuth } from "../../contexts/AuthContext"
 import { useAI } from "../../contexts/AIContext"
@@ -199,7 +199,7 @@ const AIBar = ({ loading, onAddImage, imageCount, onSendMessage, toggleSettingsD
         <div className="flex items-center gap-2 w-full">
           <AIInput id="prompt-input-mobile" value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} onKeyDown={handleKeyDown} className="resize-y" disabled={loading || isProcessingAudio} />
           <Button variant={isRecording ? "mic" : "secondary"} size="icon" $rounded title={isRecording ? "Parar Gravação" : "Gravar Áudio"} onClick={isRecording ? handleStopRecording : handleStartRecording} disabled={loading || isProcessingAudio}>
-            {isRecording ? <Square size={16} /> : <Mic size={16} />}
+            {isRecording ? <Square size={16} /> : <AudioLines size={16} />}
           </Button>
           <Button variant="secondary" size="icon" $rounded title="Upload de Áudio" onClick={handleUploadClick} disabled={loading || isProcessingAudio} loading={isProcessingAudio}>
             {!isProcessingAudio && <Upload size={16} />}
