@@ -155,7 +155,7 @@ const AIBar = ({ loading, onAddImage, imageCount, onSendMessage, toggleSettingsD
   return (
     <>
       {audioFile && (
-        <Paper className="bg-lightBg-secondary dark:bg-darkBg-secondary py-2 rounded-lg flex items-center justify-between gap-2 max-w-[95%] mb-2 mx-auto">
+        <Paper className="bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center justify-between gap-2 max-w-[95%] mb-2 mx-auto">
           <div className="flex items-center gap-2 text-lightFg-primary dark:text-darkFg-primary">
             <Paperclip size={16} />
             <span className="text-sm font-mono truncate">{audioFile.name || "gravação.webm"}</span>
@@ -165,7 +165,6 @@ const AIBar = ({ loading, onAddImage, imageCount, onSendMessage, toggleSettingsD
           </Button>
         </Paper>
       )}
-
       <Paper className="relative bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 max-w-[95%] mb-2 mx-auto">
         <input
           type="file"
