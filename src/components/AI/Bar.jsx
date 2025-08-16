@@ -9,6 +9,7 @@ import { useNotification } from "../../contexts/NotificationContext"
 import Paper from "../Paper"
 import AIInput from "./Input"
 import Button from "../Button"
+import AIAudio from "./Audio"
 
 const AIBar = ({ loading, onAddImage, imageCount, onSendMessage, toggleSettingsDoor, agentsDoor, toggleAgentsDoor, toolsDoor, toggleToolsDoor }) => {
   const { signed } = useAuth()
@@ -154,17 +155,7 @@ const AIBar = ({ loading, onAddImage, imageCount, onSendMessage, toggleSettingsD
 
   return (
     <>
-      {audioFile && (
-        <Paper className="bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center justify-between gap-2 max-w-[95%] mb-2 mx-auto">
-          <div className="flex items-center gap-2 text-lightFg-primary dark:text-darkFg-primary">
-            <Paperclip size={16} />
-            <span className="text-sm font-mono truncate">{audioFile.name || "gravação.webm"}</span>
-          </div>
-          <Button variant="danger" size="icon" $rounded title="Cancelar Áudio" onClick={() => setAudioFile(null)}>
-            <X size={16} />
-          </Button>
-        </Paper>
-      )}
+      {audioFile && <AIAudio audioFile={audioFile} setAudioFile={setAudioFile} />}
       <Paper className="relative bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 max-w-[95%] mb-2 mx-auto">
         <input
           type="file"
@@ -173,24 +164,23 @@ const AIBar = ({ loading, onAddImage, imageCount, onSendMessage, toggleSettingsD
           accept="audio/*"
           style={{ display: "none" }}
         />
-
         <div className="w-full flex flex-col gap-2 sm:hidden">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loading || !!audioFile}><Settings size={16} /></Button>
+            <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loading}><Settings size={16} /></Button>
             <Button variant={aiProvider === "groq" ? "orange" : "info"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"} disabled={loading || !!audioFile}><Waypoints size={16} /></Button>
-            <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgentsDoor} disabled={!!audioFile}><Speech size={16} /></Button>
-            <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor} disabled={aiKey.length === 0 || !!audioFile}><Wrench size={16} /></Button>
+            <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgentsDoor}><Speech size={16} /></Button>
+            <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor} disabled={aiKey.length === 0}><Wrench size={16} /></Button>
             <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={isImageSupported === false || aiProvider === "groq" || loading || !!audioFile}><ImagePlus size={16} /></Button>
-            <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={loading || !!audioFile}><AudioWaveform size={16} /></Button>
+            <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={loading}><AudioWaveform size={16} /></Button>
             <Button variant={listening ? "mic" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir (Ditado)"} onClick={toggleListening} disabled={loading || !!audioFile}><Mic size={16} /></Button>
-            <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading || !!audioFile}><MessageCirclePlus size={16} /></Button>
+            <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}><MessageCirclePlus size={16} /></Button>
           </div>
           <div className="flex items-center gap-2 w-full">
             <AIInput id="prompt-input-mobile" value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} onKeyDown={handleKeyDown} className="resize-y" disabled={loading || !!audioFile} />
-            <Button variant={isRecording ? "mic" : "secondary"} size="icon" $rounded title={isRecording ? "Parar Gravação" : "Gravar Áudio"} onClick={isRecording ? handleStopRecording : handleStartRecording} disabled={loading || !!audioFile}>
+            <Button variant={isRecording ? "mic" : "secondary"} size="icon" $rounded title={isRecording ? "Parar Gravação" : "Gravar Áudio"} onClick={isRecording ? handleStopRecording : handleStartRecording} disabled={aiProvider !== "groq" || loading || !!audioFile}>
               {isRecording ? <Square size={16} /> : <AudioLines size={16} />}
             </Button>
-            <Button variant="secondary" size="icon" $rounded title="Upload de Áudio" onClick={handleUploadClick} disabled={loading || !!audioFile}>
+            <Button variant="secondary" size="icon" $rounded title="Upload de Áudio" onClick={handleUploadClick} disabled={aiProvider !== "groq" || loading || !!audioFile}>
               <Upload size={16} />
             </Button>
             <Button size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0 && !audioFile)}>
