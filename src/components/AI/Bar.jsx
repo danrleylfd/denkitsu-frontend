@@ -183,8 +183,6 @@ const AIBar = ({ loading, onAddImage, imageCount, onSendMessage, toggleSettingsD
         accept="audio/*"
         style={{ display: "none" }}
       />
-
-      {/* CORREÇÃO DEFINITIVA: Layout para MOBILE */}
       <div className="w-full flex flex-col gap-2 sm:hidden">
         <div className="flex items-center justify-between flex-wrap gap-2">
           <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loading || isProcessingAudio}><Settings size={16} /></Button>
@@ -209,8 +207,6 @@ const AIBar = ({ loading, onAddImage, imageCount, onSendMessage, toggleSettingsD
           </Button>
         </div>
       </div>
-
-      {/* CORREÇÃO DEFINITIVA: Layout para DESKTOP */}
       <div className="w-full hidden sm:flex items-center gap-2">
         <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loading || isProcessingAudio}><Settings size={16} /></Button>
         <Button variant={aiProvider === "groq" ? "orange" : "info"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"} disabled={loading || isProcessingAudio}><Waypoints size={16} /></Button>
@@ -222,7 +218,7 @@ const AIBar = ({ loading, onAddImage, imageCount, onSendMessage, toggleSettingsD
           <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={loading || isProcessingAudio}><AudioWaveform size={16} /></Button>
           <Button variant={listening ? "mic" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir (Ditado)"} onClick={toggleListening} disabled={loading || isProcessingAudio}><Mic size={16} /></Button>
           <Button variant={isRecording ? "mic" : "secondary"} size="icon" $rounded title={isRecording ? "Parar Gravação" : "Gravar Áudio"} onClick={isRecording ? handleStopRecording : handleStartRecording} disabled={loading || isProcessingAudio}>
-            {isRecording ? <Square size={16} /> : <Mic size={16} />}
+            {isRecording ? <Square size={16} /> : <AudioLines size={16} />}
           </Button>
           <Button variant="secondary" size="icon" $rounded title="Upload de Áudio" onClick={handleUploadClick} disabled={loading || isProcessingAudio} loading={isProcessingAudio}>
             {!isProcessingAudio && <Upload size={16} />}
