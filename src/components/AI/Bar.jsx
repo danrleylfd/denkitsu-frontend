@@ -151,7 +151,7 @@ const AIBar = ({ loading, onAddImage, imageCount, onSendMessage, toggleSettingsD
             <Button variant={recording ? "mic" : "secondary"} size="icon" $rounded title={recording ? "Parar Gravação" : "Gravar Áudio"} onClick={recording ? handleStopRecording : handleStartRecording} disabled={loading || listening && !recording}>
               <AudioLines size={16} />
             </Button>
-            <Button variant="secondary" size="icon" $rounded title="Upload de Áudio" onClick={handleUploadClick} disabled={loading}>
+            <Button variant="secondary" size="icon" $rounded title="Upload de Áudio" onClick={handleUploadClick} disabled={loading || listening && !recording}>
               <FileAudio size={16} />
             </Button>
             <Button size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0 && !audioFile)}>
@@ -172,7 +172,7 @@ const AIBar = ({ loading, onAddImage, imageCount, onSendMessage, toggleSettingsD
             <Button variant={recording ? "mic" : "secondary"} size="icon" $rounded title={recording ? "Parar Gravação" : "Gravar Áudio"} onClick={recording ? handleStopRecording : handleStartRecording} disabled={loading || listening && !recording}>
               <AudioLines size={16} />
             </Button>
-            <Button variant="secondary" size="icon" $rounded title="Upload de Áudio" onClick={handleUploadClick} disabled={loading}>
+            <Button variant="secondary" size="icon" $rounded title="Upload de Áudio" onClick={handleUploadClick} disabled={loading || listening && !recording}>
               <FileAudio size={16} />
             </Button>
             <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}><MessageCirclePlus size={16} /></Button>
