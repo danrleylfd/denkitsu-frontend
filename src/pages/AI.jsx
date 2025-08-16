@@ -134,13 +134,10 @@ const AI = () => {
 
   const onSendMessage = useCallback(async () => {
     if (loading) return
-
     const promptText = aiContext.userPrompt.trim()
     const audioFile = aiContext.audioFile
     const imageUrls = aiContext.imageUrls
-
     if (!promptText && !audioFile && imageUrls.length === 0) return
-
     if (audioFile) {
       setLoading(true)
       const userMessagePlaceholder = {
@@ -148,18 +145,19 @@ const AI = () => {
         content: `[Áudio: ${audioFile.name || "Gravação"}]`,
         timestamp: new Date().toISOString()
       }
-      aiContext.setMessages(prev => [...prev, userMessagePlaceholder])
+      const historyWithPlaceholder = [...aiContext.messages, userMessagePlaceholder]
+      aiContext.setMessages(historyWithPlaceholder)
       aiContext.setAudioFile(null)
-
       try {
         const transcription = await transcribeAudio(audioFile)
-        const assistantMessage = {
-          id: Date.now(),
-          role: "assistant",
-          content: `**Transcrição do Áudio:**\n\n${transcription}`,
+        const transcriptionUserMessage = {
+          role: "user",
+          content: transcription,
           timestamp: new Date().toISOString()
         }
-        aiContext.setMessages(prev => [...prev, assistantMessage])
+        const historyWithTranscription = [...aiContext.messages.slice(0, -1), transcriptionUserMessage]
+        aiContext.setMessages(historyWithTranscription)
+        await executeSendMessage(historyWithTranscription)
       } catch (err) {
         if (err.response && err.response.data.error) {
           notifyError(err.response.data.error.message)
@@ -167,8 +165,6 @@ const AI = () => {
           notifyError("Falha ao transcrever o áudio.")
         }
         aiContext.setMessages(prev => prev.filter(m => m.timestamp !== userMessagePlaceholder.timestamp))
-      } finally {
-        setLoading(false)
       }
       return
     }
