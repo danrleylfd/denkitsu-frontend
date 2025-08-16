@@ -155,7 +155,7 @@ const AI = () => {
           content: `Se a transcrição de áudio for uma música, diga o nome da música, se não, faça um resumo do texto. Transcrição de Áudio:\n${transcription}`,
           timestamp: new Date().toISOString()
         }
-        const historyWithTranscription = [...aiContext.messages.slice(0, -1), transcriptionUserMessage]
+        const historyWithTranscription = [...historyWithPlaceholder.slice(0, -1), transcriptionUserMessage]
         aiContext.setMessages(historyWithTranscription)
         await executeSendMessage(historyWithTranscription)
       } catch (err) {
