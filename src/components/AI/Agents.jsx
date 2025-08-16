@@ -1,4 +1,4 @@
-import { BarChart2, Rss, Code, Presentation, Shield, GraduationCap, Lightbulb, Newspaper, ListTree, Bot, } from "lucide-react"
+import { BarChart2, Rss, Code, Presentation, Shield, GraduationCap, Lightbulb, Newspaper, ListTree, Bot, Speech } from "lucide-react"
 
 import Paper from "../Paper"
 import Button from "../Button"
@@ -15,6 +15,7 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
     { value: "Prompter", icon: <Lightbulb size={16} /> },
     { value: "Redator", icon: <Newspaper size={16} /> },
     { value: "Secretário", icon: <ListTree size={16} /> },
+    { value: "Transcritor", icon: <Speech size={16} /> },
   ]
 
   return (

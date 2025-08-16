@@ -35,9 +35,7 @@ const AI = () => {
       try {
         const { freeModels: loadedFree, payModels: loadedPay, groqModels: loadedGroq } = await getModels()
         aiContext.setFreeModels(loadedFree?.filter(model => !model.id.includes("whisper")) || [])
-        if (aiContext.aiKey) {
-          aiContext.setPayModels(loadedPay?.filter(model => !model.id.includes("whisper")) || [])
-        }
+        if (aiContext.aiKey) aiContext.setPayModels(loadedPay?.filter(model => !model.id.includes("whisper")) || [])
         aiContext.setGroqModels(loadedGroq?.filter(model => !model.id.includes("whisper")) || [])
       } catch (error) {
         notifyError(error.message || "Falha ao carregar modelos de IA.")
@@ -112,16 +110,13 @@ const AI = () => {
           return { content, reasoning }
         }
         const { content, reasoning } = cleanContent(res.content)
-        aiContext.setMessages(prev => [
-          ...prev,
-          {
-            id: Date.now(),
-            role: "assistant",
-            content,
-            reasoning: (res.reasoning || "") + reasoning,
-            timestamp: new Date().toISOString()
-          }
-        ])
+        aiContext.setMessages(prev => [...prev, {
+          id: Date.now(),
+          role: "assistant",
+          content,
+          reasoning: (res.reasoning || "") + reasoning,
+          timestamp: new Date().toISOString()
+        }])
       }
     } catch (err) {
       if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
@@ -163,24 +158,17 @@ const AI = () => {
         aiContext.setMessages(historyWithTranscription)
         await executeSendMessage(historyWithTranscription)
       } catch (err) {
-        if (err.response && err.response.data.error) {
-          notifyError(err.response.data.error.message)
-        } else {
-          notifyError("Falha ao transcrever o áudio.")
-        }
+        if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+        else notifyError("Falha ao transcrever o áudio.")
         aiContext.setMessages(prev => prev.filter(m => m.timestamp !== userMessagePlaceholder.timestamp))
+      } finally {
+        setLoading(false)
       }
       return
     }
-
     const newContent = []
-    if (promptText) {
-      newContent.push({ type: "text", content: promptText })
-    }
-    if (imageUrls.length > 0) {
-      newContent.push(...imageUrls.map(url => ({ type: "image_url", image_url: { url } })))
-    }
-
+    if (promptText) newContent.push({ type: "text", content: promptText })
+    if (imageUrls.length > 0) newContent.push(...imageUrls.map(url => ({ type: "image_url", image_url: { url } })))
     const newMessage = {
       role: "user",
       content: newContent,
@@ -192,7 +180,6 @@ const AI = () => {
     aiContext.setImageUrls([])
     aiContext.setAudioFile(null)
     await executeSendMessage(history)
-
   }, [loading, aiContext, executeSendMessage, notifyError])
 
   const handleRegenerateResponse = useCallback(async () => {
@@ -206,7 +193,9 @@ const AI = () => {
     aiContext.setMessages(historyWithoutLastResponse)
     await executeSendMessage(historyWithoutLastResponse)
   }, [loading, aiContext.messages, executeSendMessage, notifyWarning])
+
   const toggleLousa = useCallback((content) => setLousaContent(content), [])
+
   return (
     <SideMenu ContentView={ContentView} className="bg-brand-purple bg-cover bg-center">
       <AIHistory toggleLousa={toggleLousa} onRegenerate={handleRegenerateResponse} />
