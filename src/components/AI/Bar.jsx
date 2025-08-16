@@ -148,10 +148,10 @@ const AIBar = ({ loading, onAddImage, imageCount, onSendMessage, toggleSettingsD
           </div>
           <div className="flex items-center gap-2 w-full">
             <AIInput id="prompt-input-mobile" value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} onKeyDown={handleKeyDown} className="resize-y" disabled={loading || !!audioFile} />
-            <Button variant={isRecording ? "mic" : "secondary"} size="icon" $rounded title={isRecording ? "Parar Gravação" : "Gravar Áudio"} onClick={isRecording ? handleStopRecording : handleStartRecording} disabled={aiProvider !== "groq" || loading || !!audioFile}>
+            <Button variant={isRecording ? "mic" : "secondary"} size="icon" $rounded title={isRecording ? "Parar Gravação" : "Gravar Áudio"} onClick={isRecording ? handleStopRecording : handleStartRecording} disabled={loading || !!audioFile}>
               {isRecording ? <Square size={16} /> : <AudioLines size={16} />}
             </Button>
-            <Button variant="secondary" size="icon" $rounded title="Upload de Áudio" onClick={handleUploadClick} disabled={aiProvider !== "groq" || loading || !!audioFile}>
+            <Button variant="secondary" size="icon" $rounded title="Upload de Áudio" onClick={handleUploadClick} disabled={loading || !!audioFile}>
               <Upload size={16} />
             </Button>
             <Button size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0 && !audioFile)}>
@@ -160,14 +160,14 @@ const AIBar = ({ loading, onAddImage, imageCount, onSendMessage, toggleSettingsD
           </div>
         </div>
         <div className="w-full hidden sm:flex items-center gap-2">
-          <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loading || !!audioFile}><Settings size={16} /></Button>
+          <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loading}><Settings size={16} /></Button>
           <Button variant={aiProvider === "groq" ? "orange" : "info"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"} disabled={loading || !!audioFile}><Waypoints size={16} /></Button>
-          <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgentsDoor} disabled={!!audioFile}><Speech size={16} /></Button>
-          <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor} disabled={aiKey.length === 0 || !!audioFile}><Wrench size={16} /></Button>
+          <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgentsDoor}><Speech size={16} /></Button>
+          <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor} disabled={aiKey.length === 0}><Wrench size={16} /></Button>
           <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={isImageSupported === false || aiProvider === "groq" || loading || !!audioFile}><ImagePlus size={16} /></Button>
           <AIInput id="prompt-input-desktop" value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} onKeyDown={handleKeyDown} className="resize-y" disabled={loading || !!audioFile} />
           <div className="flex items-center gap-2">
-            <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={loading || !!audioFile}><AudioWaveform size={16} /></Button>
+            <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={loading}><AudioWaveform size={16} /></Button>
             <Button variant={listening ? "mic" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir (Ditado)"} onClick={toggleListening} disabled={loading || !!audioFile}><Mic size={16} /></Button>
             <Button variant={isRecording ? "mic" : "secondary"} size="icon" $rounded title={isRecording ? "Parar Gravação" : "Gravar Áudio"} onClick={isRecording ? handleStopRecording : handleStartRecording} disabled={loading || !!audioFile}>
               {isRecording ? <Square size={16} /> : <AudioLines size={16} />}
@@ -175,7 +175,7 @@ const AIBar = ({ loading, onAddImage, imageCount, onSendMessage, toggleSettingsD
             <Button variant="secondary" size="icon" $rounded title="Upload de Áudio" onClick={handleUploadClick} disabled={loading || !!audioFile}>
               <Upload size={16} />
             </Button>
-            <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading || !!audioFile}><MessageCirclePlus size={16} /></Button>
+            <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}><MessageCirclePlus size={16} /></Button>
           </div>
           <Button variant="primary" size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0 && !audioFile)}>
             {!loading && <Send size={16} />}
