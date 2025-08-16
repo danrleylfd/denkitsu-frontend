@@ -150,9 +150,13 @@ const AI = () => {
       aiContext.setAudioFile(null)
       try {
         const transcription = await transcribeAudio(audioFile)
+        audioPrompt = `
+        Goal: Se a transcrição de áudio gerada por IA for uma música, diga o nome da música, se não, faça um resumo do texto
+        Context Dump: Transcrição de Áudio:\n${transcription}
+        `
         const transcriptionUserMessage = {
           role: "user",
-          content: `Se a transcrição de áudio for uma música, diga o nome da música, se não, faça um resumo do texto. Transcrição de Áudio:\n${transcription}`,
+          content: audioPrompt,
           timestamp: new Date().toISOString()
         }
         const historyWithTranscription = [...historyWithPlaceholder.slice(0, -1), transcriptionUserMessage]
