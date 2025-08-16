@@ -35,7 +35,9 @@ const AI = () => {
       try {
         const { freeModels: loadedFree, payModels: loadedPay, groqModels: loadedGroq } = await getModels()
         aiContext.setFreeModels(loadedFree?.filter(model => !model.id.includes("whisper")) || [])
-        if (aiContext.aiKey) aiContext.setPayModels(loadedPay?.filter(model => !model.id.includes("whisper")) || [])
+        if (aiContext.aiKey) {
+          aiContext.setPayModels(loadedPay?.filter(model => !model.id.includes("whisper")) || [])
+        }
         aiContext.setGroqModels(loadedGroq?.filter(model => !model.id.includes("whisper")) || [])
       } catch (error) {
         notifyError(error.message || "Falha ao carregar modelos de IA.")
@@ -110,13 +112,16 @@ const AI = () => {
           return { content, reasoning }
         }
         const { content, reasoning } = cleanContent(res.content)
-        aiContext.setMessages(prev => [...prev, {
-          id: Date.now(),
-          role: "assistant",
-          content,
-          reasoning: (res.reasoning || "") + reasoning,
-          timestamp: new Date().toISOString()
-        }])
+        aiContext.setMessages(prev => [
+          ...prev,
+          {
+            id: Date.now(),
+            role: "assistant",
+            content,
+            reasoning: (res.reasoning || "") + reasoning,
+            timestamp: new Date().toISOString()
+          }
+        ])
       }
     } catch (err) {
       if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
@@ -129,37 +134,45 @@ const AI = () => {
 
   const onSendMessage = useCallback(async () => {
     if (loading) return
+
     const promptText = aiContext.userPrompt.trim()
     const audioFile = aiContext.audioFile
     const imageUrls = aiContext.imageUrls
+
     if (!promptText && !audioFile && imageUrls.length === 0) return
-    if (audioFile && !promptText && imageUrls.length === 0) {
+
+    if (audioFile) {
       setLoading(true)
-      const newMessage = {
+      const userMessagePlaceholder = {
         role: "user",
-        content: `[Arquivo de áudio: ${audioFile.name || "Gravação"}]`,
+        content: `[Áudio: ${audioFile.name || "Gravação"}]`,
         timestamp: new Date().toISOString()
       }
-      aiContext.setMessages(prev => [...prev, newMessage])
+      aiContext.setMessages(prev => [...prev, userMessagePlaceholder])
       aiContext.setAudioFile(null)
+
       try {
         const transcription = await transcribeAudio(audioFile)
         const assistantMessage = {
           id: Date.now(),
           role: "assistant",
-          content: `**Transcrição do áudio:**\n\n> ${transcription}`,
+          content: `**Transcrição do Áudio:**\n\n${transcription}`,
           timestamp: new Date().toISOString()
         }
         aiContext.setMessages(prev => [...prev, assistantMessage])
       } catch (err) {
-        if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
-        else notifyError("Falha ao transcrever o áudio.")
-        aiContext.setMessages(prev => prev.slice(0, -1))
+        if (err.response && err.response.data.error) {
+          notifyError(err.response.data.error.message)
+        } else {
+          notifyError("Falha ao transcrever o áudio.")
+        }
+        aiContext.setMessages(prev => prev.filter(m => m.timestamp !== userMessagePlaceholder.timestamp))
       } finally {
         setLoading(false)
       }
       return
     }
+
     const newContent = []
     if (promptText) {
       newContent.push({ type: "text", content: promptText })
@@ -167,6 +180,7 @@ const AI = () => {
     if (imageUrls.length > 0) {
       newContent.push(...imageUrls.map(url => ({ type: "image_url", image_url: { url } })))
     }
+
     const newMessage = {
       role: "user",
       content: newContent,
@@ -192,9 +206,7 @@ const AI = () => {
     aiContext.setMessages(historyWithoutLastResponse)
     await executeSendMessage(historyWithoutLastResponse)
   }, [loading, aiContext.messages, executeSendMessage, notifyWarning])
-
   const toggleLousa = useCallback((content) => setLousaContent(content), [])
-
   return (
     <SideMenu ContentView={ContentView} className="bg-brand-purple bg-cover bg-center">
       <AIHistory toggleLousa={toggleLousa} onRegenerate={handleRegenerateResponse} />
@@ -215,10 +227,7 @@ const AI = () => {
         />
       </div>
       <AITip />
-      <AISettings
-        settingsDoor={settingsDoor}
-        toggleSettingsDoor={() => setSettingsDoor(prev => !prev)}
-      />
+      <AISettings settingsDoor={settingsDoor} toggleSettingsDoor={() => setSettingsDoor(prev => !prev)} />
       <Lousa content={lousaContent} toggleLousa={toggleLousa} />
     </SideMenu>
   )
