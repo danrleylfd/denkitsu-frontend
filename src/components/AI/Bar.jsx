@@ -6,11 +6,11 @@ import { useAuth } from "../../contexts/AuthContext"
 import { useAI } from "../../contexts/AIContext"
 import { useNotification } from "../../contexts/NotificationContext"
 
+import AIBarSignOut from "./BarSignOut"
+import AIAudio from "./Audio"
 import Paper from "../Paper"
 import AIInput from "./Input"
 import Button from "../Button"
-import AIAudio from "./Audio"
-import AIBarSignOut from "./BarSignOut"
 
 const AIBar = ({ loading, onAddImage, imageCount, onSendMessage, toggleSettingsDoor, agentsDoor, toggleAgentsDoor, toolsDoor, toggleToolsDoor }) => {
   const { signed } = useAuth()

@@ -1,4 +1,4 @@
-import { Paperclip } from "lucide-react"
+import { Paperclip, X } from "lucide-react"
 
 import Paper from "../Paper"
 import Button from "../Button"
