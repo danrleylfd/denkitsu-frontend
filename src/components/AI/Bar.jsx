@@ -72,7 +72,6 @@ const AIBar = ({ loading, onAddImage, imageCount, onSendMessage, toggleSettingsD
         return
       }
       setAudioFile(file)
-      notifyInfo(`Arquivo "${file.name}" pronto para enviar.`)
     }
     event.target.value = ""
   }
