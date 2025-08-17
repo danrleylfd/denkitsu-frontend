@@ -9,7 +9,7 @@ import Paper from "../Paper"
 
 const FeatureListItem = ({ icon: Icon, title, children }) => (
   <div className="flex items-start gap-3">
-    <Icon size={18} className="text-primary-base flex-shrink-0 mt-1" />
+    <Icon size={18} className="text-primary-base flex-shrink-0" />
     <div>
       <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary">{title}</h5>
       <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary">{children}</p>
@@ -129,7 +129,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
             <button
               key={id}
               onClick={() => setActiveTab(id)}
-              className={`flex items-center gap-2 px-3 py-2 text-sm font-bold border-b-2 transition-colors ${
+              className={`flex items-center gap-2 px-2 text-sm font-bold border-b-2 transition-colors ${
                 activeTab === id
                   ? "border-primary-base text-primary-base"
                   : "border-transparent text-lightFg-secondary dark:text-darkFg-secondary hover:text-lightFg-primary dark:hover:text-darkFg-primary"
