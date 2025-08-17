@@ -51,29 +51,31 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
     switch (activeTab) {
       case "agents":
         return (
-          <div>
-            <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary">Dê à IA um papel específico. Cada agente é otimizado para um tipo de tarefa, alterando o estilo e o formato da resposta.</p>
+          <>
+            <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary">
+              Dê à IA um papel específico. Cada agente é otimizado para um tipo de tarefa, alterando o estilo e o formato da resposta.
+            </p>
             {AGENTS_DEFINITIONS.map(({ value, Icon }) => (
               <FeatureListItem key={value} title={value} icon={Icon}>
                 {agentDescriptions[value]}
               </FeatureListItem>
             ))}
-          </div>
+          </>
         )
       case "tools":
         return (
-          <div>
+          <>
             <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary">Conecte a IA a fontes de dados externas para obter respostas mais ricas e atualizadas. Requer chave de API e um modelo compatível.</p>
             {TOOL_DEFINITIONS.map(({ key, title, Icon }) => (
               <FeatureListItem key={key} title={title} icon={Icon}>
                 {`Permite que a IA use a ferramenta "${title}" para contextualizar a resposta.`}
               </FeatureListItem>
             ))}
-          </div>
+          </>
         )
       case "media":
         return (
-          <div>
+          <>
             <FeatureListItem title="Análise de Imagens" icon={ImagePlus}>
               Envie até 3 imagens (via URL) para que a IA possa vê-las e responder a perguntas sobre seu conteúdo. Requer um modelo compatível com visão.
             </FeatureListItem>
@@ -83,22 +85,22 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
             <FeatureListItem title="Transcrição de Áudio" icon={AudioLines}>
               Grave uma mensagem de voz ou faça o upload de um arquivo de áudio para que a IA transcreva e, se desejar, resuma ou analise o conteúdo.
             </FeatureListItem>
-          </div>
+          </>
         )
       case "customization":
         return (
-          <div>
+          <>
             <FeatureListItem title="Aperfeiçoador de Prompt" icon={Sparkle}>
               Tem uma ideia mas não sabe como formular a pergunta? Escreva o que vier à mente e use o aperfeiçoador para que a IA transforme seu rascunho em um prompt claro e eficaz.
             </FeatureListItem>
             <FeatureListItem title="Comportamento Personalizado" icon={Languages}>
               Acesse as configurações e defina um "prompt de sistema". Diga à IA como ela deve se comportar, qual sua personalidade, e que regras deve seguir em todas as suas respostas.
             </FeatureListItem>
-          </div>
+          </>
         )
       case "settings":
         return (
-          <div>
+          <>
             <FeatureListItem title="Provedores de IA" icon={Waypoints}>
               Alterne facilmente entre diferentes fornecedores de modelos, como Groq para velocidade ou OpenRouter para variedade, usando sua própria chave de API.
             </FeatureListItem>
@@ -109,7 +111,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
               <Settings size={16} className="mr-2"/>
               Abrir Configurações
             </Button>
-          </div>
+          </>
         )
       default:
         return null
