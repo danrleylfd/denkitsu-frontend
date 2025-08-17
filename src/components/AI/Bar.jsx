@@ -1,4 +1,4 @@
-import { Waypoints, Settings, Wrench, Speech, Sparkle, MessageCirclePlus, Send, Paperclip } from "lucide-react"
+import { Info, Waypoints, Settings, Wrench, Speech, Sparkle, MessageCirclePlus, Send, Paperclip } from "lucide-react"
 import { useAuth } from "../../contexts/AuthContext"
 import { useAI } from "../../contexts/AIContext"
 import AIBarSignOut from "./BarSignOut"
@@ -6,7 +6,7 @@ import Paper from "../Paper"
 import AIInput from "./Input"
 import Button from "../Button"
 
-const AIBar = ({ loading, isImproving, improvePrompt, imageCount, onSendMessage, toggleSettingsDoor, agentsDoor, toggleAgentsDoor, toolsDoor, toggleToolsDoor, mediaDoor, toggleMediaDoor }) => {
+const AIBar = ({ loading, isImproving, improvePrompt, imageCount, onSendMessage, toggleFeaturesDoor, toggleSettingsDoor, agentsDoor, toggleAgentsDoor, toolsDoor, toggleToolsDoor, mediaDoor, toggleMediaDoor }) => {
   const { signed } = useAuth()
   if (!signed) return <AIBarSignOut />
   const {
@@ -30,6 +30,7 @@ const AIBar = ({ loading, isImproving, improvePrompt, imageCount, onSendMessage,
       <Paper className="relative bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 max-w-[95%] mb-2 mx-auto">
         <div className="w-full flex flex-col gap-2 md:hidden">
           <div className="flex items-center justify-between flex-wrap gap-2">
+            <Button variant="secondary" size="icon" $rounded title="Recursos" onClick={toggleFeaturesDoor} disabled={loading || isImproving}><Info size={16} /></Button>
             <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loading || isImproving}><Settings size={16} /></Button>
             <Button variant={aiProvider === "groq" ? "orange" : "info"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"} disabled={loading || isImproving}><Waypoints size={16} /></Button>
             <Button variant={mediaDoor ? "outline" : "secondary"} size="icon" $rounded title="Mídia" onClick={toggleMediaDoor} disabled={loading || isImproving}><Paperclip size={16} /></Button>
@@ -44,6 +45,7 @@ const AIBar = ({ loading, isImproving, improvePrompt, imageCount, onSendMessage,
           </div>
         </div>
         <div className="w-full hidden md:flex items-center gap-2">
+          <Button variant="secondary" size="icon" $rounded title="Recursos" onClick={toggleFeaturesDoor} disabled={loading || isImproving}><Info size={16} /></Button>
           <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loading || isImproving}><Settings size={16} /></Button>
           <Button variant={aiProvider === "groq" ? "orange" : "info"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"} disabled={loading || isImproving}><Waypoints size={16} /></Button>
           <Button variant={mediaDoor ? "outline" : "secondary"} size="icon" $rounded title="Mídia" onClick={toggleMediaDoor} disabled={loading || isImproving}><Paperclip size={16} /></Button>

@@ -14,6 +14,7 @@ import AIAudio from "../components/AI/Audio"
 import AIMedia from "../components/AI/Media"
 import AITip from "../components/AI/Tip"
 import AIBar from "../components/AI/Bar"
+import AIFeatures from "../components/AI/AIFeatures"
 import AISettings from "../components/AI/Settings"
 import Lousa from "../components/AI/Lousa"
 
@@ -31,6 +32,7 @@ const AI = () => {
   const [agentsDoor, setAgentsDoor] = useState(false)
   const [toolsDoor, setToolsDoor] = useState(false)
   const [mediaDoor, setMediaDoor] = useState(false)
+  const [featuresDoor, setFeaturesDoor] = useState(false)
   const [settingsDoor, setSettingsDoor] = useState(false)
 
   useEffect(() => {
@@ -82,6 +84,7 @@ const AI = () => {
         toggleMediaDoor={() => setMediaDoor(prev => !prev)}
         toggleSettingsDoor={() => setSettingsDoor(prev => !prev)}
       />
+      <AIFeatures featuresDoor={featuresDoor} toggleFeaturesDoor={() => setFeaturesDoor(prev => !prev)} />
       <AISettings settingsDoor={settingsDoor} toggleSettingsDoor={() => setSettingsDoor(prev => !prev)} />
       <Lousa content={lousaContent} toggleLousa={toggleLousa} />
     </SideMenu>
