@@ -8,7 +8,7 @@ import Button from "../Button"
 import Paper from "../Paper"
 
 const FeatureListItem = ({ icon: Icon, title, children }) => (
-  <div className="flex items-start gap-3">
+  <div className="flex items-start gap-2">
     <Icon size={18} className="text-primary-base flex-shrink-0 mt-1" />
     <div>
       <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary">{title}</h5>
@@ -121,7 +121,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
       <Paper
         className="relative flex w-full max-w-2xl flex-col gap-2 rounded-lg bg-lightBg-primary p-2 shadow-2xl dark:bg-darkBg-primary"
         onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center justify-between border-b border-bLight dark:border-bDark pb-1">
+        <div className="flex items-center justify-between border-b border-bLight dark:border-bDark">
           <h3 className="font-bold text-lightFg-primary dark:text-darkFg-primary">Recursos do Denkitsu AI</h3>
           <Button variant="danger" size="icon" $rounded onClick={toggleFeaturesDoor}>
             <X size={16} />
@@ -133,7 +133,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
             <button
               key={id}
               onClick={() => setActiveTab(id)}
-              className={`flex items-center gap-2 px-3 py-2 text-sm font-bold border-b-2 transition-colors ${
+              className={`flex items-center gap-2 px-2 py-2 text-sm font-bold transition-colors ${
                 activeTab === id
                   ? "border-primary-base text-primary-base"
                   : "border-transparent text-lightFg-secondary dark:text-darkFg-secondary hover:text-lightFg-primary dark:hover:text-darkFg-primary"

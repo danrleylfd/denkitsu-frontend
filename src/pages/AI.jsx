@@ -85,7 +85,7 @@ const AI = () => {
         toggleFeaturesDoor={() => setFeaturesDoor(prev => !prev)}
         toggleSettingsDoor={() => setSettingsDoor(prev => !prev)}
       />
-      <AIFeatures featuresDoor={featuresDoor} toggleFeaturesDoor={() => setFeaturesDoor(prev => !prev)} />
+      <AIFeatures featuresDoor={featuresDoor} toggleFeaturesDoor={() => setFeaturesDoor(prev => !prev)} toggleSettingsDoor={() => setSettingsDoor(prev => !prev)} />
       <AISettings settingsDoor={settingsDoor} toggleSettingsDoor={() => setSettingsDoor(prev => !prev)} />
       <Lousa content={lousaContent} toggleLousa={toggleLousa} />
     </SideMenu>
