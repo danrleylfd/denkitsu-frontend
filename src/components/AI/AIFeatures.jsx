@@ -9,7 +9,7 @@ import Paper from "../Paper"
 
 const FeatureListItem = ({ icon: Icon, title, children }) => (
   <div className="flex items-start gap-3">
-    <Icon size={18} className="text-primary-base flex-shrink-0" />
+    <Icon size={18} className="text-primary-base flex-shrink-0 mt-1" />
     <div>
       <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary">{title}</h5>
       <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary">{children}</p>
@@ -105,6 +105,10 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
             <FeatureListItem title="Seleção de Modelos" icon={Bot}>
               Escolha o modelo de IA específico que deseja usar para a conversa, aproveitando uma vasta lista de opções gratuitas e premium disponíveis em cada provedor.
             </FeatureListItem>
+            <Button variant="outline" $rounded onClick={handleOpenSettings}>
+              <Settings size={16} className="mr-2"/>
+              Abrir Configurações
+            </Button>
           </div>
         )
       default:
@@ -115,7 +119,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <Paper
-        className="relative flex w-full max-w-2xl flex-col gap-4 rounded-lg bg-lightBg-primary p-4 shadow-2xl dark:bg-darkBg-primary"
+        className="relative flex w-full max-w-2xl flex-col gap-2 rounded-lg bg-lightBg-primary p-2 shadow-2xl dark:bg-darkBg-primary"
         onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between border-b border-bLight dark:border-bDark pb-1">
           <h3 className="font-bold text-lightFg-primary dark:text-darkFg-primary">Recursos do Denkitsu AI</h3>
@@ -129,7 +133,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
             <button
               key={id}
               onClick={() => setActiveTab(id)}
-              className={`flex items-center gap-2 px-2 text-sm font-bold border-b-2 transition-colors ${
+              className={`flex items-center gap-2 px-3 py-2 text-sm font-bold border-b-2 transition-colors ${
                 activeTab === id
                   ? "border-primary-base text-primary-base"
                   : "border-transparent text-lightFg-secondary dark:text-darkFg-secondary hover:text-lightFg-primary dark:hover:text-darkFg-primary"
