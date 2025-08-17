@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect, useCallback, useContext } from "react"
 
-import { INITIAL_TASKS } from "../constants"
+import { INITIAL_TASKS } from "../constants/tasks"
 import { sendMessage } from "../services/aiChat"
 
 import { useAI } from "./AIContext"

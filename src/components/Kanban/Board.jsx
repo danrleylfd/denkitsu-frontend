@@ -3,7 +3,7 @@ import { DndContext, DragOverlay } from "@dnd-kit/core"
 import { useDnd } from "../../contexts/DndContext"
 import { useTasks } from "../../contexts/TasksContext"
 
-import { COLUMN_TITLES } from "../../constants"
+import { COLUMN_TITLES } from "../../constants/tasks"
 
 import KanbanColumn from "./Column"
 import TaskCreator from "./TaskCreator"

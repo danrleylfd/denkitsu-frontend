@@ -3,7 +3,7 @@ import { useDroppable } from "@dnd-kit/core"
 
 import { useTasks } from "../../contexts/TasksContext"
 
-import { COLUMN_TITLES } from "../../constants"
+import { COLUMN_TITLES } from "../../constants/tasks"
 
 import TaskCard from "./TaskCard"
 

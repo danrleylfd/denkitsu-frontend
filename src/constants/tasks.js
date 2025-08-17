@@ -1,7 +1,5 @@
 export const INITIAL_TASKS = {
-  todo: [
-    { id: "task-1", content: "Listar Tarefas" }
-  ],
+  todo: [ { id: "task-1", content: "Listar Tarefas" } ],
   inProgress: [],
   review: [],
   done: []
