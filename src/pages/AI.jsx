@@ -14,7 +14,7 @@ import AIAudio from "../components/AI/Audio"
 import AIMedia from "../components/AI/Media"
 import AITip from "../components/AI/Tip"
 import AIBar from "../components/AI/Bar"
-import AIFeatures from "../components/AI/AIFeatures"
+import AIFeatures from "../components/AI/Features"
 import AISettings from "../components/AI/Settings"
 import Lousa from "../components/AI/Lousa"
 
