@@ -1,9 +1,6 @@
 import { createContext, useState, useEffect, useContext, useMemo, useCallback } from "react"
-
-import { useNotification } from "./NotificationContext"
-import { sendMessage } from "../services/aiChat"
-
 import { TOOL_DEFINITIONS } from "../constants/tools"
+import useSendMessage from "../hooks/useSendMessage"
 
 const AIContext = createContext()
 
@@ -17,9 +14,6 @@ const AIProvider = ({ children }) => {
   const storedStream = JSON.parse(localStorage.getItem("@Denkitsu:Stream"))
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
 
-  const { notifyInfo, notifySuccess, notifyError } = useNotification()
-
-  const [isImproving, setIsImproving] = useState(false)
   const [aiProvider, setAIProvider] = useState(storedAIProvider || "groq")
   const [groqModel, setGroqModel] = useState(storedModelGroq || "deepseek-r1-distill-llama-70b")
   const [openRouterModel, setOpenRouterModel] = useState(storedOpenRouterModel || "deepseek/deepseek-r1:free")
@@ -36,6 +30,7 @@ const AIProvider = ({ children }) => {
   const [speaking, setSpeaking] = useState(false)
   const [listening, setListening] = useState(false)
   const [audioFile, setAudioFile] = useState(null)
+  const [selectedAgent, setSelectedAgent] = useState("Padrão")
   const [activeTools, setActiveTools] = useState(() => {
     const initialTools = new Set()
     TOOL_DEFINITIONS.forEach((tool) => {
@@ -47,42 +42,21 @@ const AIProvider = ({ children }) => {
     return initialTools
   })
 
+  const aiKey = aiProvider === "groq" ? groqKey : openRouterKey
+  const model = aiProvider === "groq" ? groqModel : openRouterModel
+
+  const hookProps = {
+    aiProvider, aiKey, model, stream, activeTools, userPrompt, imageUrls, audioFile, messages,
+    freeModels, payModels, groqModels, selectedAgent,
+    setUserPrompt, setImageUrls, setAudioFile, setMessages
+  }
+  const { loading, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt } = useSendMessage(hookProps)
+
   useEffect(() => (localStorage.setItem("@Denkitsu:aiProvider", aiProvider)), [aiProvider])
   useEffect(() => (localStorage.setItem("@Denkitsu:GroqModel", groqModel)), [groqModel])
   useEffect(() => (localStorage.setItem("@Denkitsu:OpenRouterModel", openRouterModel)), [openRouterModel])
   useEffect(() => (localStorage.setItem("@Denkitsu:customPrompt", customPrompt)), [customPrompt])
   useEffect(() => (localStorage.setItem("@Denkitsu:Stream", stream)), [stream])
-
-  const improvePrompt = useCallback(async () => {
-    if (!userPrompt.trim() || isImproving) return
-    setIsImproving(true)
-    notifyInfo("Aperfeiçoando seu prompt...")
-    const userMessage = { role: "user", content: userPrompt }
-    try {
-      const aiKey = aiProvider === "groq" ? groqKey : openRouterKey
-      const model = aiProvider === "groq" ? groqModel : openRouterModel
-      const response = await sendMessage(
-        aiKey,
-        aiProvider,
-        model,
-        [...freeModels, ...payModels, ...groqModels],
-        [userMessage],
-        "Prompter",
-        new Set()
-      )
-      const improvedPrompt = response.data?.choices?.[0]?.message?.content
-      if (improvedPrompt) {
-        setUserPrompt(improvedPrompt)
-        notifySuccess("Prompt aperfeiçoado!")
-      } else notifyError("Não foi possível aperfeiçoar o prompt.")
-    } catch (error) {
-      console.error("Error improving prompt:", error)
-      if (error.response && error.response.data.error) notifyError(error.response.data.error.message)
-      else notifyError("Falha ao aperfeiçoar o prompt.")
-    } finally {
-      setIsImproving(false)
-    }
-  }, [userPrompt, isImproving, groqKey, openRouterKey, groqModel, openRouterModel, aiProvider, freeModels, payModels, groqModels, notifyInfo, notifySuccess, notifyError])
 
   const handleToolToggle = useCallback((toolKey, isActive) => {
     setActiveTools(prev => {
@@ -143,9 +117,9 @@ const AIProvider = ({ children }) => {
     imageUrls, setImageUrls,
     audioFile, setAudioFile,
     aiProvider, setAIProvider, aiProviderToggle,
-    aiKey: aiProvider === "groq" ? groqKey : openRouterKey,
+    aiKey,
     setAIKey: aiProvider === "groq" ? setGroqKey : setOpenRouterKey,
-    model: aiProvider === "groq" ? groqModel : openRouterModel,
+    model,
     setModel: aiProvider === "groq" ? setGroqModel : setOpenRouterModel,
     freeModels, setFreeModels,
     payModels, setPayModels,
@@ -153,13 +127,14 @@ const AIProvider = ({ children }) => {
     customPrompt, setCustomPrompt,
     userPrompt, setUserPrompt,
     messages, setMessages, clearHistory,
-    isImproving, improvePrompt,
+    selectedAgent, setSelectedAgent,
+    loading, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt
   }), [
     stream, speaking, listening, activeTools, handleToolToggle, imageUrls, audioFile,
-    aiProvider, groqKey, openRouterKey, groqModel, openRouterModel,
+    aiProvider, aiKey, model, groqKey, openRouterKey, groqModel, openRouterModel,
     freeModels, payModels, groqModels, customPrompt, userPrompt, messages,
     toggleStream, speakResponse, toggleListening, aiProviderToggle, clearHistory,
-    isImproving, improvePrompt,
+    selectedAgent, loading, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt
   ])
   return (
     <AIContext.Provider value={values}>
