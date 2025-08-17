@@ -12,7 +12,7 @@ const TIPS = [
   "A análise de imagens exige um modelo compatível ex: qwen/qwen2.5-vl-72b-instruct:free. Máximo 3 imagens.",
   "As ferramentas exigem um modelo compatível ex: deepseek/deepseek-chat-v3-0324:free.",
   "Use as ferramentas para contextualizar o Denkitsu.",
-  "Pressione Shift + Enter para quebrar a linha no campo de prompt.",
+  "Pressione Ctrl + Enter para enviar o prompt.",
   "Para usar os comandos ative as ferramentas necessárias e digite / e uma lista de comandos aparecerá.",
   "Limpe a conversa a qualquer momento clicando no ícone de nova mensagem.",
   "Entregue a ferramenta Buscar Notícias ao Agente Redator e veja a mágica acontecer",

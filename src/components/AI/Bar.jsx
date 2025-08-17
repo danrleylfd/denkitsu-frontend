@@ -1,5 +1,4 @@
-import { Link } from "react-router-dom"
-import { Lock, Waypoints, Settings, ImagePlus, Wrench, AudioWaveform, AudioLines, Mic, MessageCirclePlus, Send, Speech, FileAudio, UserPlus, LogIn, Sparkle } from "lucide-react"
+import { Waypoints, Settings, ImagePlus, Wrench, AudioWaveform, AudioLines, Mic, MessageCirclePlus, Send, Speech, FileAudio, Sparkle } from "lucide-react"
 import { useAuth } from "../../contexts/AuthContext"
 import { useAI } from "../../contexts/AIContext"
 import AIBarSignOut from "./BarSignOut"
@@ -29,7 +28,7 @@ const AIBar = ({ loading, isImproving, improvePrompt, onAddImage, imageCount, on
   }
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === "Enter" && e.ctrlKey) {
       e.preventDefault()
       handleSendMessage()
     }
