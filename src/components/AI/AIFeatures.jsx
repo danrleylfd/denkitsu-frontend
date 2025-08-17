@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { X, Bot, Wrench, Sparkle, Paperclip, Settings, ImagePlus, AudioLines, Mic, Languages, Waypoints } from "lucide-react"
+import { X, Bot, Wrench, Sparkle, Paperclip, Settings, ImagePlus, AudioLines, Mic, Languages, Waypoints, Star } from "lucide-react"
 
 import { AGENTS_DEFINITIONS } from "../../constants/agents"
 import { TOOL_DEFINITIONS } from "../../constants/tools"
@@ -21,6 +21,7 @@ const tabs = [
   { id: "agents", label: "Agentes", icon: Bot },
   { id: "tools", label: "Ferramentas", icon: Wrench },
   { id: "media", label: "Mídia", icon: Paperclip },
+  { id: "extras", label: "Extras", icon: Star },
   { id: "customization", label: "Personalização", icon: Sparkle },
   { id: "settings", label: "Configurações", icon: Settings },
 ]
@@ -79,11 +80,29 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
             <FeatureListItem title="Análise de Imagens" icon={ImagePlus}>
               Envie até 3 imagens (via URL) para que a IA possa vê-las e responder a perguntas sobre seu conteúdo. Requer um modelo compatível com visão.
             </FeatureListItem>
+            <FeatureListItem title="Leitura em Voz Alta" icon={Speech}>
+              Qualquer resposta da IA pode ser convertida em áudio. Clique no ícone de som para ouvir a mensagem em voz alta.
+            </FeatureListItem>
             <FeatureListItem title="Ditado por Voz" icon={Mic}>
               Ative o modo "Ouvir" para transcrever continuamente sua fala para a caixa de texto, ideal para ditar longos prompts sem digitar.
             </FeatureListItem>
             <FeatureListItem title="Transcrição de Áudio" icon={AudioLines}>
               Grave uma mensagem de voz ou faça o upload de um arquivo de áudio para que a IA transcreva e, se desejar, resuma ou analise o conteúdo.
+            </FeatureListItem>
+          </>
+        )
+      case "extras":
+        return (
+          <>
+            <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary">Combine os recursos do Denkitsu para automatizar tarefas complexas em outras áreas da aplicação.</p>
+            <FeatureListItem title="Gerar Notícias com Fontes" icon={Newspaper}>
+              Na página de Notícias ou no Chat, combine o Agente <strong>Redator</strong> com a Ferramenta <strong>Buscar Notícias</strong>. Descreva um tópico e a IA irá pesquisar e escrever um artigo completo.
+            </FeatureListItem>
+            <FeatureListItem title="Criar Conteúdo para Vídeos" icon={Upload}>
+              Na página de Upload, use o Agente <strong>Blogueiro</strong> para gerar automaticamente o título e a descrição do seu vídeo a partir de um tema ou rascunho.
+            </FeatureListItem>
+            <FeatureListItem title="Planejar Projetos no Kanban" icon={Kanban}>
+              Na página Kanban, descreva um objetivo (ex: "lançar meu site") e use o Agente <strong>Secretário</strong> para que a IA gere automaticamente uma lista de tarefas passo a passo.
             </FeatureListItem>
           </>
         )
@@ -108,9 +127,9 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
               Escolha o modelo de IA específico que deseja usar para a conversa, aproveitando uma vasta lista de opções gratuitas e premium disponíveis em cada provedor.
             </FeatureListItem>
             <Button variant="outline" $rounded onClick={handleOpenSettings}>
-              <Settings size={16} className="mr-2"/>
-              Abrir Configurações
-            </Button>
+              <Settings size={16} className="mr-2"/>
+              Abrir Configurações
+            </Button>
           </>
         )
       default:
