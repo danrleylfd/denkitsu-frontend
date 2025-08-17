@@ -11,9 +11,9 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
       mb-1 py-2 gap-2 rounded-lg shadow-lg max-w-[95%]
       grid grid-cols-[repeat(auto-fit,minmax(2rem,1fr))] justify-center justify-items-center mx-auto`}
     >
-      {AGENTS_DEFINITIONS.map((agent) => (
-        <Button key={agent.value} variant={selectedAgent === agent.value ? "outline" : "secondary"} size="icon" $rounded title={agent.value} onClick={() => onSelectAgent(agent.value)} disabled={loading}>
-          {agent.icon}
+      {AGENTS_DEFINITIONS.map(({ value, Icon }) => (
+        <Button key={value} variant={selectedAgent === value ? "outline" : "secondary"} size="icon" $rounded title={value} onClick={() => onSelectAgent(value)} disabled={loading}>
+          <Icon size={16} />
         </Button>
       ))}
     </Paper>
