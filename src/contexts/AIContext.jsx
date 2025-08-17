@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect, useContext, useMemo, useCallback } from "react"
 
 import { useNotification } from "./NotificationContext"
+import { sendMessage } from "../services/aiChat"
 
 import { TOOL_DEFINITIONS } from "../constants/tools"
 
