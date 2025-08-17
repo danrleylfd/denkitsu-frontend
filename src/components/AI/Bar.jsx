@@ -133,7 +133,7 @@ const AIBar = ({ loading, onAddImage, imageCount, onSendMessage, toggleSettingsD
   return (
     <>
       {audioFile && <AIAudio audioFile={audioFile} setAudioFile={setAudioFile} />}
-      <Paper className="relative bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 max-w-[95%] mb-2 mx-auto">
+      <Paper className="relative bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 max-w-[95%] mb-1 mx-auto">
         <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="audio/*" style={{ display: "none" }} />
         <div className="w-full flex flex-col gap-2 sm:hidden">
           <div className="flex items-center justify-between flex-wrap gap-2">
