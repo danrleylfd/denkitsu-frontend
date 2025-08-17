@@ -131,7 +131,8 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
         className="relative flex w-full max-w-2xl flex-col gap-2 rounded-lg bg-lightBg-primary p-2 shadow-2xl dark:bg-darkBg-primary"
         onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between border-b border-bLight dark:border-bDark">
-          <h3 className="font-bold text-lightFg-primary dark:text-darkFg-primary">Recursos do Denkitsu AI</h3>
+          <h3 className="font-bold text-lightFg-primary dark:text-darkFg-primary">Apresentamos Denkitsu!</h3>
+          <p className="text-lightFg-secondary dark:text-darkFg-secondary">Seu Parceiro Inteligente!</p>
           <Button variant="danger" size="icon" $rounded onClick={toggleFeaturesDoor}>
             <X size={16} />
           </Button>
