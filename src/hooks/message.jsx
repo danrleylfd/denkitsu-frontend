@@ -137,7 +137,7 @@ const useMessage = (props) => {
   const improvePrompt = useCallback(async () => {
     if (!userPrompt.trim() || isImproving || loading) return
     setIsImproving(true)
-    notifyInfo("Aprimorando seu prompt...")
+    notifyInfo("Aperfeiçoando seu prompt...")
     const userMessage = { role: "user", content: userPrompt }
     try {
       const response = await sendMessage(
@@ -148,16 +148,16 @@ const useMessage = (props) => {
       const improvedPrompt = response.data?.choices?.[0]?.message?.content
       if (improvedPrompt) {
         setUserPrompt(improvedPrompt)
-        notifySuccess("Prompt aprimorado!")
+        notifySuccess("Prompt Aperfeiçoado!")
       } else {
-        notifyError("Não foi possível aprimorar o prompt.")
+        notifyError("Não foi possível aperfeiçoar o prompt.")
       }
     } catch (error) {
       console.error("Error improving prompt:", error)
       if (error.response && error.response.data.error) {
         notifyError(error.response.data.error.message)
       } else {
-        notifyError("Falha ao aprimorar o prompt.")
+        notifyError("Falha ao aperfeiçoar o prompt.")
       }
     } finally {
       setIsImproving(false)
