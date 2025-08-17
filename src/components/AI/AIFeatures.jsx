@@ -51,7 +51,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
     switch (activeTab) {
       case "agents":
         return (
-          <div className="space-y-4">
+          <div>
             <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary">Dê à IA um papel específico. Cada agente é otimizado para um tipo de tarefa, alterando o estilo e o formato da resposta.</p>
             {AGENTS_DEFINITIONS.map(({ value, Icon }) => (
               <FeatureListItem key={value} title={value} icon={Icon}>
@@ -62,7 +62,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
         )
       case "tools":
         return (
-          <div className="space-y-4">
+          <div>
             <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary">Conecte a IA a fontes de dados externas para obter respostas mais ricas e atualizadas. Requer chave de API e um modelo compatível.</p>
             {TOOL_DEFINITIONS.map(({ key, title, Icon }) => (
               <FeatureListItem key={key} title={title} icon={Icon}>
@@ -73,7 +73,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
         )
       case "media":
         return (
-          <div className="space-y-4">
+          <div>
             <FeatureListItem title="Análise de Imagens" icon={ImagePlus}>
               Envie até 3 imagens (via URL) para que a IA possa vê-las e responder a perguntas sobre seu conteúdo. Requer um modelo compatível com visão.
             </FeatureListItem>
@@ -87,7 +87,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
         )
       case "customization":
         return (
-          <div className="space-y-4">
+          <div>
             <FeatureListItem title="Aperfeiçoador de Prompt" icon={Sparkle}>
               Tem uma ideia mas não sabe como formular a pergunta? Escreva o que vier à mente e use o aperfeiçoador para que a IA transforme seu rascunho em um prompt claro e eficaz.
             </FeatureListItem>
@@ -98,7 +98,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
         )
       case "settings":
         return (
-          <div className="space-y-4">
+          <div>
             <FeatureListItem title="Provedores de IA" icon={Waypoints}>
               Alterne facilmente entre diferentes fornecedores de modelos, como Groq para velocidade ou OpenRouter para variedade, usando sua própria chave de API.
             </FeatureListItem>
