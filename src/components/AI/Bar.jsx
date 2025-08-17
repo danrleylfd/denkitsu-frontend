@@ -135,7 +135,7 @@ const AIBar = ({ loading, onAddImage, imageCount, onSendMessage, toggleSettingsD
       {audioFile && <AIAudio audioFile={audioFile} setAudioFile={setAudioFile} />}
       <Paper className="relative bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 max-w-[95%] mb-1 mx-auto">
         <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="audio/*" style={{ display: "none" }} />
-        <div className="w-full flex flex-col gap-2 sm:hidden">
+        <div className="w-full flex flex-col gap-2 md:hidden">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loading}><Settings size={16} /></Button>
             <Button variant={aiProvider === "groq" ? "orange" : "info"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"} disabled={loading}><Waypoints size={16} /></Button>
@@ -155,7 +155,7 @@ const AIBar = ({ loading, onAddImage, imageCount, onSendMessage, toggleSettingsD
             </Button>
           </div>
         </div>
-        <div className="w-full hidden sm:flex items-center gap-2">
+        <div className="w-full hidden md:flex items-center gap-2">
           <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loading}><Settings size={16} /></Button>
           <Button variant={aiProvider === "groq" ? "orange" : "info"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"} disabled={loading}><Waypoints size={16} /></Button>
           <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgentsDoor}><Speech size={16} /></Button>
