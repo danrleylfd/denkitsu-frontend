@@ -1,5 +1,7 @@
 import { createContext, useState, useEffect, useContext, useMemo, useCallback } from "react"
 
+import { useNotification } from "./NotificationContext"
+
 import { TOOL_DEFINITIONS } from "../constants/tools"
 
 const AIContext = createContext()
@@ -14,6 +16,9 @@ const AIProvider = ({ children }) => {
   const storedStream = JSON.parse(localStorage.getItem("@Denkitsu:Stream"))
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
 
+  const { notifyInfo, notifySuccess, notifyError } = useNotification()
+
+  const [isImproving, setIsImproving] = useState(false)
   const [aiProvider, setAIProvider] = useState(storedAIProvider || "groq")
   const [groqModel, setGroqModel] = useState(storedModelGroq || "deepseek-r1-distill-llama-70b")
   const [openRouterModel, setOpenRouterModel] = useState(storedOpenRouterModel || "deepseek/deepseek-r1:free")
@@ -46,6 +51,35 @@ const AIProvider = ({ children }) => {
   useEffect(() => (localStorage.setItem("@Denkitsu:OpenRouterModel", openRouterModel)), [openRouterModel])
   useEffect(() => (localStorage.setItem("@Denkitsu:customPrompt", customPrompt)), [customPrompt])
   useEffect(() => (localStorage.setItem("@Denkitsu:Stream", stream)), [stream])
+
+  const improvePrompt = useCallback(async () => {
+    if (!userPrompt.trim() || isImproving) return
+    setIsImproving(true)
+    notifyInfo("Aperfeiçoando seu prompt...")
+    const userMessage = { role: "user", content: userPrompt }
+    try {
+      const response = await sendMessage(
+        aiKey,
+        aiProvider,
+        model,
+        [...freeModels, ...payModels, ...groqModels],
+        [userMessage],
+        "Prompter",
+        new Set()
+      )
+      const improvedPrompt = response.data?.choices?.[0]?.message?.content
+      if (improvedPrompt) {
+        setUserPrompt(improvedPrompt)
+        notifySuccess("Prompt aperfeiçoado!")
+      } else notifyError("Não foi possível aperfeiçoar o prompt.")
+    } catch (error) {
+      console.error("Error improving prompt:", error)
+      if (error.response && error.response.data.error) notifyError(error.response.data.error.message)
+      else notifyError("Falha ao aperfeiçoar o prompt.")
+    } finally {
+      setIsImproving(false)
+    }
+  }, [userPrompt, isImproving, aiKey, aiProvider, model, freeModels, payModels, groqModels, notifyInfo, notifySuccess, notifyError])
 
   const handleToolToggle = useCallback((toolKey, isActive) => {
     setActiveTools(prev => {
@@ -116,11 +150,13 @@ const AIProvider = ({ children }) => {
     customPrompt, setCustomPrompt,
     userPrompt, setUserPrompt,
     messages, setMessages, clearHistory,
+    isImproving, improvePrompt,
   }), [
     stream, speaking, listening, activeTools, handleToolToggle, imageUrls, audioFile,
     aiProvider, groqKey, openRouterKey, groqModel, openRouterModel,
     freeModels, payModels, groqModels, customPrompt, userPrompt, messages,
     toggleStream, speakResponse, toggleListening, aiProviderToggle, clearHistory,
+    isImproving, improvePrompt,
   ])
   return (
     <AIContext.Provider value={values}>

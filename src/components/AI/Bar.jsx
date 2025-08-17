@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react"
-import { Link } from "react-router-dom"
-import { Lock, Brain, Waypoints, Settings, ImagePlus, Wrench, AudioWaveform, AudioLines, Mic, MessageCirclePlus, Send, Bot, Speech, Square, FileAudio, UserPlus, LogIn, Paperclip, X } from "lucide-react"
+import { Sparkle, Waypoints, Settings, ImagePlus, Wrench, AudioWaveform, AudioLines, Mic, MessageCirclePlus, Send, Speech, FileAudio, } from "lucide-react"
 
 import { useAuth } from "../../contexts/AuthContext"
 import { useAI } from "../../contexts/AIContext"
@@ -22,6 +21,7 @@ const AIBar = ({ loading, onAddImage, imageCount, onSendMessage, toggleSettingsD
     model, freeModels, payModels, groqModels,
     stream, toggleStream,
     listening, setListening, toggleListening,
+    isImproving, improvePrompt,
   } = useAI()
   const { notifyError, notifyInfo } = useNotification()
 
@@ -146,6 +146,7 @@ const AIBar = ({ loading, onAddImage, imageCount, onSendMessage, toggleSettingsD
             <Button variant={listening ? "mic" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir (Ditado)"} onClick={toggleListening} disabled={loading || recording}><Mic size={16} /></Button>
             <Button variant={recording ? "mic" : "secondary"} size="icon" $rounded title={recording ? "Parar Gravação" : "Gravar Áudio"} onClick={recording ? handleStopRecording : handleStartRecording} disabled={loading || listening && !recording}><AudioLines size={16} /></Button>
             <Button variant="secondary" size="icon" $rounded title="Upload de Áudio" onClick={handleUploadClick} disabled={loading || listening || recording}><FileAudio size={16} /></Button>
+            <Button variant="secondary" size="icon" $rounded title="Aperfeiçoar Prompt" onClick={improvePrompt} loading={isImproving} disabled={loading || !userPrompt.trim()}><Sparkle size={16} /></Button>
           </div>
           <div className="flex items-center gap-2 w-full">
             <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}><MessageCirclePlus size={16} /></Button>
@@ -167,6 +168,7 @@ const AIBar = ({ loading, onAddImage, imageCount, onSendMessage, toggleSettingsD
             <Button variant={listening ? "mic" : "secondary"} size="icon" $rounded title={listening ? "Parar de ouvir" : "Ouvir (Ditado)"} onClick={toggleListening} disabled={loading || recording}><Mic size={16} /></Button>
             <Button variant={recording ? "mic" : "secondary"} size="icon" $rounded title={recording ? "Parar Gravação" : "Gravar Áudio"} onClick={recording ? handleStopRecording : handleStartRecording} disabled={loading || listening && !recording}><AudioLines size={16} /></Button>
             <Button variant="secondary" size="icon" $rounded title="Upload de Áudio" onClick={handleUploadClick} disabled={loading || listening || recording}><FileAudio size={16} /></Button>
+            <Button variant="secondary" size="icon" $rounded title="Aperfeiçoar Prompt" onClick={improvePrompt} loading={isImproving} disabled={loading || !userPrompt.trim()}><Sparkle size={16} /></Button>
             <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading}><MessageCirclePlus size={16} /></Button>
           </div>
           <Button variant="primary" size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || (!userPrompt.trim() && imageCount === 0 && !audioFile)}>
