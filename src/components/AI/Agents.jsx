@@ -18,14 +18,11 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
     { value: "Transcritor", icon: <Speech size={16} /> },
   ]
 
-  //grid grid-cols-5 sm:grid-cols-9
-  //md:flex md:static md:mx-auto md:left-auto md:translate-x-0 md:bottom-auto
-  //absolute z-20 left-1/2 -translate-x-1/2 bottom-full
   return (
     <Paper className={`bg-lightBg-primary dark:bg-darkBg-primary text-lightFg-primary dark:text-darkFg-primary
       opacity-80 dark:opacity-90
       mb-2 py-2 gap-2 rounded-lg shadow-lg max-w-[95%]
-      grid xs:grid-cols-5 sm:grid-cols-7 md:grid-cols-9 lg:grid-cols-[30]
+      grid grid-cols-[repeat(auto-fit,minmax(2.25rem,1fr))]
       mx-auto left-auto translate-x-0 bottom-auto`}
     >
       {agentOptions.map((agent) => (
