@@ -82,6 +82,7 @@ const AI = () => {
         toggleAgentsDoor={() => setAgentsDoor(prev => !prev)}
         toggleToolsDoor={() => setToolsDoor(prev => !prev)}
         toggleMediaDoor={() => setMediaDoor(prev => !prev)}
+        toggleFeaturesDoor={() => setFeaturesDoor(prev => !prev)}
         toggleSettingsDoor={() => setSettingsDoor(prev => !prev)}
       />
       <AIFeatures featuresDoor={featuresDoor} toggleFeaturesDoor={() => setFeaturesDoor(prev => !prev)} />
