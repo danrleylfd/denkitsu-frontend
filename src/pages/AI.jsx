@@ -197,22 +197,20 @@ const AI = () => {
     <SideMenu ContentView={ContentView} className="bg-brand-purple bg-cover bg-center">
       <AIHistory toggleLousa={toggleLousa} onRegenerate={handleRegenerateResponse} />
       <ImagePreview />
-      <div className="w-full relative">
-        <AIAgents loading={loading} agentsDoor={agentsDoor} selectedAgent={selectedPrompt} onSelectAgent={setSelectedPrompt} />
-        <AITools loading={loading} toolsDoor={toolsDoor} />
-        <AIBar
-          loading={loading}
-          onAddImage={onAddImage}
-          imageCount={aiContext.imageUrls.length}
-          onSendMessage={onSendMessage}
-          agentsDoor={agentsDoor}
-          toolsDoor={toolsDoor}
-          toggleAgentsDoor={() => setAgentsDoor(prev => !prev)}
-          toggleToolsDoor={() => setToolsDoor(prev => !prev)}
-          toggleSettingsDoor={() => setSettingsDoor(prev => !prev)}
-        />
-      </div>
+      <AIAgents loading={loading} agentsDoor={agentsDoor} selectedAgent={selectedPrompt} onSelectAgent={setSelectedPrompt} />
+      <AITools loading={loading} toolsDoor={toolsDoor} />
       <AITip />
+      <AIBar
+        loading={loading}
+        onAddImage={onAddImage}
+        imageCount={aiContext.imageUrls.length}
+        onSendMessage={onSendMessage}
+        agentsDoor={agentsDoor}
+        toolsDoor={toolsDoor}
+        toggleAgentsDoor={() => setAgentsDoor(prev => !prev)}
+        toggleToolsDoor={() => setToolsDoor(prev => !prev)}
+        toggleSettingsDoor={() => setSettingsDoor(prev => !prev)}
+      />
       <AISettings settingsDoor={settingsDoor} toggleSettingsDoor={() => setSettingsDoor(prev => !prev)} />
       <Lousa content={lousaContent} toggleLousa={toggleLousa} />
     </SideMenu>
