@@ -26,18 +26,6 @@ const tabs = [
   { id: "settings", label: "Configurações", icon: Settings },
 ]
 
-const agentDescriptions = {
-  Padrão: "Assistente geral para uma ampla gama de tarefas e conversas.",
-  Analista: "Focado em interpretar dados, encontrar padrões e gerar insights.",
-  Blogueiro: "Ideal para criar textos longos, artigos e posts de blog com estilo.",
-  Desenvolvedor: "Especializado em gerar, explicar e depurar código em várias linguagens.",
-  Lousa: "Otimizado para criar visualizações interativas com código HTML.",
-  Prompter: "Ajuda a refinar e melhorar as suas próprias perguntas para obter melhores respostas.",
-  Redator: "Perfeito para escrever textos concisos, anúncios e notícias.",
-  Secretário: "Excelente para organizar informações, criar listas e formatar dados.",
-  Transcritor: "Especialista em transcrever áudio para texto com alta precisão.",
-}
-
 const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) => {
   const [activeTab, setActiveTab] = useState("agents")
 
@@ -56,9 +44,9 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
             <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary">
               Dê à IA um papel específico. Cada agente é otimizado para um tipo de tarefa, alterando o estilo e o formato da resposta.
             </p>
-            {AGENTS_DEFINITIONS.map(({ value, Icon }) => (
+            {AGENTS_DEFINITIONS.map(({ value, description, Icon }) => (
               <FeatureListItem key={value} title={value} icon={Icon}>
-                {agentDescriptions[value]}
+                {description}
               </FeatureListItem>
             ))}
           </>
@@ -67,9 +55,9 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
         return (
           <>
             <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary">Conecte a IA a fontes de dados externas para obter respostas mais ricas e atualizadas. Requer chave de API e um modelo compatível.</p>
-            {TOOL_DEFINITIONS.map(({ key, title, Icon }) => (
+            {TOOL_DEFINITIONS.map(({ key, title, description, Icon }) => (
               <FeatureListItem key={key} title={title} icon={Icon}>
-                {`Permite que a IA use a ferramenta "${title}" para contextualizar a resposta.`}
+                {description}
               </FeatureListItem>
             ))}
           </>
@@ -81,8 +69,8 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
               Envie até 3 imagens (via URL) para que a IA possa vê-las e responder a perguntas sobre seu conteúdo. Requer um modelo compatível com visão.
             </FeatureListItem>
             <FeatureListItem title="Leitura em Voz Alta" icon={Speech}>
-              Qualquer resposta da IA pode ser convertida em áudio. Clique no ícone de som para ouvir a mensagem em voz alta.
-            </FeatureListItem>
+              Qualquer resposta da IA pode ser convertida em áudio. Clique no ícone de som para ouvir a mensagem em voz alta.
+            </FeatureListItem>
             <FeatureListItem title="Ditado por Voz" icon={Mic}>
               Ative o modo "Ouvir" para transcrever continuamente sua fala para a caixa de texto, ideal para ditar longos prompts sem digitar.
             </FeatureListItem>
