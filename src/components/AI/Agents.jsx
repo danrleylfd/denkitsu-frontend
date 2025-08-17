@@ -25,7 +25,7 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
     <Paper className={`bg-lightBg-primary dark:bg-darkBg-primary text-lightFg-primary dark:text-darkFg-primary
       opacity-80 dark:opacity-90
       mb-2 py-2 gap-2 rounded-lg shadow-lg max-w-[95%]
-      grid xs:grid-cols-5 sm:grid-cols-7 md:grid-cols-9
+      grid xs:grid-cols-5 sm:grid-cols-7 md:grid-cols-9 lg:grid-cols-[30]
       mx-auto left-auto translate-x-0 bottom-auto`}
     >
       {agentOptions.map((agent) => (
