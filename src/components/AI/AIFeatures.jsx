@@ -77,11 +77,11 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
             <FeatureListItem title="Análise de Imagens" icon={ImagePlus}>
               Envie até 3 imagens (via URL) para que a IA possa vê-las e responder a perguntas sobre seu conteúdo. Requer um modelo compatível com visão.
             </FeatureListItem>
-            <FeatureListItem title="Transcrição de Áudio" icon={AudioLines}>
-              Grave uma mensagem de voz ou faça o upload de um arquivo de áudio para que a IA transcreva e, se desejar, resuma ou analise o conteúdo.
-            </FeatureListItem>
             <FeatureListItem title="Ditado por Voz" icon={Mic}>
               Ative o modo "Ouvir" para transcrever continuamente sua fala para a caixa de texto, ideal para ditar longos prompts sem digitar.
+            </FeatureListItem>
+            <FeatureListItem title="Transcrição de Áudio" icon={AudioLines}>
+              Grave uma mensagem de voz ou faça o upload de um arquivo de áudio para que a IA transcreva e, se desejar, resuma ou analise o conteúdo.
             </FeatureListItem>
           </div>
         )
@@ -119,7 +119,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <Paper
-        className="relative flex w-full max-w-lg flex-col gap-4 rounded-lg bg-lightBg-primary p-4 shadow-2xl dark:bg-darkBg-primary"
+        className="relative flex w-full max-w-2xl flex-col gap-4 rounded-lg bg-lightBg-primary p-4 shadow-2xl dark:bg-darkBg-primary"
         onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between border-b border-bLight dark:border-bDark pb-2">
           <h3 className="font-bold text-lightFg-primary dark:text-darkFg-primary">Recursos do Denkitsu AI</h3>
