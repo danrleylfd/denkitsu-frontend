@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect, useContext, useMemo, useCallback } from "react"
 import { TOOL_DEFINITIONS } from "../constants/tools"
-import useSendMessage from "../hooks/useSendMessage"
-import useAudio from "../hooks/useAudio"
+import useMessage from "../hooks/message"
+import useAudio from "../hooks/audio"
 
 const AIContext = createContext()
 
@@ -54,7 +54,7 @@ const AIProvider = ({ children }) => {
 
   const {
     loading, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt
-  } = useSendMessage({
+  } = useMessage({
     aiProvider, aiKey, model, stream, activeTools, userPrompt, imageUrls, audioFile, messages,
     freeModels, payModels, groqModels, selectedAgent,
     setUserPrompt, setImageUrls, setAudioFile, setMessages
