@@ -6,14 +6,15 @@ import { useNotification } from "../contexts/NotificationContext"
 import { getModels } from "../services/aiChat"
 
 import SideMenu from "../components/SideMenu"
-import AIBar from "../components/AI/Bar"
-import AITip from "../components/AI/Tip"
+import AIHistory from "../components/AI/History"
 import ImagePreview from "../components/AI/ImagePreview"
-import AISettings from "../components/AI/Settings"
 import AIAgents from "../components/AI/Agents"
 import AITools from "../components/AI/Tools"
+import AIAudio from "../components/AI/Audio"
 import AIMedia from "../components/AI/Media"
-import AIHistory from "../components/AI/History"
+import AITip from "../components/AI/Tip"
+import AIBar from "../components/AI/Bar"
+import AISettings from "../components/AI/Settings"
 import Lousa from "../components/AI/Lousa"
 
 const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-dvh mx-auto">{children}</main>
@@ -22,7 +23,8 @@ const AI = () => {
   const {
     setFreeModels, setPayModels, setGroqModels, aiKey, imageUrls, setImageUrls,
     selectedAgent, setSelectedAgent, loading, isImproving, onSendMessage,
-    handleRegenerateResponse, improvePrompt, fileInputRef, handleFileChange
+    handleRegenerateResponse, improvePrompt, fileInputRef, handleFileChange,
+    audioFile, setAudioFile,
   } = useAI()
   const { notifyWarning, notifyError } = useNotification()
   const [lousaContent, setLousaContent] = useState(null)
@@ -60,9 +62,10 @@ const AI = () => {
     <SideMenu ContentView={ContentView} className="bg-brand-purple bg-cover bg-center">
       <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="audio/*" style={{ display: "none" }} />
       <AIHistory toggleLousa={toggleLousa} onRegenerate={handleRegenerateResponse} />
-      <ImagePreview />
       <AIAgents loading={loading || isImproving} agentsDoor={agentsDoor} selectedAgent={selectedAgent} onSelectAgent={setSelectedAgent} />
       <AITools loading={loading || isImproving} toolsDoor={toolsDoor} />
+      <ImagePreview />
+      {audioFile && <AIAudio audioFile={audioFile} setAudioFile={setAudioFile} />}
       <AIMedia mediaDoor={mediaDoor} onAddImage={onAddImage} loading={loading} isImproving={isImproving} />
       <AITip />
       <AIBar

@@ -2,7 +2,6 @@ import { Waypoints, Settings, Wrench, Speech, Sparkle, MessageCirclePlus, Send, 
 import { useAuth } from "../../contexts/AuthContext"
 import { useAI } from "../../contexts/AIContext"
 import AIBarSignOut from "./BarSignOut"
-import AIAudio from "./Audio"
 import Paper from "../Paper"
 import AIInput from "./Input"
 import Button from "../Button"
@@ -11,7 +10,7 @@ const AIBar = ({ loading, isImproving, improvePrompt, imageCount, onSendMessage,
   const { signed } = useAuth()
   if (!signed) return <AIBarSignOut />
   const {
-    aiProvider, aiProviderToggle, aiKey, userPrompt, setUserPrompt, audioFile, setAudioFile, clearHistory
+    aiProvider, aiProviderToggle, aiKey, userPrompt, setUserPrompt, audioFile, clearHistory
   } = useAI()
 
   const handleSendMessage = () => {
@@ -28,8 +27,6 @@ const AIBar = ({ loading, isImproving, improvePrompt, imageCount, onSendMessage,
   }
 
   return (
-    <>
-      {audioFile && <AIAudio audioFile={audioFile} setAudioFile={setAudioFile} />}
       <Paper className="relative bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 max-w-[95%] mb-2 mx-auto">
         <div className="w-full flex flex-col gap-2 md:hidden">
           <div className="flex items-center justify-between flex-wrap gap-2">
@@ -60,7 +57,6 @@ const AIBar = ({ loading, isImproving, improvePrompt, imageCount, onSendMessage,
           <Button variant="primary" size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || isImproving || (!userPrompt.trim() && imageCount === 0 && !audioFile)}>{!loading && <Send size={16} />}</Button>
         </div>
       </Paper>
-    </>
   )
 }
 
