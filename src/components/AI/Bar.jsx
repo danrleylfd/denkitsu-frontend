@@ -12,122 +12,122 @@ import AIInput from "./Input"
 import Button from "../Button"
 
 const AIBar = ({ loading, isImproving, improvePrompt, onAddImage, imageCount, onSendMessage, toggleSettingsDoor, agentsDoor, toggleAgentsDoor, toolsDoor, toggleToolsDoor }) => {
-  const { signed } = useAuth()
-  if (!signed) return <AIBarSignOut />
-  const {
-    aiProvider, aiProviderToggle, aiKey,
-    userPrompt, setUserPrompt, audioFile, setAudioFile,
-    clearHistory,
-    model, freeModels, payModels, groqModels,
-    stream, toggleStream,
-    listening, setListening, toggleListening,
-  } = useAI()
-  const { notifyError, notifyInfo } = useNotification()
+  const { signed } = useAuth()
+  if (!signed) return <AIBarSignOut />
+  const {
+    aiProvider, aiProviderToggle, aiKey,
+    userPrompt, setUserPrompt, audioFile, setAudioFile,
+    clearHistory,
+    model, freeModels, payModels, groqModels,
+    stream, toggleStream,
+    listening, setListening, toggleListening,
+  } = useAI()
+  const { notifyError, notifyInfo } = useNotification()
 
-  const [recording, setRecording] = useState(false)
-  const mediaRecorderRef = useRef(null)
-  const audioChunksRef = useRef([])
-  const fileInputRef = useRef(null)
-  const recognitionRef = useRef(null)
+  const [recording, setRecording] = useState(false)
+  const mediaRecorderRef = useRef(null)
+  const audioChunksRef = useRef([])
+  const fileInputRef = useRef(null)
+  const recognitionRef = useRef(null)
 
-  const allModels = [...freeModels, ...payModels, ...groqModels]
-  const selectedModel = allModels.find(m => m.id === model)
-  const isImageSupported = selectedModel?.supports_images ?? false
+  const allModels = [...freeModels, ...payModels, ...groqModels]
+  const selectedModel = allModels.find(m => m.id === model)
+  const isImageSupported = selectedModel?.supports_images ?? false
 
-  const handleStartRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-      mediaRecorderRef.current = new MediaRecorder(stream)
-      mediaRecorderRef.current.ondataavailable = (event) => {
-        audioChunksRef.current.push(event.data)
-      }
-      mediaRecorderRef.current.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" })
-        setAudioFile(audioBlob)
-        notifyInfo("Gravação pronta para enviar.")
-        audioChunksRef.current = []
-        stream.getTracks().forEach(track => track.stop())
-      }
-      mediaRecorderRef.current.start()
-      setRecording(true)
-    } catch (err) {
-      notifyError("Não foi possível acessar o microfone.")
-    }
-  }
+  const handleStartRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      mediaRecorderRef.current = new MediaRecorder(stream)
+      mediaRecorderRef.current.ondataavailable = (event) => {
+        audioChunksRef.current.push(event.data)
+      }
+      mediaRecorderRef.current.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" })
+        setAudioFile(audioBlob)
+        notifyInfo("Gravação pronta para enviar.")
+        audioChunksRef.current = []
+        stream.getTracks().forEach(track => track.stop())
+      }
+      mediaRecorderRef.current.start()
+      setRecording(true)
+    } catch (err) {
+      notifyError("Não foi possível acessar o microfone.")
+    }
+  }
 
-  const handleStopRecording = () => {
-    if (mediaRecorderRef.current) {
-      mediaRecorderRef.current.stop()
-      setRecording(false)
-    }
-  }
+  const handleStopRecording = () => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop()
+      setRecording(false)
+    }
+  }
 
-  const handleUploadClick = () => {
-    fileInputRef.current.click()
-  }
+  const handleUploadClick = () => {
+    fileInputRef.current.click()
+  }
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0]
-    if (file) {
-      if (file.size > 25 * 1024 * 1024) {
-        notifyError("O arquivo de áudio não pode exceder 25 MB.")
-        return
-      }
-      setAudioFile(file)
-    }
-    event.target.value = ""
-  }
+  const handleFileChange = (event) => {
+    const file = event.target.files[0]
+    if (file) {
+      if (file.size > 25 * 1024 * 1024) {
+        notifyError("O arquivo de áudio não pode exceder 25 MB.")
+        return
+      }
+      setAudioFile(file)
+    }
+    event.target.value = ""
+  }
 
-  const handleSendMessage = () => {
-    if (loading || isImproving) return
-    if (!userPrompt.trim() && imageCount === 0 && !audioFile) return
-    onSendMessage()
-  }
+  const handleSendMessage = () => {
+    if (loading || isImproving) return
+    if (!userPrompt.trim() && imageCount === 0 && !audioFile) return
+    onSendMessage()
+  }
 
-  useEffect(() => {
-    if (!("webkitSpeechRecognition" in window)) {
-      console.error("Reconhecimento de voz não é suportado neste navegador.")
-      return
-    }
-    const recognition = new window.webkitSpeechRecognition()
-    recognition.continuous = true
-    recognition.interimResults = true
-    recognition.lang = "pt-BR"
-    recognition.onresult = (event) => {
-      let finalTranscript = ""
-      for (let i = event.resultIndex; i < event.results.length; ++i) {
-        if (event.results[i].isFinal) finalTranscript += event.results[i][0].transcript
-      }
-      if (finalTranscript) setUserPrompt((prev) => `${prev}${finalTranscript}`)
-    }
-    recognition.onerror = (event) => {
-      console.error(`Erro no reconhecimento de voz: ${event.error}`)
-    }
-    recognitionRef.current = recognition
-    return () => {
-      if (recognitionRef.current) {
-        recognitionRef.current.onend = null
-        recognitionRef.current.stop()
-      }
-    }
-  }, [setUserPrompt])
+  useEffect(() => {
+    if (!("webkitSpeechRecognition" in window)) {
+      console.error("Reconhecimento de voz não é suportado neste navegador.")
+      return
+    }
+    const recognition = new window.webkitSpeechRecognition()
+    recognition.continuous = true
+    recognition.interimResults = true
+    recognition.lang = "pt-BR"
+    recognition.onresult = (event) => {
+      let finalTranscript = ""
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) finalTranscript += event.results[i][0].transcript
+      }
+      if (finalTranscript) setUserPrompt((prev) => `${prev}${finalTranscript}`)
+    }
+    recognition.onerror = (event) => {
+      console.error(`Erro no reconhecimento de voz: ${event.error}`)
+    }
+    recognitionRef.current = recognition
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.onend = null
+        recognitionRef.current.stop()
+      }
+    }
+  }, [setUserPrompt])
 
-  useEffect(() => {
-    const recognition = recognitionRef.current
-    if (!recognition) return
-    recognition.onend = () => {
-      if (listening) recognition.start()
-    }
-    if (listening) recognition.start()
-    else recognition.stop()
-  }, [listening])
+  useEffect(() => {
+    const recognition = recognitionRef.current
+    if (!recognition) return
+    recognition.onend = () => {
+      if (listening) recognition.start()
+    }
+    if (listening) recognition.start()
+    else recognition.stop()
+  }, [listening])
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault()
-      handleSendMessage()
-    }
-  }
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault()
+      handleSendMessage()
+    }
+  }
 
   return (
     <>

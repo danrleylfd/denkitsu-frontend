@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect, useContext, useMemo, useCallback } from "react"
 import { TOOL_DEFINITIONS } from "../constants/tools"
-import useSendMessage from "../hooks/useSendMessage"
+import useSendMessage from "../hooks/message"
 
 const AIContext = createContext()
 
