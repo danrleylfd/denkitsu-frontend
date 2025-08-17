@@ -59,6 +59,7 @@ const AIProvider = ({ children }) => {
     const userMessage = { role: "user", content: userPrompt }
     try {
       const aiKey = aiProvider === "groq" ? groqKey : openRouterKey
+      const model = aiProvider === "groq" ? groqModel : openRouterModel
       const response = await sendMessage(
         aiKey,
         aiProvider,
@@ -80,7 +81,7 @@ const AIProvider = ({ children }) => {
     } finally {
       setIsImproving(false)
     }
-  }, [userPrompt, isImproving, groqKey, openRouterKey, aiProvider, model, freeModels, payModels, groqModels, notifyInfo, notifySuccess, notifyError])
+  }, [userPrompt, isImproving, groqKey, openRouterKey, groqModel, openRouterModel, aiProvider, freeModels, payModels, groqModels, notifyInfo, notifySuccess, notifyError])
 
   const handleToolToggle = useCallback((toolKey, isActive) => {
     setActiveTools(prev => {
