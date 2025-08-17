@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import { Lock, UserPlus, LogIn } from "lucide-react"
 
 import Paper from "../Paper"
