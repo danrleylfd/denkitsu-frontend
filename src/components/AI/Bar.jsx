@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { Lock, Waypoints, Settings, ImagePlus, Wrench, AudioWaveform, AudioLines, Mic, MessageCirclePlus, Send, Speech, FileAudio, UserPlus, LogIn, Lightbulb } from "lucide-react"
+import { Lock, Waypoints, Settings, ImagePlus, Wrench, AudioWaveform, AudioLines, Mic, MessageCirclePlus, Send, Speech, FileAudio, UserPlus, LogIn, Sparkle } from "lucide-react"
 import { useAuth } from "../../contexts/AuthContext"
 import { useAI } from "../../contexts/AIContext"
 import AIBarSignOut from "./BarSignOut"
@@ -56,7 +56,7 @@ const AIBar = ({ loading, isImproving, improvePrompt, onAddImage, imageCount, on
             <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading || isImproving}><MessageCirclePlus size={16} /></Button>
             <AIInput id="prompt-input-mobile" value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} onKeyDown={handleKeyDown} className="resize-y" disabled={loading || isImproving} />
             <Button variant="warning" size="icon" $rounded title="Aprimorar Prompt" onClick={improvePrompt} loading={isImproving} disabled={loading || isImproving || !userPrompt.trim()}>
-              {!isImproving && <Lightbulb size={16} />}
+              {!isImproving && <Sparkle size={16} />}
             </Button>
             <Button size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || isImproving || (!userPrompt.trim() && imageCount === 0 && !audioFile)}>
               {!loading && <Send size={16} />}
@@ -78,7 +78,7 @@ const AIBar = ({ loading, isImproving, improvePrompt, onAddImage, imageCount, on
             <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading || isImproving}><MessageCirclePlus size={16} /></Button>
           </div>
           <Button variant="warning" size="icon" $rounded title="Aprimorar Prompt" onClick={improvePrompt} loading={isImproving} disabled={loading || isImproving || !userPrompt.trim()}>
-            {!isImproving && <Lightbulb size={16} />}
+            {!isImproving && <Sparkle size={16} />}
           </Button>
           <Button variant="primary" size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || isImproving || (!userPrompt.trim() && imageCount === 0 && !audioFile)}>
             {!loading && <Send size={16} />}
