@@ -53,33 +53,34 @@ const AIProvider = ({ children }) => {
   useEffect(() => (localStorage.setItem("@Denkitsu:Stream", stream)), [stream])
 
   const improvePrompt = useCallback(async () => {
-    if (!userPrompt.trim() || isImproving) return
-    setIsImproving(true)
-    notifyInfo("Aperfeiçoando seu prompt...")
-    const userMessage = { role: "user", content: userPrompt }
-    try {
-      const response = await sendMessage(
-        aiKey,
-        aiProvider,
-        model,
-        [...freeModels, ...payModels, ...groqModels],
-        [userMessage],
-        "Prompter",
-        new Set()
-      )
-      const improvedPrompt = response.data?.choices?.[0]?.message?.content
-      if (improvedPrompt) {
-        setUserPrompt(improvedPrompt)
-        notifySuccess("Prompt aperfeiçoado!")
-      } else notifyError("Não foi possível aperfeiçoar o prompt.")
-    } catch (error) {
-      console.error("Error improving prompt:", error)
-      if (error.response && error.response.data.error) notifyError(error.response.data.error.message)
-      else notifyError("Falha ao aperfeiçoar o prompt.")
-    } finally {
-      setIsImproving(false)
-    }
-  }, [userPrompt, isImproving, aiKey, aiProvider, model, freeModels, payModels, groqModels, notifyInfo, notifySuccess, notifyError])
+    if (!userPrompt.trim() || isImproving) return
+    setIsImproving(true)
+    notifyInfo("Aperfeiçoando seu prompt...")
+    const userMessage = { role: "user", content: userPrompt }
+    try {
+      const aiKey = aiProvider === "groq" ? groqKey : openRouterKey
+      const response = await sendMessage(
+        aiKey,
+        aiProvider,
+        model,
+        [...freeModels, ...payModels, ...groqModels],
+        [userMessage],
+        "Prompter",
+        new Set()
+      )
+      const improvedPrompt = response.data?.choices?.[0]?.message?.content
+      if (improvedPrompt) {
+        setUserPrompt(improvedPrompt)
+        notifySuccess("Prompt aperfeiçoado!")
+      } else notifyError("Não foi possível aperfeiçoar o prompt.")
+    } catch (error) {
+      console.error("Error improving prompt:", error)
+      if (error.response && error.response.data.error) notifyError(error.response.data.error.message)
+      else notifyError("Falha ao aperfeiçoar o prompt.")
+    } finally {
+      setIsImproving(false)
+    }
+  }, [userPrompt, isImproving, groqKey, openRouterKey, aiProvider, model, freeModels, payModels, groqModels, notifyInfo, notifySuccess, notifyError])
 
   const handleToolToggle = useCallback((toolKey, isActive) => {
     setActiveTools(prev => {
