@@ -17,6 +17,7 @@ const TIPS = [
   "Limpe a conversa a qualquer momento clicando no ícone de nova mensagem.",
   "Entregue a ferramenta Buscar Notícias ao Agente Redator e veja a mágica acontecer",
   "Experimente também entregar as ferramentas de cotação albion e cripto ao Agente Analista",
+  "A Transcrição funciona melhor com o Agente Transcritor",
 ]
 
 const AITip = () => {
