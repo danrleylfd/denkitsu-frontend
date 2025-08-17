@@ -3,7 +3,7 @@ import { useNotification } from "../contexts/NotificationContext"
 import { sendMessageStream, sendMessage } from "../services/aiChat"
 import { transcribeAudio } from "../services/audio"
 
-const useSendMessage = (props) => {
+const useMessage = (props) => {
   const {
     aiProvider, aiKey, model, stream, activeTools, userPrompt, imageUrls, audioFile, messages,
     freeModels, payModels, groqModels, selectedAgent,
@@ -167,4 +167,4 @@ const useSendMessage = (props) => {
   return { loading, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt }
 }
 
-export default useSendMessage
+export default useMessage

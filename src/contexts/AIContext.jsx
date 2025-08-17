@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect, useContext, useMemo, useCallback } from "react"
 import { TOOL_DEFINITIONS } from "../constants/tools"
-import useSendMessage from "../hooks/message"
+import useSendMessage from "../hooks/useSendMessage"
+import useAudio from "../hooks/useAudio"
 
 const AIContext = createContext()
 
@@ -44,13 +45,20 @@ const AIProvider = ({ children }) => {
 
   const aiKey = aiProvider === "groq" ? groqKey : openRouterKey
   const model = aiProvider === "groq" ? groqModel : openRouterModel
+  const toggleListening = useCallback(() => setListening(l => !l), [])
 
-  const hookProps = {
+  const {
+    recording, fileInputRef, handleStartRecording,
+    handleStopRecording, handleUploadClick, handleFileChange
+  } = useAudio({ setAudioFile, setUserPrompt, listening })
+
+  const {
+    loading, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt
+  } = useSendMessage({
     aiProvider, aiKey, model, stream, activeTools, userPrompt, imageUrls, audioFile, messages,
     freeModels, payModels, groqModels, selectedAgent,
     setUserPrompt, setImageUrls, setAudioFile, setMessages
-  }
-  const { loading, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt } = useSendMessage(hookProps)
+  })
 
   useEffect(() => (localStorage.setItem("@Denkitsu:aiProvider", aiProvider)), [aiProvider])
   useEffect(() => (localStorage.setItem("@Denkitsu:GroqModel", groqModel)), [groqModel])
@@ -89,7 +97,6 @@ const AIProvider = ({ children }) => {
   const aiProviderToggle = useCallback(() => setAIProvider((prev) => (prev === "groq" ? "openrouter" : "groq")), [])
   const clearHistory = useCallback(() => setMessages([{ role: "system", content: customPrompt }]), [customPrompt])
   const toggleStream = useCallback(() => setStream(s => !s), [])
-  const toggleListening = useCallback(() => setListening(l => !l), [])
 
   const speakResponse = useCallback((text) => {
     if ("speechSynthesis" in window) {
@@ -128,13 +135,15 @@ const AIProvider = ({ children }) => {
     userPrompt, setUserPrompt,
     messages, setMessages, clearHistory,
     selectedAgent, setSelectedAgent,
-    loading, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt
+    loading, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt,
+    recording, fileInputRef, handleStartRecording, handleStopRecording, handleUploadClick, handleFileChange,
   }), [
     stream, speaking, listening, activeTools, handleToolToggle, imageUrls, audioFile,
     aiProvider, aiKey, model, groqKey, openRouterKey, groqModel, openRouterModel,
     freeModels, payModels, groqModels, customPrompt, userPrompt, messages,
     toggleStream, speakResponse, toggleListening, aiProviderToggle, clearHistory,
-    selectedAgent, loading, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt
+    selectedAgent, loading, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt,
+    recording, fileInputRef, handleStartRecording, handleStopRecording, handleUploadClick, handleFileChange,
   ])
   return (
     <AIContext.Provider value={values}>
