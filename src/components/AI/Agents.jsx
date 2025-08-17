@@ -22,7 +22,7 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
     <Paper className={`bg-lightBg-primary dark:bg-darkBg-primary text-lightFg-primary dark:text-darkFg-primary
       opacity-80 dark:opacity-90
       mb-1 py-2 gap-2 rounded-lg shadow-lg max-w-[95%]
-      grid grid-cols-[repeat(auto-fit,minmax(2.25rem,1fr))] justify-center justify-items-center mx-auto`}
+      grid grid-cols-[repeat(auto-fit,minmax(2rem,1fr))] justify-center justify-items-center mx-auto`}
     >
       {agentOptions.map((agent) => (
         <Button key={agent.value} variant={selectedAgent === agent.value ? "outline" : "secondary"} size="icon" $rounded title={agent.value} onClick={() => onSelectAgent(agent.value)} disabled={loading}>
