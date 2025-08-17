@@ -28,10 +28,9 @@ const AITools= ({ loading, toolsDoor }) => {
   return (
     <Paper className={`bg-lightBg-primary dark:bg-darkBg-primary text-lightFg-primary dark:text-darkFg-primary
       opacity-80 dark:opacity-90
-      mb-2 py-2 gap-2 rounded-lg shadow-lg
-      max-w-[95%]
-      grid grid-cols-5 sm:grid-cols-9
-      md:flex static mx-auto left-auto translate-x-0 bottom-auto`}
+      mb-2 py-2 gap-2 rounded-lg shadow-lg max-w-[95%]
+      grid xs:grid-cols-5 sm:grid-cols-7 md:grid-cols-9
+      mx-auto left-auto translate-x-0 bottom-auto`}
     >
       {tools.map(({ key, title, Icon, isDisabled }) => (
         <ToolButton key={key} toolKey={key} title={title} onToggle={handleToolToggle} disabled={isDisabled}>
