@@ -14,14 +14,47 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
   useEffect(() => {
     setFormData({
       name: tool?.name || "",
-      description: tool?.description || "",
       alias: tool?.alias || "",
+      description: tool?.description || "",
       method: tool?.httpConfig?.method || "GET",
       url: tool?.httpConfig?.url || "",
-      parameters: JSON.stringify(tool?.parameters || { type: "object", properties: {} }, null, 2),
-      queryParams: JSON.stringify(tool?.httpConfig?.queryParams || {}, null, 2),
-      headers: JSON.stringify(tool?.httpConfig?.headers || {}, null, 2),
-      body: JSON.stringify(tool?.httpConfig?.body || {}, null, 2)
+      queryParams: JSON.stringify(
+        tool?.httpConfig?.queryParams || {
+          "parametro_fixo": "valor_fixo",
+          "parametro_dinamico": "{{nome_do_parametro_da_ia}}"
+        },
+        null,
+        2
+      ),
+      parameters: JSON.stringify(
+        tool?.parameters || {
+          "type": "object",
+          "properties": {
+            "nome_do_parametro_da_ia": {
+              "type": "string",
+              "description": "Uma breve descrição do que este parâmetro faz para a IA."
+            }
+          },
+          "required": ["nome_do_parametro_da_ia"]
+        },
+        null,
+        2
+      ),
+      headers: JSON.stringify(
+        tool?.httpConfig?.headers || {
+          "Content-Type": "application/json"
+        },
+        null,
+        2
+      ),
+      body: JSON.stringify(
+        tool?.httpConfig?.body || {
+          "chave": "valor",
+          "outro_dado": "{{nome_do_parametro_da_ia}}"
+        },
+        null,
+        2
+      )
     })
   }, [tool])
 
