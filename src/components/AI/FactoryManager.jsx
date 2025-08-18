@@ -118,7 +118,7 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
       icon: tool?.icon || "PocketKnife",
       method: tool?.httpConfig?.method || "GET",
       url: tool?.httpConfig?.url || "",
-      parameters: JSON.stringify(tool?.parameters || { type: "object", properties: {} }, null, 2),
+      parameters: JSON.stringify(tool?.parameters || { type: "object", properties: {}, required: [] }, null, 2),
       queryParams: JSON.stringify(tool?.httpConfig?.queryParams || {}, null, 2),
       headers: JSON.stringify(tool?.httpConfig?.headers || {}, null, 2),
       body: JSON.stringify(tool?.httpConfig?.body || {}, null, 2)
