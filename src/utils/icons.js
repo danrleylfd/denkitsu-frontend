@@ -8,4 +8,8 @@ const excludedKeys = [
   "default"
 ]
 
-export const iconNames = Object.keys(Icons).filter(key => !excludedKeys.includes(key))
+export const iconNames = Object.keys(Icons).filter(key =>
+  !excludedKeys.includes(key) &&
+  !key.startsWith("Lucide") &&
+  !key.endsWith("Icon")
+).sort()
