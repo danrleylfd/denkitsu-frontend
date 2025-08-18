@@ -1,4 +1,4 @@
-import { Info, Waypoints, Settings, Wrench, Speech, Sparkle, MessageCirclePlus, Send, Paperclip } from "lucide-react"
+import { Info, Waypoints, Settings, Wrench, Speech, Sparkle, MessageCirclePlus, Send, Paperclip, Shapes } from "lucide-react"
 import { useAuth } from "../../contexts/AuthContext"
 import { useAI } from "../../contexts/AIContext"
 import AIBarSignOut from "./BarSignOut"
