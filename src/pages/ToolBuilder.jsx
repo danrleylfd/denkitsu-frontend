@@ -236,7 +236,7 @@ const ToolBuilder = () => {
   }
 
   return (
-    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
+    <SideMenu ContentView={ContentView} className="bg-cover bg-brand-purple">
       {loading ? <Button variant="outline" loading disabled /> : (
         <>
           <ToolList
