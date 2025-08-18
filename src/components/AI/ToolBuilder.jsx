@@ -1,5 +1,5 @@
 import { useState, useEffect, memo } from "react"
-import { Diamond, Plus, Trash2, Pencil, Save, X, ArrowLeft, Code } from "lucide-react"
+import { Diamond, Plus, Trash2, Pencil, Save, X, ArrowLeft, Code, Wrench } from "lucide-react"
 
 import { useTools } from "../../contexts/ToolContext"
 import { useNotification } from "../../contexts/NotificationContext"
@@ -120,7 +120,7 @@ const ToolList = memo(({ tools, onCreate, onEdit, onDelete, toggleToolBuilderDoo
     <div className="flex-1 overflow-y-auto py-4 pr-2">
       {tools.length === 0 ? (
         <div className="text-center py-10">
-          <Diamond size={48} className="mx-auto text-lightFg-tertiary dark:text-darkFg-tertiary" />
+          <Wrench size={48} className="mx-auto text-lightFg-tertiary dark:text-darkFg-tertiary" />
           <p className="mt-4 text-sm text-lightFg-primary dark:text-darkFg-primary">Você ainda não criou nenhuma ferramenta.</p>
         </div>
       ) : (

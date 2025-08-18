@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { X, Bot, Wrench, BookText, Sparkle, Paperclip, Box, AlertTriangle, Settings, ImagePlus, AudioLines, Mic, Languages, Waypoints, Star, Newspaper, Kanban, Upload, Speech } from "lucide-react"
+import { X, Bot, Wrench, BookText, Sparkle, Paperclip, Factory, AlertTriangle, Settings, ImagePlus, AudioLines, Mic, Languages, Waypoints, Star, Newspaper, Kanban, Upload, Speech } from "lucide-react"
 
 import { AGENTS_DEFINITIONS } from "../../constants/agents"
 import { TOOL_DEFINITIONS } from "../../constants/tools"
@@ -76,7 +76,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
             </div>
             <div>
               <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 2: Abrindo o Construtor</h5>
-              <p>Clique no ícone de <Box size={16} className="inline-block mx-1" /> na barra de chat para abrir o Construtor de Ferramentas e clique em "Criar Nova Ferramenta".</p>
+              <p>Clique no ícone de <Factory size={16} className="inline-block mx-1" /> na barra de chat para abrir o Construtor de Ferramentas e clique em "Criar Nova Ferramenta".</p>
             </div>
             <div>
               <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 3: Preenchendo o Formulário</h5>
