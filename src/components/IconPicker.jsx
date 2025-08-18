@@ -12,7 +12,7 @@ const IconPicker = ({ isOpen, onClose, onSelect, currentIcon }) => {
 
   const filteredIcons = useMemo(() => {
     if (!searchTerm) {
-      return iconNames.slice(0, 1822)
+      return iconNames//.slice(0, 150)
     }
     return iconNames.filter(name =>
       name.toLowerCase().includes(searchTerm.toLowerCase())
