@@ -44,7 +44,7 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
       </div>
       <div className="flex-grow overflow-y-auto pr-2 flex flex-col gap-2">
         <Input placeholder="Nome do Agente (ex: Mestre Cuca)" value={formData.name} onChange={(e) => handleChange("name", e.target.value)} disabled={loading} />
-        <IconAutocompleteInput
+        <IconInputAutocomplete
           placeholder="Ícone (Nome do Lucide Icon)"
           value={formData.icon}
           onChange={(value) => handleChange("icon", value)}
