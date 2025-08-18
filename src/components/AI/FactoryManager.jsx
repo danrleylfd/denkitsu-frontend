@@ -1,5 +1,5 @@
-import { useState, memo } from "react"
-import { Plus, Trash2, Pencil, Save, X, ArrowLeft, Bot, Shapes, Code, PocketKnife, Factory } from "lucide-react"
+import { useEffect, useState, memo } from "react"
+import { Plus, Trash2, Pencil, Save, X, ArrowLeft, Bot, Code, PocketKnife, Factory } from "lucide-react"
 
 import { useAgents } from "../../contexts/AgentContext"
 import { useTools } from "../../contexts/ToolContext"
@@ -70,7 +70,7 @@ const AgentList = memo(({ agents, onCreate, onEdit, onDelete, canCreate }) => (
     <div className="flex-1 overflow-y-auto py-2 pr-2">
       {agents.length === 0 ? (
         <div className="text-center py-10">
-          <Shapes size={48} className="mx-auto text-lightFg-tertiary dark:text-darkFg-tertiary" />
+          <Bot size={48} className="mx-auto text-lightFg-tertiary dark:text-darkFg-tertiary" />
           <p className="mt-4 text-sm text-lightFg-primary dark:text-darkFg-primary">Você ainda não criou nenhum agente.</p>
         </div>
       ) : (
