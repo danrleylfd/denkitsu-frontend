@@ -57,7 +57,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
           <>
             <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary">Conecte a IA a fontes de dados externas para obter respostas mais ricas e atualizadas. Requer chave de API e um modelo compatível.</p>
             <FeatureListItem title="Construtor de Ferramentas" icon={Factory}>
-              Crie suas próprias ferramentas para se conectar a qualquer API. Automatize tarefas e ensine novas habilidades ao Denkitsu através de uma interface simples. Acesse pelo ícone de <Shapes size={16} className="inline-block mx-1" /> na barra de chat.
+              Crie suas próprias ferramentas para se conectar a qualquer API. Automatize tarefas e ensine novas habilidades ao Denkitsu através de uma interface simples. Acesse pelo ícone de <Factory size={16} className="inline-block mx-1" /> na barra de chat.
             </FeatureListItem>
             <div className="w-full border-t border-bLight dark:border-bDark my-2"></div>
             {TOOL_DEFINITIONS.map(({ key, title, description, Icon }) => (
