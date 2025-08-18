@@ -113,10 +113,10 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
   )
 })
 
-const ToolList = memo(({ tools, onCreate, onEdit, onDelete, toggleToolBuilderDoor, canCreate }) => ( // Adicionada prop `canCreate`
+const ToolList = memo(({ tools, onCreate, onEdit, onDelete, toggleToolBuilderDoor, canCreate }) => (
   <div className="flex flex-col h-full">
     <div className="flex justify-between items-center pb-4 border-b border-bLight dark:border-bDark">
-      <h3 className="font-bold text-xl text-lightFg-primary dark:text-darkFg-primary">Minhas Ferramentas ({tools.length}/6)</h3>
+      <h3 className="font-bold text-xl text-lightFg-primary dark:text-darkFg-primary">Fábrica de Ferramentas ({tools.length}/6)</h3>
       <Button variant="danger" size="icon" $rounded onClick={toggleToolBuilderDoor}><X size={16} /></Button>
     </div>
     <div className="flex-1 overflow-y-auto py-4 pr-2">
@@ -127,9 +127,8 @@ const ToolList = memo(({ tools, onCreate, onEdit, onDelete, toggleToolBuilderDoo
         </div>
       ) : (
         <ul className="space-y-2">
-          {/* Adicionado `index` para pegar o ícone dinamicamente */}
           {tools.map((tool, index) => {
-            const Icon = diceIcons[index] || Shapes // Pega o ícone de dado ou um padrão
+            const Icon = diceIcons[index]
             return (
               <li key={tool._id}>
                 <button
@@ -140,7 +139,7 @@ const ToolList = memo(({ tools, onCreate, onEdit, onDelete, toggleToolBuilderDoo
                     <Icon className="text-primary-base flex-shrink-0" size={20} />
                     <div className="flex-1 min-w-0">
                       <p className="font-bold text-lightFg-primary dark:text-darkFg-primary truncate">{tool.alias || tool.name}</p>
-                      {tool.alias && <p className="text-xs font-mono text-lightFg-tertiary dark:text-darkFg-tertiary truncate">{tool.name}</p>}
+                      {tool.alias && <p className="text-xs font-mono text-lightFg-tertiary dark:text-darkFg-tertiary truncate">{tool.description}</p>}
                     </div>
                   </div>
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 pl-2">
