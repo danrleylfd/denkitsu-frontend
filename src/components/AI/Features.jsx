@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { X, Bot, Wrench, Sparkle, Paperclip, Settings, ImagePlus, AudioLines, Mic, Languages, Waypoints, Star, Newspaper, Kanban, Upload, Speech } from "lucide-react"
+import { X, Bot, Wrench, BookText, Sparkle, Paperclip, Settings, ImagePlus, AudioLines, Mic, Languages, Waypoints, Star, Newspaper, Kanban, Upload, Speech } from "lucide-react"
 
 import { AGENTS_DEFINITIONS } from "../../constants/agents"
 import { TOOL_DEFINITIONS } from "../../constants/tools"
@@ -20,6 +20,7 @@ const FeatureListItem = ({ icon: Icon, title, children }) => (
 const tabs = [
   { id: "agents", label: "Agentes", icon: Bot },
   { id: "tools", label: "Ferramentas", icon: Wrench },
+  { id: "tutorial", label: "Tutorial", icon: BookText },
   { id: "media", label: "Mídia", icon: Paperclip },
   { id: "extras", label: "Extras", icon: Star },
   { id: "customization", label: "Personalização", icon: Sparkle },
@@ -61,6 +62,66 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
               </FeatureListItem>
             ))}
           </>
+        )
+      case "tutorial":
+        return (
+          <div className="flex flex-col gap-4 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
+            <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Tutorial: Criando sua Primeira Ferramenta</h4>
+            <p>
+              As ferramentas customizadas permitem que você conecte o Denkitsu a qualquer API na internet. Vamos criar uma ferramenta divertida que busca uma piada aleatória do site <a href="https://icanhazdadjoke.com/" target="_blank" rel="noopener noreferrer" className="text-primary-base underline">icanhazdadjoke.com</a>.
+            </p>
+            <div>
+              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 1: Entendendo a API</h5>
+              <p>A API de piadas é simples. Para pegar uma piada como texto, precisamos acessar a URL `https://icanhazdadjoke.com/` e enviar um "cabeçalho" (Header) especial dizendo que queremos a resposta em texto puro.</p>
+            </div>
+            <div>
+              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 2: Abrindo o Construtor</h5>
+              <p>Clique no ícone de <Shapes size={16} className="inline-block mx-1" /> na barra de chat para abrir o Construtor de Ferramentas e clique em "Criar Nova Ferramenta".</p>
+            </div>
+            <div>
+              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 3: Preenchendo o Formulário</h5>
+              <p className="mb-2">Copie e cole os valores abaixo em cada campo correspondente:</p>
+              <ul className="list-disc list-inside space-y-2 pl-2">
+                <li><strong>Apelido da Ferramenta:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">Buscador de Piadas</code></li>
+                <li><strong>Nome Técnico:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">buscarPiada</code></li>
+                <li><strong>Descrição para a IA:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">Use esta ferramenta para buscar uma piada aleatória em inglês. A ferramenta não precisa de nenhum parâmetro.</code></li>
+                <li><strong>Método HTTP:</strong> Selecione `GET`</li>
+                <li><strong>URL Base da API:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">https://icanhazdadjoke.com/</code></li>
+                <li><strong>Parâmetros de Query:</strong> Deixe como está (um JSON vazio `{ }`).</li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 4: Configurações Avançadas</h5>
+              <p className="mb-2">Clique para expandir as "Configurações Avançadas" e preencha:</p>
+              <ul className="list-disc list-inside space-y-2 pl-2">
+                <li><strong>Definição de Parâmetros (Schema):</strong> Como não precisamos de nenhuma informação do usuário, podemos deixar o schema com as propriedades vazias:
+                  <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md mt-1 text-xs font-mono"><code>{`{ "type": "object", "properties": {} }`}</code></pre>
+                </li>
+                <li><strong>Headers (JSON):</strong> Esta é a parte importante para esta API. Precisamos dizer a ela para nos dar texto puro.
+                  <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md mt-1 text-xs font-mono"><code>{`{ "Accept": "text/plain" }`}</code></pre>
+                </li>
+                <li><strong>Body (JSON):</strong> Deixe como está (um JSON vazio `{ }`).</li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 5: Salvar e Testar!</h5>
+              <p>Clique em "Salvar Ferramenta". Depois, volte para o chat, abra a gaveta de ferramentas (<Wrench size={16} className="inline-block mx-1" />) e ative a sua nova ferramenta "Buscador de Piadas". Agora, simplesmente peça no chat:</p>
+              <blockquote className="border-l-4 border-primary-base pl-2 my-2 italic">Me conte uma piada.</blockquote>
+              <p>A IA vai entender seu pedido, encontrar a ferramenta `buscarPiada`, executá-la e te contar a piada que a API retornou!</p>
+            </div>
+            <div className="p-3 rounded-md bg-amber-base/10 border border-amber-base/30">
+              <h5 className="font-bold text-amber-base flex items-center gap-2">
+                <AlertTriangle size={18} />
+                Atenção: Limites de Resposta da API
+              </h5>
+              <p className="mt-1 text-amber-dark dark:text-amber-light">
+                A IA precisa "ler" a resposta completa da API que sua ferramenta busca. Se a API externa retornar uma resposta muito grande (milhares de linhas de dados), ela pode ultrapassar o "limite de leitura" (contexto de tokens) do modelo de IA.
+              </p>
+              <p className="mt-2 text-amber-dark dark:text-amber-light">
+                Isso pode causar um erro e impedir que a IA formule uma resposta final. Portanto, **prefira usar APIs que retornem dados concisos** ou que permitam filtrar a quantidade de informação através de parâmetros na URL!
+              </p>
+            </div>
+          </div>
         )
       case "media":
         return (
@@ -115,7 +176,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
               Escolha o modelo de IA específico que deseja usar para a conversa, aproveitando uma vasta lista de opções gratuitas e premium disponíveis em cada provedor.
             </FeatureListItem>
             <Button variant="outline" $rounded onClick={handleOpenSettings}>
-              <Settings size={16} className="mr-2"/>
+              <Settings size={16} className="mr-2" />
               Abrir Configurações
             </Button>
           </>
@@ -145,11 +206,10 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
             <button
               key={id}
               onClick={() => setActiveTab(id)}
-              className={`flex items-center gap-2 px-2 py-2 text-sm font-bold transition-colors ${
-                activeTab === id
+              className={`flex items-center gap-2 px-2 py-2 text-sm font-bold transition-colors ${activeTab === id
                   ? "border-primary-base text-primary-base"
                   : "border-transparent text-lightFg-secondary dark:text-darkFg-secondary hover:text-lightFg-primary dark:hover:text-darkFg-primary"
-              }`}>
+                }`}>
               <Icon size={16} />
               <span className="hidden sm:inline">{label}</span>
             </button>
