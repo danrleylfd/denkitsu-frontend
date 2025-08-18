@@ -1,10 +1,13 @@
 import { useState, memo } from "react"
 import { Plus, Trash2, Pencil, Save, X, ArrowLeft, Bot, Shapes } from "lucide-react"
+
 import { useAgents } from "../../contexts/AgentContext"
 import { useNotification } from "../../contexts/NotificationContext"
+
 import Button from "../Button"
 import Input from "../Input"
 import DynamicIcon from "../DynamicIcon"
+import IconAutocompleteInput from "./IconAutocompleteInput"
 
 const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
   const [formData, setFormData] = useState({
@@ -45,7 +48,12 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
       </div>
       <div className="flex-grow overflow-y-auto pr-2 flex flex-col gap-2">
         <Input placeholder="Nome do Agente (ex: Mestre Cuca)" value={formData.name} onChange={(e) => handleChange("name", e.target.value)} disabled={loading} />
-        <Input placeholder="Ícone (Nome do Lucide Icon)" value={formData.icon} onChange={(e) => handleChange("icon", e.target.value)} disabled={loading} />
+        <IconAutocompleteInput
+          placeholder="Ícone (Nome do Lucide Icon)"
+          value={formData.icon}
+          onChange={(value) => handleChange("icon", value)}
+          disabled={loading}
+        />
         <Input placeholder="Descrição curta (ex: Ajuda com receitas)" value={formData.description} onChange={(e) => handleChange("description", e.target.value)} disabled={loading} />
 
         <textarea placeholder="Goal: Objetivo do prompt..." value={formData.prompt.goal} onChange={(e) => handlePromptChange("goal", e.target.value)} className="w-full h-20 p-2 rounded-md resize-y bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" disabled={loading} />
