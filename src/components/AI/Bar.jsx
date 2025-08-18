@@ -1,4 +1,4 @@
-import { Info, Waypoints, Settings, Speech, Sparkle, MessageCirclePlus, Send, Paperclip, Wrench, Factory, Bot } from "lucide-react"
+import { Info, Waypoints, Settings, Speech, Sparkle, MessageCirclePlus, Send, Paperclip, Wrench, Factory } from "lucide-react"
 import { useAuth } from "../../contexts/AuthContext"
 import { useAI } from "../../contexts/AIContext"
 import AIBarSignOut from "./BarSignOut"
@@ -6,7 +6,7 @@ import Paper from "../Paper"
 import AIInput from "./Input"
 import Button from "../Button"
 
-const AIBar = ({ loading, isImproving, improvePrompt, imageCount, onSendMessage, toggleFeaturesDoor, toggleSettingsDoor, toggleToolBuilderDoor, toggleAgentManagerDoor, agentsDoor, toggleAgentsDoor, toolsDoor, toggleToolsDoor, mediaDoor, toggleMediaDoor }) => {
+const AIBar = ({ loading, isImproving, improvePrompt, imageCount, onSendMessage, toggleFeaturesDoor, toggleSettingsDoor, toggleFactoryManagerDoor, agentsDoor, toggleAgentsDoor, toolsDoor, toggleToolsDoor, mediaDoor, toggleMediaDoor }) => {
   const { signed } = useAuth()
   if (!signed) return <AIBarSignOut />
   const { aiProvider, aiProviderToggle, aiKey, userPrompt, setUserPrompt, audioFile, clearHistory } = useAI()
@@ -34,8 +34,7 @@ const AIBar = ({ loading, isImproving, improvePrompt, imageCount, onSendMessage,
           <Button variant={mediaDoor ? "outline" : "secondary"} size="icon" $rounded title="Mídia" onClick={toggleMediaDoor} disabled={loading || isImproving}><Paperclip size={16} /></Button>
           <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgentsDoor}><Speech size={16} /></Button>
           <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor} disabled={aiKey.length === 0}><Wrench size={16} /></Button>
-          <Button variant="secondary" size="icon" $rounded title="Gerenciar Agentes" onClick={toggleAgentManagerDoor} disabled={loading || isImproving}><Bot size={16} /></Button>
-          <Button variant="secondary" size="icon" $rounded title="Fábrica de Ferramentas" onClick={toggleToolBuilderDoor} disabled={loading || isImproving}><Factory size={16} /></Button>
+          <Button variant="secondary" size="icon" $rounded title="Fábrica de Agentes e Ferramentas" onClick={toggleFactoryManagerDoor} disabled={loading || isImproving}><Factory size={16} /></Button>
           <Button variant="outline" size="icon" $rounded title="Aperfeiçoar Prompt" onClick={improvePrompt} loading={isImproving} disabled={loading || isImproving || !userPrompt.trim()}>{!isImproving && <Sparkle size={16} />}</Button>
         </div>
         <div className="flex items-center gap-2 w-full">
@@ -51,8 +50,7 @@ const AIBar = ({ loading, isImproving, improvePrompt, imageCount, onSendMessage,
         <Button variant={mediaDoor ? "outline" : "secondary"} size="icon" $rounded title="Mídia" onClick={toggleMediaDoor} disabled={loading || isImproving}><Paperclip size={16} /></Button>
         <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgentsDoor}><Speech size={16} /></Button>
         <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor} disabled={aiKey.length === 0}><Wrench size={16} /></Button>
-        <Button variant="secondary" size="icon" $rounded title="Gerenciar Agentes" onClick={toggleAgentManagerDoor} disabled={loading || isImproving}><Bot size={16} /></Button>
-        <Button variant="secondary" size="icon" $rounded title="Fábrica de Ferramentas" onClick={toggleToolBuilderDoor} disabled={loading || isImproving}><Factory size={16} /></Button>
+        <Button variant="secondary" size="icon" $rounded title="Fábrica de Agentes e Ferramentas" onClick={toggleFactoryManagerDoor} disabled={loading || isImproving}><Factory size={16} /></Button>
         <AIInput id="prompt-input-desktop" value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} onKeyDown={handleKeyDown} className="resize-y" disabled={loading || isImproving} />
         <div className="flex items-center gap-2">
           <Button variant="outline" size="icon" $rounded title="Aperfeiçoar Prompt" onClick={improvePrompt} loading={isImproving} disabled={loading || isImproving || !userPrompt.trim()}>{!isImproving && <Sparkle size={16} />}</Button>
