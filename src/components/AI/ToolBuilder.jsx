@@ -80,7 +80,7 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
             <Code size={16} className="inline mr-2" />
             Configurações Avançadas (JSON)
           </summary>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+          <div className="flex flex-col gap-4 mt-2">
             <div>
               <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Parâmetros (Schema)</label>
               <textarea value={formData.parameters} onChange={(e) => handleChange("parameters", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
