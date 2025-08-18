@@ -28,7 +28,7 @@ const AITools = ({ loading, toolsDoor }) => {
 
     const userTools = customTools.map(tool => ({
       key: tool.name,
-      title: tool.name,
+      title: tool.alias || tool.name,
       Icon: Box,
       isCustom: true
     }))

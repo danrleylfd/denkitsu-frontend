@@ -125,7 +125,7 @@ const ToolList = memo(({ tools, onCreate, onEdit, onDelete, toggleToolBuilderDoo
           {tools.map(tool => (
             <li key={tool._id} className="group flex items-center justify-between p-3 rounded-md hover:bg-lightBg-secondary dark:hover:bg-darkBg-secondary">
               <div className="flex-1 min-w-0">
-                <p className="font-bold text-lightFg-primary dark:text-darkFg-primary truncate">{tool.name}</p>
+                <p className="font-bold text-lightFg-primary dark:text-darkFg-primary truncate">{tool.alias || tool.name}</p>
                 <p className="text-xs text-lightFg-secondary dark:text-darkFg-secondary truncate">{tool.description}</p>
               </div>
               <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 pl-2">
