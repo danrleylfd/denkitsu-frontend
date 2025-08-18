@@ -15,6 +15,7 @@ const Shortcut = lazy(() => import("../pages/Shortcut"))
 const Redirect = lazy(() => import("../pages/Redirect"))
 
 const AI = lazy(() => import("../pages/AI"))
+const ToolBuilder = lazy(() => import("../pages/ToolBuilder"))
 const Profile = lazy(() => import("../pages/Profile"))
 const UserVideos = lazy(() => import("../pages/Video/UserVideos"))
 const Popular = lazy(() => import("../pages/Video/Popular"))
@@ -63,6 +64,7 @@ const AppRoutes = () => {
               <Route path="/profile/:userId" element={<Profile />} />
               <Route path="/atalho" element={<Shortcut />} />
               <Route path="/chat" element={<AI />} />
+              <Route path="/tools" element={<ToolBuilder />} />
               <Route path="/access/:label" element={<Redirect />} />
               <Route path="/auth/:label" element={<Redirect />} />
               <Route path="/*" element={<Redirect />} />

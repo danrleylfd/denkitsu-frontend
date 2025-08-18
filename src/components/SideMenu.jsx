@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom"
 import {
   Menu, X, Sun, Moon, Home, Newspaper, Cloud, Languages, Clock, Code, Bot, Kanban, Link2,
   User, LogIn, UserPlus, LogOut, Film, Edit2, ChevronDown, ChevronRight,
-  Upload, Video, TrendingUp, Play, Star, Lock, KeyRound
+  Upload, Video, TrendingUp, Play, Star, Lock, KeyRound, Shapes,
 } from "lucide-react"
 import { useTheme } from "../contexts/ThemeContext"
 import { useAuth } from "../contexts/AuthContext"
@@ -113,6 +113,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
     { icon: Cloud, label: "Clima", to: "/clima" },
     { icon: Languages, label: "Tradutor", to: "/translator" },
     { icon: Film, label: "Cinema", to: "/cinema" },
+    { icon: Shapes, label: "Criar Ferramentas", to: "/tools" },
   ]
 
   const videoItems = [
