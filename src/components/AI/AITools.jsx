@@ -31,7 +31,7 @@ const AITools = ({ loading, toolsDoor }) => {
         isDisabled: isDisabled
       }
     })
-    const userTools = customTools.map(tool => ({
+    const userTools = customTools.map((tool, index) => ({
       key: tool.name,
       title: tool.alias || tool.name,
       Icon: diceIcons[index],
