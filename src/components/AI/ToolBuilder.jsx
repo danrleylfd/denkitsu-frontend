@@ -1,5 +1,5 @@
 import { useState, useEffect, memo } from "react"
-import { Shapes, Plus, Trash2, Save, X, ArrowLeft, Code } from "lucide-react"
+import { Shapes, Plus, Trash2, Pencil, Save, X, ArrowLeft, Code } from "lucide-react"
 
 import { useTools } from "../../contexts/ToolContext"
 import { useNotification } from "../../contexts/NotificationContext"
@@ -106,11 +106,11 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
   )
 })
 
-const ToolList = memo(({ tools, onCreate, onEdit, onDelete, onClose }) => (
+const ToolList = memo(({ tools, onCreate, onEdit, onDelete, toggleToolBuilderDoor }) => (
   <div className="flex flex-col h-full">
     <div className="flex justify-between items-center pb-4 border-b border-bLight dark:border-bDark">
       <h3 className="font-bold text-xl text-lightFg-primary dark:text-darkFg-primary">Minhas Ferramentas</h3>
-      <Button variant="danger" size="icon" $rounded onClick={onClose}><X size={16} /></Button>
+      <Button variant="danger" size="icon" $rounded onClick={toggleToolBuilderDoor}><X size={16} /></Button>
     </div>
     <div className="flex-1 overflow-y-auto py-4 pr-2">
       {tools.length === 0 ? (
@@ -127,7 +127,7 @@ const ToolList = memo(({ tools, onCreate, onEdit, onDelete, onClose }) => (
                 <p className="text-xs text-lightFg-secondary dark:text-darkFg-secondary truncate">{tool.description}</p>
               </div>
               <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 pl-2">
-                <Button variant="warning" size="icon" $rounded title="Editar" onClick={() => onEdit(tool)}><Save size={14} /></Button>
+                <Button variant="warning" size="icon" $rounded title="Editar" onClick={() => onEdit(tool)}><Pencil size={14} /></Button>
                 <Button variant="danger" size="icon" $rounded title="Excluir" onClick={() => onDelete(tool)}><Trash2 size={14} /></Button>
               </div>
             </li>
@@ -143,14 +143,14 @@ const ToolList = memo(({ tools, onCreate, onEdit, onDelete, onClose }) => (
   </div>
 ))
 
-const AIToolBuilder = ({ isOpen, onClose }) => {
+const AIToolBuilder = ({ toolBuilderDoor, toggleToolBuilderDoor }) => {
+  if (!toolBuilderDoor) return null
+
   const { tools, loading, addTool, editTool, removeTool } = useTools()
   const { notifyError, notifyInfo } = useNotification()
   const [view, setView] = useState("list")
   const [currentTool, setCurrentTool] = useState(null)
   const [formLoading, setFormLoading] = useState(false)
-
-  if (!isOpen) return null
 
   const handleSave = async (toolData) => {
     setFormLoading(true)
@@ -198,14 +198,14 @@ const AIToolBuilder = ({ isOpen, onClose }) => {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <div
         className="relative flex w-full max-w-xl h-[90vh] flex-col gap-2 rounded-lg bg-lightBg-primary p-4 shadow-2xl dark:bg-darkBg-primary"
         onClick={(e) => e.stopPropagation()}
       >
         {loading ? <Button variant="outline" loading disabled /> : (
           view === 'list'
-            ? <ToolList tools={tools} onCreate={handleCreate} onEdit={handleEdit} onDelete={handleDelete} onClose={onClose} />
+            ? <ToolList tools={tools} onCreate={handleCreate} onEdit={handleEdit} onDelete={handleDelete} toggleToolBuilderDoor={toggleToolBuilderDoor} />
             : <ToolForm tool={currentTool} onSave={handleSave} onBack={handleBack} loading={formLoading} />
         )}
       </div>
