@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { Box } from "lucide-react"
+import { Disc3 } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 import { useTools } from "../../contexts/ToolContext"
@@ -32,7 +32,7 @@ const AITools = ({ loading, toolsDoor }) => {
     const userTools = customTools.map(tool => ({
       key: tool.name,
       title: tool.alias || tool.name,
-      Icon: Box,
+      Icon: Disc3,
       isDisabled: aiKey.length === 0 || !isToolsSupported || stream || loading
     }))
     return [...nativeTools, ...userTools]
