@@ -6,6 +6,8 @@ import { useNotification } from "../../contexts/NotificationContext"
 
 import Button from "../Button"
 import Input from "../Input"
+import DynamicIcon from "../DynamicIcon"
+import IconPickerInput from "../IconPickerInput"
 
 const diceIcons = [Dice1, Dice2, Dice3, Dice4, Dice5, Dice6]
 
@@ -18,6 +20,7 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
       name: tool?.name || "",
       alias: tool?.alias || "",
       description: tool?.description || "",
+      icon: tool?.icon || "Wrench",
       method: tool?.httpConfig?.method || "GET",
       url: tool?.httpConfig?.url || "",
       parameters: JSON.stringify(tool?.parameters || { type: "object", properties: {} }, null, 2),
@@ -38,6 +41,7 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
         name: formData.name,
         description: formData.description,
         alias: formData.alias,
+        icon: formData.icon,
         parameters: JSON.parse(formData.parameters),
         httpConfig: {
           method: formData.method,
@@ -65,6 +69,11 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
         <div>
           <Input placeholder="Apelido da Ferramenta (ex: Buscar CEP)" value={formData.alias} onChange={(e) => handleChange("alias", e.target.value)} disabled={loading} />
           <Input placeholder="Nome Técnico (ex: cepTool)" value={formData.name} onChange={(e) => handleChange("name", e.target.value)} disabled={loading} />
+          <IconPickerInput
+            value={formData.icon}
+            onChange={(value) => handleChange("icon", value)}
+            disabled={loading}
+          />
         </div>
         <div>
           <label className="text-sm font-bold text-lightFg-secondary dark:text-darkFg-secondary">Descrição para a IA</label>
@@ -127,8 +136,7 @@ const ToolList = memo(({ tools, onCreate, onEdit, onDelete, toggleToolBuilderDoo
         </div>
       ) : (
         <ul className="space-y-2">
-          {tools.map((tool, index) => {
-            const Icon = diceIcons[index]
+          {tools.map(tool => {
             return (
               <li key={tool._id}>
                 <button
@@ -136,7 +144,7 @@ const ToolList = memo(({ tools, onCreate, onEdit, onDelete, toggleToolBuilderDoo
                   className="w-full text-left p-3 rounded-md transition-colors flex justify-between items-center group hover:bg-lightBg-tertiary dark:hover:bg-darkBg-secondary"
                 >
                   <div className="flex items-center gap-3 flex-1 min-w-0">
-                    <Icon className="text-primary-base flex-shrink-0" size={20} />
+                    <DynamicIcon name={tool.icon || "Wrench"} className="text-primary-base flex-shrink-0" size={20} />
                     <div className="flex-1 min-w-0">
                       <p className="font-bold text-lightFg-primary dark:text-darkFg-primary truncate">{tool.alias || tool.name}</p>
                       {tool.alias && <p className="text-xs font-mono text-lightFg-tertiary dark:text-darkFg-tertiary truncate">{tool.description}</p>}
