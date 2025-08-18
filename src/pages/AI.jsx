@@ -66,11 +66,11 @@ const AI = () => {
     <SideMenu ContentView={ContentView} className="bg-brand-purple bg-cover bg-center">
       <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="audio/*" style={{ display: "none" }} />
       <AIHistory toggleLousa={toggleLousa} onRegenerate={handleRegenerateResponse} />
+      <AIMedia mediaDoor={mediaDoor} onAddImage={onAddImage} loading={loading} isImproving={isImproving} />
       <AIAgents loading={loading || isImproving} agentsDoor={agentsDoor} selectedAgent={selectedAgent} onSelectAgent={setSelectedAgent} />
       <AITools loading={loading || isImproving} toolsDoor={toolsDoor} />
       <ImagePreview />
       {audioFile && <AIAudio audioFile={audioFile} setAudioFile={setAudioFile} />}
-      <AIMedia mediaDoor={mediaDoor} onAddImage={onAddImage} loading={loading} isImproving={isImproving} />
       <AITip />
       <AIBar
         loading={loading}
