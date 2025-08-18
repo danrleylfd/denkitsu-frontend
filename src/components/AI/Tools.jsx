@@ -33,7 +33,7 @@ const AITools = ({ loading, toolsDoor }) => {
     const userTools = customTools.map(tool => ({
       key: tool.name,
       title: tool.alias || tool.name,
-      Icon: tool.icon || "Wrench",
+      Icon: tool.icon || "PocketKnife",
       isCustom: true,
       isDisabled: aiKey.length === 0 || !isToolsSupported || stream || loading
     }))

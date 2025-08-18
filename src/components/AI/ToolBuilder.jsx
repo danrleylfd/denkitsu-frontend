@@ -1,5 +1,5 @@
 import { useState, useEffect, memo } from "react"
-import { Plus, Trash2, Pencil, Save, X, ArrowLeft, Code, Dice1, Dice2, Dice3, Dice4, Dice5, Dice6 } from "lucide-react"
+import { Plus, Trash2, Pencil, Save, X, ArrowLeft, Code, PocketKnife } from "lucide-react"
 
 import { useTools } from "../../contexts/ToolContext"
 import { useNotification } from "../../contexts/NotificationContext"
@@ -8,8 +8,6 @@ import Button from "../Button"
 import Input from "../Input"
 import DynamicIcon from "../DynamicIcon"
 import IconPickerInput from "../IconPickerInput"
-
-const diceIcons = [Dice1, Dice2, Dice3, Dice4, Dice5, Dice6]
 
 const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
   const [formData, setFormData] = useState({})
@@ -20,7 +18,7 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
       name: tool?.name || "",
       alias: tool?.alias || "",
       description: tool?.description || "",
-      icon: tool?.icon || "Wrench",
+      icon: tool?.icon || "PocketKnife",
       method: tool?.httpConfig?.method || "GET",
       url: tool?.httpConfig?.url || "",
       parameters: JSON.stringify(tool?.parameters || { type: "object", properties: {} }, null, 2),
@@ -131,7 +129,7 @@ const ToolList = memo(({ tools, onCreate, onEdit, onDelete, toggleToolBuilderDoo
     <div className="flex-1 overflow-y-auto py-4 pr-2">
       {tools.length === 0 ? (
         <div className="text-center py-10">
-          <Shapes size={48} className="mx-auto text-lightFg-tertiary dark:text-darkFg-tertiary" />
+          <PocketKnife size={48} className="mx-auto text-lightFg-tertiary dark:text-darkFg-tertiary" />
           <p className="mt-4 text-sm text-lightFg-primary dark:text-darkFg-primary">Você ainda não criou nenhuma ferramenta.</p>
         </div>
       ) : (
@@ -144,7 +142,7 @@ const ToolList = memo(({ tools, onCreate, onEdit, onDelete, toggleToolBuilderDoo
                   className="w-full text-left p-3 rounded-md transition-colors flex justify-between items-center group hover:bg-lightBg-tertiary dark:hover:bg-darkBg-secondary"
                 >
                   <div className="flex items-center gap-3 flex-1 min-w-0">
-                    <DynamicIcon name={tool.icon || "Wrench"} className="text-primary-base flex-shrink-0" size={20} />
+                    <DynamicIcon name={tool.icon || "PocketKnife"} className="text-primary-base flex-shrink-0" size={20} />
                     <div className="flex-1 min-w-0">
                       <p className="font-bold text-lightFg-primary dark:text-darkFg-primary truncate">{tool.alias || tool.name}</p>
                       {tool.alias && <p className="text-xs font-mono text-lightFg-tertiary dark:text-darkFg-tertiary truncate">{tool.description}</p>}
