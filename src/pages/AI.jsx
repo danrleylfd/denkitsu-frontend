@@ -90,7 +90,7 @@ const AI = () => {
       />
       <AIFeatures featuresDoor={featuresDoor} toggleFeaturesDoor={() => setFeaturesDoor(prev => !prev)} toggleSettingsDoor={() => setSettingsDoor(prev => !prev)} />
       <AISettings settingsDoor={settingsDoor} toggleSettingsDoor={() => setSettingsDoor(prev => !prev)} />
-      <AIToolBuilder isOpen={toolBuilderDoor} onClose={toggleToolBuilderDoor} />
+      <AIToolBuilder isOpen={toolBuilderDoor} onClose={() => setToolBuilderDoor(prev => !prev)} />
       <Lousa content={lousaContent} toggleLousa={toggleLousa} />
     </SideMenu>
   )
