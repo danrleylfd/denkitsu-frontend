@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { X, Bot, Wrench, BookText, Sparkle, Paperclip, Factory, AlertTriangle, Settings, ImagePlus, AudioLines, Mic, Languages, Waypoints, Star, Newspaper, Kanban, Upload, Speech, Factory } from "lucide-react"
+import { X, Bot, Wrench, Sparkle, Paperclip, Factory, AlertTriangle, Settings, ImagePlus, AudioLines, Mic, Languages, Waypoints, Star, Newspaper, Kanban, Upload, Speech } from "lucide-react"
 
 import { AGENTS_DEFINITIONS } from "../../constants/agents"
 import { TOOL_DEFINITIONS } from "../../constants/tools"
@@ -20,7 +20,7 @@ const FeatureListItem = ({ icon: Icon, title, children }) => (
 const tabs = [
   { id: "agents", label: "Agentes", icon: Bot },
   { id: "tools", label: "Ferramentas", icon: Wrench },
-  { id: "factory", label: "Fábrica", icon: BookText },
+  { id: "factory", label: "Fábrica", icon: Factory },
   { id: "media", label: "Mídia", icon: Paperclip },
   { id: "extras", label: "Extras", icon: Star },
   { id: "customization", label: "Personalização", icon: Sparkle },
