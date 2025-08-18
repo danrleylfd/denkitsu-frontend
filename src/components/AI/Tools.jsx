@@ -46,7 +46,7 @@ const AITools = ({ loading, toolsDoor }) => {
       mb-1 py-2 gap-2 rounded-lg shadow-lg max-w-[95%]
       grid grid-cols-[repeat(auto-fit,minmax(2rem,1fr))] justify-center justify-items-center mx-auto`}
     >
-      {allAvailableTools.map(({ key, title, Icon, isDisabled }) => (
+      {allAvailableTools.map(({ key, title, Icon, isCustom, isDisabled }) => (
         <ToolButton
           key={key}
           toolKey={key}
