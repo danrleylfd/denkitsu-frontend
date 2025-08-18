@@ -4,7 +4,6 @@ import { Shapes, Plus, Trash2, Save, X, ArrowLeft, Code } from "lucide-react"
 import { useTools } from "../../contexts/ToolContext"
 import { useNotification } from "../../contexts/NotificationContext"
 
-import Paper from "../Paper"
 import Button from "../Button"
 import Input from "../Input"
 
@@ -54,29 +53,29 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
         <Button variant="secondary" size="icon" $rounded onClick={onBack} title="Voltar para a lista">
           <ArrowLeft size={16} />
         </Button>
-        <h3 className="font-bold text-xl truncate">{tool ? `Editando: ${tool.name}` : "Criar Nova Ferramenta"}</h3>
+        <h3 className="font-bold text-xl text-lightFg-primary dark:text-darkFg-primary truncate">{tool ? `Editando: ${tool.name}` : "Criar Nova Ferramenta"}</h3>
       </div>
 
-      <div className="flex-grow overflow-y-auto pr-2 flex flex-col gap-3">
+      <div className="flex-grow overflow-y-auto pr-2 flex flex-col gap-4">
         <div>
           <label className="text-sm font-bold text-lightFg-secondary dark:text-darkFg-secondary">Nome da Ferramenta</label>
           <Input placeholder="ex: buscarCEP" value={formData.name} onChange={(e) => handleChange("name", e.target.value)} disabled={loading} />
         </div>
         <div>
           <label className="text-sm font-bold text-lightFg-secondary dark:text-darkFg-secondary">Descrição para a IA</label>
-          <textarea placeholder="Como e quando usar esta ferramenta..." value={formData.description} onChange={(e) => handleChange("description", e.target.value)} className="w-full mt-1 h-24 p-2 rounded-md resize-y bg-lightBg-tertiary dark:bg-darkBg-tertiary" disabled={loading} />
+          <textarea placeholder="Como e quando usar esta ferramenta..." value={formData.description} onChange={(e) => handleChange("description", e.target.value)} className="w-full mt-1 h-24 p-2 rounded-md resize-y bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" disabled={loading} />
         </div>
         <div>
           <label className="text-sm font-bold text-lightFg-secondary dark:text-darkFg-secondary">Configuração HTTP</label>
           <div className="flex gap-2 mt-1">
-            <select value={formData.method} onChange={(e) => handleChange("method", e.target.value)} className="rounded-full bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2" disabled={loading}>
+            <select value={formData.method} onChange={(e) => handleChange("method", e.target.value)} className="rounded-full bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary p-2" disabled={loading}>
               {["GET", "POST", "PUT", "PATCH", "DELETE"].map(m => <option key={m} value={m}>{m}</option>)}
             </select>
             <Input placeholder="URL da API (use {{param}})" value={formData.url} onChange={(e) => handleChange("url", e.target.value)} disabled={loading} />
           </div>
         </div>
 
-        <details className="bg-lightBg-secondary/50 dark:bg-darkBg-secondary/50 p-2 rounded-md">
+        <details className="bg-lightBg-secondary/50 dark:bg-darkBg-secondary/50 p-3 rounded-md">
           <summary className="cursor-pointer font-bold text-sm text-lightFg-secondary dark:text-darkFg-secondary">
             <Code size={16} className="inline mr-2" />
             Configurações Avançadas (JSON)
@@ -84,15 +83,15 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
             <div>
               <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Parâmetros (Schema)</label>
-              <textarea value={formData.parameters} onChange={(e) => handleChange("parameters", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary" />
+              <textarea value={formData.parameters} onChange={(e) => handleChange("parameters", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
             </div>
             <div>
               <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Headers</label>
-              <textarea value={formData.headers} onChange={(e) => handleChange("headers", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary" />
+              <textarea value={formData.headers} onChange={(e) => handleChange("headers", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
             </div>
             <div>
               <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Body</label>
-              <textarea value={formData.body} onChange={(e) => handleChange("body", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary" />
+              <textarea value={formData.body} onChange={(e) => handleChange("body", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
             </div>
           </div>
         </details>
@@ -110,24 +109,24 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
 const ToolList = memo(({ tools, onCreate, onEdit, onDelete, onClose }) => (
   <div className="flex flex-col h-full">
     <div className="flex justify-between items-center pb-4 border-b border-bLight dark:border-bDark">
-      <h3 className="font-bold text-xl">Minhas Ferramentas</h3>
+      <h3 className="font-bold text-xl text-lightFg-primary dark:text-darkFg-primary">Minhas Ferramentas</h3>
       <Button variant="danger" size="icon" $rounded onClick={onClose}><X size={16} /></Button>
     </div>
     <div className="flex-1 overflow-y-auto py-4 pr-2">
       {tools.length === 0 ? (
         <div className="text-center py-10">
           <Shapes size={48} className="mx-auto text-lightFg-tertiary dark:text-darkFg-tertiary" />
-          <p className="mt-4 text-sm">Você ainda não criou nenhuma ferramenta.</p>
+          <p className="mt-4 text-sm text-lightFg-primary dark:text-darkFg-primary">Você ainda não criou nenhuma ferramenta.</p>
         </div>
       ) : (
         <ul className="space-y-2">
           {tools.map(tool => (
-            <li key={tool._id} className="group flex items-center justify-between p-3 rounded-md hover:bg-lightBg-tertiary dark:hover:bg-darkBg-tertiary">
-              <div>
-                <p className="font-bold">{tool.name}</p>
+            <li key={tool._id} className="group flex items-center justify-between p-3 rounded-md hover:bg-lightBg-secondary dark:hover:bg-darkBg-secondary">
+              <div className="flex-1 min-w-0">
+                <p className="font-bold text-lightFg-primary dark:text-darkFg-primary truncate">{tool.name}</p>
                 <p className="text-xs text-lightFg-secondary dark:text-darkFg-secondary truncate">{tool.description}</p>
               </div>
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 pl-2">
                 <Button variant="warning" size="icon" $rounded title="Editar" onClick={() => onEdit(tool)}><Save size={14} /></Button>
                 <Button variant="danger" size="icon" $rounded title="Excluir" onClick={() => onDelete(tool)}><Trash2 size={14} /></Button>
               </div>
@@ -143,7 +142,6 @@ const ToolList = memo(({ tools, onCreate, onEdit, onDelete, onClose }) => (
     </div>
   </div>
 ))
-
 
 const AIToolBuilder = ({ isOpen, onClose }) => {
   const { tools, loading, addTool, editTool, removeTool } = useTools()
@@ -201,8 +199,8 @@ const AIToolBuilder = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={onClose}>
-      <Paper
-        className="w-full max-w-xl h-[90vh] flex flex-col"
+      <div
+        className="relative flex w-full max-w-xl h-[90vh] flex-col gap-2 rounded-lg bg-lightBg-primary p-4 shadow-2xl dark:bg-darkBg-primary"
         onClick={(e) => e.stopPropagation()}
       >
         {loading ? <Button variant="outline" loading disabled /> : (
@@ -210,7 +208,7 @@ const AIToolBuilder = ({ isOpen, onClose }) => {
             ? <ToolList tools={tools} onCreate={handleCreate} onEdit={handleEdit} onDelete={handleDelete} onClose={onClose} />
             : <ToolForm tool={currentTool} onSave={handleSave} onBack={handleBack} loading={formLoading} />
         )}
-      </Paper>
+      </div>
     </div>
   )
 }
