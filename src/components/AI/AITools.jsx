@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { Disc3 } from "lucide-react"
+import { Dice1, Dice2, Dice3, Dice4, Dice5, Dice6 } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 import { useTools } from "../../contexts/ToolContext"
@@ -8,6 +8,8 @@ import { TOOL_DEFINITIONS } from "../../constants/tools"
 
 import Paper from "../Paper"
 import ToolButton from "./ToolButton"
+
+const diceIcons = [Dice1, Dice2, Dice3, Dice4, Dice5, Dice6]
 
 const AITools = ({ loading, toolsDoor }) => {
   if (!toolsDoor) return null
@@ -32,7 +34,7 @@ const AITools = ({ loading, toolsDoor }) => {
     const userTools = customTools.map(tool => ({
       key: tool.name,
       title: tool.alias || tool.name,
-      Icon: Disc3,
+      Icon: diceIcons[index],
       isDisabled: aiKey.length === 0 || !isToolsSupported || stream || loading
     }))
     return [...nativeTools, ...userTools]

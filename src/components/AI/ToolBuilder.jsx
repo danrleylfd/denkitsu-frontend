@@ -1,11 +1,13 @@
 import { useState, useEffect, memo } from "react"
-import { Diamond, Plus, Trash2, Pencil, Save, X, ArrowLeft, Code, Wrench } from "lucide-react"
+import { Plus, Trash2, Pencil, Save, X, ArrowLeft, Code, Dice1, Dice2, Dice3, Dice4, Dice5, Dice6 } from "lucide-react"
 
 import { useTools } from "../../contexts/ToolContext"
 import { useNotification } from "../../contexts/NotificationContext"
 
 import Button from "../Button"
 import Input from "../Input"
+
+const diceIcons = [Dice1, Dice2, Dice3, Dice4, Dice5, Dice6]
 
 const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
   const [formData, setFormData] = useState({})
@@ -111,37 +113,49 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
   )
 })
 
-const ToolList = memo(({ tools, onCreate, onEdit, onDelete, toggleToolBuilderDoor }) => (
+const ToolList = memo(({ tools, onCreate, onEdit, onDelete, onClose, canCreate }) => ( // Adicionada prop `canCreate`
   <div className="flex flex-col h-full">
     <div className="flex justify-between items-center pb-4 border-b border-bLight dark:border-bDark">
-      <h3 className="font-bold text-xl text-lightFg-primary dark:text-darkFg-primary">Fábrica de Ferramentas</h3>
-      <Button variant="danger" size="icon" $rounded onClick={toggleToolBuilderDoor}><X size={16} /></Button>
+      <h3 className="font-bold text-xl text-lightFg-primary dark:text-darkFg-primary">Minhas Ferramentas ({tools.length}/6)</h3>
+      <Button variant="danger" size="icon" $rounded onClick={onClose}><X size={16} /></Button>
     </div>
     <div className="flex-1 overflow-y-auto py-4 pr-2">
       {tools.length === 0 ? (
         <div className="text-center py-10">
-          <Wrench size={48} className="mx-auto text-lightFg-tertiary dark:text-darkFg-tertiary" />
+          <Shapes size={48} className="mx-auto text-lightFg-tertiary dark:text-darkFg-tertiary" />
           <p className="mt-4 text-sm text-lightFg-primary dark:text-darkFg-primary">Você ainda não criou nenhuma ferramenta.</p>
         </div>
       ) : (
         <ul className="space-y-2">
-          {tools.map(tool => (
-            <li key={tool._id} className="group flex items-center justify-between p-3 rounded-md hover:bg-lightBg-secondary dark:hover:bg-darkBg-secondary">
-              <div className="flex-1 min-w-0">
-                <p className="font-bold text-lightFg-primary dark:text-darkFg-primary truncate">{tool.alias || tool.name}</p>
-                <p className="text-xs text-lightFg-secondary dark:text-darkFg-secondary truncate">{tool.description}</p>
-              </div>
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 pl-2">
-                <Button variant="warning" size="icon" $rounded title="Editar" onClick={() => onEdit(tool)}><Pencil size={14} /></Button>
-                <Button variant="danger" size="icon" $rounded title="Excluir" onClick={() => onDelete(tool)}><Trash2 size={14} /></Button>
-              </div>
-            </li>
-          ))}
+          {/* Adicionado `index` para pegar o ícone dinamicamente */}
+          {tools.map((tool, index) => {
+            const Icon = diceIcons[index] || Shapes // Pega o ícone de dado ou um padrão
+            return (
+              <li key={tool._id}>
+                <button
+                  onClick={() => onEdit(tool)}
+                  className="w-full text-left p-3 rounded-md transition-colors flex justify-between items-center group hover:bg-lightBg-tertiary dark:hover:bg-darkBg-secondary"
+                >
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <Icon className="text-primary-base flex-shrink-0" size={20} />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-lightFg-primary dark:text-darkFg-primary truncate">{tool.alias || tool.name}</p>
+                      {tool.alias && <p className="text-xs font-mono text-lightFg-tertiary dark:text-darkFg-tertiary truncate">{tool.name}</p>}
+                    </div>
+                  </div>
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 pl-2">
+                    <Button variant="warning" size="icon" $rounded title="Editar" onClick={(e) => { e.stopPropagation(); onEdit(tool) }}><Pencil size={14} /></Button>
+                    <Button variant="danger" size="icon" $rounded title="Excluir" onClick={(e) => { e.stopPropagation(); onDelete(tool) }}><Trash2 size={14} /></Button>
+                  </div>
+                </button>
+              </li>
+            )
+          })}
         </ul>
       )}
     </div>
     <div className="pt-4 border-t border-bLight dark:border-bDark">
-      <Button variant="primary" $rounded onClick={onCreate} className="w-full justify-center">
+      <Button variant="primary" $rounded onClick={onCreate} className="w-full justify-center" disabled={!canCreate} title={canCreate ? "Criar Nova Ferramenta" : "Limite de 6 ferramentas atingido"}>
         <Plus size={16} className="mr-2" /> Criar Nova Ferramenta
       </Button>
     </div>
@@ -150,8 +164,8 @@ const ToolList = memo(({ tools, onCreate, onEdit, onDelete, toggleToolBuilderDoo
 
 const AIToolBuilder = ({ toolBuilderDoor, toggleToolBuilderDoor }) => {
   if (!toolBuilderDoor) return null
-
   const { tools, loading, addTool, editTool, removeTool } = useTools()
+  const canCreateTool = tools.length < 6
   const { notifyError, notifyInfo } = useNotification()
   const [view, setView] = useState("list")
   const [currentTool, setCurrentTool] = useState(null)
@@ -203,14 +217,14 @@ const AIToolBuilder = ({ toolBuilderDoor, toggleToolBuilderDoor }) => {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={onClose}>
       <div
         className="relative flex w-full max-w-xl h-[90vh] flex-col gap-2 rounded-lg bg-lightBg-primary p-4 shadow-2xl dark:bg-darkBg-primary"
         onClick={(e) => e.stopPropagation()}
       >
         {loading ? <Button variant="outline" loading disabled /> : (
           view === 'list'
-            ? <ToolList tools={tools} onCreate={handleCreate} onEdit={handleEdit} onDelete={handleDelete} toggleToolBuilderDoor={toggleToolBuilderDoor} />
+            ? <ToolList tools={tools} onCreate={handleCreate} onEdit={handleEdit} onDelete={handleDelete} onClose={onClose} canCreate={canCreateTool} />
             : <ToolForm tool={currentTool} onSave={handleSave} onBack={handleBack} loading={formLoading} />
         )}
       </div>
