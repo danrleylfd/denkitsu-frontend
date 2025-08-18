@@ -191,19 +191,19 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
           <div className="flex flex-col gap-4 mt-2">
             <div>
               <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Definição do Esquema da Ferramenta</label>
-              <textarea value={formData.parameters} onChange={(e) => handleChange("parameters", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
+              <textarea placeholder={`{ "type": "object", "properties": {}, "required": [] }`} value={formData.parameters} onChange={(e) => handleChange("parameters", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
             </div>
             <div>
               <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Parâmetros de Query (JSON)</label>
-              <textarea placeholder={`{ "apiKey": "valor_fixo", "cidade": "{{nome_da_cidade}}" }`} value={formData.queryParams} onChange={(e) => handleChange("queryParams", e.target.value)} className="w-full h-24 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
+              <textarea placeholder={`{ "static": "valor_fixo", "dynamic": "{{variable}}" }`} value={formData.queryParams} onChange={(e) => handleChange("queryParams", e.target.value)} className="w-full h-24 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
             </div>
             <div>
               <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Cabeçalho</label>
-              <textarea value={formData.headers} onChange={(e) => handleChange("headers", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
+              <textarea placeholder={`{ "Content-Type": "application/json" }`} value={formData.headers} onChange={(e) => handleChange("headers", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
             </div>
             <div>
               <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Corpo</label>
-              <textarea value={formData.body} onChange={(e) => handleChange("body", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
+              <textarea placeholder={`{ "text": "Hello World" }`} value={formData.body} onChange={(e) => handleChange("body", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
             </div>
           </div>
         </details>
