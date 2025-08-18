@@ -63,7 +63,7 @@ const IconInputAutocomplete = ({ value, onChange, placeholder, disabled }) => {
         }
       />
       {showSuggestions && (
-        <ul className="absolute bottom-full mb-2 w-full max-h-48 overflow-y-auto bg-lightBg-secondary dark:bg-darkBg-secondary border border-bLight dark:border-bDark rounded-md shadow-lg z-20">
+        <ul className="absolute top-full mt-2 w-full min-h-24 max-h-48 overflow-y-auto bg-lightBg-secondary dark:bg-darkBg-secondary border border-bLight dark:border-bDark rounded-md shadow-lg z-20">
           {suggestions.map(name => (
             <li
               key={name}
