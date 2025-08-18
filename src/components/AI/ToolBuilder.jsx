@@ -92,7 +92,6 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
         </Button>
         <h3 className="font-bold text-xl text-lightFg-primary dark:text-darkFg-primary truncate">{tool ? `Editando: ${tool.name}` : "Criar Nova Ferramenta"}</h3>
       </div>
-
       <div className="flex-grow overflow-y-auto pr-2 flex flex-col gap-4">
         <div>
           <Input placeholder="Apelido da Ferramenta (ex: Buscar CEP)" value={formData.alias} onChange={(e) => handleChange("alias", e.target.value)} disabled={loading} />
@@ -111,12 +110,6 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
             <Input placeholder="URL Base da API (sem query params)" value={formData.url} onChange={(e) => handleChange("url", e.target.value)} disabled={loading} />
           </div>
         </div>
-
-        <div>
-          <label className="text-sm font-bold text-lightFg-secondary dark:text-darkFg-secondary">Parâmetros de Query (JSON)</label>
-          <textarea placeholder={`{ "apiKey": "valor_fixo", "cidade": "{{nome_da_cidade}}" }`} value={formData.queryParams} onChange={(e) => handleChange("queryParams", e.target.value)} className="w-full h-24 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
-        </div>
-
         <details className="bg-lightBg-secondary/50 dark:bg-darkBg-secondary/50 p-3 rounded-md">
           <summary className="cursor-pointer font-bold text-sm text-lightFg-secondary dark:text-darkFg-secondary">
             <Code size={16} className="inline mr-2" />
@@ -126,6 +119,10 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
             <div>
               <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Definição do Esquema da Ferramenta</label>
               <textarea value={formData.parameters} onChange={(e) => handleChange("parameters", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
+            </div>
+            <div>
+              <label className="text-sm font-bold text-lightFg-secondary dark:text-darkFg-secondary">Parâmetros de Query (JSON)</label>
+              <textarea placeholder={`{ "apiKey": "valor_fixo", "cidade": "{{nome_da_cidade}}" }`} value={formData.queryParams} onChange={(e) => handleChange("queryParams", e.target.value)} className="w-full h-24 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
             </div>
             <div>
               <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Cabeçalho</label>
@@ -138,7 +135,6 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
           </div>
         </details>
       </div>
-
       <div className="flex justify-end pt-4 border-t border-bLight dark:border-bDark">
         <Button type="submit" variant="primary" $rounded loading={loading} disabled={loading || !formData.name || !formData.url}>
           {!loading && <Save size={16} className="mr-2" />} Salvar Ferramenta
