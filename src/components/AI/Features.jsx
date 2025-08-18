@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { X, Bot, Wrench, BookText, Sparkle, Paperclip, Factory, AlertTriangle, Settings, ImagePlus, AudioLines, Mic, Languages, Waypoints, Star, Newspaper, Kanban, Upload, Speech } from "lucide-react"
+import { X, Bot, Wrench, BookText, Sparkle, Paperclip, Factory, AlertTriangle, Settings, ImagePlus, AudioLines, Mic, Languages, Waypoints, Star, Newspaper, Kanban, Upload, Speech, Factory } from "lucide-react"
 
 import { AGENTS_DEFINITIONS } from "../../constants/agents"
 import { TOOL_DEFINITIONS } from "../../constants/tools"
