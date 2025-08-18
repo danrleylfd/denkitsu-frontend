@@ -19,6 +19,7 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
       method: tool?.httpConfig?.method || "GET",
       url: tool?.httpConfig?.url || "",
       parameters: JSON.stringify(tool?.parameters || { type: "object", properties: {} }, null, 2),
+      queryParams: JSON.stringify(tool?.httpConfig?.queryParams || {}, null, 2),
       headers: JSON.stringify(tool?.httpConfig?.headers || {}, null, 2),
       body: JSON.stringify(tool?.httpConfig?.body || {}, null, 2)
     })
@@ -39,6 +40,7 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
         httpConfig: {
           method: formData.method,
           url: formData.url,
+          queryParams: JSON.parse(formData.queryParams),
           headers: JSON.parse(formData.headers),
           body: JSON.parse(formData.body),
         }
@@ -73,8 +75,13 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
             <select value={formData.method} onChange={(e) => handleChange("method", e.target.value)} className="rounded-full bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary p-2" disabled={loading}>
               {["GET", "POST", "PUT", "PATCH", "DELETE"].map(m => <option key={m} value={m}>{m}</option>)}
             </select>
-            <Input placeholder="URL da API (use {{param}})" value={formData.url} onChange={(e) => handleChange("url", e.target.value)} disabled={loading} />
+            <Input placeholder="URL Base da API (sem query params)" value={formData.url} onChange={(e) => handleChange("url", e.target.value)} disabled={loading} />
           </div>
+        </div>
+
+        <div>
+          <label className="text-sm font-bold text-lightFg-secondary dark:text-darkFg-secondary">Parâmetros de Query (JSON)</label>
+          <textarea placeholder={`{ "apiKey": "valor_fixo", "cidade": "{{nome_da_cidade}}" }`} value={formData.queryParams} onChange={(e) => handleChange("queryParams", e.target.value)} className="w-full h-24 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
         </div>
 
         <details className="bg-lightBg-secondary/50 dark:bg-darkBg-secondary/50 p-3 rounded-md">
@@ -84,15 +91,15 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
           </summary>
           <div className="flex flex-col gap-4 mt-2">
             <div>
-              <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Parâmetros (Schema)</label>
+              <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Definição do Esquema da Ferramenta</label>
               <textarea value={formData.parameters} onChange={(e) => handleChange("parameters", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
             </div>
             <div>
-              <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Headers</label>
+              <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Cabeçalho</label>
               <textarea value={formData.headers} onChange={(e) => handleChange("headers", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
             </div>
             <div>
-              <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Body</label>
+              <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Corpo</label>
               <textarea value={formData.body} onChange={(e) => handleChange("body", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
             </div>
           </div>
