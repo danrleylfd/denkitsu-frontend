@@ -113,11 +113,11 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
   )
 })
 
-const ToolList = memo(({ tools, onCreate, onEdit, onDelete, onClose, canCreate }) => ( // Adicionada prop `canCreate`
+const ToolList = memo(({ tools, onCreate, onEdit, onDelete, toggleToolBuilderDoor, canCreate }) => ( // Adicionada prop `canCreate`
   <div className="flex flex-col h-full">
     <div className="flex justify-between items-center pb-4 border-b border-bLight dark:border-bDark">
       <h3 className="font-bold text-xl text-lightFg-primary dark:text-darkFg-primary">Minhas Ferramentas ({tools.length}/6)</h3>
-      <Button variant="danger" size="icon" $rounded onClick={onClose}><X size={16} /></Button>
+      <Button variant="danger" size="icon" $rounded onClick={toggleToolBuilderDoor}><X size={16} /></Button>
     </div>
     <div className="flex-1 overflow-y-auto py-4 pr-2">
       {tools.length === 0 ? (
@@ -217,14 +217,14 @@ const AIToolBuilder = ({ toolBuilderDoor, toggleToolBuilderDoor }) => {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={toggleToolBuilderDoor}>
       <div
         className="relative flex w-full max-w-xl h-[90vh] flex-col gap-2 rounded-lg bg-lightBg-primary p-4 shadow-2xl dark:bg-darkBg-primary"
         onClick={(e) => e.stopPropagation()}
       >
         {loading ? <Button variant="outline" loading disabled /> : (
           view === 'list'
-            ? <ToolList tools={tools} onCreate={handleCreate} onEdit={handleEdit} onDelete={handleDelete} onClose={onClose} canCreate={canCreateTool} />
+            ? <ToolList tools={tools} onCreate={handleCreate} onEdit={handleEdit} onDelete={handleDelete} toggleToolBuilderDoor={toggleToolBuilderDoor} canCreate={canCreateTool} />
             : <ToolForm tool={currentTool} onSave={handleSave} onBack={handleBack} loading={formLoading} />
         )}
       </div>
