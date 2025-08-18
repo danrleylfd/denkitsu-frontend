@@ -1,5 +1,4 @@
 import { useMemo } from "react"
-import { Dice1, Dice2, Dice3, Dice4, Dice5, Dice6 } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 import { useTools } from "../../contexts/ToolContext"
@@ -8,8 +7,7 @@ import { TOOL_DEFINITIONS } from "../../constants/tools"
 
 import Paper from "../Paper"
 import ToolButton from "./ToolButton"
-
-const diceIcons = [Dice1, Dice2, Dice3, Dice4, Dice5, Dice6]
+import DynamicIcon from "../DynamicIcon"
 
 const AITools = ({ loading, toolsDoor }) => {
   if (!toolsDoor) return null
@@ -31,10 +29,10 @@ const AITools = ({ loading, toolsDoor }) => {
         isDisabled: isDisabled
       }
     })
-    const userTools = customTools.map((tool, index) => ({
+    const userTools = customTools.map(tool => ({
       key: tool.name,
       title: tool.alias || tool.name,
-      Icon: diceIcons[index],
+      Icon: tool.icon || "Wrench",
       isDisabled: aiKey.length === 0 || !isToolsSupported || stream || loading
     }))
     return [...nativeTools, ...userTools]
@@ -54,7 +52,7 @@ const AITools = ({ loading, toolsDoor }) => {
           onToggle={handleToolToggle}
           disabled={isDisabled}
         >
-          <Icon size={16} />
+          {isCustom ? <DynamicIcon name={Icon} size={16} /> : <Icon size={16} />}
         </ToolButton>
       ))}
     </Paper>
