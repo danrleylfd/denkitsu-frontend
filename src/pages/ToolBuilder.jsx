@@ -16,7 +16,6 @@ const ToolEditor = memo(({ tool, onSave, onCancel, loading }) => {
   const { notifyError } = useNotification()
 
   useEffect(() => {
-    // Reseta o formulário sempre que a ferramenta selecionada muda
     setFormData({
       name: tool?.name || "",
       description: tool?.description || "",
@@ -26,7 +25,7 @@ const ToolEditor = memo(({ tool, onSave, onCancel, loading }) => {
       headers: JSON.stringify(tool?.httpConfig?.headers || {}, null, 2),
       body: JSON.stringify(tool?.httpConfig?.body || {}, null, 2)
     })
-    setActiveTab("general") // Volta para a primeira aba
+    setActiveTab("general")
   }, [tool])
 
   const handleChange = (field, value) => {
@@ -36,7 +35,6 @@ const ToolEditor = memo(({ tool, onSave, onCancel, loading }) => {
   const handleSubmit = (e) => {
     e.preventDefault()
     try {
-      // Validação de JSON antes de salvar
       const toolData = {
         name: formData.name,
         description: formData.description,
@@ -54,7 +52,6 @@ const ToolEditor = memo(({ tool, onSave, onCancel, loading }) => {
     }
   }
 
-  // Abas para organizar o formulário
   const renderContent = () => {
     switch (activeTab) {
       case "general":
@@ -95,16 +92,17 @@ const ToolEditor = memo(({ tool, onSave, onCancel, loading }) => {
   }
 
   return (
-    <Paper className="flex-1 flex flex-col">
+    // CORREÇÃO 2: Adicionado min-w-0 para evitar o overflow do flex item
+    <Paper className="flex-1 flex flex-col min-w-0">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 h-full">
         <div className="flex justify-between items-center">
-          <h3 className="font-bold text-xl">{tool ? `Editando: ${tool.name}` : "Criar Nova Ferramenta"}</h3>
+          <h3 className="font-bold text-xl truncate">{tool ? `Editando: ${tool.name}` : "Criar Nova Ferramenta"}</h3>
           <Button type="button" variant="secondary" $rounded onClick={onCancel}>
             <X size={16} className="mr-2" /> Fechar
           </Button>
         </div>
 
-        <div className="border-b border-bLight dark:border-bDark flex">
+        <div className="border-b border-bLight dark:border-bDark flex flex-wrap">
           <button type="button" onClick={() => setActiveTab("general")} className={`p-2 font-bold ${activeTab === 'general' ? 'text-primary-base border-b-2 border-primary-base' : 'text-lightFg-secondary dark:text-darkFg-secondary'}`}><BotMessageSquare size={16} className="inline mr-2" />Geral</button>
           <button type="button" onClick={() => setActiveTab("config")} className={`p-2 font-bold ${activeTab === 'config' ? 'text-primary-base border-b-2 border-primary-base' : 'text-lightFg-secondary dark:text-darkFg-secondary'}`}><Wrench size={16} className="inline mr-2" />Configuração HTTP</button>
           <button type="button" onClick={() => setActiveTab("advanced")} className={`p-2 font-bold ${activeTab === 'advanced' ? 'text-primary-base border-b-2 border-primary-base' : 'text-lightFg-secondary dark:text-darkFg-secondary'}`}><Code size={16} className="inline mr-2" />Avançado</button>
@@ -163,7 +161,7 @@ const ToolList = memo(({ tools, selectedToolId, onSelect, onCreate, onDelete }) 
 ))
 
 const WelcomePanel = () => (
-  <Paper className="flex-1 flex flex-col items-center justify-center text-center bg-lightBg-secondary/50 dark:bg-darkBg-secondary/50">
+  <Paper className="flex-1 flex flex-col items-center justify-center text-center">
     <Shapes size={64} className="text-primary-base/50" />
     <h3 className="mt-4 text-xl font-bold">Construtor de Ferramentas</h3>
     <p className="mt-2 max-w-sm text-lightFg-secondary dark:text-darkFg-secondary">
@@ -182,9 +180,10 @@ const ToolBuilder = () => {
   const handleSaveNew = async (toolData) => {
     setFormLoading(true)
     try {
-      await addTool(toolData)
+      const newTool = await addTool(toolData)
       notifyInfo("Ferramenta criada com sucesso!")
-      setActiveView("list")
+      setSelectedTool(newTool)
+      setActiveView("edit")
     } catch (error) {
       notifyError(error.response?.data?.error?.message || "Falha ao criar ferramenta.")
     } finally {
@@ -237,10 +236,11 @@ const ToolBuilder = () => {
   }
 
   return (
+    // Removida a ContentView customizada para usar a padrão do SideMenu
     <SideMenu fixed className="bg-cover bg-brand-purple">
       {loading ? <Button variant="outline" loading disabled /> : (
-        // Este novo div é o container principal da página, corrigindo o layout e o fundo
-        <div className="flex-1 flex gap-4 w-full h-full bg-lightBg-primary/80 dark:bg-darkBg-primary/90 p-4 rounded-xl shadow-lg backdrop-blur-sm">
+        // CORREÇÃO 1: O container principal agora é um Paper, para ter o fundo e estilos corretos
+        <Paper className="flex-1 flex gap-4 w-full h-full overflow-hidden">
           <ToolList
             tools={tools}
             selectedToolId={selectedTool?._id}
@@ -251,7 +251,7 @@ const ToolBuilder = () => {
           {activeView === 'list' && <WelcomePanel />}
           {activeView === 'create' && <ToolEditor onSave={handleSaveNew} onCancel={handleCancel} loading={formLoading} />}
           {activeView === 'edit' && <ToolEditor tool={selectedTool} onSave={handleSaveEdit} onCancel={handleCancel} loading={formLoading} />}
-        </div>
+        </Paper>
       )}
     </SideMenu>
   )
