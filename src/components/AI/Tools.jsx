@@ -26,6 +26,7 @@ const AITools = ({ loading, toolsDoor }) => {
         key: tool.key,
         title: tool.title,
         Icon: tool.Icon,
+        isCustom: false,
         isDisabled: isDisabled
       }
     })
@@ -33,6 +34,7 @@ const AITools = ({ loading, toolsDoor }) => {
       key: tool.name,
       title: tool.alias || tool.name,
       Icon: tool.icon || "Wrench",
+      isCustom: true,
       isDisabled: aiKey.length === 0 || !isToolsSupported || stream || loading
     }))
     return [...nativeTools, ...userTools]
