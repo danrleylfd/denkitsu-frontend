@@ -194,7 +194,7 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
               <textarea value={formData.parameters} onChange={(e) => handleChange("parameters", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
             </div>
             <div>
-              <label className="text-sm font-bold text-lightFg-secondary dark:text-darkFg-secondary">Parâmetros de Query (JSON)</label>
+              <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Parâmetros de Query (JSON)</label>
               <textarea placeholder={`{ "apiKey": "valor_fixo", "cidade": "{{nome_da_cidade}}" }`} value={formData.queryParams} onChange={(e) => handleChange("queryParams", e.target.value)} className="w-full h-24 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
             </div>
             <div>
