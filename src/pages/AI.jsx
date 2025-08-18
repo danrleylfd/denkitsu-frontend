@@ -17,6 +17,7 @@ import AIBar from "../components/AI/Bar"
 import AIFeatures from "../components/AI/Features"
 import AISettings from "../components/AI/Settings"
 import AIToolBuilder from "../components/AI/ToolBuilder"
+import AgentManager from "../components/AI/AgentManager"
 import Lousa from "../components/AI/Lousa"
 
 const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-dvh mx-auto">{children}</main>
@@ -36,6 +37,7 @@ const AI = () => {
   const [featuresDoor, setFeaturesDoor] = useState(false)
   const [settingsDoor, setSettingsDoor] = useState(false)
   const [toolBuilderDoor, setToolBuilderDoor] = useState(false)
+  const [agentManagerDoor, setAgentManagerDoor] = useState(false)
 
   useEffect(() => {
     (async () => {
@@ -87,10 +89,12 @@ const AI = () => {
         toggleFeaturesDoor={() => setFeaturesDoor(prev => !prev)}
         toggleSettingsDoor={() => setSettingsDoor(prev => !prev)}
         toggleToolBuilderDoor={() => setToolBuilderDoor(prev => !prev)}
+        toggleAgentManagerDoor={() => setAgentManagerDoor(prev => !prev)}
       />
       <AIFeatures featuresDoor={featuresDoor} toggleFeaturesDoor={() => setFeaturesDoor(prev => !prev)} toggleSettingsDoor={() => setSettingsDoor(prev => !prev)} />
       <AISettings settingsDoor={settingsDoor} toggleSettingsDoor={() => setSettingsDoor(prev => !prev)} />
       <AIToolBuilder toolBuilderDoor={toolBuilderDoor} toggleToolBuilderDoor={() => setToolBuilderDoor(prev => !prev)} />
+      <AgentManager agentManagerDoor={agentManagerDoor} toggleAgentManagerDoor={() => setAgentManagerDoor(prev => !prev)} />
       <Lousa content={lousaContent} toggleLousa={toggleLousa} />
     </SideMenu>
   )
