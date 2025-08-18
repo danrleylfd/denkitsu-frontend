@@ -33,8 +33,8 @@ const AIBar = ({ loading, isImproving, improvePrompt, imageCount, onSendMessage,
           <Button variant={aiProvider === "groq" ? "orange" : "info"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"} disabled={loading || isImproving}><Waypoints size={16} /></Button>
           <Button variant={mediaDoor ? "outline" : "secondary"} size="icon" $rounded title="Mídia" onClick={toggleMediaDoor} disabled={loading || isImproving}><Paperclip size={16} /></Button>
           <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgentsDoor}><Speech size={16} /></Button>
-          <Button variant="secondary" size="icon" $rounded title="Gerenciar Agentes" onClick={toggleAgentManagerDoor} disabled={loading || isImproving}><Bot size={16} /></Button>
           <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor} disabled={aiKey.length === 0}><Wrench size={16} /></Button>
+          <Button variant="secondary" size="icon" $rounded title="Gerenciar Agentes" onClick={toggleAgentManagerDoor} disabled={loading || isImproving}><Bot size={16} /></Button>
           <Button variant="secondary" size="icon" $rounded title="Fábrica de Ferramentas" onClick={toggleToolBuilderDoor} disabled={loading || isImproving}><Factory size={16} /></Button>
           <Button variant="outline" size="icon" $rounded title="Aperfeiçoar Prompt" onClick={improvePrompt} loading={isImproving} disabled={loading || isImproving || !userPrompt.trim()}>{!isImproving && <Sparkle size={16} />}</Button>
         </div>
@@ -50,8 +50,8 @@ const AIBar = ({ loading, isImproving, improvePrompt, imageCount, onSendMessage,
         <Button variant={aiProvider === "groq" ? "orange" : "info"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"} disabled={loading || isImproving}><Waypoints size={16} /></Button>
         <Button variant={mediaDoor ? "outline" : "secondary"} size="icon" $rounded title="Mídia" onClick={toggleMediaDoor} disabled={loading || isImproving}><Paperclip size={16} /></Button>
         <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgentsDoor}><Speech size={16} /></Button>
-        <Button variant="secondary" size="icon" $rounded title="Gerenciar Agentes" onClick={toggleAgentManagerDoor} disabled={loading || isImproving}><Bot size={16} /></Button>
         <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor} disabled={aiKey.length === 0}><Wrench size={16} /></Button>
+        <Button variant="secondary" size="icon" $rounded title="Gerenciar Agentes" onClick={toggleAgentManagerDoor} disabled={loading || isImproving}><Bot size={16} /></Button>
         <Button variant="secondary" size="icon" $rounded title="Fábrica de Ferramentas" onClick={toggleToolBuilderDoor} disabled={loading || isImproving}><Factory size={16} /></Button>
         <AIInput id="prompt-input-desktop" value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} onKeyDown={handleKeyDown} className="resize-y" disabled={loading || isImproving} />
         <div className="flex items-center gap-2">
