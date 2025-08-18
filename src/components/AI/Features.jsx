@@ -20,7 +20,7 @@ const FeatureListItem = ({ icon: Icon, title, children }) => (
 const tabs = [
   { id: "agents", label: "Agentes", icon: Bot },
   { id: "tools", label: "Ferramentas", icon: Wrench },
-  { id: "tutorial", label: "Tutorial", icon: BookText },
+  { id: "factory", label: "Fábrica", icon: BookText },
   { id: "media", label: "Mídia", icon: Paperclip },
   { id: "extras", label: "Extras", icon: Star },
   { id: "customization", label: "Personalização", icon: Sparkle },
@@ -56,6 +56,10 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
         return (
           <>
             <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary">Conecte a IA a fontes de dados externas para obter respostas mais ricas e atualizadas. Requer chave de API e um modelo compatível.</p>
+            <FeatureListItem title="Construtor de Ferramentas" icon={Factory}>
+              Crie suas próprias ferramentas para se conectar a qualquer API. Automatize tarefas e ensine novas habilidades ao Denkitsu através de uma interface simples. Acesse pelo ícone de <Shapes size={16} className="inline-block mx-1" /> na barra de chat.
+            </FeatureListItem>
+            <div className="w-full border-t border-bLight dark:border-bDark my-2"></div>
             {TOOL_DEFINITIONS.map(({ key, title, description, Icon }) => (
               <FeatureListItem key={key} title={title} icon={Icon}>
                 {description}
@@ -63,7 +67,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
             ))}
           </>
         )
-      case "tutorial":
+      case "factory":
         return (
           <div className="flex flex-col gap-4 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
             <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Tutorial: Criando sua Primeira Ferramenta</h4>
