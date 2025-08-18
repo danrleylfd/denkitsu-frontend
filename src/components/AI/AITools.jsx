@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { Shapes } from "lucide-react" // Ícone genérico para ferramentas customizadas
+import { Box } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 import { useTools } from "../../contexts/ToolContext" // Importar o novo hook
@@ -27,9 +27,9 @@ const AITools = ({ loading, toolsDoor }) => {
     }))
 
     const userTools = customTools.map(tool => ({
-      key: tool.name, // A chave para ferramentas customizadas é o seu nome único
+      key: tool.name,
       title: tool.name,
-      Icon: Shapes, // Usar um ícone genérico
+      Icon: Box,
       isCustom: true
     }))
 
