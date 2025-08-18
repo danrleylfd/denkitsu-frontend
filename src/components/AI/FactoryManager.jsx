@@ -1,4 +1,4 @@
-import { useEffect, useState, memo } from "react"
+import { useState, memo, useEffect } from "react"
 import { Plus, Trash2, Pencil, Save, X, ArrowLeft, Bot, Code, PocketKnife, Factory } from "lucide-react"
 
 import { useAgents } from "../../contexts/AgentContext"
@@ -77,7 +77,10 @@ const AgentList = memo(({ agents, onCreate, onEdit, onDelete, canCreate }) => (
         <ul className="space-y-2">
           {agents.map((agent) => (
             <li key={agent._id}>
-              <div className="w-full text-left p-3 rounded-md flex justify-between items-center group bg-lightBg-tertiary/50 dark:bg-darkBg-secondary/50">
+              <button
+                onClick={() => onEdit(agent)}
+                className="w-full text-left p-3 rounded-md transition-colors flex justify-between items-center group hover:bg-lightBg-tertiary dark:hover:bg-darkBg-secondary"
+              >
                 <div className="flex items-center gap-3 flex-1 min-w-0">
                   <DynamicIcon name={agent.icon} className="text-primary-base flex-shrink-0" size={20} />
                   <div className="flex-1 min-w-0">
@@ -89,7 +92,7 @@ const AgentList = memo(({ agents, onCreate, onEdit, onDelete, canCreate }) => (
                   <Button variant="warning" size="icon" $rounded title="Editar" onClick={(e) => { e.stopPropagation(); onEdit(agent) }}><Pencil size={14} /></Button>
                   <Button variant="danger" size="icon" $rounded title="Excluir" onClick={(e) => { e.stopPropagation(); onDelete(agent) }}><Trash2 size={14} /></Button>
                 </div>
-              </div>
+              </button>
             </li>
           ))}
         </ul>
