@@ -7,7 +7,7 @@ import { useNotification } from "../../contexts/NotificationContext"
 import Button from "../Button"
 import Input from "../Input"
 import DynamicIcon from "../DynamicIcon"
-import IconAutocompleteInput from "./IconAutocompleteInput"
+import IconAutocompleteInput from "../IconAutocompleteInput"
 
 const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
   const [formData, setFormData] = useState({

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react"
-import { iconNames } from "../../utils/icons"
-import Input from "../Input"
-import DynamicIcon from "../DynamicIcon"
+import { iconNames } from "../utils/icons"
+import Input from "./Input"
+import DynamicIcon from "./DynamicIcon"
 
 const IconAutocompleteInput = ({ value, onChange, placeholder, disabled }) => {
   const [inputValue, setInputValue] = useState(value)
