@@ -23,13 +23,9 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
   })
   const { notifyError } = useNotification()
 
-  const handleChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
-  }
+  const handleChange = (field, value) => setFormData(prev => ({ ...prev, [field]: value }))
 
-  const handlePromptChange = (field, value) => {
-    setFormData(prev => ({ ...prev, prompt: { ...prev.prompt, [field]: value } }))
-  }
+  const handlePromptChange = (field, value) => setFormData(prev => ({ ...prev, prompt: { ...prev.prompt, [field]: value } }))
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -55,7 +51,6 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
           disabled={loading}
         />
         <Input placeholder="Descrição curta (ex: Ajuda com receitas)" value={formData.description} onChange={(e) => handleChange("description", e.target.value)} disabled={loading} />
-
         <textarea placeholder="Goal: Objetivo do prompt..." value={formData.prompt.goal} onChange={(e) => handlePromptChange("goal", e.target.value)} className="w-full h-20 p-2 rounded-md resize-y bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" disabled={loading} />
         <textarea placeholder="Return Format: Formato da resposta..." value={formData.prompt.returnFormat} onChange={(e) => handlePromptChange("returnFormat", e.target.value)} className="w-full h-20 p-2 rounded-md resize-y bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" disabled={loading} />
         <textarea placeholder="Warning: Restrições e avisos..." value={formData.prompt.warning} onChange={(e) => handlePromptChange("warning", e.target.value)} className="w-full h-20 p-2 rounded-md resize-y bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" disabled={loading} />
