@@ -3,7 +3,7 @@ import { iconNames } from "../utils/icons"
 import Input from "./Input"
 import DynamicIcon from "./DynamicIcon"
 
-const IconAutocompleteInput = ({ value, onChange, placeholder, disabled }) => {
+const IconInputAutocomplete = ({ value, onChange, placeholder, disabled }) => {
   const [inputValue, setInputValue] = useState(value)
   const [suggestions, setSuggestions] = useState([])
   const [showSuggestions, setShowSuggestions] = useState(false)
@@ -21,7 +21,7 @@ const IconAutocompleteInput = ({ value, onChange, placeholder, disabled }) => {
     if (term.trim().length > 1) {
       const filtered = iconNames
         .filter(name => name.toLowerCase().includes(term.toLowerCase()))
-        .slice(0, 50) // Limita a 50 sugestões para performance
+        .slice(0, 50)
       setSuggestions(filtered)
       setShowSuggestions(filtered.length > 0)
     } else {
@@ -80,4 +80,4 @@ const IconAutocompleteInput = ({ value, onChange, placeholder, disabled }) => {
   )
 }
 
-export default IconAutocompleteInput
+export default IconInputAutocomplete
