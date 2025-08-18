@@ -15,6 +15,7 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
     setFormData({
       name: tool?.name || "",
       description: tool?.description || "",
+      alias: tool?.alias || "",
       method: tool?.httpConfig?.method || "GET",
       url: tool?.httpConfig?.url || "",
       parameters: JSON.stringify(tool?.parameters || { type: "object", properties: {} }, null, 2),
@@ -33,6 +34,7 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
       const toolData = {
         name: formData.name,
         description: formData.description,
+        alias: formData.alias,
         parameters: JSON.parse(formData.parameters),
         httpConfig: {
           method: formData.method,
@@ -58,8 +60,8 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
 
       <div className="flex-grow overflow-y-auto pr-2 flex flex-col gap-4">
         <div>
-          <label className="text-sm font-bold text-lightFg-secondary dark:text-darkFg-secondary">Nome da Ferramenta</label>
-          <Input placeholder="ex: buscarCEP" value={formData.name} onChange={(e) => handleChange("name", e.target.value)} disabled={loading} />
+          <Input placeholder="Apelido da Ferramenta (ex: Buscar CEP)" value={formData.alias} onChange={(e) => handleChange("alias", e.target.value)} disabled={loading} />
+          <Input placeholder="Nome Técnico (ex: cepTool)" value={formData.name} onChange={(e) => handleChange("name", e.target.value)} disabled={loading} />
         </div>
         <div>
           <label className="text-sm font-bold text-lightFg-secondary dark:text-darkFg-secondary">Descrição para a IA</label>
