@@ -1,82 +1,184 @@
-import { useState } from "react"
-import { Shapes, Plus, Trash2, Pencil, Save, X } from "lucide-react"
+import { useState, useEffect, memo } from "react"
+import { Shapes, Plus, Trash2, Pencil, Save, X, BotMessageSquare, Wrench, Code } from "lucide-react"
+
 import { useTools } from "../contexts/ToolContext"
 import { useNotification } from "../contexts/NotificationContext"
+
 import SideMenu from "../components/SideMenu"
 import Paper from "../components/Paper"
 import Button from "../components/Button"
 import Input from "../components/Input"
 
 const ContentView = ({ children }) => (
-  <main className="flex flex-1 flex-col p-2 gap-2 w-full h-dvh ml-[3.5rem] md:ml-auto">
+  <main className="flex flex-1 p-4 gap-4 w-full h-dvh ml-[3.5rem] md:ml-auto">
     {children}
   </main>
 )
 
-const ToolForm = ({ tool, onSave, onCancel, loading }) => {
-  const [name, setName] = useState(tool?.name || "")
-  const [description, setDescription] = useState(tool?.description || "")
-  const [url, setUrl] = useState(tool?.httpConfig?.url || "")
-  const [method, setMethod] = useState(tool?.httpConfig?.method || "GET")
-  const [parameters, setParameters] = useState(JSON.stringify(tool?.parameters || { type: "object", properties: {} }, null, 2))
-  const [headers, setHeaders] = useState(JSON.stringify(tool?.httpConfig?.headers || {}, null, 2))
-  const [body, setBody] = useState(JSON.stringify(tool?.httpConfig?.body || {}, null, 2))
+const ToolEditor = memo(({ tool, onSave, onCancel, loading }) => {
+  const [formData, setFormData] = useState({})
+  const [activeTab, setActiveTab] = useState("general")
   const { notifyError } = useNotification()
+
+  useEffect(() => {
+    setFormData({
+      name: tool?.name || "",
+      description: tool?.description || "",
+      method: tool?.httpConfig?.method || "GET",
+      url: tool?.httpConfig?.url || "",
+      parameters: JSON.stringify(tool?.parameters || { type: "object", properties: {} }, null, 2),
+      headers: JSON.stringify(tool?.httpConfig?.headers || {}, null, 2),
+      body: JSON.stringify(tool?.httpConfig?.body || {}, null, 2)
+    })
+  }, [tool])
+
+  const handleChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }))
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault()
     try {
       const toolData = {
-        name,
-        description,
-        parameters: JSON.parse(parameters),
+        name: formData.name,
+        description: formData.description,
+        parameters: JSON.parse(formData.parameters),
         httpConfig: {
-          method,
-          url,
-          headers: JSON.parse(headers),
-          body: JSON.parse(body)
+          method: formData.method,
+          url: formData.url,
+          headers: JSON.parse(formData.headers),
+          body: JSON.parse(formData.body),
         }
       }
       onSave(toolData)
     } catch (error) {
-      notifyError("JSON inválido em um dos campos. Por favor, verifique.")
+      notifyError("JSON inválido em um dos campos avançados. Por favor, verifique.")
+    }
+  }
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case "general":
+        return (
+          <>
+            <Input placeholder="Nome da Ferramenta (ex: buscarCEP)" value={formData.name} onChange={(e) => handleChange("name", e.target.value)} disabled={loading} />
+            <textarea placeholder="Descrição para a IA entender como e quando usar esta ferramenta..." value={formData.description} onChange={(e) => handleChange("description", e.target.value)} className="w-full h-24 p-2 rounded-md resize-y bg-lightBg-tertiary dark:bg-darkBg-tertiary" disabled={loading} />
+          </>
+        )
+      case "config":
+        return (
+          <div className="flex flex-col gap-4">
+             <select value={formData.method} onChange={(e) => handleChange("method", e.target.value)} className="w-full rounded-full bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2" disabled={loading}>
+              {["GET", "POST", "PUT", "PATCH", "DELETE"].map(m => <option key={m} value={m}>{m}</option>)}
+            </select>
+            <Input placeholder="URL da API (use {{param}} para variáveis)" value={formData.url} onChange={(e) => handleChange("url", e.target.value)} disabled={loading} />
+          </div>
+        )
+      case "advanced":
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="text-sm font-bold">Parâmetros (JSON Schema)</label>
+                <textarea value={formData.parameters} onChange={(e) => handleChange("parameters", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary" />
+              </div>
+              <div>
+                <label className="text-sm font-bold">Headers (JSON)</label>
+                <textarea value={formData.headers} onChange={(e) => handleChange("headers", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary" />
+              </div>
+              <div>
+                <label className="text-sm font-bold">Body (JSON)</label>
+                <textarea value={formData.body} onChange={(e) => handleChange("body", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary" />
+              </div>
+          </div>
+        )
+      default: return null
     }
   }
 
   return (
-    <Paper>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <h3 className="font-bold text-xl">{tool ? "Editar Ferramenta" : "Criar Nova Ferramenta"}</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input placeholder="Nome da Ferramenta (ex: buscarCEP)" value={name} onChange={(e) => setName(e.target.value)} disabled={loading} />
-          <select value={method} onChange={(e) => setMethod(e.target.value)} className="w-full rounded-full bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2" disabled={loading}>
-            {["GET", "POST", "PUT", "PATCH", "DELETE"].map(m => <option key={m} value={m}>{m}</option>)}
-          </select>
+    <Paper className="flex-1 flex flex-col">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 h-full">
+        <div className="flex justify-between items-center">
+            <h3 className="font-bold text-xl">{tool ? "Editar Ferramenta" : "Criar Nova Ferramenta"}</h3>
+            <Button type="button" variant="secondary" $rounded onClick={onCancel}>
+                <X size={16} className="mr-2" /> Cancelar
+            </Button>
         </div>
-        <Input placeholder="URL da API (use {{param}} para variáveis)" value={url} onChange={(e) => setUrl(e.target.value)} disabled={loading} />
-        <textarea placeholder="Descrição para a IA..." value={description} onChange={(e) => setDescription(e.target.value)} className="w-full h-24 p-2 rounded-md resize-y bg-lightBg-tertiary dark:bg-darkBg-tertiary" disabled={loading} />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <textarea placeholder="Parâmetros (JSON Schema)" value={parameters} onChange={(e) => setParameters(e.target.value)} className="w-full h-32 p-2 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary" />
-          <textarea placeholder="Headers (JSON)" value={headers} onChange={(e) => setHeaders(e.target.value)} className="w-full h-32 p-2 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary" />
-          <textarea placeholder="Body (JSON)" value={body} onChange={(e) => setBody(e.target.value)} className="w-full h-32 p-2 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary" />
+
+        <div className="border-b border-bLight dark:border-bDark flex">
+            <button type="button" onClick={() => setActiveTab("general")} className={`p-2 font-bold ${activeTab === 'general' ? 'text-primary-base border-b-2 border-primary-base' : 'text-lightFg-secondary dark:text-darkFg-secondary'}`}><BotMessageSquare size={16} className="inline mr-2" />Geral</button>
+            <button type="button" onClick={() => setActiveTab("config")} className={`p-2 font-bold ${activeTab === 'config' ? 'text-primary-base border-b-2 border-primary-base' : 'text-lightFg-secondary dark:text-darkFg-secondary'}`}><Wrench size={16} className="inline mr-2" />Configuração HTTP</button>
+            <button type="button" onClick={() => setActiveTab("advanced")} className={`p-2 font-bold ${activeTab === 'advanced' ? 'text-primary-base border-b-2 border-primary-base' : 'text-lightFg-secondary dark:text-darkFg-secondary'}`}><Code size={16} className="inline mr-2" />Avançado</button>
         </div>
-        <div className="flex justify-end gap-2">
-          {onCancel && <Button variant="secondary" $rounded onClick={onCancel} disabled={loading}>Cancelar</Button>}
-          <Button type="submit" variant="primary" $rounded loading={loading} disabled={loading || !name || !url}>
-            {!loading && <Save size={16} className="mr-2" />} Salvar
+
+        <div className="flex-grow">
+            {renderContent()}
+        </div>
+
+        <div className="flex justify-end">
+          <Button type="submit" variant="primary" $rounded loading={loading} disabled={loading || !formData.name || !formData.url}>
+            {!loading && <Save size={16} className="mr-2" />} Salvar Ferramenta
           </Button>
         </div>
       </form>
     </Paper>
   )
-}
+})
 
+const ToolList = memo(({ tools, selectedToolId, onSelect, onCreate, onEdit, onDelete }) => (
+  <Paper className="w-full md:w-1/3 flex flex-col">
+    <div className="flex justify-between items-center mb-4">
+      <h2 className="text-2xl font-bold">Ferramentas</h2>
+      <Button variant="primary" $rounded onClick={onCreate}>
+        <Plus size={16} className="mr-2" /> Criar
+      </Button>
+    </div>
+    <div className="flex-1 overflow-y-auto">
+      {tools.length === 0 ? (
+         <div className="text-center py-10">
+            <Shapes size={48} className="mx-auto text-lightFg-tertiary dark:text-darkFg-tertiary" />
+            <p className="mt-4 text-sm">Você ainda não criou nenhuma ferramenta.</p>
+          </div>
+      ) : (
+        <ul className="space-y-2">
+          {tools.map(tool => (
+            <li key={tool._id}>
+              <button
+                onClick={() => onSelect(tool)}
+                className={`w-full text-left p-3 rounded-md transition-colors flex justify-between items-center group ${selectedToolId === tool._id ? 'bg-primary-base/20' : 'hover:bg-lightBg-tertiary dark:hover:bg-darkBg-tertiary'}`}
+              >
+                <div>
+                  <p className="font-bold">{tool.name}</p>
+                  <p className="text-xs text-lightFg-secondary dark:text-darkFg-secondary truncate">{tool.description}</p>
+                </div>
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                    <Button variant="warning" size="icon" $rounded onClick={(e) => { e.stopPropagation(); onEdit(tool) }}><Pencil size={14} /></Button>
+                    <Button variant="danger" size="icon" $rounded onClick={(e) => { e.stopPropagation(); onDelete(tool) }}><Trash2 size={14} /></Button>
+                </div>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </Paper>
+))
+
+const WelcomePanel = () => (
+    <Paper className="flex-1 flex flex-col items-center justify-center text-center">
+        <Shapes size={64} className="text-primary-base/50" />
+        <h3 className="mt-4 text-xl font-bold">Construtor de Ferramentas</h3>
+        <p className="mt-2 max-w-sm text-lightFg-secondary dark:text-darkFg-secondary">
+            Selecione uma ferramenta à esquerda para editar ou clique em "Criar" para configurar uma nova integração com qualquer API REST.
+        </p>
+    </Paper>
+)
 
 const ToolBuilder = () => {
   const { tools, loading, addTool, editTool, removeTool } = useTools()
   const { notifyError, notifyInfo } = useNotification()
-  const [isCreating, setIsCreating] = useState(false)
-  const [editingTool, setEditingTool] = useState(null)
+  const [activeView, setActiveView] = useState("list") // 'list', 'create', 'edit'
+  const [selectedTool, setSelectedTool] = useState(null)
   const [formLoading, setFormLoading] = useState(false)
 
   const handleSaveNew = async (toolData) => {
@@ -84,7 +186,7 @@ const ToolBuilder = () => {
     try {
       await addTool(toolData)
       notifyInfo("Ferramenta criada com sucesso!")
-      setIsCreating(false)
+      setActiveView("list")
     } catch (error) {
       notifyError(error.response?.data?.error?.message || "Falha ao criar ferramenta.")
     } finally {
@@ -95,9 +197,10 @@ const ToolBuilder = () => {
   const handleSaveEdit = async (toolData) => {
     setFormLoading(true)
     try {
-      await editTool(editingTool._id, toolData)
+      await editTool(selectedTool._id, toolData)
       notifyInfo("Ferramenta atualizada com sucesso!")
-      setEditingTool(null)
+      setActiveView("list")
+      setSelectedTool(null)
     } catch (error) {
       notifyError(error.response?.data?.error?.message || "Falha ao atualizar ferramenta.")
     } finally {
@@ -110,59 +213,44 @@ const ToolBuilder = () => {
         try {
             await removeTool(tool._id)
             notifyInfo("Ferramenta excluída com sucesso!")
+            if (selectedTool?._id === tool._id) setSelectedTool(null)
         } catch (error) {
             notifyError(error.response?.data?.error?.message || "Falha ao excluir ferramenta.")
         }
     }
   }
 
-  if (loading) {
-    return (
-      <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
-        <Button variant="outline" loading disabled />
-      </SideMenu>
-    )
+  const handleSelectTool = (tool) => {
+    setSelectedTool(tool)
+    setActiveView("edit")
+  }
+
+  const handleCreateClick = () => {
+      setSelectedTool(null)
+      setActiveView("create")
+  }
+
+  const handleCancel = () => {
+      setSelectedTool(null)
+      setActiveView("list")
   }
 
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
-      {editingTool ? (
-        <ToolForm tool={editingTool} onSave={handleSaveEdit} onCancel={() => setEditingTool(null)} loading={formLoading} />
-      ) : isCreating ? (
-        <ToolForm onSave={handleSaveNew} onCancel={() => setIsCreating(false)} loading={formLoading} />
-      ) : (
-        <div className="flex flex-col gap-4">
-          <Paper className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold">Minhas Ferramentas</h2>
-            <Button variant="primary" $rounded onClick={() => setIsCreating(true)}>
-              <Plus size={16} className="mr-2" /> Criar Ferramenta
-            </Button>
-          </Paper>
-          {tools.length === 0 ? (
-            <Paper className="text-center">
-              <Shapes size={48} className="mx-auto text-lightFg-tertiary dark:text-darkFg-tertiary" />
-              <p className="mt-4">Você ainda não criou nenhuma ferramenta.</p>
-            </Paper>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {tools.map(tool => (
-                <Paper key={tool._id} className="flex flex-col justify-between">
-                  <div>
-                    <h4 className="font-bold truncate">{tool.name}</h4>
-                    <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary h-10 overflow-hidden text-ellipsis">{tool.description}</p>
-                    <p className="font-mono text-xs mt-2 p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded">
-                      <span className="font-bold text-primary-base">{tool.httpConfig.method}</span> {tool.httpConfig.url}
-                    </p>
-                  </div>
-                  <div className="flex justify-end gap-2 mt-4">
-                    <Button variant="warning" size="icon" $rounded onClick={() => setEditingTool(tool)}><Pencil size={16} /></Button>
-                    <Button variant="danger" size="icon" $rounded onClick={() => handleDelete(tool)}><Trash2 size={16} /></Button>
-                  </div>
-                </Paper>
-              ))}
-            </div>
-          )}
-        </div>
+      {loading ? <Button variant="outline" loading disabled /> : (
+        <>
+          <ToolList
+            tools={tools}
+            selectedToolId={selectedTool?._id}
+            onSelect={handleSelectTool}
+            onCreate={handleCreateClick}
+            onEdit={handleSelectTool}
+            onDelete={handleDelete}
+          />
+          {activeView === 'list' && <WelcomePanel />}
+          {activeView === 'create' && <ToolEditor onSave={handleSaveNew} onCancel={handleCancel} loading={formLoading} />}
+          {activeView === 'edit' && <ToolEditor tool={selectedTool} onSave={handleSaveEdit} onCancel={handleCancel} loading={formLoading} />}
+        </>
       )}
     </SideMenu>
   )
