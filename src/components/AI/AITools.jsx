@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { Shapes } from "lucide-react" // Usaremos Shapes como um ícone mais adequado
+import { Box } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 import { useTools } from "../../contexts/ToolContext"
@@ -20,8 +20,8 @@ const AITools = ({ loading, toolsDoor }) => {
 
   const allAvailableTools = useMemo(() => {
     const nativeTools = TOOL_DEFINITIONS.map(tool => {
-      let isDisabled = !isToolsSupported || stream || loading
-      if (tool.key === "web") isDisabled = isDisabled || aiProvider === "groq" || aiKey.length === 0
+      let isDisabled = aiKey.length === 0 || !isToolsSupported || stream || loading
+      if (tool.key === "web") isDisabled = isDisabled || aiProvider === "groq"
       return {
         key: tool.key,
         title: tool.title,
@@ -32,8 +32,8 @@ const AITools = ({ loading, toolsDoor }) => {
     const userTools = customTools.map(tool => ({
       key: tool.name,
       title: tool.alias || tool.name,
-      Icon: Shapes,
-      isDisabled: !isToolsSupported || stream || loading
+      Icon: Box,
+      isDisabled: aiKey.length === 0 || !isToolsSupported || stream || loading
     }))
     return [...nativeTools, ...userTools]
   }, [customTools, isToolsSupported, stream, loading, aiProvider, aiKey])
