@@ -1,5 +1,5 @@
 import { useState, useEffect, memo } from "react"
-import { Shapes, Plus, Trash2, Pencil, Save, X, BotMessageSquare, Wrench, Code } from "lucide-react"
+import { Shapes, Plus, Trash2, Save, X, BotMessageSquare, Wrench, Code } from "lucide-react"
 
 import { useTools } from "../contexts/ToolContext"
 import { useNotification } from "../contexts/NotificationContext"
@@ -92,7 +92,6 @@ const ToolEditor = memo(({ tool, onSave, onCancel, loading }) => {
   }
 
   return (
-    // CORREÇÃO 2: Adicionado min-w-0 para evitar o overflow do flex item
     <Paper className="flex-1 flex flex-col min-w-0">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 h-full">
         <div className="flex justify-between items-center">
@@ -148,8 +147,9 @@ const ToolList = memo(({ tools, selectedToolId, onSelect, onCreate, onDelete }) 
                   <p className="font-bold">{tool.name}</p>
                   <p className="text-xs text-lightFg-secondary dark:text-darkFg-secondary truncate">{tool.description}</p>
                 </div>
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
-                  <Button variant="danger" size="icon" $rounded onClick={(e) => { e.stopPropagation(); onDelete(tool) }}><Trash2 size={14} /></Button>
+                {/* CORREÇÃO 2: Botão de exclusão restaurado */}
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Button variant="danger" size="icon" $rounded title="Excluir" onClick={(e) => { e.stopPropagation(); onDelete(tool) }}><Trash2 size={14} /></Button>
                 </div>
               </button>
             </li>
@@ -173,7 +173,7 @@ const WelcomePanel = () => (
 const ToolBuilder = () => {
   const { tools, loading, addTool, editTool, removeTool } = useTools()
   const { notifyError, notifyInfo } = useNotification()
-  const [activeView, setActiveView] = useState("list") // 'list', 'create', 'edit'
+  const [activeView, setActiveView] = useState("list")
   const [selectedTool, setSelectedTool] = useState(null)
   const [formLoading, setFormLoading] = useState(false)
 
@@ -236,11 +236,10 @@ const ToolBuilder = () => {
   }
 
   return (
-    // Removida a ContentView customizada para usar a padrão do SideMenu
     <SideMenu fixed className="bg-cover bg-brand-purple">
       {loading ? <Button variant="outline" loading disabled /> : (
-        // CORREÇÃO 1: O container principal agora é um Paper, para ter o fundo e estilos corretos
-        <Paper className="flex-1 flex gap-4 w-full h-full overflow-hidden">
+        // CORREÇÃO 1: Fundo sólido e correto
+        <div className="flex-1 flex gap-4 w-full h-full p-4 bg-lightBg-primary dark:bg-darkBg-primary">
           <ToolList
             tools={tools}
             selectedToolId={selectedTool?._id}
@@ -251,7 +250,7 @@ const ToolBuilder = () => {
           {activeView === 'list' && <WelcomePanel />}
           {activeView === 'create' && <ToolEditor onSave={handleSaveNew} onCancel={handleCancel} loading={formLoading} />}
           {activeView === 'edit' && <ToolEditor tool={selectedTool} onSave={handleSaveEdit} onCancel={handleCancel} loading={formLoading} />}
-        </Paper>
+        </div>
       )}
     </SideMenu>
   )
