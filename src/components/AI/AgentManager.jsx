@@ -162,7 +162,7 @@ const AgentManager = ({ agentManagerDoor, toggleAgentManagerDoor }) => {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={toggleAgentManagerDoor}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <div
         className="relative flex w-full max-w-xl h-[90vh] flex-col gap-2 rounded-lg bg-lightBg-primary p-4 shadow-2xl dark:bg-darkBg-primary"
         onClick={(e) => e.stopPropagation()}
