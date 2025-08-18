@@ -1,5 +1,5 @@
 import { useState, useEffect, memo } from "react"
-import { Shapes, Plus, Trash2, Pencil, Save, X, ArrowLeft, Code } from "lucide-react"
+import { Diamond, Plus, Trash2, Pencil, Save, X, ArrowLeft, Code } from "lucide-react"
 
 import { useTools } from "../../contexts/ToolContext"
 import { useNotification } from "../../contexts/NotificationContext"
@@ -114,13 +114,13 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
 const ToolList = memo(({ tools, onCreate, onEdit, onDelete, toggleToolBuilderDoor }) => (
   <div className="flex flex-col h-full">
     <div className="flex justify-between items-center pb-4 border-b border-bLight dark:border-bDark">
-      <h3 className="font-bold text-xl text-lightFg-primary dark:text-darkFg-primary">Minhas Ferramentas</h3>
+      <h3 className="font-bold text-xl text-lightFg-primary dark:text-darkFg-primary">Fábrica de Ferramentas</h3>
       <Button variant="danger" size="icon" $rounded onClick={toggleToolBuilderDoor}><X size={16} /></Button>
     </div>
     <div className="flex-1 overflow-y-auto py-4 pr-2">
       {tools.length === 0 ? (
         <div className="text-center py-10">
-          <Shapes size={48} className="mx-auto text-lightFg-tertiary dark:text-darkFg-tertiary" />
+          <Diamond size={48} className="mx-auto text-lightFg-tertiary dark:text-darkFg-tertiary" />
           <p className="mt-4 text-sm text-lightFg-primary dark:text-darkFg-primary">Você ainda não criou nenhuma ferramenta.</p>
         </div>
       ) : (
