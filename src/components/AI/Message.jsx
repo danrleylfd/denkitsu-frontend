@@ -12,7 +12,7 @@ const AIMessage = ({ msg, user, toggleLousa, loading, onRegenerate, isLastMessag
   const isUser = msg.role === "user"
 
   const renderContent = () => {
-    return msg.content.map((part, index) => {
+    return (msg.content || []).map((part, index) => {
       if (part.type === "text") {
         return <Markdown key={index} content={part.text || part.content} />
       }

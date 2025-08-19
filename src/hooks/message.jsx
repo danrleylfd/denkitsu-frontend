@@ -31,8 +31,15 @@ const useMessage = (props) => {
         setMessages(prev => [...prev, placeholder])
 
         await sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], historyToProcess, activeTools, selectedAgent, (parsedChunk) => {
+
           if (parsedChunk.type === "delta" && parsedChunk.delta?.content) {
-            placeholder.content[0].text += parsedChunk.delta.content
+            const textChunk = parsedChunk.delta.content[0]?.text || ""
+            if (textChunk) {
+              if (placeholder.content.length === 0) {
+                placeholder.content.push({ type: "text", text: "" })
+              }
+              placeholder.content[0].text += textChunk
+            }
           } else if (parsedChunk.type === "status") {
             if (parsedChunk.status === "TOOL_CALL") {
               const existing = placeholder.toolStatus.find(t => t.name === parsedChunk.tool.name)
@@ -50,11 +57,17 @@ const useMessage = (props) => {
             }
           } else if (parsedChunk.type === "error") {
             placeholder.processingState = "FAILED"
-            placeholder.content[0].text += `\n\n**Erro no processamento:** ${parsedChunk.error.message}`
+            const errorText = `\n\n**Erro no processamento:** ${parsedChunk.error.message}`
+            if (placeholder.content.length === 0) {
+              placeholder.content.push({ type: "text", text: errorText })
+            } else {
+              placeholder.content[0].text += errorText
+            }
           }
 
           setMessages(prev => prev.map(msg => (msg.id === placeholder.id ? { ...placeholder } : msg)))
         })
+
       } else {
         const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], historyToProcess, selectedAgent, activeTools)
         const res = data?.choices?.[0]?.message
@@ -73,7 +86,7 @@ const useMessage = (props) => {
         setMessages(prev => [...prev, {
           id: Date.now(),
           role: "assistant",
-          content: [{ type: "text", text: content }],
+          content: [{ type: "text", text: content || "" }],
           reasoning: (res.reasoning || "") + reasoning,
           timestamp: new Date().toISOString(),
           toolStatus: [],
@@ -83,7 +96,7 @@ const useMessage = (props) => {
     } catch (err) {
       if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
       else notifyError("Falha na comunicação com o servidor de IA.")
-      setMessages(prev => prev.filter(msg => msg.id !== (err.id || -1) && (Array.isArray(msg.content) ? msg.content.some(part => part.text || part.content) : msg.content !== "")))
+      setMessages(prev => prev.filter(msg => msg.id !== (err.id || -1)))
     } finally {
       setLoading(false)
     }
@@ -123,6 +136,9 @@ const useMessage = (props) => {
       newContent.push({ type: "text", content: promptText })
     }
     if (imageUrls.length > 0) {
+      if (!promptText) {
+        newContent.push({ type: "text", content: "" })
+      }
       imageUrls.forEach(url => {
         newContent.push({ type: "image_url", image_url: { url } })
       })
