@@ -28,27 +28,40 @@ const useMessage = (props) => {
           role: "assistant",
           content: "",
           reasoning: "",
-          _contentBuffer: "",
-          _reasoningBuffer: "",
+          toolCalls: [],
           timestamp: new Date().toISOString()
         }
         setMessages(prev => [...prev, placeholder])
         await sendMessageStream(aiKey, aiProvider, model, apiMessages, activeTools, selectedAgent, delta => {
-          if (delta.content) placeholder._contentBuffer += delta.content
-          if (delta.reasoning) placeholder._reasoningBuffer += delta.reasoning
-          if (delta.tool_calls?.[0]?.function?.arguments) placeholder._reasoningBuffer += delta.tool_calls[0].function.arguments
-          const cleanContent = raw => {
-            let reasoning = ""
-            const content = raw.replace(/(<think>.*?<\/think>|<thinking>.*?<\/thinking>|◁think▷.*?◁\/think▷)/gs, (_, r) => {
-              reasoning += r
-              return ""
-            })
-            return { content, reasoning }
+          const currentMsg = { ...placeholder }
+
+          if (delta.reasoning) {
+            currentMsg.reasoning += delta.reasoning
           }
-          const { content, reasoning } = cleanContent(placeholder._contentBuffer)
-          placeholder.content = content
-          placeholder.reasoning = (placeholder._reasoningBuffer + reasoning).trim()
-          setMessages((prev) => prev.map(msg => (msg.id === placeholder.id ? { ...placeholder } : msg)))
+
+          if (delta.tool_calls) {
+            delta.tool_calls.forEach((toolCallChunk) => {
+              const existingCall = currentMsg.toolCalls.find(c => c.index === toolCallChunk.index)
+              if (!existingCall) {
+                currentMsg.toolCalls.push({
+                  index: toolCallChunk.index,
+                  name: toolCallChunk.function.name,
+                  arguments: toolCallChunk.function.arguments
+                })
+              } else {
+                if (toolCallChunk.function?.arguments) {
+                  existingCall.arguments += toolCallChunk.function.arguments
+                }
+              }
+            })
+          }
+
+          if (delta.content) {
+            currentMsg.content += delta.content
+          }
+
+          Object.assign(placeholder, currentMsg)
+          setMessages(prev => prev.map(msg => (msg.id === placeholder.id ? { ...placeholder } : msg)))
         })
       } else {
         const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, selectedAgent, activeTools)

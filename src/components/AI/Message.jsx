@@ -1,5 +1,5 @@
 import { memo } from "react"
-import { UserRound } from "lucide-react"
+import { UserRound, Wrench } from "lucide-react"
 import AIReactions from "./Reactions"
 import Markdown from "../Markdown"
 import Button from "../Button"
@@ -38,7 +38,20 @@ const AIMessage = ({ msg, user, toggleLousa, loading, onRegenerate, isLastMessag
       )}
       <div className="max-w-[90%] sm:max-w-[67%] md:max-w-[75%] lg:max-w-[90%] break-words rounded-md px-4 py-2 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] text-lightFg-secondary dark:text-darkFg-secondary bg-lightBg-secondary dark:bg-darkBg-secondary opacity-75 dark:opacity-90">
         {isAssistant && msg.reasoning && <Markdown loading={loading} content={msg.reasoning} think />}
-        {loading && !msg.content ? <Button variant="outline" size="icon" $rounded loading={true} disabled /> : renderContent()}
+
+        {isAssistant && msg.toolCalls?.length > 0 && !msg.content && (
+          <div className="my-2 p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md animate-pulse">
+            {msg.toolCalls.map((call) => (
+              <div key={call.index} className="flex items-center gap-2 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
+                <Wrench size={14} />
+                <span>Usando a ferramenta <strong>{call.name}</strong>...</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {loading && !msg.content && msg.toolCalls?.length === 0 ? <Button variant="outline" size="icon" $rounded loading={true} disabled /> : renderContent()}
+
         {msg.timestamp && (
           <small className="ml-auto pl-2 text-xs text-lightFg-secondary dark:text-darkFg-secondary whitespace-nowrap">
             {new Date(msg.timestamp).toLocaleString("pt-BR")}
