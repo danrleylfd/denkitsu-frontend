@@ -65,12 +65,24 @@ const useMessage = (props) => {
           return { content, reasoning }
         }
         const { content, reasoning } = cleanContent(res.content)
+        // setMessages(prev => [...prev, {
+        //   id: Date.now(),
+        //   role: "assistant",
+        //   content,
+        //   reasoning: (res.reasoning || "") + reasoning,
+        //   toolCalls: [],
+        //   timestamp: new Date().toISOString()
+        // }])
         setMessages(prev => [...prev, {
           id: Date.now(),
           role: "assistant",
           content,
           reasoning: (res.reasoning || "") + reasoning,
-          toolCalls: [],
+          toolCalls: (data.tool_calls || []).map((call, idx) => ({
+            index: idx,
+            name: call.function.name,
+            arguments: call.function.arguments
+          })),
           timestamp: new Date().toISOString()
         }])
       }
