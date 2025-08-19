@@ -34,11 +34,8 @@ const useMessage = (props) => {
         setMessages(prev => [...prev, placeholder])
         await sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, activeTools, selectedAgent, delta => {
           const currentMsg = { ...placeholder }
-
-          if (delta.reasoning) {
-            currentMsg.reasoning += delta.reasoning
-          }
-
+          if (delta.reasoning) currentMsg.reasoning += delta.reasoning
+          if (delta.content) currentMsg.content += delta.content
           if (delta.tool_calls) {
             delta.tool_calls.forEach((toolCallChunk) => {
               const existingCall = currentMsg.toolCalls.find(c => c.index === toolCallChunk.index)
@@ -48,18 +45,10 @@ const useMessage = (props) => {
                   name: toolCallChunk.function.name,
                   arguments: toolCallChunk.function.arguments
                 })
-              } else {
-                if (toolCallChunk.function?.arguments) {
-                  existingCall.arguments += toolCallChunk.function.arguments
-                }
               }
+              if (existingCall && toolCallChunk.function?.arguments) existingCall.arguments += toolCallChunk.function.arguments
             })
           }
-
-          if (delta.content) {
-            currentMsg.content += delta.content
-          }
-
           Object.assign(placeholder, currentMsg)
           setMessages(prev => prev.map(msg => (msg.id === placeholder.id ? { ...placeholder } : msg)))
         })
@@ -101,7 +90,6 @@ const useMessage = (props) => {
     if (loading || isImproving) return
     const promptText = userPrompt.trim()
     if (!promptText && !audioFile && imageUrls.length === 0) return
-
     if (audioFile) {
       setLoading(true)
       const userMessagePlaceholder = { role: "user", content: `[Áudio: ${audioFile.name || "Gravação"}]`, timestamp: new Date().toISOString() }
@@ -126,7 +114,6 @@ const useMessage = (props) => {
     const newContent = []
     if (promptText) newContent.push({ type: "text", content: promptText })
     if (imageUrls.length > 0) newContent.push(...imageUrls.map(url => ({ type: "image_url", image_url: { url } })))
-
     const newMessage = { role: "user", content: newContent, timestamp: new Date().toISOString() }
     const history = [...messages, newMessage]
     setMessages(history)
@@ -163,16 +150,11 @@ const useMessage = (props) => {
       if (improvedPrompt) {
         setUserPrompt(improvedPrompt)
         notifySuccess("Prompt Aperfeiçoado!")
-      } else {
-        notifyError("Não foi possível aperfeiçoar o prompt.")
-      }
+      } else notifyError("Não foi possível aperfeiçoar o prompt.")
     } catch (error) {
       console.error("Error improving prompt:", error)
-      if (error.response && error.response.data.error) {
-        notifyError(error.response.data.error.message)
-      } else {
-        notifyError("Falha ao aperfeiçoar o prompt.")
-      }
+      if (error.response && error.response.data.error) notifyError(error.response.data.error.message)
+      else notifyError("Falha ao aperfeiçoar o prompt.")
     } finally {
       setIsImproving(false)
     }
