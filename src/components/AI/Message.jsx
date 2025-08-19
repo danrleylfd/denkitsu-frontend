@@ -1,5 +1,5 @@
 import { memo } from "react"
-import { UserRound, Wrench, CheckCircle } from "lucide-react"
+import { UserRound, Wrench, CheckCircle, AlertTriangle, BrainCircuit, Bot } from "lucide-react"
 import AIReactions from "./Reactions"
 import Markdown from "../Markdown"
 import Button from "../Button"
@@ -21,7 +21,27 @@ const AIMessage = ({ msg, user, toggleLousa, loading, onRegenerate, isLastMessag
     return null
   }
 
-  const hasContentStarted = msg.content && msg.content.length > 0
+  const renderToolStatus = () => {
+    if (!msg.toolStatus) return null
+
+    const { state, tools, message, error } = msg.toolStatus
+    const toolNames = tools?.join(", ")
+
+    switch (state) {
+      case "decided":
+        return <div className="flex items-center gap-2 text-sm"><Bot size={14} /><span>A IA decidiu usar: <strong>{toolNames}</strong></span></div>
+      case "executing":
+        return <div className="flex items-center gap-2 text-sm animate-pulse"><Wrench size={14} className="animate-spin-fast" /><span>A executar: <strong>{toolNames}</strong>...</span></div>
+      case "processing":
+        return <div className="flex items-center gap-2 text-sm animate-pulse"><BrainCircuit size={14} /><span>{message}</span></div>
+      case "error":
+        return <div className="flex items-center gap-2 text-sm text-red-base"><AlertTriangle size={14} /><span>Erro na ferramenta: {error}</span></div>
+      case "finished":
+        return <div className="flex items-center gap-2 text-sm text-green-base"><CheckCircle size={14} /><span>Ferramentas usadas: <strong>{toolNames}</strong></span></div>
+      default:
+        return null
+    }
+  }
 
   return (
     <div className={`flex items-end gap-2 px-2 ${isUser ? "flex-row-reverse" : "flex-row"}`}>
@@ -41,30 +61,20 @@ const AIMessage = ({ msg, user, toggleLousa, loading, onRegenerate, isLastMessag
       <div className="max-w-[90%] sm:max-w-[67%] md:max-w-[75%] lg:max-w-[90%] break-words rounded-md px-4 py-2 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] text-lightFg-secondary dark:text-darkFg-secondary bg-lightBg-secondary dark:bg-darkBg-secondary opacity-75 dark:opacity-90">
         {isAssistant && msg.reasoning && <Markdown loading={loading} content={msg.reasoning} think />}
 
-        {isAssistant && msg.toolCalls?.length > 0 && (
-          <div className={`my-2 p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md ${!hasContentStarted ? 'animate-pulse' : ''}`}>
-            <div className="flex flex-col gap-1">
-              {msg.toolCalls.map((call) => (
-                <div key={call.index || call.name} className="flex items-center gap-2 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
-                  {hasContentStarted
-                    ? <CheckCircle size={14} className="text-green-base" />
-                    : <Wrench size={14} className="animate-spin-fast" />
-                  }
-                  <span>{hasContentStarted ? 'Ferramenta usada:' : 'Usando a ferramenta'} <strong>{call.name}</strong></span>
-                </div>
-              ))}
-            </div>
+        {isAssistant && msg.toolStatus && (
+          <div className="my-2 p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md">
+            {renderToolStatus()}
           </div>
         )}
 
-        {loading && !hasContentStarted && msg.toolCalls?.length === 0 ? <Button variant="outline" size="icon" $rounded loading={true} disabled /> : renderContent()}
+        {loading && !msg.content && !msg.toolStatus ? <Button variant="outline" size="icon" $rounded loading={true} disabled /> : renderContent()}
 
         {msg.timestamp && (
           <small className="ml-auto pl-2 text-xs text-lightFg-secondary dark:text-darkFg-secondary whitespace-nowrap">
             {new Date(msg.timestamp).toLocaleString("pt-BR")}
           </small>
         )}
-        {!loading && isAssistant && (
+        {!loading && isAssistant && msg.content && (
           <AIReactions message={msg} toggleLousa={toggleLousa} onRegenerate={onRegenerate} isLastMessage={isLastMessage} />
         )}
       </div>

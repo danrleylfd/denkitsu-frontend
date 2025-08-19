@@ -40,7 +40,11 @@ const sendMessageStream = async (aiKey, aiProvider, model, models, messages, act
           const delta = json.choices?.[0]?.delta
           if (delta?.content || delta?.reasoning || delta?.tool_calls) onDelta(delta)
         } catch (error) {
-          console.error("Error on sendMessageStream JSON.parse:", error)
+          console.error("--- ERRO DE PARSING NO STREAM ---")
+          console.error("Payload problemático:", payload)
+          console.error("Erro:", error)
+          // Lançamos o erro para que o useMessage possa tratar a falha na UI
+          throw new Error("Falha ao processar o stream de dados.")
         }
       }
     })
