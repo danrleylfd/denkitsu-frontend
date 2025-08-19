@@ -9,7 +9,7 @@ import Button from "../Button"
 const AIBar = ({ loading, isImproving, improvePrompt, imageCount, onSendMessage, toggleFeaturesDoor, toggleSettingsDoor, toggleFactoryManagerDoor, agentsDoor, toggleAgentsDoor, toolsDoor, toggleToolsDoor, mediaDoor, toggleMediaDoor }) => {
   const { signed } = useAuth()
   if (!signed) return <AIBarSignOut />
-  const { aiProvider, aiProviderToggle, aiKey, userPrompt, setUserPrompt, audioFile, clearHistory } = useAI()
+  const { aiProvider, aiProviderToggle, userPrompt, setUserPrompt, audioFile, clearHistory } = useAI()
 
   const handleSendMessage = () => {
     if (loading || isImproving) return
