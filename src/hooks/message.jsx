@@ -81,6 +81,7 @@ const useMessage = (props) => {
           role: "assistant",
           content,
           reasoning: (res.reasoning || "") + reasoning,
+          toolCalls: [],
           timestamp: new Date().toISOString()
         }])
       }
