@@ -16,7 +16,7 @@ const AIProvider = ({ children }) => {
   const storedOpenRouterKey = localStorage.getItem("@Denkitsu:OpenRouter")
   const storedStream = JSON.parse(localStorage.getItem("@Denkitsu:Stream"))
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
-  const storedAutoScroll = localStorage.getItem("@Denkitsu:AutoScroll")
+  const storedAutoScroll = JSON.parse(localStorage.getItem("@Denkitsu:AutoScroll"))
 
   const [aiProvider, setAIProvider] = useState(storedAIProvider || "groq")
   const [groqModel, setGroqModel] = useState(storedModelGroq || "openai/gpt-oss-120b")
