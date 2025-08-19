@@ -17,17 +17,17 @@ const AITools = ({ loading, toolsDoor }) => {
   const allModels = [...freeModels, ...payModels, ...groqModels]
   const selectedModel = allModels.find(m => m.id === model)
   const isToolsSupported = selectedModel?.supports_tools ?? false
-  let isDisabled = aiKey.length === 0 || !isToolsSupported || loading
+  const isDisabled = aiKey.length === 0 || !isToolsSupported || loading
 
   const allAvailableTools = useMemo(() => {
     const nativeTools = TOOL_DEFINITIONS.map(tool => {
-      if (tool.key === "web") isDisabled = isDisabled || aiProvider === "groq"
+      let currentToolState = (tool.key === "web" && aiProvider === "groq") ? false : isDisabled
       return {
         key: tool.key,
         title: tool.title,
         Icon: tool.Icon,
         isCustom: false,
-        isDisabled
+        isDisabled: currentToolState
       }
     })
     const userTools = customTools.map(tool => ({
