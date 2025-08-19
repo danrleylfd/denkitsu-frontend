@@ -1,9 +1,6 @@
 import { useState, useCallback } from "react"
-
 import { useNotification } from "../contexts/NotificationContext"
-
 import { sendMessageStream, sendMessage } from "../services/aiChat"
-
 import { transcribeAudio } from "../services/audio"
 
 const useMessage = (props) => {
@@ -19,56 +16,50 @@ const useMessage = (props) => {
 
   const executeSendMessage = useCallback(async (historyToProcess) => {
     setLoading(true)
-    const apiMessages = historyToProcess.map(({ role, content }) =>
-      Array.isArray(content)
-        ? { role, content: content.map(item => (item.type === "text" ? { type: "text", text: item.content } : item)) }
-        : { role, content }
-    )
+
     try {
       if (stream) {
         const placeholder = {
           id: Date.now(),
           role: "assistant",
-          content: "",
+          content: [{ type: "text", text: "" }],
           reasoning: "",
-          timestamp: new Date().toISOString(),
           toolStatus: [],
           processingState: "IDLE",
+          timestamp: new Date().toISOString()
         }
         setMessages(prev => [...prev, placeholder])
 
-        await sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, activeTools, selectedAgent, (parsedChunk) => {
-          const currentMsg = { ...placeholder }
-
-          if (parsedChunk.type === "delta" && parsedChunk.delta) {
-            if (parsedChunk.delta.content) currentMsg.content += parsedChunk.delta.content
+        await sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], historyToProcess, activeTools, selectedAgent, (parsedChunk) => {
+          if (parsedChunk.type === "delta" && parsedChunk.delta?.content) {
+            placeholder.content[0].text += parsedChunk.delta.content
           } else if (parsedChunk.type === "status") {
             if (parsedChunk.status === "TOOL_CALL") {
-              const existing = currentMsg.toolStatus.find(t => t.name === parsedChunk.tool.name)
+              const existing = placeholder.toolStatus.find(t => t.name === parsedChunk.tool.name)
               if (!existing) {
-                currentMsg.toolStatus.push({ name: parsedChunk.tool.name, state: "CALLING" })
+                placeholder.toolStatus.push({ name: parsedChunk.tool.name, state: "CALLING" })
               }
             } else if (parsedChunk.status === "TOOL_EXECUTION") {
-              currentMsg.toolStatus = currentMsg.toolStatus.map(t =>
+              placeholder.toolStatus = placeholder.toolStatus.map(t =>
                 t.name === parsedChunk.tool.name ? { ...t, ...parsedChunk.tool } : t
               )
             } else if (parsedChunk.status === "TOOL_PROCESSING") {
-              currentMsg.processingState = "PROCESSING"
+              placeholder.processingState = "PROCESSING"
             } else if (parsedChunk.status === "TOOL_PROCESSING_COMPLETE") {
-              currentMsg.processingState = "COMPLETED"
+              placeholder.processingState = "COMPLETED"
             }
           } else if (parsedChunk.type === "error") {
-            currentMsg.processingState = "FAILED"
-            currentMsg.content += `\n\n**Erro no processamento:** ${parsedChunk.error.message}`
+            placeholder.processingState = "FAILED"
+            placeholder.content[0].text += `\n\n**Erro no processamento:** ${parsedChunk.error.message}`
           }
 
-          Object.assign(placeholder, currentMsg)
           setMessages(prev => prev.map(msg => (msg.id === placeholder.id ? { ...placeholder } : msg)))
         })
       } else {
-        const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, selectedAgent, activeTools)
+        const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], historyToProcess, selectedAgent, activeTools)
         const res = data?.choices?.[0]?.message
         if (!res) return
+
         const cleanContent = (raw = "") => {
           let reasoning = ""
           const content = raw.replace(/(<think>.*?<\/think>|<thinking>.*?<\/thinking>|◁think▷.*?◁\/think▷)/gs, (_, r) => {
@@ -77,21 +68,22 @@ const useMessage = (props) => {
           })
           return { content, reasoning }
         }
+
         const { content, reasoning } = cleanContent(res.content)
         setMessages(prev => [...prev, {
           id: Date.now(),
           role: "assistant",
-          content,
+          content: [{ type: "text", text: content }],
           reasoning: (res.reasoning || "") + reasoning,
           timestamp: new Date().toISOString(),
           toolStatus: [],
-          processingState: "IDLE",
+          processingState: "IDLE"
         }])
       }
     } catch (err) {
       if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
       else notifyError("Falha na comunicação com o servidor de IA.")
-      setMessages(prev => prev.filter(msg => msg.content !== "" || msg.id !== err.id))
+      setMessages(prev => prev.filter(msg => msg.id !== (err.id || -1) && (Array.isArray(msg.content) ? msg.content.some(part => part.text || part.content) : msg.content !== "")))
     } finally {
       setLoading(false)
     }
@@ -107,13 +99,13 @@ const useMessage = (props) => {
 
     if (audioFile) {
       setLoading(true)
-      const userMessagePlaceholder = { role: "user", content: `[Áudio: ${audioFile.name || "Gravação"}]`, timestamp: new Date().toISOString() }
+      const userMessagePlaceholder = { role: "user", content: [{ type: "text", text: `[Áudio: ${audioFile.name || "Gravação"}]` }], timestamp: new Date().toISOString() }
       const historyWithPlaceholder = [...messages, userMessagePlaceholder]
       setMessages(historyWithPlaceholder)
       setAudioFile(null)
       try {
         const transcription = await transcribeAudio(audioFile)
-        const transcriptionUserMessage = { role: "user", content: `Transcrição de Áudio:\n${transcription}`, timestamp: new Date().toISOString() }
+        const transcriptionUserMessage = { role: "user", content: [{ type: "text", text: `Transcrição de Áudio:\n${transcription}` }], timestamp: new Date().toISOString() }
         const historyWithTranscription = [...historyWithPlaceholder.slice(0, -1), transcriptionUserMessage]
         setMessages(historyWithTranscription)
         await executeSendMessage(historyWithTranscription)
@@ -127,10 +119,21 @@ const useMessage = (props) => {
     }
 
     const newContent = []
-    if (promptText) newContent.push({ type: "text", content: promptText })
-    if (imageUrls.length > 0) newContent.push(...imageUrls.map(url => ({ type: "image_url", image_url: { url } })))
+    if (promptText) {
+      newContent.push({ type: "text", content: promptText })
+    }
+    if (imageUrls.length > 0) {
+      imageUrls.forEach(url => {
+        newContent.push({ type: "image_url", image_url: { url } })
+      })
+    }
 
-    const newMessage = { role: "user", content: newContent, timestamp: new Date().toISOString() }
+    const newMessage = {
+      role: "user",
+      content: newContent,
+      timestamp: new Date().toISOString()
+    }
+
     const history = [...messages, newMessage]
     setMessages(history)
     setUserPrompt("")
@@ -155,7 +158,7 @@ const useMessage = (props) => {
     if (!userPrompt.trim() || isImproving || loading) return
     setIsImproving(true)
     notifyInfo("Aperfeiçoando seu prompt...")
-    const userMessage = { role: "user", content: userPrompt }
+    const userMessage = { role: "user", content: [{ type: "text", content: userPrompt }] }
     try {
       const response = await sendMessage(
         aiKey, aiProvider, model,

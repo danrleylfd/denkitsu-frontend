@@ -6,9 +6,22 @@ const sendMessageStream = async (aiKey, aiProvider, model, models, messages, act
   const regularTools = Array.from(activeTools).filter(tool => tool !== "web")
   const fullModel = models.find((item) => item.id === model)
   const use_tools = (aiKey.length > 0 && fullModel?.supports_tools && regularTools.length > 0) ? regularTools : undefined
-  const payload = { aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages, plugins, use_tools, stream: true, mode }
-  const token = sessionStorage.getItem("@Denkitsu:token")
 
+  const apiMessages = messages.map(msg => {
+    if (msg.role === "system") {
+      return msg
+    }
+    return {
+      ...msg,
+      content: msg.content.map(item =>
+        item.type === "text" ? { type: "text", text: item.content } : item
+      )
+    }
+  })
+
+  const payload = { aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages: apiMessages, plugins, use_tools, stream: true, mode }
+
+  const token = sessionStorage.getItem("@Denkitsu:token")
   const headers = {
     ...api.defaults.headers.common,
     "Content-Type": "application/json",
@@ -58,7 +71,21 @@ const sendMessage = async (aiKey, aiProvider, model, models, messages, mode = "P
   const regularTools = Array.from(activeTools).filter(tool => tool !== "web")
   const fullModel = models.find((item) => item.id === model)
   const use_tools = (aiKey.length > 0 && fullModel?.supports_tools && regularTools.length > 0) ? regularTools : undefined
-  const payload = { aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages: [...messages], plugins, use_tools, mode }
+
+  const apiMessages = messages.map(msg => {
+    if (msg.role === "system") {
+      return msg
+    }
+    return {
+      ...msg,
+      content: msg.content.map(item =>
+        item.type === "text" ? { type: "text", text: item.content } : item
+      )
+    }
+  })
+
+  const payload = { aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages: apiMessages, plugins, use_tools, mode }
+
   try {
     return await api.post("/ai/chat/completions", payload)
   } catch (error) {
