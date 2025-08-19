@@ -38,28 +38,24 @@ const AIReactions = ({ message, toggleLousa, onRegenerate, isLastMessage }) => {
   const { speakResponse } = useAI()
   const { setTasks } = useTasks()
 
-  const { allCodeToCopy, htmlBlockForPreview, kanbanableJsonString, codeBlocks } = useMemo(() => {
-    if (!message?.content) {
-      return { allCodeToCopy: null, htmlBlockForPreview: null, kanbanableJsonString: null, codeBlocks: [] }
-    }
-    const blocks = [...message.content.matchAll(/^```(\w*)\n([\s\S]+?)\n^```/gm)].map((match) => ({
-      lang: match[1].toLowerCase() || "md",
-      code: match[2].trim()
+  const { allCodeToCopy, htmlBlockForPreview, kanbanableJsonString, codeBlocks, fullTextContent } = useMemo(() => {
+    const textContent = message.content?.find(part => part.type === "text")?.text || ""
+    if (!textContent) return { allCodeToCopy: null, htmlBlockForPreview: null, kanbanableJsonString: null, codeBlocks: [], fullTextContent: "" }
+    const blocks = [...textContent.matchAll(/^```(\w*)\n([\s\S]+?)\n^```/gm)].map((match) => ({
+      lang: match[1].toLowerCase() || "md", code: match[2].trim()
     }))
     const allCode = blocks.length > 0 ? blocks.map((block) => block.code).join("\n\n") : null
     const htmlBlock = blocks.find((block) => block.lang === "html") || null
     const firstCodeBlockContent = blocks.length > 0 ? blocks[0].code : null
     let kanbanJson = null
-    if (firstCodeBlockContent && isValidJsonStringArray(firstCodeBlockContent)) {
-      kanbanJson = firstCodeBlockContent
-    } else if (!firstCodeBlockContent && isValidJsonStringArray(message.content)) {
-      kanbanJson = message.content
-    }
+    if (firstCodeBlockContent && isValidJsonStringArray(firstCodeBlockContent)) kanbanJson = firstCodeBlockContent
+    else if (!firstCodeBlockContent && isValidJsonStringArray(textContent)) kanbanJson = textContent
     return {
       allCodeToCopy: allCode,
       htmlBlockForPreview: htmlBlock,
       kanbanableJsonString: kanbanJson,
-      codeBlocks: blocks
+      codeBlocks: blocks,
+      fullTextContent: textContent
     }
   }, [message.content])
 
