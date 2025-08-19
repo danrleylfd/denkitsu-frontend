@@ -65,6 +65,33 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
       case "factory":
         return (
           <div className="flex flex-col gap-4 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
+            <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Tutorial: Criando seu Primeiro Agente</h4>
+            <p>
+              Agentes permitem que você personalize a personalidade e comportamento da IA. Diferente das ferramentas, eles não conectam APIs externas, mas definem como a IA deve pensar e responder.
+            </p>
+            <div>
+              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 1: Abrindo o Gerenciador</h5>
+              <p>
+                Clique no ícone de <Bot size={16} className="inline-block mx-1" /> na barra de chat para abrir o Gerenciador de Agentes e clique em "Criar Novo Agente".
+              </p>
+            </div>
+            <div>
+              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 2: Preenchendo os Campos</h5>
+              <ul className="list-disc list-inside space-y-2 pl-2">
+                <li><strong>Nome do Agente:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">Professor Zen</code></li>
+                <li><strong>Descrição:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">Ajuda a aprender programação com explicações claras.</code></li>
+                <li><strong>Goal:</strong> O objetivo central do agente (ex: "Ensinar programação de forma didática").</li>
+                <li><strong>Return Format:</strong> Defina como as respostas devem ser estruturadas (ex: "Responda em tópicos claros e exemplos práticos").</li>
+                <li><strong>Warning:</strong> Limitações ou regras (ex: "Não dar conselhos médicos").</li>
+                <li><strong>Context Dump:</strong> Informações extras ou estilo (ex: "Sempre usar exemplos em JavaScript").</li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 3: Salvar e Ativar</h5>
+              <p>
+                Clique em "Salvar Agente". Depois, abra a gaveta de agentes (<Bot size={16} className="inline-block mx-1" />) e ative o novo agente. Agora ele responderá de acordo com suas instruções personalizadas!
+              </p>
+            </div>
             <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Tutorial: Criando sua Primeira Ferramenta</h4>
             <p>
               As ferramentas customizadas permitem que você conecte o Denkitsu a qualquer API na internet. Vamos criar uma ferramenta divertida que busca uma piada aleatória do site <a href="https://icanhazdadjoke.com/" target="_blank" rel="noopener noreferrer" className="text-primary-base underline">icanhazdadjoke.com</a>.
@@ -202,8 +229,8 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
               key={id}
               onClick={() => setActiveTab(id)}
               className={`flex items-center gap-2 px-2 py-2 text-sm font-bold transition-colors ${activeTab === id
-                  ? "border-primary-base text-primary-base"
-                  : "border-transparent text-lightFg-secondary dark:text-darkFg-secondary hover:text-lightFg-primary dark:hover:text-darkFg-primary"
+                ? "border-primary-base text-primary-base"
+                : "border-transparent text-lightFg-secondary dark:text-darkFg-secondary hover:text-lightFg-primary dark:hover:text-darkFg-primary"
                 }`}>
               <Icon size={16} />
               <span className="hidden sm:inline">{label}</span>
