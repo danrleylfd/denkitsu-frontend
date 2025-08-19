@@ -1,4 +1,4 @@
-import { ImagePlus, AudioWaveform, Mic, AudioLines, FileAudio } from "lucide-react"
+import { ImagePlus, AudioWaveform, Mic, AudioLines, FileAudio, Mouse } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 
@@ -16,6 +16,8 @@ const AIMedia = ({ mediaDoor, onAddImage, loading, isImproving }) => {
     groqModels,
     stream,
     toggleStream,
+    autoScroll,
+    toggleAutoScroll,
     listening,
     toggleListening,
     recording,
@@ -37,6 +39,9 @@ const AIMedia = ({ mediaDoor, onAddImage, loading, isImproving }) => {
     >
       <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={loading || isImproving}>
         <AudioWaveform size={16} />
+      </Button>
+      <Button variant={autoScroll ? "outline" : "secondary"} size="icon" $rounded title="Scroll Automático" onClick={toggleAutoScroll} disabled={loading || isImproving}>
+        <Mouse size={16} />
       </Button>
       <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={isImageSupported === false || aiProvider === "groq" || loading || isImproving}>
         <ImagePlus size={16} />

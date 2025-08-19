@@ -16,6 +16,7 @@ const AIProvider = ({ children }) => {
   const storedOpenRouterKey = localStorage.getItem("@Denkitsu:OpenRouter")
   const storedStream = JSON.parse(localStorage.getItem("@Denkitsu:Stream"))
   const storedMessages = localStorage.getItem("@Denkitsu:messages")
+  const storedAutoScroll = localStorage.getItem("@Denkitsu:AutoScroll")
 
   const [aiProvider, setAIProvider] = useState(storedAIProvider || "groq")
   const [groqModel, setGroqModel] = useState(storedModelGroq || "openai/gpt-oss-120b")
@@ -30,6 +31,7 @@ const AIProvider = ({ children }) => {
   const [imageUrls, setImageUrls] = useState([])
   const [userPrompt, setUserPrompt] = useState("")
   const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
+  const [autoScroll, setAutoScroll] = useState(storedAutoScroll === null ? false : storedAutoScroll)
   const [speaking, setSpeaking] = useState(false)
   const [listening, setListening] = useState(false)
   const [audioFile, setAudioFile] = useState(null)
@@ -67,6 +69,7 @@ const AIProvider = ({ children }) => {
   useEffect(() => (localStorage.setItem("@Denkitsu:OpenRouterModel", openRouterModel)), [openRouterModel])
   useEffect(() => (localStorage.setItem("@Denkitsu:customPrompt", customPrompt)), [customPrompt])
   useEffect(() => (localStorage.setItem("@Denkitsu:Stream", stream)), [stream])
+  useEffect(() => (localStorage.setItem("@Denkitsu:AutoScroll", autoScroll)), [autoScroll])
 
   const handleToolToggle = useCallback((toolKey, isActive) => {
     setActiveTools(prev => {
@@ -99,6 +102,7 @@ const AIProvider = ({ children }) => {
   const aiProviderToggle = useCallback(() => setAIProvider((prev) => (prev === "groq" ? "openrouter" : "groq")), [])
   const clearHistory = useCallback(() => setMessages([{ role: "system", content: customPrompt }]), [customPrompt])
   const toggleStream = useCallback(() => setStream(s => !s), [])
+  const toggleAutoScroll = useCallback(() => setAutoScroll(prev => !prev), [])
 
   const speakResponse = useCallback((text) => {
     if ("speechSynthesis" in window) {
@@ -119,6 +123,7 @@ const AIProvider = ({ children }) => {
   }, [])
 
   const values = useMemo(() => ({
+    autoScroll, setAutoScroll, toggleAutoScroll,
     stream, setStream, toggleStream,
     speaking, setSpeaking, speakResponse,
     listening, setListening, toggleListening,
@@ -140,10 +145,10 @@ const AIProvider = ({ children }) => {
     loading, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt,
     recording, fileInputRef, handleStartRecording, handleStopRecording, handleUploadClick, handleFileChange,
   }), [
-    stream, speaking, listening, activeTools, handleToolToggle, imageUrls, audioFile,
+    autoScroll, stream, speaking, listening, activeTools, handleToolToggle, imageUrls, audioFile,
     aiProvider, aiKey, model, groqKey, openRouterKey, groqModel, openRouterModel,
     freeModels, payModels, groqModels, customPrompt, userPrompt, messages,
-    toggleStream, speakResponse, toggleListening, aiProviderToggle, clearHistory,
+    toggleAutoScroll, toggleStream, speakResponse, toggleListening, aiProviderToggle, clearHistory,
     selectedAgent, loading, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt,
     recording, fileInputRef, handleStartRecording, handleStopRecording, handleUploadClick, handleFileChange,
   ])
