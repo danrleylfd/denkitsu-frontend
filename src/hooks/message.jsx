@@ -21,9 +21,6 @@ const useMessage = (props) => {
         ? { role, content: content.map(item => (item.type === "text" ? { type: "text", text: item.content } : item)) }
         : { role, content }
     )
-
-    let placeholderId = null
-
     try {
       if (stream) {
         const placeholder = {
@@ -31,42 +28,36 @@ const useMessage = (props) => {
           role: "assistant",
           content: "",
           reasoning: "",
-          toolStatus: null,
+          toolCalls: [],
           timestamp: new Date().toISOString()
         }
-        placeholderId = placeholder.id
         setMessages(prev => [...prev, placeholder])
-
-        await sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, activeTools, selectedAgent, (eventData) => {
+        await sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, activeTools, selectedAgent, delta => {
           const currentMsg = { ...placeholder }
 
-          if (eventData.custom_event) {
-            switch (eventData.custom_event) {
-              case "tool_decision":
-                currentMsg.toolStatus = { state: "decided", tools: eventData.tools }
-                break
-              case "tool_execution_start":
-                currentMsg.toolStatus = { state: "executing", tools: eventData.tools }
-                break
-              case "tool_processing_start":
-                currentMsg.toolStatus = { ...currentMsg.toolStatus, state: "processing", message: eventData.message }
-                break
-              case "tool_execution_error":
-                currentMsg.toolStatus = { state: "error", error: eventData.error }
-                setLoading(false)
-                break
-            }
-          } else {
-            const delta = eventData.choices?.[0]?.delta
-            if (delta?.content) {
-              if (currentMsg.toolStatus && currentMsg.toolStatus.state !== "error") {
-                currentMsg.toolStatus.state = "finished"
+          if (delta.reasoning) {
+            currentMsg.reasoning += delta.reasoning
+          }
+
+          if (delta.tool_calls) {
+            delta.tool_calls.forEach((toolCallChunk) => {
+              const existingCall = currentMsg.toolCalls.find(c => c.index === toolCallChunk.index)
+              if (!existingCall) {
+                currentMsg.toolCalls.push({
+                  index: toolCallChunk.index,
+                  name: toolCallChunk.function.name,
+                  arguments: toolCallChunk.function.arguments
+                })
+              } else {
+                if (toolCallChunk.function?.arguments) {
+                  existingCall.arguments += toolCallChunk.function.arguments
+                }
               }
-              currentMsg.content += delta.content
-            }
-            if (delta?.reasoning) {
-              currentMsg.reasoning += delta.reasoning
-            }
+            })
+          }
+
+          if (delta.content) {
+            currentMsg.content += delta.content
           }
 
           Object.assign(placeholder, currentMsg)
@@ -96,10 +87,7 @@ const useMessage = (props) => {
     } catch (err) {
       if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
       else notifyError("Falha na comunicação com o servidor de IA.")
-
-      if (placeholderId) {
-        setMessages(prev => prev.filter(msg => msg.id !== placeholderId))
-      }
+      setMessages(prev => prev.filter(msg => msg.content !== "" || msg.id !== err.id))
     } finally {
       setLoading(false)
     }
