@@ -1,62 +1,44 @@
 import api from "./"
 
-const sendMessageStream = async (aiKey, aiProvider, model, models, messages, activeTools, mode, onData) => {
+const sendMessageStream = async (aiKey, aiProvider, model, models, messages, activeTools, mode, onDelta) => {
   const web = aiProvider !== "groq" && aiKey.length > 0 && activeTools.has("web")
   const plugins = web ? [{ id: "web" }] : undefined
   const regularTools = Array.from(activeTools).filter(tool => tool !== "web")
   const fullModel = models.find((item) => item.id === model)
   const use_tools = (aiKey.length > 0 && fullModel?.supports_tools && regularTools.length > 0) ? regularTools : undefined
-
-  const apiMessages = messages.map(msg => {
-    if (msg.role === "system") {
-      return msg
-    }
-    return {
-      ...msg,
-      content: msg.content.map(item =>
-        item.type === "text" ? { type: "text", text: item.content } : item
-      )
-    }
-  })
-
-  const payload = { aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages: apiMessages, plugins, use_tools, stream: true, mode }
-
+  const payload = { aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages, plugins, use_tools, stream: true, mode }
   const token = sessionStorage.getItem("@Denkitsu:token")
   const headers = {
     ...api.defaults.headers.common,
     "Content-Type": "application/json",
     authorization: `Bearer ${token}`
   }
-
   const response = await fetch(`${api.defaults.baseURL}/ai/chat/completions`, {
     method: "POST",
     headers,
     body: JSON.stringify(payload)
   })
-
   if (!response.ok) {
     const errorData = await response.json()
     const errorToThrow = new Error("Erro na requisição de streaming da API.")
     errorToThrow.response = { data: errorData }
     throw errorToThrow
   }
-
   const reader = response.body.getReader()
   const decoder = new TextDecoder("utf-8")
   let done = false
-
   while (!done) {
     const { value, done: doneReading } = await reader.read()
     done = doneReading
     const chunk = decoder.decode(value)
-
     chunk.split("\n").forEach((line) => {
       if (line.startsWith("data: ")) {
         const payload = line.replace("data: ", "")
         if (payload === "[DONE]") return
         try {
           const json = JSON.parse(payload)
-          onData(json)
+          const delta = json.choices?.[0]?.delta
+          if (delta?.content || delta?.reasoning || delta?.tool_calls) onDelta(delta)
         } catch (error) {
           console.error("Error on sendMessageStream JSON.parse:", error)
         }
@@ -71,21 +53,7 @@ const sendMessage = async (aiKey, aiProvider, model, models, messages, mode = "P
   const regularTools = Array.from(activeTools).filter(tool => tool !== "web")
   const fullModel = models.find((item) => item.id === model)
   const use_tools = (aiKey.length > 0 && fullModel?.supports_tools && regularTools.length > 0) ? regularTools : undefined
-
-  const apiMessages = messages.map(msg => {
-    if (msg.role === "system") {
-      return msg
-    }
-    return {
-      ...msg,
-      content: msg.content.map(item =>
-        item.type === "text" ? { type: "text", text: item.content } : item
-      )
-    }
-  })
-
-  const payload = { aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages: apiMessages, plugins, use_tools, mode }
-
+  const payload = { aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages: [...messages], plugins, use_tools, mode }
   try {
     return await api.post("/ai/chat/completions", payload)
   } catch (error) {
