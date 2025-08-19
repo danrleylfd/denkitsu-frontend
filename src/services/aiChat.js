@@ -1,6 +1,6 @@
 import api from "./"
 
-const sendMessageStream = async (aiKey, aiProvider, model, models, messages, activeTools, mode, onDelta) => {
+const sendMessageStream = async (aiKey, aiProvider, model, models, messages, activeTools, mode, onData) => {
   const web = aiProvider !== "groq" && aiKey.length > 0 && activeTools.has("web")
   const plugins = web ? [{ id: "web" }] : undefined
   const regularTools = Array.from(activeTools).filter(tool => tool !== "web")
@@ -8,37 +8,42 @@ const sendMessageStream = async (aiKey, aiProvider, model, models, messages, act
   const use_tools = (aiKey.length > 0 && fullModel?.supports_tools && regularTools.length > 0) ? regularTools : undefined
   const payload = { aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages, plugins, use_tools, stream: true, mode }
   const token = sessionStorage.getItem("@Denkitsu:token")
+
   const headers = {
     ...api.defaults.headers.common,
     "Content-Type": "application/json",
     authorization: `Bearer ${token}`
   }
+
   const response = await fetch(`${api.defaults.baseURL}/ai/chat/completions`, {
     method: "POST",
     headers,
     body: JSON.stringify(payload)
   })
+
   if (!response.ok) {
     const errorData = await response.json()
     const errorToThrow = new Error("Erro na requisição de streaming da API.")
     errorToThrow.response = { data: errorData }
     throw errorToThrow
   }
+
   const reader = response.body.getReader()
   const decoder = new TextDecoder("utf-8")
   let done = false
+
   while (!done) {
     const { value, done: doneReading } = await reader.read()
     done = doneReading
     const chunk = decoder.decode(value)
+
     chunk.split("\n").forEach((line) => {
       if (line.startsWith("data: ")) {
         const payload = line.replace("data: ", "")
         if (payload === "[DONE]") return
         try {
           const json = JSON.parse(payload)
-          const delta = json.choices?.[0]?.delta
-          if (delta?.content || delta?.reasoning || delta?.tool_calls) onDelta(delta)
+          onData(json)
         } catch (error) {
           console.error("Error on sendMessageStream JSON.parse:", error)
         }

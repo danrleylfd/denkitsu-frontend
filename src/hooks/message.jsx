@@ -28,36 +28,33 @@ const useMessage = (props) => {
           role: "assistant",
           content: "",
           reasoning: "",
-          toolCalls: [],
+          toolStatus: [],
+          processingState: "IDLE",
           timestamp: new Date().toISOString()
         }
         setMessages(prev => [...prev, placeholder])
-        await sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, activeTools, selectedAgent, delta => {
+
+        await sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, activeTools, selectedAgent, (parsedChunk) => {
           const currentMsg = { ...placeholder }
 
-          if (delta.reasoning) {
-            currentMsg.reasoning += delta.reasoning
-          }
-
-          if (delta.tool_calls) {
-            delta.tool_calls.forEach((toolCallChunk) => {
-              const existingCall = currentMsg.toolCalls.find(c => c.index === toolCallChunk.index)
-              if (!existingCall) {
-                currentMsg.toolCalls.push({
-                  index: toolCallChunk.index,
-                  name: toolCallChunk.function.name,
-                  arguments: toolCallChunk.function.arguments
-                })
-              } else {
-                if (toolCallChunk.function?.arguments) {
-                  existingCall.arguments += toolCallChunk.function.arguments
-                }
+          if (parsedChunk.type === "delta" && parsedChunk.delta) {
+            if (parsedChunk.delta.content) currentMsg.content += parsedChunk.delta.content
+          } else if (parsedChunk.type === "status") {
+            if (parsedChunk.status === "TOOL_CALL") {
+              const existing = currentMsg.toolStatus.find(t => t.name === parsedChunk.tool.name)
+              if (!existing) {
+                currentMsg.toolStatus.push({ name: parsedChunk.tool.name, state: "CALLING" })
               }
-            })
-          }
-
-          if (delta.content) {
-            currentMsg.content += delta.content
+            } else if (parsedChunk.status === "TOOL_EXECUTION") {
+              currentMsg.toolStatus = currentMsg.toolStatus.map(t =>
+                t.name === parsedChunk.tool.name ? { ...t, ...parsedChunk.tool } : t
+              )
+            } else if (parsedChunk.status === "TOOL_PROCESSING") {
+              currentMsg.processingState = "PROCESSING"
+            }
+          } else if (parsedChunk.type === "error") {
+            currentMsg.processingState = "FAILED"
+            currentMsg.content += `\n\n**Erro no processamento:** ${parsedChunk.error.message}`
           }
 
           Object.assign(placeholder, currentMsg)

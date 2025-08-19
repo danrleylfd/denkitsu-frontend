@@ -1,5 +1,5 @@
 import { memo } from "react"
-import { UserRound, Wrench, CheckCircle } from "lucide-react"
+import { UserRound, Wrench, CheckCircle, XCircle, Loader2 } from "lucide-react"
 import AIReactions from "./Reactions"
 import Markdown from "../Markdown"
 import Button from "../Button"
@@ -23,6 +23,42 @@ const AIMessage = ({ msg, user, toggleLousa, loading, onRegenerate, isLastMessag
 
   const hasContentStarted = msg.content && msg.content.length > 0
 
+  const renderToolStatus = () => {
+    if ((!msg.toolStatus || msg.toolStatus.length === 0) && msg.processingState === "IDLE") return null
+
+    const statusIcons = {
+      CALLING: <Wrench size={14} className="animate-spin-fast text-amber-base" />,
+      SUCCESS: <CheckCircle size={14} className="text-green-base" />,
+      FAILURE: <XCircle size={14} className="text-red-base" />
+    }
+
+    const statusText = {
+      CALLING: "Usando ferramenta:",
+      SUCCESS: "Ferramenta usada:",
+      FAILURE: "Falha na ferramenta:"
+    }
+
+    return (
+      <div className="my-2 p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md">
+        <div className="flex flex-col gap-1">
+          {msg.toolStatus.map((tool) => (
+            <div key={tool.name} className="flex items-center gap-2 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
+              {statusIcons[tool.state]}
+              <span>{statusText[tool.state]} <strong>{tool.name}</strong></span>
+              {tool.state === "FAILURE" && <small className="italic opacity-80 truncate" title={tool.message}>- {tool.message}</small>}
+            </div>
+          ))}
+          {msg.processingState === "PROCESSING" && (
+            <div className="flex items-center gap-2 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
+              <Loader2 size={14} className="animate-spin text-primary-base" />
+              <span>Processando resultados...</span>
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className={`flex items-end gap-2 px-2 ${isUser ? "flex-row-reverse" : "flex-row"}`}>
       {isUser ? (
@@ -41,23 +77,9 @@ const AIMessage = ({ msg, user, toggleLousa, loading, onRegenerate, isLastMessag
       <div className="max-w-[90%] sm:max-w-[67%] md:max-w-[75%] lg:max-w-[90%] break-words rounded-md px-4 py-2 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] text-lightFg-secondary dark:text-darkFg-secondary bg-lightBg-secondary dark:bg-darkBg-secondary opacity-75 dark:opacity-90">
         {isAssistant && msg.reasoning && <Markdown loading={loading} content={msg.reasoning} think />}
 
-        {isAssistant && msg.toolCalls?.length > 0 && (
-          <div className={`my-2 p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md ${!hasContentStarted ? 'animate-pulse' : ''}`}>
-            <div className="flex flex-col gap-1">
-              {msg.toolCalls.map((call) => (
-                <div key={call.index || call.name} className="flex items-center gap-2 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
-                  {hasContentStarted
-                    ? <CheckCircle size={14} className="text-green-base" />
-                    : <Wrench size={14} className="animate-spin-fast" />
-                  }
-                  <span>{hasContentStarted ? 'Ferramenta usada:' : 'Usando a ferramenta'} <strong>{call.name}</strong></span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        {renderToolStatus()}
 
-        {loading && !hasContentStarted && msg.toolCalls?.length === 0 ? <Button variant="outline" size="icon" $rounded loading={true} disabled /> : renderContent()}
+        {loading && !hasContentStarted && (!msg.toolStatus || msg.toolStatus.length === 0) ? <Button variant="outline" size="icon" $rounded loading={true} disabled /> : renderContent()}
 
         {msg.timestamp && (
           <small className="ml-auto pl-2 text-xs text-lightFg-secondary dark:text-darkFg-secondary whitespace-nowrap">
