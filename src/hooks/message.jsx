@@ -1,6 +1,9 @@
 import { useState, useCallback } from "react"
+
 import { useNotification } from "../contexts/NotificationContext"
+
 import { sendMessageStream, sendMessage } from "../services/aiChat"
+
 import { transcribeAudio } from "../services/audio"
 
 const useMessage = (props) => {
@@ -28,9 +31,9 @@ const useMessage = (props) => {
           role: "assistant",
           content: "",
           reasoning: "",
+          timestamp: new Date().toISOString(),
           toolStatus: [],
           processingState: "IDLE",
-          timestamp: new Date().toISOString()
         }
         setMessages(prev => [...prev, placeholder])
 
@@ -78,7 +81,9 @@ const useMessage = (props) => {
           role: "assistant",
           content,
           reasoning: (res.reasoning || "") + reasoning,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
+          toolStatus: [],
+          processingState: "IDLE",
         }])
       }
     } catch (err) {
