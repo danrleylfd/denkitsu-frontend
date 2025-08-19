@@ -28,7 +28,7 @@ const AIBar = ({ loading, isImproving, improvePrompt, imageCount, onSendMessage,
     <Paper className="relative bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 max-w-[95%] mb-2 mx-auto">
       <div className="w-full flex flex-col gap-2 md:hidden">
         <div className="flex items-center justify-between flex-wrap gap-2">
-          <Button variant="secondary" size="icon" $rounded title="Recursos" onClick={toggleFeaturesDoor} disabled={loading || isImproving}><Info size={16} /></Button>
+          <Button variant="secondary" size="icon" $rounded title="Recursos" onClick={toggleFeaturesDoor}><Info size={16} /></Button>
           <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loading || isImproving}><Settings size={16} /></Button>
           <Button variant={aiProvider === "groq" ? "orange" : "info"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"} disabled={loading || isImproving}><Waypoints size={16} /></Button>
           <Button variant={mediaDoor ? "outline" : "secondary"} size="icon" $rounded title="Mídia" onClick={toggleMediaDoor}><Paperclip size={16} /></Button>
@@ -44,7 +44,7 @@ const AIBar = ({ loading, isImproving, improvePrompt, imageCount, onSendMessage,
         </div>
       </div>
       <div className="w-full hidden md:flex items-center gap-2">
-        <Button variant="secondary" size="icon" $rounded title="Recursos" onClick={toggleFeaturesDoor} disabled={loading || isImproving}><Info size={16} /></Button>
+        <Button variant="secondary" size="icon" $rounded title="Recursos" onClick={toggleFeaturesDoor}><Info size={16} /></Button>
         <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loading || isImproving}><Settings size={16} /></Button>
         <Button variant={aiProvider === "groq" ? "orange" : "info"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"} disabled={loading || isImproving}><Waypoints size={16} /></Button>
         <Button variant={mediaDoor ? "outline" : "secondary"} size="icon" $rounded title="Mídia" onClick={toggleMediaDoor}><Paperclip size={16} /></Button>
