@@ -55,6 +55,12 @@ const AIMessage = ({ msg, user, toggleLousa, loading, onRegenerate, isLastMessag
               <span>Processando resultados...</span>
             </div>
           )}
+          {msg.processingState === "COMPLETED" && (
+             <div className="flex items-center gap-2 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
+                <CheckCircle size={14} className="text-green-base" />
+                <span>Resultados processados. Gerando resposta...</span>
+            </div>
+          )}
         </div>
       </div>
     )
