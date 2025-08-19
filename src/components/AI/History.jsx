@@ -11,7 +11,7 @@ const AIHistory = ({ toggleLousa, onRegenerate }) => {
   const messagesEndRef = useRef(null)
   // Descomente a linha abaixo para rolar automaticamente para o final da conversa quando novas mensagens chegarem
   useEffect(() => () => {
-    if (autoScroll && messagesEndRef.current) messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
+    if (autoScroll && messagesEndRef.current && messages.length > 0) messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
   }, [autoScroll, messages, loading])
   return (
     <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-2">
