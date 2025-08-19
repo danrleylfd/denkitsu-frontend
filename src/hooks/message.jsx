@@ -54,6 +54,8 @@ const useMessage = (props) => {
               )
             } else if (parsedChunk.status === "TOOL_PROCESSING") {
               currentMsg.processingState = "PROCESSING"
+            } else if (parsedChunk.status === "TOOL_PROCESSING_COMPLETE") {
+              currentMsg.processingState = "COMPLETED"
             }
           } else if (parsedChunk.type === "error") {
             currentMsg.processingState = "FAILED"
