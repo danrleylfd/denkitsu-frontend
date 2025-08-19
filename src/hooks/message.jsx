@@ -32,7 +32,7 @@ const useMessage = (props) => {
           timestamp: new Date().toISOString()
         }
         setMessages(prev => [...prev, placeholder])
-        await sendMessageStream(aiKey, aiProvider, model, apiMessages, activeTools, selectedAgent, delta => {
+        await sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, activeTools, selectedAgent, delta => {
           const currentMsg = { ...placeholder }
 
           if (delta.reasoning) {
