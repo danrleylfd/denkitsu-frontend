@@ -11,7 +11,7 @@ import DynamicIcon from "../DynamicIcon"
 
 const AITools = ({ loading, toolsDoor }) => {
   if (!toolsDoor) return null
-  const { aiKey, aiProvider, model, freeModels, payModels, groqModels, stream, handleToolToggle } = useAI()
+  const { aiKey, aiProvider, model, freeModels, payModels, groqModels, handleToolToggle } = useAI()
   const { tools: customTools } = useTools()
 
   const allModels = [...freeModels, ...payModels, ...groqModels]
@@ -20,7 +20,7 @@ const AITools = ({ loading, toolsDoor }) => {
 
   const allAvailableTools = useMemo(() => {
     const nativeTools = TOOL_DEFINITIONS.map(tool => {
-      let isDisabled = aiKey.length === 0 || !isToolsSupported || stream || loading
+      let isDisabled = aiKey.length === 0 || !isToolsSupported || loading
       if (tool.key === "web") isDisabled = isDisabled || aiProvider === "groq"
       return {
         key: tool.key,
@@ -35,10 +35,10 @@ const AITools = ({ loading, toolsDoor }) => {
       title: tool.alias || tool.name,
       Icon: tool.icon || "PocketKnife",
       isCustom: true,
-      isDisabled: aiKey.length === 0 || !isToolsSupported || stream || loading
+      isDisabled: aiKey.length === 0 || !isToolsSupported || loading
     }))
     return [...nativeTools, ...userTools]
-  }, [customTools, isToolsSupported, stream, loading, aiProvider, aiKey])
+  }, [customTools, isToolsSupported, loading, aiProvider, aiKey])
 
   return (
     <Paper className={`bg-lightBg-primary dark:bg-darkBg-primary text-lightFg-primary dark:text-darkFg-primary
