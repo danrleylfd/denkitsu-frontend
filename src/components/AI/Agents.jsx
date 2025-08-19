@@ -35,7 +35,7 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
           onClick={() => onSelectAgent(value)}
           disabled={loading}
         >
-          <DynamicIcon name={Icon} size={16} />
+          {isCustom ? <DynamicIcon name={Icon} size={16} /> : <Icon size={16} />}
         </Button>
       ))}
     </Paper>
