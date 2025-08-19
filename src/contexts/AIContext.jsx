@@ -99,9 +99,9 @@ const AIProvider = ({ children }) => {
     localStorage.setItem("@Denkitsu:messages", JSON.stringify(messages))
   }, [messages, customPrompt])
 
-  const aiProviderToggle = useCallback(() => setAIProvider((prev) => (prev === "groq" ? "openrouter" : "groq")), [])
+  const aiProviderToggle = useCallback(() => setAIProvider(prev => (prev === "groq" ? "openrouter" : "groq")), [])
   const clearHistory = useCallback(() => setMessages([{ role: "system", content: customPrompt }]), [customPrompt])
-  const toggleStream = useCallback(() => setStream(s => !s), [])
+  const toggleStream = useCallback(() => setStream(prev => !prev), [])
   const toggleAutoScroll = useCallback(() => setAutoScroll(prev => !prev), [])
 
   const speakResponse = useCallback((text) => {
