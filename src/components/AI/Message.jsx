@@ -12,6 +12,7 @@ const AIMessage = ({ msg, user, toggleLousa, loading, onRegenerate, isLastMessag
   const isUser = msg.role === "user"
 
   const renderContent = () => {
+    if (!msg.toolStatus?.length) return null
     if (typeof msg.content === "string") return <Markdown key={msg.content} content={msg.content} />
     if (Array.isArray(msg.content)) return msg.content.map((part, index) => {
       if (part.type === "text") return <Markdown key={index} content={part.content} />
@@ -41,7 +42,7 @@ const AIMessage = ({ msg, user, toggleLousa, loading, onRegenerate, isLastMessag
     return (
       <div className="my-2 p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md">
         <div className="flex flex-col gap-1">
-          {msg.toolStatus.map((tool) => (
+          {(msg.toolStatus || []).map((tool) => (
             <div key={tool.name} className="flex items-center gap-2 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
               {statusIcons[tool.state]}
               <span>{statusText[tool.state]} <strong>{tool.name}</strong></span>
