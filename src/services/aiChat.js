@@ -4,12 +4,15 @@ const sendMessageStream = async (aiKey, aiProvider, model, messages, activeTools
   const web = aiProvider !== "groq" && aiKey.length > 0 && activeTools.has("web")
   const plugins = web ? [{ id: "web" }] : undefined
   const payload = { aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages, plugins, stream: true, mode }
+  const token = sessionStorage.getItem("@Denkitsu:token")
+  const headers = {
+    ...api.defaults.headers.common,
+    "Content-Type": "application/json",
+    authorization: `Bearer ${token}`
+  }
   const response = await fetch(`${api.defaults.baseURL}/ai/chat/completions`, {
     method: "POST",
-    headers: {
-      ...api.defaults.headers.common,
-      "Content-Type": "application/json",
-    },
+    headers,
     body: JSON.stringify(payload)
   })
   if (!response.ok) {
