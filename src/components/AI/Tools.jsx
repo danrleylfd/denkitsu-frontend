@@ -17,7 +17,7 @@ const AITools = ({ loading, toolsDoor }) => {
   const allModels = [...freeModels, ...payModels, ...groqModels]
   const selectedModel = allModels.find(m => m.id === model)
   const isToolsSupported = selectedModel?.supports_tools ?? false
-  const isDisabled = aiKey.length === 0 || !isToolsSupported || loading
+  let isDisabled = aiKey.length === 0 || !isToolsSupported || loading
 
   const allAvailableTools = useMemo(() => {
     const nativeTools = TOOL_DEFINITIONS.map(tool => {
