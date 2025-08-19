@@ -88,7 +88,7 @@ const AI = () => {
         toggleSettingsDoor={() => setSettingsDoor(prev => !prev)}
         toggleFactoryManagerDoor={() => setFactoryManagerDoor(prev => !prev)}
       />
-      <AIFeatures featuresDoor={featuresDoor} toggleFeaturesDoor={() => setFeaturesDoor(prev => !prev)} toggleSettingsDoor={() => setSettingsDoor(prev => !prev)} />
+      <AIFeatures featuresDoor={featuresDoor} toggleFeaturesDoor={() => setFeaturesDoor(prev => !prev)} />
       <AISettings settingsDoor={settingsDoor} toggleSettingsDoor={() => setSettingsDoor(prev => !prev)} />
       <AIFactoryManager factoryManagerDoor={factoryManagerDoor} toggleFactoryManagerDoor={() => setFactoryManagerDoor(prev => !prev)} />
       <Lousa content={lousaContent} toggleLousa={toggleLousa} />

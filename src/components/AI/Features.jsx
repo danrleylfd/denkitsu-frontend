@@ -27,15 +27,10 @@ const tabs = [
   { id: "settings", label: "Configurações", icon: Settings },
 ]
 
-const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) => {
+const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
   const [activeTab, setActiveTab] = useState("agents")
 
   if (!featuresDoor) return null
-
-  const handleOpenSettings = () => {
-    toggleFeaturesDoor()
-    toggleSettingsDoor()
-  }
 
   const renderContent = () => {
     switch (activeTab) {
@@ -179,10 +174,6 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor, toggleSettingsDoor }) =>
             <FeatureListItem title="Seleção de Modelos" icon={Bot}>
               Escolha o modelo de IA específico que deseja usar para a conversa, aproveitando uma vasta lista de opções gratuitas e premium disponíveis em cada provedor.
             </FeatureListItem>
-            <Button variant="outline" $rounded onClick={handleOpenSettings}>
-              <Settings size={16} className="mr-2" />
-              Abrir Configurações
-            </Button>
           </>
         )
       default:
