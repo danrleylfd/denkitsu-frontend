@@ -43,17 +43,17 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
         </h3>
       </div>
       <div className="flex-grow overflow-y-auto pr-2 flex flex-col gap-2">
-        <Input placeholder="Nome do Agente (ex: Mestre Cuca)" value={formData.name} onChange={(e) => handleChange("name", e.target.value)} disabled={loading} />
+        <Input maxLength={32} placeholder="Nome do Agente (ex: Mestre Cuca)" value={formData.name} onChange={(e) => handleChange("name", e.target.value)} disabled={loading} />
         <IconPickerInput
           value={formData.icon}
           onChange={(value) => handleChange("icon", value)}
           disabled={loading}
         />
-        <Input placeholder="Descrição curta (ex: Ajuda com receitas)" value={formData.description} onChange={(e) => handleChange("description", e.target.value)} disabled={loading} />
-        <textarea placeholder="Goal: Objetivo do prompt..." value={formData.prompt.goal} onChange={(e) => handlePromptChange("goal", e.target.value)} className="w-full h-20 p-2 rounded-md resize-y bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" disabled={loading} />
-        <textarea placeholder="Return Format: Formato da resposta..." value={formData.prompt.returnFormat} onChange={(e) => handlePromptChange("returnFormat", e.target.value)} className="w-full h-20 p-2 rounded-md resize-y bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" disabled={loading} />
-        <textarea placeholder="Warning: Restrições e avisos..." value={formData.prompt.warning} onChange={(e) => handlePromptChange("warning", e.target.value)} className="w-full h-20 p-2 rounded-md resize-y bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" disabled={loading} />
-        <textarea placeholder="Context Dump: Dados de contexto..." value={formData.prompt.contextDump} onChange={(e) => handlePromptChange("contextDump", e.target.value)} className="w-full h-20 p-2 rounded-md resize-y bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" disabled={loading} />
+        <Input maxLength={256} placeholder="Descrição curta (ex: Ajuda com receitas)" value={formData.description} onChange={(e) => handleChange("description", e.target.value)} disabled={loading} />
+        <textarea maxLength={512} placeholder="Goal: Objetivo do prompt..." value={formData.prompt.goal} onChange={(e) => handlePromptChange("goal", e.target.value)} className="w-full h-20 p-2 rounded-md resize-y bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" disabled={loading} />
+        <textarea maxLength={512} placeholder="Return Format: Formato da resposta..." value={formData.prompt.returnFormat} onChange={(e) => handlePromptChange("returnFormat", e.target.value)} className="w-full h-20 p-2 rounded-md resize-y bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" disabled={loading} />
+        <textarea maxLength={512} placeholder="Warning: Restrições e avisos..." value={formData.prompt.warning} onChange={(e) => handlePromptChange("warning", e.target.value)} className="w-full h-20 p-2 rounded-md resize-y bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" disabled={loading} />
+        <textarea maxLength={512} placeholder="Context Dump: Dados de contexto..." value={formData.prompt.contextDump} onChange={(e) => handlePromptChange("contextDump", e.target.value)} className="w-full h-20 p-2 rounded-md resize-y bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" disabled={loading} />
       </div>
       <div className="flex justify-end pt-2 border-t border-bLight dark:border-bDark">
         <Button type="submit" variant="primary" $rounded loading={loading} disabled={loading || !formData.name || !formData.description}>

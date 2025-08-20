@@ -65,8 +65,8 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
       </div>
       <div className="flex-grow overflow-y-auto pr-2 flex flex-col gap-4">
         <div>
-          <Input placeholder="Apelido da Ferramenta (ex: Buscar CEP)" value={formData.alias} onChange={(e) => handleChange("alias", e.target.value)} disabled={loading} />
-          <Input placeholder="Nome Técnico (ex: cepTool)" value={formData.name} onChange={(e) => handleChange("name", e.target.value)} disabled={loading} />
+          <Input maxLength={32} placeholder="Nome Técnico (ex: cepTool)" value={formData.name} onChange={(e) => handleChange("name", e.target.value)} disabled={loading} />
+          <Input maxLength={32} placeholder="Apelido da Ferramenta (ex: Buscar CEP)" value={formData.alias} onChange={(e) => handleChange("alias", e.target.value)} disabled={loading} />
           <IconPickerInput
             value={formData.icon}
             onChange={(value) => handleChange("icon", value)}
@@ -75,7 +75,7 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
         </div>
         <div>
           <label className="text-sm font-bold text-lightFg-secondary dark:text-darkFg-secondary">Descrição para a IA</label>
-          <textarea placeholder="Como e quando usar esta ferramenta..." value={formData.description} onChange={(e) => handleChange("description", e.target.value)} className="w-full mt-1 h-24 p-2 rounded-md resize-y bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" disabled={loading} />
+          <textarea maxLength={256} placeholder="Como e quando usar esta ferramenta..." value={formData.description} onChange={(e) => handleChange("description", e.target.value)} className="w-full mt-1 h-24 p-2 rounded-md resize-y bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" disabled={loading} />
         </div>
         <div>
           <label className="text-sm font-bold text-lightFg-secondary dark:text-darkFg-secondary">Configuração HTTP</label>
