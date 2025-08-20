@@ -211,7 +211,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <Paper
-        className="relative flex w-full max-w-3xl flex-col gap-2 rounded-lg bg-lightBg-primary p-2 shadow-2xl dark:bg-darkBg-primary"
+        className="relative flex w-full max-w-3xl flex-col gap-2 rounded-lg bg-lightBg-primary p-2 shadow-2xl dark:bg-darkBg-primary border border-solid border-brand-purple"
         onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between border-b border-bLight dark:border-bDark">
           <div className="flex flex-col gap-2">
