@@ -59,12 +59,12 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
           <small className="text-right text-xs text-lightFg-tertiary dark:text-darkFg-tertiary self-end pr-2">{formData.description.length} / 100</small>
         </div>
 
-        <details className="bg-lightBg-secondary/50 dark:bg-darkBg-secondary/50 p-3 rounded-md">
+        <details className="bg-lightBg-primary dark:bg-darkBg-primary p-3 rounded-md">
           <summary className="cursor-pointer font-bold text-sm text-lightFg-secondary dark:text-darkFg-secondary">
             <Code size={16} className="inline mr-2" />
             Estrutura do Prompt (Modelo GRWC)
           </summary>
-          <div className="flex flex-col gap-4 mt-2">
+          <div className="flex flex-col gap-2 mt-2">
             <div>
               <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Goal (Objetivo)</label>
               <textarea placeholder="O objetivo principal do agente..." value={formData.prompt.goal} onChange={(e) => handlePromptChange("goal", e.target.value)} className="w-full h-24 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" disabled={loading} />
@@ -213,15 +213,15 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
             <Input placeholder="URL Base da API (sem query params)" value={formData.url} onChange={(e) => handleChange("url", e.target.value)} disabled={loading} />
           </div>
         </div>
-        <details className="bg-lightBg-secondary/50 dark:bg-darkBg-secondary/50 p-3 rounded-md">
+        <details className="bg-lightBg-primary dark:bg-darkBg-primary p-3 rounded-md">
           <summary className="cursor-pointer font-bold text-sm text-lightFg-secondary dark:text-darkFg-secondary">
             <Code size={16} className="inline mr-2" />
             Configurações Avançadas (JSON)
           </summary>
-          <div className="flex flex-col gap-4 mt-2">
+          <div className="flex flex-col gap-2 mt-2">
             <div>
               <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Definição do Esquema da Ferramenta</label>
-              <textarea placeholder={`{ "type": "object", "properties": {}, "required": [] }`} value={formData.parameters} onChange={(e) => handleChange("parameters", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
+              <textarea  placeholder={`{ "type": "object", "properties": {}, "required": [] }`} value={formData.parameters} onChange={(e) => handleChange("parameters", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
             </div>
             <div>
               <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Parâmetros de Query (JSON)</label>
@@ -416,7 +416,7 @@ const AIFactoryManager = ({ factoryManagerDoor, toggleFactoryManagerDoor }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <div
-        className="relative flex w-full max-w-xl h-[90vh] flex-col gap-2 rounded-lg bg-lightBg-primary p-4 shadow-2xl dark:bg-darkBg-primary"
+        className="relative flex w-full max-w-lg h-[95vh] flex-col gap-2 rounded-lg bg-lightBg-primary p-4 shadow-2xl dark:bg-darkBg-primary"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center pb-2 border-b border-bLight dark:border-bDark">
