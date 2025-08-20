@@ -53,7 +53,6 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
         <Input placeholder="Descrição curta (ex: Ajuda com receitas)" value={formData.description} onChange={(e) => handleChange("description", e.target.value)} disabled={loading} maxLength="100" />
         <small className="text-right text-xs text-lightFg-tertiary dark:text-darkFg-tertiary self-end pr-2 -mt-2">{formData.description.length} / 100</small>
 
-        {/* Campos do Prompt Agrupados */}
         <details className="bg-lightBg-secondary/50 dark:bg-darkBg-secondary/50 p-3 rounded-md">
           <summary className="cursor-pointer font-bold text-sm text-lightFg-secondary dark:text-darkFg-secondary">
             <Code size={16} className="inline mr-2" />
