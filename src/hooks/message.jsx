@@ -151,8 +151,8 @@ const useMessage = (props) => {
     if (!userPrompt.trim() || isImproving || loading) return
     setIsImproving(true)
     notifyInfo("Aperfeiçoando seu prompt...")
-    const userMessage = { role: "user", content: userPrompt }
     const systemMessage = { role: "system", content: `Sempre responda em ${navigator.language}` }
+    const userMessage = { role: "user", content: userPrompt }
     try {
       const response = await sendMessage(
         aiKey, aiProvider, model,
