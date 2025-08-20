@@ -1,87 +1,119 @@
-import { useState, memo } from "react"
-import { Plus, Trash2, Pencil, Save, X, ArrowLeft, Bot, Shapes, Code } from "lucide-react" // Ícone 'Code' adicionado
+import { useState, useEffect, memo } from "react"
+import { Plus, Trash2, Pencil, Save, X, ArrowLeft, Code, PocketKnife } from "lucide-react"
 
-import { useAgents } from "../../contexts/AgentContext"
+import { useTools } from "../../contexts/ToolContext"
+import { useNotification } from "../../contexts/NotificationContext"
 
 import Button from "../Button"
 import Input from "../Input"
 import DynamicIcon from "../DynamicIcon"
 import IconPickerInput from "../IconPickerInput"
 
-const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
-  const [formData, setFormData] = useState({
-    name: agent?.name || "",
-    icon: agent?.icon || "Bot",
-    description: agent?.description || "",
-    prompt: {
-      goal: agent?.prompt?.goal || "",
-      returnFormat: agent?.prompt?.returnFormat || "",
-      warning: agent?.prompt?.warning || "",
-      contextDump: agent?.prompt?.contextDump || "",
-    }
-  })
+const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
+  const [formData, setFormData] = useState({})
+  const { notifyError } = useNotification()
 
-  const handleChange = (field, value) => setFormData(prev => ({ ...prev, [field]: value }))
+  useEffect(() => {
+    setFormData({
+      name: tool?.name || "",
+      alias: tool?.alias || "",
+      description: tool?.description || "",
+      icon: tool?.icon || "PocketKnife",
+      method: tool?.httpConfig?.method || "GET",
+      url: tool?.httpConfig?.url || "",
+      parameters: JSON.stringify(tool?.parameters || { type: "object", properties: {} }, null, 2),
+      queryParams: JSON.stringify(tool?.httpConfig?.queryParams || {}, null, 2),
+      headers: JSON.stringify(tool?.httpConfig?.headers || {}, null, 2),
+      body: JSON.stringify(tool?.httpConfig?.body || {}, null, 2)
+    })
+  }, [tool])
 
-  const handlePromptChange = (field, value) => setFormData(prev => ({ ...prev, prompt: { ...prev.prompt, [field]: value } }))
+  const handleChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }))
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    onSave(formData)
+    try {
+      const toolData = {
+        name: formData.name,
+        description: formData.description,
+        alias: formData.alias,
+        icon: formData.icon,
+        parameters: JSON.parse(formData.parameters),
+        httpConfig: {
+          method: formData.method,
+          url: formData.url,
+          queryParams: JSON.parse(formData.queryParams),
+          headers: JSON.parse(formData.headers),
+          body: JSON.parse(formData.body),
+        }
+      }
+      onSave(toolData)
+    } catch (error) {
+      notifyError("JSON inválido em um dos campos avançados. Por favor, verifique.")
+    }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-2 h-full">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 h-full">
       <div className="flex items-center gap-2">
-        <Button variant="secondary" size="icon" $rounded onClick={onBack} title="Voltar">
+        <Button variant="secondary" size="icon" $rounded onClick={onBack} title="Voltar para a lista">
           <ArrowLeft size={16} />
         </Button>
-        <h3 className="font-bold text-xl text-lightFg-primary dark:text-darkFg-primary truncate">
-          {agent ? `Editando: ${agent.name}` : "Criar Novo Agente"}
-        </h3>
+        <h3 className="font-bold text-xl text-lightFg-primary dark:text-darkFg-primary truncate">{tool ? `Editando: ${tool.name}` : "Criar Nova Ferramenta"}</h3>
       </div>
-      <div className="flex-grow overflow-y-auto pr-2 flex flex-col gap-2">
-        <Input placeholder="Nome do Agente (ex: Mestre Cuca)" value={formData.name} onChange={(e) => handleChange("name", e.target.value)} disabled={loading} maxLength="30" />
-        <small className="text-right text-xs text-lightFg-tertiary dark:text-darkFg-tertiary self-end pr-2 -mt-2">{formData.name.length} / 30</small>
-
-        <IconPickerInput
-          value={formData.icon}
-          onChange={(value) => handleChange("icon", value)}
-          disabled={loading}
-        />
-
-        <Input placeholder="Descrição curta (ex: Ajuda com receitas)" value={formData.description} onChange={(e) => handleChange("description", e.target.value)} disabled={loading} maxLength="100" />
-        <small className="text-right text-xs text-lightFg-tertiary dark:text-darkFg-tertiary self-end pr-2 -mt-2">{formData.description.length} / 100</small>
-
-        {/* Campos do Prompt Agrupados */}
+      <div className="flex-grow overflow-y-auto pr-2 flex flex-col gap-4">
+        <div>
+          <Input maxLength={32} placeholder="Nome Técnico (ex: cepTool)" value={formData.name} onChange={(e) => handleChange("name", e.target.value)} disabled={loading} />
+          <Input maxLength={32} placeholder="Apelido da Ferramenta (ex: Buscar CEP)" value={formData.alias} onChange={(e) => handleChange("alias", e.target.value)} disabled={loading} />
+          <IconPickerInput
+            value={formData.icon}
+            onChange={(value) => handleChange("icon", value)}
+            disabled={loading}
+          />
+        </div>
+        <div>
+          <label className="text-sm font-bold text-lightFg-secondary dark:text-darkFg-secondary">Descrição para a IA</label>
+          <textarea maxLength={256} placeholder="Como e quando usar esta ferramenta..." value={formData.description} onChange={(e) => handleChange("description", e.target.value)} className="w-full mt-1 h-24 p-2 rounded-md resize-y bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" disabled={loading} />
+        </div>
+        <div>
+          <label className="text-sm font-bold text-lightFg-secondary dark:text-darkFg-secondary">Configuração HTTP</label>
+          <div className="flex gap-2 mt-1">
+            <select value={formData.method} onChange={(e) => handleChange("method", e.target.value)} className="rounded-full bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary p-2" disabled={loading}>
+              {["GET", "POST", "PUT", "PATCH", "DELETE"].map(m => <option key={m} value={m}>{m}</option>)}
+            </select>
+            <Input placeholder="URL Base da API (sem query params)" value={formData.url} onChange={(e) => handleChange("url", e.target.value)} disabled={loading} />
+          </div>
+        </div>
         <details className="bg-lightBg-secondary/50 dark:bg-darkBg-secondary/50 p-3 rounded-md">
           <summary className="cursor-pointer font-bold text-sm text-lightFg-secondary dark:text-darkFg-secondary">
             <Code size={16} className="inline mr-2" />
-            Estrutura do Prompt (Modelo GRWC)
+            Configurações Avançadas (JSON)
           </summary>
           <div className="flex flex-col gap-4 mt-2">
             <div>
-              <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Goal (Objetivo)</label>
-              <textarea placeholder="O objetivo principal do agente..." value={formData.prompt.goal} onChange={(e) => handlePromptChange("goal", e.target.value)} className="w-full h-24 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" disabled={loading} />
+              <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Definição do Esquema da Ferramenta</label>
+              <textarea value={formData.parameters} onChange={(e) => handleChange("parameters", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
             </div>
             <div>
-              <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Return Format (Formato de Retorno)</label>
-              <textarea placeholder="O formato de saída esperado..." value={formData.prompt.returnFormat} onChange={(e) => handlePromptChange("returnFormat", e.target.value)} className="w-full h-24 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" disabled={loading} />
+              <label className="text-sm font-bold text-lightFg-secondary dark:text-darkFg-secondary">Parâmetros de Query (JSON)</label>
+              <textarea placeholder={`{ "apiKey": "valor_fixo", "cidade": "{{nome_da_cidade}}" }`} value={formData.queryParams} onChange={(e) => handleChange("queryParams", e.target.value)} className="w-full h-24 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
             </div>
             <div>
-              <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Warning (Aviso)</label>
-              <textarea placeholder="Restrições críticas ou advertências..." value={formData.prompt.warning} onChange={(e) => handlePromptChange("warning", e.target.value)} className="w-full h-24 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" disabled={loading} />
+              <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Cabeçalho</label>
+              <textarea value={formData.headers} onChange={(e) => handleChange("headers", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
             </div>
             <div>
-              <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Context Dump (Contexto)</label>
-              <textarea placeholder="Dados contextuais relevantes..." value={formData.prompt.contextDump} onChange={(e) => handlePromptChange("contextDump", e.target.value)} className="w-full h-24 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" disabled={loading} />
+              <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Corpo</label>
+              <textarea value={formData.body} onChange={(e) => handleChange("body", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
             </div>
           </div>
         </details>
       </div>
-      <div className="flex justify-end pt-2 border-t border-bLight dark:border-bDark">
-        <Button type="submit" variant="primary" $rounded loading={loading} disabled={loading || !formData.name || !formData.description}>
-          {!loading && <Save size={16} className="mr-2" />} Salvar Agente
+      <div className="flex justify-end pt-4 border-t border-bLight dark:border-bDark">
+        <Button type="submit" variant="primary" $rounded loading={loading} disabled={loading || !formData.name || !formData.url}>
+          {!loading && <Save size={16} className="mr-2" />} Salvar Ferramenta
         </Button>
       </div>
     </form>
