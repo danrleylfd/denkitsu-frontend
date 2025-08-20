@@ -152,11 +152,12 @@ const useMessage = (props) => {
     setIsImproving(true)
     notifyInfo("Aperfeiçoando seu prompt...")
     const userMessage = { role: "user", content: userPrompt }
+    const systemMessage = { role: "system", content: `Sempre responda em ${navigator.language}` }
     try {
       const response = await sendMessage(
         aiKey, aiProvider, model,
         [...freeModels, ...payModels, ...groqModels],
-        [userMessage], "Prompter", new Set()
+        [systemMessage, userMessage], "Prompter", new Set()
       )
       const improvedPrompt = response.data?.choices?.[0]?.message?.content
       if (improvedPrompt) {
