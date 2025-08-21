@@ -101,28 +101,7 @@ const useMessage = (props) => {
   const onSendMessage = useCallback(async () => {
     if (loading || isImproving) return
     const promptText = userPrompt.trim()
-    if (!promptText && !audioFile && imageUrls.length === 0) return
-    if (audioFile) {
-      setLoading(true)
-      const userMessagePlaceholder = { role: "user", content: `[Áudio: ${audioFile.name || "Gravação"}]`, timestamp: new Date().toISOString() }
-      const historyWithPlaceholder = [...messages, userMessagePlaceholder]
-      setMessages(historyWithPlaceholder)
-      setAudioFile(null)
-      try {
-        const transcription = await transcribeAudio(audioFile)
-        const transcriptionUserMessage = { role: "user", content: `Transcrição de Áudio:\n${transcription}`, timestamp: new Date().toISOString() }
-        const historyWithTranscription = [...historyWithPlaceholder.slice(0, -1), transcriptionUserMessage]
-        setMessages(historyWithTranscription)
-        await executeSendMessage(historyWithTranscription)
-      } catch (err) {
-        if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
-        else notifyError("Falha ao transcrever o áudio.")
-        setMessages(prev => prev.filter(m => m.timestamp !== userMessagePlaceholder.timestamp))
-        setLoading(false)
-      }
-      return
-    }
-
+    if (!promptText && imageUrls.length === 0) return
     const newContent = []
     if (promptText) newContent.push({ type: "text", content: promptText })
     if (imageUrls.length > 0) newContent.push(...imageUrls.map(url => ({ type: "image_url", image_url: { url } })))
@@ -133,7 +112,28 @@ const useMessage = (props) => {
     setImageUrls([])
     setAudioFile(null)
     await executeSendMessage(history)
-  }, [loading, isImproving, userPrompt, imageUrls, audioFile, messages, executeSendMessage, notifyError, setUserPrompt, setImageUrls, setAudioFile, setMessages])
+  }, [loading, isImproving, userPrompt, imageUrls, messages, executeSendMessage, setUserPrompt, setImageUrls, setAudioFile])
+
+  const handleSendAudioMessage = useCallback(async () => {
+    if (!audioFile) return
+    setLoading(true)
+    const userMessagePlaceholder = { role: "user", content: `[Áudio: ${audioFile.name || "Gravação"}]`, timestamp: new Date().toISOString() }
+    const historyWithPlaceholder = [...messages, userMessagePlaceholder]
+    setMessages(historyWithPlaceholder)
+    setAudioFile(null)
+    try {
+      const transcription = await transcribeAudio(audioFile)
+      const transcriptionUserMessage = { role: "user", content: `Transcrição de Áudio:\n${transcription}`, timestamp: new Date().toISOString() }
+      const historyWithTranscription = [...historyWithPlaceholder.slice(0, -1), transcriptionUserMessage]
+      setMessages(historyWithTranscription)
+      await executeSendMessage(historyWithTranscription)
+    } catch (err) {
+      if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+      else notifyError("Falha ao transcrever o áudio.")
+      setMessages(prev => prev.filter(m => m.timestamp !== userMessagePlaceholder.timestamp))
+      setLoading(false)
+    }
+  }, [audioFile, messages, executeSendMessage, setAudioFile, setMessages, notifyError])
 
   const handleRegenerateResponse = useCallback(async () => {
     if (loading || isImproving) return
@@ -173,7 +173,7 @@ const useMessage = (props) => {
     }
   }, [userPrompt, isImproving, loading, aiKey, aiProvider, model, freeModels, payModels, groqModels, setUserPrompt, notifyInfo, notifySuccess, notifyError])
 
-  return { loading, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt }
+  return { loading, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt, handleSendAudioMessage }
 }
 
 export default useMessage

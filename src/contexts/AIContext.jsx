@@ -57,7 +57,7 @@ const AIProvider = ({ children }) => {
   } = useAudio({ setAudioFile, setUserPrompt, listening })
 
   const {
-    loading, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt
+    loading, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt, handleSendAudioMessage
   } = useMessage({
     aiProvider, aiKey, model, stream, activeTools, userPrompt, imageUrls, audioFile, messages,
     freeModels, payModels, groqModels, selectedAgent,
@@ -142,14 +142,14 @@ const AIProvider = ({ children }) => {
     userPrompt, setUserPrompt,
     messages, setMessages, clearHistory,
     selectedAgent, setSelectedAgent,
-    loading, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt,
+    loading, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt, handleSendAudioMessage,
     recording, fileInputRef, handleStartRecording, handleStopRecording, handleUploadClick, handleFileChange,
   }), [
     autoScroll, stream, speaking, listening, activeTools, handleToolToggle, imageUrls, audioFile,
     aiProvider, aiKey, model, groqKey, openRouterKey, groqModel, openRouterModel,
     freeModels, payModels, groqModels, customPrompt, userPrompt, messages,
     toggleAutoScroll, toggleStream, speakResponse, toggleListening, aiProviderToggle, clearHistory,
-    selectedAgent, loading, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt,
+    selectedAgent, loading, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt, handleSendAudioMessage,
     recording, fileInputRef, handleStartRecording, handleStopRecording, handleUploadClick, handleFileChange,
   ])
   return (

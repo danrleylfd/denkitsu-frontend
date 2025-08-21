@@ -26,7 +26,7 @@ const AI = () => {
     setFreeModels, setPayModels, setGroqModels, aiKey, imageUrls, setImageUrls,
     selectedAgent, setSelectedAgent, loading, isImproving, onSendMessage,
     handleRegenerateResponse, improvePrompt, fileInputRef, handleFileChange,
-    audioFile, setAudioFile,
+    audioFile, setAudioFile, handleSendAudioMessage,
   } = useAI()
   const { notifyWarning, notifyError } = useNotification()
   const [lousaContent, setLousaContent] = useState(null)
@@ -70,7 +70,7 @@ const AI = () => {
       <AIAgents loading={loading || isImproving} agentsDoor={agentsDoor} selectedAgent={selectedAgent} onSelectAgent={setSelectedAgent} />
       <AITools loading={loading || isImproving} toolsDoor={toolsDoor} />
       <ImagePreview />
-      {audioFile && <AIAudio audioFile={audioFile} setAudioFile={setAudioFile} />}
+      {audioFile && <AIAudio audioFile={audioFile} onCancel={() => setAudioFile(null)} onSend={handleSendAudioMessage} />}
       <AITip />
       <AIBar
         loading={loading}
