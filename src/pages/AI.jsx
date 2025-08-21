@@ -30,12 +30,18 @@ const AI = () => {
   } = useAI()
   const { notifyWarning, notifyError } = useNotification()
   const [lousaContent, setLousaContent] = useState(null)
-  const [agentsDoor, setAgentsDoor] = useState(false)
-  const [toolsDoor, setToolsDoor] = useState(false)
-  const [mediaDoor, setMediaDoor] = useState(false)
+  const [openDoor, setOpenDoor] = useState(null)
   const [featuresDoor, setFeaturesDoor] = useState(false)
   const [settingsDoor, setSettingsDoor] = useState(false)
   const [factoryManagerDoor, setFactoryManagerDoor] = useState(false)
+
+  const handleDoorToggle = (doorName) => {
+    setOpenDoor(prevOpenDoor => (prevOpenDoor === doorName ? null : doorName))
+  }
+
+  const agentsDoor = openDoor === "agents"
+  const toolsDoor = openDoor === "tools"
+  const mediaDoor = openDoor === "media"
 
   useEffect(() => {
     (async () => {
@@ -69,8 +75,8 @@ const AI = () => {
       <AIMedia mediaDoor={mediaDoor} onAddImage={onAddImage} loading={loading} isImproving={isImproving} />
       <AIAgents loading={loading || isImproving} agentsDoor={agentsDoor} selectedAgent={selectedAgent} onSelectAgent={setSelectedAgent} />
       <AITools loading={loading || isImproving} toolsDoor={toolsDoor} />
+      {openDoor === null && <AITip />}
       <ImagePreview />
-      <AITip />
       {audioFile && <AIAudio audioFile={audioFile} onCancel={() => setAudioFile(null)} onSend={handleSendAudioMessage} />}
       <AIBar
         loading={loading}
@@ -81,9 +87,9 @@ const AI = () => {
         agentsDoor={agentsDoor}
         toolsDoor={toolsDoor}
         mediaDoor={mediaDoor}
-        toggleAgentsDoor={() => setAgentsDoor(prev => !prev)}
-        toggleToolsDoor={() => setToolsDoor(prev => !prev)}
-        toggleMediaDoor={() => setMediaDoor(prev => !prev)}
+        toggleAgentsDoor={() => handleDoorToggle("agents")}
+        toggleToolsDoor={() => handleDoorToggle("tools")}
+        toggleMediaDoor={() => handleDoorToggle("media")}
         toggleFeaturesDoor={() => setFeaturesDoor(prev => !prev)}
         toggleSettingsDoor={() => setSettingsDoor(prev => !prev)}
         toggleFactoryManagerDoor={() => setFactoryManagerDoor(prev => !prev)}
