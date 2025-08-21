@@ -123,7 +123,7 @@ const useMessage = (props) => {
     setAudioFile(null)
     try {
       const transcription = await transcribeAudio(audioFile)
-      const transcriptionUserMessage = { role: "user", content: `Transcrição de Áudio:\n${transcription}`, timestamp: new Date().toISOString() }
+      const transcriptionUserMessage = { role: "user", content: `[Áudio: ${audioFile.name || "Gravação"}]\nTranscrição de Áudio:\n${transcription}`, timestamp: new Date().toISOString() }
       const historyWithTranscription = [...historyWithPlaceholder.slice(0, -1), transcriptionUserMessage]
       setMessages(historyWithTranscription)
       await executeSendMessage(historyWithTranscription)
