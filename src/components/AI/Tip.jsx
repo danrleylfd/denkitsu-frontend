@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react"
 import Marquee from "react-fast-marquee"
 
-import { useTheme } from "../../contexts/ThemeContext"
-
 import Paper from "../Paper"
 
 const TIPS = [
@@ -24,10 +22,8 @@ const TIPS = [
 
 const AITip = () => {
   const [tip, setTip] = useState("")
-  const { theme } = useTheme()
   const tipIndexRef = useRef(0)
   const intervalIdRef = useRef(null)
-
   const advanceToNextTip = useCallback(() => {
     clearInterval(intervalIdRef.current)
     const newIndex = (tipIndexRef.current + 1) % TIPS.length
@@ -35,21 +31,16 @@ const AITip = () => {
     setTip(TIPS[newIndex])
     intervalIdRef.current = setInterval(advanceToNextTip, 15000)
   }, [])
-
   useEffect(() => {
     tipIndexRef.current = 0
     setTip(TIPS[tipIndexRef.current])
     intervalIdRef.current = setInterval(advanceToNextTip, 15000)
     return () => clearInterval(intervalIdRef.current)
   }, [advanceToNextTip])
-
-  const gradientColor = theme === "dark"
-    ? [21, 21, 21]
-    : [255, 255, 255]
-
+  if (!tip) return null
   return (
     <Paper onClick={advanceToNextTip} className="bg-lightBg-primary dark:bg-darkBg-primary p-0 h-8 max-w-[95%] mb-1 mx-auto overflow-hidden flex items-center">
-      <Marquee speed={50} direction="right" pauseOnHover={true} gradient={true} gradientColor={gradientColor}>
+      <Marquee speed={50} direction="left" gradient={false} pauseOnHover={true}>
         <p className="text-xs text-lightFg-primary dark:text-darkFg-primary">{tip}</p>
       </Marquee>
     </Paper>
