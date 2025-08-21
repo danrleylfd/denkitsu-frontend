@@ -11,17 +11,32 @@ import DynamicIcon from "../DynamicIcon"
 
 const AITools = ({ loading, toolsDoor }) => {
   if (!toolsDoor) return null
-  const { aiKey, aiProvider, model, freeModels, payModels, groqModels, handleToolToggle } = useAI()
+  // MODIFICADO: Adicionado freeModels, payModels, groqModels para verificar as propriedades do modelo selecionado
+  const { aiProvider, aiKey, model, handleToolToggle, freeModels, payModels, groqModels } = useAI()
   const { tools: customTools } = useTools()
 
-  const allModels = [...freeModels, ...payModels, ...groqModels]
-  const selectedModel = allModels.find(m => m.id === model)
-  const isToolsSupported = selectedModel?.supports_tools ?? false
-
   const allAvailableTools = useMemo(() => {
+    const allModels = [...freeModels, ...payModels, ...groqModels]
+    const selectedModel = allModels.find(m => m.id === model)
     const nativeTools = TOOL_DEFINITIONS.map(tool => {
-      let isDisabled = aiKey.length === 0 || !isToolsSupported || loading
-      if (tool.key === "web") isDisabled = isDisabled || aiProvider === "groq"
+      let isDisabled = loading
+      const isCompoundModel = model?.startsWith("compound-")
+      const isGptOssModel = model?.startsWith("openai/gpt-oss-")
+      switch (tool.key) {
+        case "web":
+          if (aiProvider === "groq") isDisabled = isDisabled || !isCompoundModel
+          else isDisabled = isDisabled || aiKey.length === 0 || !selectedModel?.supports_tools
+          break
+        case "browserSearch":
+          isDisabled = isDisabled || !isGptOssModel
+          break
+        case "codeExecution":
+          isDisabled = isDisabled || (!isCompoundModel && !isGptOssModel)
+          break
+        default:
+          isDisabled = isDisabled || aiKey.length === 0 || !selectedModel?.supports_tools
+          break
+      }
       return {
         key: tool.key,
         title: tool.title,
@@ -35,10 +50,10 @@ const AITools = ({ loading, toolsDoor }) => {
       title: tool.alias || tool.name,
       Icon: tool.icon || "PocketKnife",
       isCustom: true,
-      isDisabled: aiKey.length === 0 || !isToolsSupported || loading
+      isDisabled: loading || aiKey.length === 0 || !selectedModel?.supports_tools
     }))
     return [...nativeTools, ...userTools]
-  }, [customTools, isToolsSupported, loading, aiProvider, aiKey])
+  }, [customTools, model, loading, aiKey, aiProvider, freeModels, payModels, groqModels]) // MODIFICADO: Adicionadas dependências
 
   return (
     <Paper className={`bg-lightBg-primary dark:bg-darkBg-primary text-lightFg-primary dark:text-darkFg-primary

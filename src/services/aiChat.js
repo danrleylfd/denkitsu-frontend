@@ -1,32 +1,40 @@
 import api from "./"
 
 const sendMessageStream = async (aiKey, aiProvider, model, models, messages, activeTools, mode, onDelta) => {
-  const web = aiProvider !== "groq" && aiKey.length > 0 && activeTools.has("web")
-  const plugins = web ? [{ id: "web" }] : undefined
-  const regularTools = Array.from(activeTools).filter(tool => tool !== "web")
+  const finalPlugins = []
+  if (activeTools.has("webSearch")) {
+    finalPlugins.push({ id: "web" })
+  }
+  const regularTools = Array.from(activeTools).filter(tool => tool !== "webSearch")
+
   const fullModel = models.find((item) => item.id === model)
-  const use_tools = (aiKey.length > 0 && fullModel?.supports_tools && regularTools.length > 0) ? regularTools : undefined
-  const payload = { aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages, plugins, use_tools, stream: true, mode }
+  const use_tools = (fullModel?.supports_tools && regularTools.length > 0) ? regularTools : undefined
+  const payload = { aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages, plugins: finalPlugins.length > 0 ? finalPlugins : undefined, use_tools, stream: true, mode }
+
   const token = sessionStorage.getItem("@Denkitsu:token")
   const headers = {
     ...api.defaults.headers.common,
     "Content-Type": "application/json",
     authorization: `Bearer ${token}`
   }
+
   const response = await fetch(`${api.defaults.baseURL}/ai/chat/completions`, {
     method: "POST",
     headers,
     body: JSON.stringify(payload)
   })
+
   if (!response.ok) {
     const errorData = await response.json()
     const errorToThrow = new Error("Erro na requisição de streaming da API.")
     errorToThrow.response = { data: errorData }
     throw errorToThrow
   }
+
   const reader = response.body.getReader()
   const decoder = new TextDecoder("utf-8")
   let done = false
+
   while (!done) {
     const { value, done: doneReading } = await reader.read()
     done = doneReading
@@ -48,12 +56,12 @@ const sendMessageStream = async (aiKey, aiProvider, model, models, messages, act
 }
 
 const sendMessage = async (aiKey, aiProvider, model, models, messages, mode = "Padrão", activeTools = new Set()) => {
-  const web = aiProvider !== "groq" && aiKey.length > 0 && activeTools.has("web")
-  const plugins = web ? [{ id: "web" }] : undefined
+  const finalPlugins = []
+  if (activeTools.has("web")) finalPlugins.push({ id: "web" })
   const regularTools = Array.from(activeTools).filter(tool => tool !== "web")
   const fullModel = models.find((item) => item.id === model)
-  const use_tools = (aiKey.length > 0 && fullModel?.supports_tools && regularTools.length > 0) ? regularTools : undefined
-  const payload = { aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages: [...messages], plugins, use_tools, mode }
+  const use_tools = (fullModel?.supports_tools && regularTools.length > 0) ? regularTools : undefined
+  const payload = { aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages: [...messages], plugins: finalPlugins.length > 0 ? finalPlugins : undefined, use_tools, mode }
   try {
     return await api.post("/ai/chat/completions", payload)
   } catch (error) {
