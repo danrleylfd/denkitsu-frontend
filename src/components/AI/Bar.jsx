@@ -9,11 +9,11 @@ import Button from "../Button"
 const AIBar = ({ loading, isImproving, improvePrompt, imageCount, onSendMessage, toggleFeaturesDoor, toggleSettingsDoor, toggleFactoryManagerDoor, agentsDoor, toggleAgentsDoor, toolsDoor, toggleToolsDoor, mediaDoor, toggleMediaDoor }) => {
   const { signed } = useAuth()
   if (!signed) return <AIBarSignOut />
-  const { aiProvider, aiProviderToggle, userPrompt, setUserPrompt, audioFile, clearHistory } = useAI()
+  const { aiProvider, aiProviderToggle, userPrompt, setUserPrompt, clearHistory } = useAI()
 
   const handleSendMessage = () => {
     if (loading || isImproving) return
-    if (!userPrompt.trim() && imageCount === 0 && !audioFile) return
+    if (!userPrompt.trim() && imageCount === 0) return
     onSendMessage()
   }
 
@@ -40,7 +40,7 @@ const AIBar = ({ loading, isImproving, improvePrompt, imageCount, onSendMessage,
         <div className="flex items-center gap-2 w-full">
           <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading || isImproving}><MessageCirclePlus size={16} /></Button>
           <AIInput id="prompt-input-mobile" value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} onKeyDown={handleKeyDown} className="resize-y" disabled={loading || isImproving} />
-          <Button size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || isImproving || (!userPrompt.trim() && imageCount === 0 && !audioFile)}>{!loading && <Send size={16} />}</Button>
+          <Button size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || isImproving || (!userPrompt.trim() && imageCount === 0)}>{!loading && <Send size={16} />}</Button>
         </div>
       </div>
       <div className="w-full hidden md:flex items-center gap-2">
@@ -56,7 +56,7 @@ const AIBar = ({ loading, isImproving, improvePrompt, imageCount, onSendMessage,
           <Button variant="outline" size="icon" $rounded title="Aperfeiçoar Prompt" onClick={improvePrompt} loading={isImproving} disabled={loading || isImproving || !userPrompt.trim()}>{!isImproving && <Sparkle size={16} />}</Button>
           <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading || isImproving}><MessageCirclePlus size={16} /></Button>
         </div>
-        <Button variant="primary" size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || isImproving || (!userPrompt.trim() && imageCount === 0 && !audioFile)}>{!loading && <Send size={16} />}</Button>
+        <Button variant="primary" size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || isImproving || (!userPrompt.trim() && imageCount === 0)}>{!loading && <Send size={16} />}</Button>
       </div>
     </Paper>
   )
