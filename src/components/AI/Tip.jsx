@@ -49,7 +49,7 @@ const AITip = () => {
 
   return (
     <Paper onClick={advanceToNextTip} className="bg-lightBg-primary dark:bg-darkBg-primary p-0 h-8 max-w-[95%] mb-1 mx-auto overflow-hidden flex items-center">
-      <Marquee speed={50} direction="left" gradient={true} gradientColor={gradientColor} gradientWidth={30} pauseOnHover={true}>
+      <Marquee speed={50} direction="right" pauseOnHover={true} gradient={true} gradientColor={gradientColor}>
         <p className="text-xs text-lightFg-primary dark:text-darkFg-primary">{tip}</p>
       </Marquee>
     </Paper>
