@@ -64,9 +64,9 @@ const AIAudio = ({ audioFile, onSend, onCancel }) => {
           {isPlaying ? <Pause size={16} /> : <Play size={16} />}
         </Button>
         <div className="flex flex-col flex-grow min-w-0">
-          <span className="text-sm font-mono truncate text-lightFg-primary dark:text-darkFg-primary">
+          {/* <span className="text-sm font-mono truncate text-lightFg-primary dark:text-darkFg-primary">
             {audioFile.name || "gravação.webm"}
-          </span>
+          </span> */}
           <div className="flex items-center gap-2">
             <input
               type="range"
