@@ -16,13 +16,13 @@ const AITools = ({ loading, toolsDoor }) => {
   const { internalTools, backendTools, userTools } = useMemo(() => {
     const allModels = [...freeModels, ...payModels, ...groqModels]
     const selectedModel = allModels.find(m => m.id === model)
-    const internalToolKeys = new Set(["webSearch", "browserSearch", "codeExecution"])
+    const internalToolKeys = new Set(["web", "browserSearch", "codeExecution"])
     const processTool = (tool) => {
       let isDisabled = loading
       const isCompoundModel = model?.startsWith("compound-")
       const isGptOssModel = model?.startsWith("openai/gpt-oss-")
       switch (tool.key) {
-        case "webSearch":
+        case "web":
           if (aiProvider === "groq") isDisabled = isDisabled || !isCompoundModel
           else isDisabled = isDisabled || aiKey.length === 0 || !selectedModel?.supports_tools
           break
