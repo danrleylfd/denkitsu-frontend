@@ -74,9 +74,9 @@ const AI = () => {
       <AIHistory toggleLousa={toggleLousa} onRegenerate={handleRegenerateResponse} />
       <ImagePreview />
       {audioFile && <AIAudio audioFile={audioFile} onCancel={() => setAudioFile(null)} onSend={handleSendAudioMessage} />}
-      <AIMedia mediaDoor={mediaDoor} onAddImage={onAddImage} loading={loading} isImproving={isImproving} />
-      <AIAgents loading={loading || isImproving} agentsDoor={agentsDoor} selectedAgent={selectedAgent} onSelectAgent={setSelectedAgent} />
       <AITools loading={loading || isImproving} toolsDoor={toolsDoor} />
+      <AIAgents loading={loading || isImproving} agentsDoor={agentsDoor} selectedAgent={selectedAgent} onSelectAgent={setSelectedAgent} />
+      <AIMedia mediaDoor={mediaDoor} onAddImage={onAddImage} loading={loading} isImproving={isImproving} />
       {openDoor === null && <AITip />}
       <AIBar
         loading={loading}
