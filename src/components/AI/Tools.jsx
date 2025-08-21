@@ -11,7 +11,6 @@ import DynamicIcon from "../DynamicIcon"
 
 const AITools = ({ loading, toolsDoor }) => {
   if (!toolsDoor) return null
-  // MODIFICADO: Adicionado freeModels, payModels, groqModels para verificar as propriedades do modelo selecionado
   const { aiProvider, aiKey, model, handleToolToggle, freeModels, payModels, groqModels } = useAI()
   const { tools: customTools } = useTools()
 

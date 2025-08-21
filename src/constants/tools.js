@@ -1,5 +1,5 @@
 import {
-  Globe, Link2, Search, Server, Bitcoin, Telescope, Earth, SunMoon,
+  Globe, MonitorPlay, Terminal, Link2, Search, Server, Bitcoin, Telescope, Earth, SunMoon,
   Thermometer, Satellite, Orbit, Newspaper, Cloud, BookOpen, Gamepad,
   Coins, Gamepad2, Smartphone, Clapperboard, SquareLibrary, BookOpenText,
 } from "lucide-react"
