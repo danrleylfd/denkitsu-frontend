@@ -73,24 +73,22 @@ const useMessage = (props) => {
           return { content, reasoning }
         }
         const { content, reasoning } = cleanContent(res.content)
-        // setMessages(prev => [...prev, {
-        //   id: Date.now(),
-        //   role: "assistant",
-        //   content,
-        //   reasoning: (res.reasoning || "") + reasoning,
-        //   toolCalls: [],
-        //   timestamp: new Date().toISOString()
-        // }])
+        const executedFunctionTools = (res.tool_calls || []).map((call, idx) => ({
+          index: idx,
+          name: call.function.name,
+          arguments: call.function.arguments
+        }))
+        const executedNativeTools = (res.executed_tools || []).map((tool, idx) => {
+          let name = tool.type === "python" ? "code_interpreter" : tool.type === "search" ? "web_search" : tool.type
+          return { index: 100 + idx, name, arguments: tool.arguments || "" }
+        })
+        const allToolCalls = [...executedFunctionTools, ...executedNativeTools]
         setMessages(prev => [...prev, {
           id: Date.now(),
           role: "assistant",
           content,
           reasoning: (res.reasoning || "") + reasoning,
-          toolCalls: (data.tool_calls || []).map((call, idx) => ({
-            index: idx,
-            name: call.function.name,
-            arguments: call.function.arguments
-          })),
+          toolCalls: allToolCalls,
           timestamp: new Date().toISOString()
         }])
       }
