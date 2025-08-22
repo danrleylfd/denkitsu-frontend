@@ -6,8 +6,8 @@ import {
 
 const TOOL_DEFINITIONS = [
   { key: "web", title: "Pesquisa Profunda", Icon: Globe, description: "Realiza uma busca aprofundada na web para encontrar respostas detalhadas sobre qualquer assunto." },
-  { key: "browserSearch", title: "Groq Browser Search", Icon: MonitorPlay, description: "Permite que a IA navegue interativamente em sites para obter respostas detalhadas. (Apenas modelos gpt-oss)" },
-  { key: "codeExecution", title: "Groq Code Execution", Icon: Terminal, description: "Permite que a IA execute código Python para realizar cálculos e resolver problemas computacionais." },
+  { key: "browser_search", title: "Pesquisar no Navegador", Icon: MonitorPlay, description: "Permite que a IA navegue interativamente em sites para obter respostas detalhadas. (Apenas modelos gpt-oss)" },
+  { key: "code_interpreter", title: "Interpretador de Código", Icon: Terminal, description: "Permite que a IA execute código Python para realizar cálculos e resolver problemas computacionais." },
 
   { key: "browserTool", title: "Acessar Site Específico", Icon: Link2, description: "Extrai e analisa o conteúdo de uma URL específica que você fornecer no prompt." },
   { key: "httpTool", title: "Requisição HTTP", Icon: Server, description: "Faz uma requisição GET para uma URL, útil para acessar APIs ou dados brutos de uma página." },

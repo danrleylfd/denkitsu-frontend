@@ -16,7 +16,7 @@ const AITools = ({ loading, toolsDoor }) => {
   const { internalTools, backendTools, userTools } = useMemo(() => {
     const allModels = [...freeModels, ...payModels, ...groqModels]
     const selectedModel = allModels.find(m => m.id === model)
-    const internalToolKeys = new Set(["web", "browserSearch", "codeExecution"])
+    const internalToolKeys = new Set(["web", "browser_search", "code_interpreter"])
     const processTool = (tool) => {
       let isDisabled = loading
       const isCompoundModel = model?.startsWith("compound-")
@@ -26,10 +26,10 @@ const AITools = ({ loading, toolsDoor }) => {
           if (aiProvider === "groq") isDisabled = isDisabled || !isCompoundModel
           else isDisabled = isDisabled || aiKey.length === 0 || !selectedModel?.supports_tools
           break
-        case "browserSearch":
+        case "browser_search":
           isDisabled = isDisabled || !isGptOssModel
           break
-        case "codeExecution":
+        case "code_interpreter":
           isDisabled = isDisabled || (!isCompoundModel && !isGptOssModel)
           break
         default:
