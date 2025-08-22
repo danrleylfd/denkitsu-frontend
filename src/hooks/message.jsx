@@ -41,7 +41,7 @@ const useMessage = (props) => {
                 currentMsg.toolCalls.push({ index, name: toolName, arguments: "" })
               }
             }
-            if (delta.reasoning.includes("<tool>search")) addToolCallOnce("web_search", 97)
+            if (delta.reasoning.includes("<tool>web_search")) addToolCallOnce("web_search", 97)
             if (delta.reasoning.includes("<tool>browser_search")) addToolCallOnce("browser_search", 98)
             if (delta.reasoning.includes("<tool>code_interpreter") || delta.reasoning.includes("<tool>python")) addToolCallOnce("code_interpreter", 99)
           }
