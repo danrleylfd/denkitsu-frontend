@@ -81,7 +81,12 @@ const useMessage = (props) => {
           arguments: call.function.arguments
         }))
         const executedNativeTools = (res.executed_tools || []).map((tool, idx) => {
-          let name = tool.type === "python" ? "code_interpreter" : tool.type === "web_search" ? "web_search" : tool.type
+          let name =
+            tool.type === "web_search" ? "web_search" :
+            tool.type === "browser_search" ? "browser_search" :
+            tool.type === "python" ? "code_interpreter" :
+            tool.type === "web_search" ? "web_search" :
+            tool.type
           return { index: 100 + idx, name, arguments: tool.arguments || "" }
         })
         const allToolCalls = [...executedFunctionTools, ...executedNativeTools]
