@@ -34,15 +34,7 @@ const useMessage = (props) => {
         setMessages(prev => [...prev, placeholder])
         await sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, activeTools, selectedAgent, delta => {
           const currentMsg = { ...placeholder }
-          if (delta.reasoning) {
-            currentMsg.reasoning += delta.reasoning
-            const addToolCallOnce = (toolName, index) => {
-              if (!currentMsg.toolCalls.some(t => t.name === toolName)) currentMsg.toolCalls.push({ index, name: toolName, arguments: "" })
-            }
-            if (delta.reasoning.includes("<tool>web_search")) addToolCallOnce("web_search", 97)
-            if (delta.reasoning.includes("<tool>browser_search")) addToolCallOnce("browser_search", 98)
-            if (delta.reasoning.includes("<tool>code_interpreter") || delta.reasoning.includes("<tool>python")) addToolCallOnce("code_interpreter", 99)
-          }
+          if (delta.reasoning) currentMsg.reasoning += delta.reasoning
           if (delta.content) currentMsg.content += delta.content
           if (delta.tool_calls) {
             delta.tool_calls.forEach((toolCallChunk) => {
@@ -73,22 +65,24 @@ const useMessage = (props) => {
           return { content, reasoning }
         }
         const { content, reasoning } = cleanContent(res.content)
-        const executedFunctionTools = (res.tool_calls || []).map((call, idx) => ({
-          index: idx,
-          name: call.function.name,
-          arguments: call.function.arguments
-        }))
-        const executedNativeTools = (res.executed_tools || []).map((tool, idx) => {
-          let name = tool.type === "python" ? "code_interpreter" : tool.type === "search" ? "web_search" : tool.type
-          return { index: 100 + idx, name, arguments: tool.arguments || "" }
-        })
-        const allToolCalls = [...executedFunctionTools, ...executedNativeTools]
+        // setMessages(prev => [...prev, {
+        //   id: Date.now(),
+        //   role: "assistant",
+        //   content,
+        //   reasoning: (res.reasoning || "") + reasoning,
+        //   toolCalls: [],
+        //   timestamp: new Date().toISOString()
+        // }])
         setMessages(prev => [...prev, {
           id: Date.now(),
           role: "assistant",
           content,
           reasoning: (res.reasoning || "") + reasoning,
-          toolCalls: allToolCalls,
+          toolCalls: (data.tool_calls || []).map((call, idx) => ({
+            index: idx,
+            name: call.function.name,
+            arguments: call.function.arguments
+          })),
           timestamp: new Date().toISOString()
         }])
       }
