@@ -43,7 +43,7 @@ const useMessage = (props) => {
             }
             if (delta.reasoning.includes("<tool>search")) addToolCallOnce("web_search", 97)
             if (delta.reasoning.includes("<tool>browser_search")) addToolCallOnce("browser_search", 98)
-            if (delta.reasoning.includes("<tool>python")) addToolCallOnce("code_interpreter", 99)
+            if (delta.reasoning.includes("<tool>code_interpreter") || delta.reasoning.includes("<tool>python")) addToolCallOnce("code_interpreter", 99)
           }
           if (delta.content) currentMsg.content += delta.content
           if (delta.tool_calls) {
@@ -81,9 +81,11 @@ const useMessage = (props) => {
           arguments: call.function.arguments
         }))
         const executedNativeTools = (res.executed_tools || []).map((tool, idx) => {
+          console.log(tool.type)
           let name =
             tool.type === "web_search" ? "web_search" :
             tool.type === "browser_search" ? "browser_search" :
+            tool.type === "code_interpreter" ? "code_interpreter" :
             tool.type === "python" ? "code_interpreter" :
             tool.type === "web_search" ? "web_search" :
             tool.type
