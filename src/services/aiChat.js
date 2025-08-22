@@ -2,10 +2,10 @@ import api from "./"
 
 const sendMessageStream = async (aiKey, aiProvider, model, models, messages, activeTools, mode, onDelta) => {
   const finalPlugins = []
-  if (activeTools.has("webSearch")) {
+  if (activeTools.has("web")) {
     finalPlugins.push({ id: "web" })
   }
-  const regularTools = Array.from(activeTools).filter(tool => tool !== "webSearch")
+  const regularTools = Array.from(activeTools).filter(tool => tool !== "web")
 
   const fullModel = models.find((item) => item.id === model)
   const use_tools = (fullModel?.supports_tools && regularTools.length > 0) ? regularTools : undefined
