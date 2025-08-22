@@ -34,20 +34,15 @@ const useMessage = (props) => {
         setMessages(prev => [...prev, placeholder])
         await sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, activeTools, selectedAgent, delta => {
           const currentMsg = { ...placeholder }
-          if (delta.reasoning) {
-            currentMsg.reasoning += delta.reasoning
-            if (delta.reasoning.includes("<tool>browser_search")) {
-              if (!currentMsg.toolCalls.some(t => t.name === "browser_search")) {
-                currentMsg.toolCalls.push({ index: 98, name: "browser_search", arguments: "" })
-              }
-            }
-            if (delta.reasoning.includes("<tool>python") || delta.reasoning.includes("<tool>code_interpreter")) {
-              if (!currentMsg.toolCalls.some(t => t.name === "code_interpreter")) {
-                currentMsg.toolCalls.push({ index: 99, name: "code_interpreter", arguments: "" })
-              }
-            }
-          }
-          if (delta.reasoning) currentMsg.reasoning += delta.reasoning
+          if (delta.reasoning) {
+            currentMsg.reasoning += delta.reasoning
+            const addToolCallOnce = (toolName, index) => {
+              if (!currentMsg.toolCalls.some(t => t.name === toolName)) currentMsg.toolCalls.push({ index, name: toolName, arguments: "" })
+            }
+            if (delta.reasoning.includes("<tool>web_search")) addToolCallOnce("web_search", 97)
+            if (delta.reasoning.includes("<tool>browser_search")) addToolCallOnce("browser_search", 98)
+            if (delta.reasoning.includes("<tool>code_interpreter") || delta.reasoning.includes("<tool>python")) addToolCallOnce("code_interpreter", 99)
+          }
           if (delta.content) currentMsg.content += delta.content
           if (delta.tool_calls) {
             delta.tool_calls.forEach((toolCallChunk) => {
