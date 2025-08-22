@@ -1,12 +1,10 @@
 import {
   Globe, MonitorPlay, Terminal, Link2, Search, Server, Bitcoin, Telescope, Earth, SunMoon,
   Thermometer, Satellite, Orbit, Newspaper, Cloud, BookOpen, Gamepad,
-  Coins, Gamepad2, Smartphone, Clapperboard, SquareLibrary, BookOpenText, Ghost
+  Coins, Gamepad2, Smartphone, Clapperboard, SquareLibrary, BookOpenText,
 } from "lucide-react"
 
 const TOOL_DEFINITIONS = [
-  { value: "promptTool", Icon: Ghost, description: "Seleciona automaticamente o melhor agente especialista para cada tarefa." },
-
   { key: "web", title: "Pesquisa Profunda", Icon: Globe, description: "Realiza uma busca aprofundada na web para encontrar respostas detalhadas sobre qualquer assunto." },
   { key: "browserSearch", title: "Groq Browser Search", Icon: MonitorPlay, description: "Permite que a IA navegue interativamente em sites para obter respostas detalhadas. (Apenas modelos gpt-oss)" },
   { key: "codeExecution", title: "Groq Code Execution", Icon: Terminal, description: "Permite que a IA execute código Python para realizar cálculos e resolver problemas computacionais." },

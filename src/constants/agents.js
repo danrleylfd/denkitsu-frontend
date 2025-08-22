@@ -1,7 +1,6 @@
-import { Bot, BarChart2, Rss, Code, Presentation, Lightbulb, Newspaper, ListTree, Speech, Ghost } from "lucide-react"
+import { Bot, BarChart2, Rss, Code, Presentation, Lightbulb, Newspaper, ListTree, Speech } from "lucide-react"
 
 export const AGENTS_DEFINITIONS = [
-  { value: "Roteador", Icon: Ghost, description: "Seleciona automaticamente o melhor agente especialista para cada tarefa." },
   { value: "Padrão", Icon: Bot, description: "Assistente geral para uma ampla gama de tarefas e conversas." },
   { value: "Analista", Icon: BarChart2, description: "Focado em interpretar dados, encontrar padrões e gerar insights." },
   { value: "Blogueiro", Icon: Rss, description: "Ideal para criar textos longos, artigos e posts de blog com estilo." },
