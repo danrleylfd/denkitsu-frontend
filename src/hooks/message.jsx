@@ -34,6 +34,19 @@ const useMessage = (props) => {
         setMessages(prev => [...prev, placeholder])
         await sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, activeTools, selectedAgent, delta => {
           const currentMsg = { ...placeholder }
+          if (delta.reasoning) {
+            currentMsg.reasoning += delta.reasoning
+            if (delta.reasoning.includes("<tool>browser_search")) {
+              if (!currentMsg.toolCalls.some(t => t.name === "browser_search")) {
+                currentMsg.toolCalls.push({ index: 98, name: "browser_search", arguments: "" })
+              }
+            }
+            if (delta.reasoning.includes("<tool>python") || delta.reasoning.includes("<tool>code_interpreter")) {
+              if (!currentMsg.toolCalls.some(t => t.name === "code_interpreter")) {
+                currentMsg.toolCalls.push({ index: 99, name: "code_interpreter", arguments: "" })
+              }
+            }
+          }
           if (delta.reasoning) currentMsg.reasoning += delta.reasoning
           if (delta.content) currentMsg.content += delta.content
           if (delta.tool_calls) {
