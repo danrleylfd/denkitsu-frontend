@@ -67,15 +67,6 @@ const useMessage = (props) => {
         const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, selectedAgent, activeTools)
         const res = data?.choices?.[0]?.message
         if (!res) return
-        const cleanContent = (raw = "") => {
-          let reasoning = ""
-          const content = raw.replace(/(<think>.*?<\/think>|<thinking>.*?<\/thinking>|◁think▷.*?◁\/think▷)/gs, (_, r) => {
-            reasoning += r
-            return ""
-          })
-          return { content, reasoning }
-        }
-        const { content, reasoning } = cleanContent(res.content)
         const executedFunctionTools = (res.tool_calls || []).map((call, idx) => ({
           index: idx,
           name: call.function.name,
@@ -96,8 +87,8 @@ const useMessage = (props) => {
         setMessages(prev => [...prev, {
           id: Date.now(),
           role: "assistant",
-          content,
-          reasoning: (res.reasoning || "") + reasoning,
+          content: res.content || "",
+          reasoning: res.reasoning || "",
           toolCalls: allToolCalls,
           timestamp: new Date().toISOString()
         }])
