@@ -9,11 +9,9 @@ const useMessage = (props) => {
     freeModels, payModels, groqModels, selectedAgent,
     setUserPrompt, setImageUrls, setAudioFile, setMessages
   } = props
-
   const { notifyError, notifyWarning, notifyInfo, notifySuccess } = useNotification()
   const [loading, setLoading] = useState(false)
   const [isImproving, setIsImproving] = useState(false)
-
   const executeSendMessage = useCallback(async (historyToProcess) => {
     setLoading(true)
     const apiMessages = historyToProcess.map(({ role, content }) =>
@@ -58,13 +56,11 @@ const useMessage = (props) => {
         const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, selectedAgent, activeTools)
         const res = data?.choices?.[0]?.message
         if (!res) return
-
         const allToolCalls = (data.tool_calls || []).map((call, idx) => ({
           index: idx,
           name: call.function.name,
           arguments: call.function.arguments
         }))
-
         setMessages(prev => [...prev, {
           id: Date.now(),
           role: "assistant",
@@ -160,7 +156,6 @@ const useMessage = (props) => {
       setIsImproving(false)
     }
   }, [userPrompt, isImproving, loading, aiKey, aiProvider, model, freeModels, payModels, groqModels, setUserPrompt, notifyInfo, notifySuccess, notifyError])
-
   return { loading, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt, handleSendAudioMessage }
 }
 
