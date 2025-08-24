@@ -110,6 +110,7 @@ const AIProvider = ({ children }) => {
         text
           .replace(/!\[.*?\]\(.*?\)/g, "")
           .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1")
+          .replace(/(?:https?|ftp):\/\/[\n\S]+/g, "")
           .replace(/[^a-zA-Z0-9À-ÿ,.\-!?;\s]/g, "")
       )
       utterance.lang = "pt-BR"
