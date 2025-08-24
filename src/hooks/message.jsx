@@ -56,17 +56,26 @@ const useMessage = (props) => {
         const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, agentForCall, activeTools)
 
         if (isRouterPass && data.next_action?.type === "SWITCH_AGENT") {
+          console.log("passei aqui 1")
           const newAgent = data.next_action.agent
+          console.log("passei aqui 2")
           notifyInfo(`Roteador direcionou para: ${newAgent}`)
+          console.log("passei aqui 3")
           setSelectedAgent(newAgent)
-
+          console.log("passei aqui 4")
           await executeSendMessage(historyToProcess, newAgent, attempt + 1)
+          console.log("passei aqui 5")
         } else {
+          console.log("passei aqui 6")
           const assistantMessage = createAssistantMessage(data)
+          console.log("passei aqui 7")
           if (assistantMessage) {
+            console.log("passei aqui 8")
             setMessages([...historyToProcess, assistantMessage])
+            console.log("passei aqui 9")
           }
           setLoading(false)
+          console.log("passei aqui 10")
         }
       }
     } catch (err) {
