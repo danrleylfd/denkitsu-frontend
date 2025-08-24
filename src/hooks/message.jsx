@@ -64,7 +64,7 @@ const useMessage = (props) => {
         } else {
           const assistantMessage = createAssistantMessage(data)
           if (assistantMessage) {
-            setMessages(prev => [...prev, assistantMessage])
+            setMessages([...historyToProcess, assistantMessage])
           }
           setLoading(false)
         }
