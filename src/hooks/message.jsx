@@ -10,7 +10,7 @@ const useMessage = (props) => {
     setUserPrompt, setImageUrls, setAudioFile, setMessages, setSelectedAgent
   } = props
 
-  const { notifyError, notifyWarning, notifyInfo } = useNotification()
+  const { notifyError, notifyWarning, notifyInfo, notifySuccess } = useNotification()
   const [loading, setLoading] = useState(false)
   const [isImproving, setIsImproving] = useState(false)
 
