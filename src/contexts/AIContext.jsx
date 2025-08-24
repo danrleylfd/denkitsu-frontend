@@ -35,7 +35,7 @@ const AIProvider = ({ children }) => {
   const [speaking, setSpeaking] = useState(false)
   const [listening, setListening] = useState(false)
   const [audioFile, setAudioFile] = useState(null)
-  const [selectedAgent, setSelectedAgent] = useState("Padrão")
+  const [selectedAgent, setSelectedAgent] = useState("Roteador")
   const [activeTools, setActiveTools] = useState(() => {
     const initialTools = new Set()
     TOOL_DEFINITIONS.forEach((tool) => {

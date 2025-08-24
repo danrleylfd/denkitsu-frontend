@@ -7,102 +7,105 @@ const useMessage = (props) => {
   const {
     aiProvider, aiKey, model, stream, activeTools, userPrompt, imageUrls, audioFile, messages,
     freeModels, payModels, groqModels, selectedAgent,
-    setUserPrompt, setImageUrls, setAudioFile, setMessages
+    setUserPrompt, setImageUrls, setAudioFile, setMessages, setSelectedAgent
   } = props
 
-  const { notifyError, notifyWarning, notifyInfo, notifySuccess } = useNotification()
+  const { notifyError, notifyWarning, notifyInfo } = useNotification()
   const [loading, setLoading] = useState(false)
   const [isImproving, setIsImproving] = useState(false)
 
-  const executeSendMessage = useCallback(async (historyToProcess) => {
+  const createAssistantMessage = (data) => {
+    const res = data?.choices?.[0]?.message
+    if (!res) return null
+    const allToolCalls = (data.tool_calls || []).map((call, idx) => ({
+      index: idx, name: call.function.name, arguments: call.function.arguments
+    }))
+    return {
+      id: Date.now(), role: "assistant", content: res.content || "",
+      reasoning: res.reasoning || "", toolCalls: allToolCalls, timestamp: new Date().toISOString()
+    }
+  }
+
+  const executeSendMessage = useCallback(async (historyToProcess, agentForCall, attempt = 1) => {
+    if (attempt > 2) {
+      notifyError("Erro de roteamento: Loop de agentes detectado.")
+      setLoading(false)
+      return
+    }
+
     setLoading(true)
     const apiMessages = historyToProcess.map(({ role, content }) =>
       Array.isArray(content)
         ? { role, content: content.map(item => (item.type === "text" ? { type: "text", text: item.content } : item)) }
         : { role, content }
     )
+
     try {
-      if (stream) {
-        const placeholder = {
-          id: Date.now(),
-          role: "assistant",
-          content: "",
-          reasoning: "",
-          toolCalls: [],
-          timestamp: new Date().toISOString()
-        }
-        setMessages(prev => [...prev, placeholder])
-        await sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, activeTools, selectedAgent, delta => {
-          const currentMsg = { ...placeholder }
-          if (delta.reasoning) {
-            currentMsg.reasoning += delta.reasoning
-          }
-          if (delta.content) currentMsg.content += delta.content
-          if (delta.tool_calls) {
-            delta.tool_calls.forEach((toolCallChunk) => {
-              if (typeof toolCallChunk.index !== "number") return // <-- CORREÇÃO AQUI
+      const isRouterPass = agentForCall === "Roteador"
+      if (stream && isRouterPass) {
+        notifyWarning("Roteador de Agentes não suporta streaming. Usando modo padrão.")
+      }
 
-              const existingCall = currentMsg.toolCalls.find(c => c.index === toolCallChunk.index)
-              if (!existingCall) {
-                currentMsg.toolCalls.push({
-                  index: toolCallChunk.index,
-                  name: toolCallChunk.function.name,
-                  arguments: toolCallChunk.function.arguments
-                })
-              }
-              if (existingCall && toolCallChunk.function?.arguments) existingCall.arguments += toolCallChunk.function.arguments
-            })
-          }
-          Object.assign(placeholder, currentMsg)
-          setMessages(prev => prev.map(msg => (msg.id === placeholder.id ? { ...placeholder } : msg)))
-        })
+      const shouldUseStream = stream && !isRouterPass
+
+      if (shouldUseStream) {
+        // TODO: Implementar lógica de roteamento para streaming
+        notifyError("Roteador + Streaming ainda não implementado.")
+        setLoading(false)
       } else {
-        const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, selectedAgent, activeTools)
-        const res = data?.choices?.[0]?.message
-        if (!res) return
+        const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, agentForCall, activeTools)
 
-        const allToolCalls = (data.tool_calls || []).map((call, idx) => ({
-          index: idx,
-          name: call.function.name,
-          arguments: call.function.arguments
-        }))
+        if (isRouterPass && data.next_action?.type === "SWITCH_AGENT") {
+          const newAgent = data.next_action.agent
+          notifyInfo(`Roteador direcionou para: ${newAgent}`)
+          setSelectedAgent(newAgent)
 
-        setMessages(prev => [...prev, {
-          id: Date.now(),
-          role: "assistant",
-          content: res.content || "",
-          reasoning: res.reasoning || "",
-          toolCalls: allToolCalls,
-          timestamp: new Date().toISOString()
-        }])
+          await executeSendMessage(historyToProcess, newAgent, attempt + 1)
+        } else {
+          const assistantMessage = createAssistantMessage(data)
+          if (assistantMessage) {
+            setMessages(prev => [...prev, assistantMessage])
+          }
+          setLoading(false)
+        }
       }
     } catch (err) {
       if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
       else notifyError("Falha na comunicação com o servidor de IA.")
-      setMessages(prev => prev.filter(msg => msg.content !== "" || msg.id !== err.id))
-    } finally {
+      setMessages(prev => {
+        const lastMessage = prev[prev.length - 1]
+        // Remove a mensagem do usuário que falhou, apenas se ela foi a última a ser adicionada
+        if (lastMessage && lastMessage.role === 'user' && lastMessage.timestamp === historyToProcess[historyToProcess.length-1].timestamp){
+          return prev.slice(0, -1)
+        }
+        return prev
+      })
       setLoading(false)
     }
   }, [
-    notifyError, stream, aiKey, aiProvider, model, activeTools, selectedAgent,
-    setMessages, freeModels, payModels, groqModels
+    aiKey, aiProvider, model, freeModels, payModels, groqModels, activeTools, stream, messages,
+    notifyError, notifyInfo, notifyWarning, setMessages, setSelectedAgent
   ])
 
   const onSendMessage = useCallback(async () => {
     if (loading || isImproving) return
     const promptText = userPrompt.trim()
     if (!promptText && imageUrls.length === 0) return
-    const newContent = []
-    if (promptText) newContent.push({ type: "text", content: promptText })
-    if (imageUrls.length > 0) newContent.push(...imageUrls.map(url => ({ type: "image_url", image_url: { url } })))
-    const newMessage = { role: "user", content: newContent, timestamp: new Date().toISOString() }
+
+    const content = []
+    if (promptText) content.push({ type: "text", content: promptText })
+    if (imageUrls.length > 0) content.push(...imageUrls.map(url => ({ type: "image_url", image_url: { url } })))
+
+    const newMessage = { role: "user", content, timestamp: new Date().toISOString() }
     const history = [...messages, newMessage]
+
     setMessages(history)
     setUserPrompt("")
     setImageUrls([])
     setAudioFile(null)
-    await executeSendMessage(history)
-  }, [loading, isImproving, userPrompt, imageUrls, messages, executeSendMessage, setUserPrompt, setImageUrls, setAudioFile])
+
+    await executeSendMessage(history, selectedAgent)
+  }, [loading, isImproving, userPrompt, imageUrls, messages, selectedAgent, executeSendMessage, setMessages, setUserPrompt, setImageUrls, setAudioFile])
 
   const handleSendAudioMessage = useCallback(async () => {
     if (!audioFile) return
@@ -113,17 +116,17 @@ const useMessage = (props) => {
     setAudioFile(null)
     try {
       const transcription = await transcribeAudio(audioFile)
-      const transcriptionUserMessage = { role: "user", content: `[Áudio: ${audioFile.name || "Gravação"}]\nTranscrição de Áudio:\n${transcription}`, timestamp: new Date().toISOString() }
-      const historyWithTranscription = [...historyWithPlaceholder.slice(0, -1), transcriptionUserMessage]
+      const transcriptionUserMessage = { role: "user", content: `[Áudio: ${audioFile.name || "Gravação"}]\nTranscrição de Áudio:\n${transcription}`, timestamp: userMessagePlaceholder.timestamp }
+      const historyWithTranscription = [...messages, transcriptionUserMessage]
       setMessages(historyWithTranscription)
-      await executeSendMessage(historyWithTranscription)
+      await executeSendMessage(historyWithTranscription, selectedAgent)
     } catch (err) {
       if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
       else notifyError("Falha ao transcrever o áudio.")
       setMessages(prev => prev.filter(m => m.timestamp !== userMessagePlaceholder.timestamp))
       setLoading(false)
     }
-  }, [audioFile, messages, executeSendMessage, setAudioFile, setMessages, notifyError])
+  }, [audioFile, messages, executeSendMessage, setAudioFile, setMessages, notifyError, selectedAgent])
 
   const handleRegenerateResponse = useCallback(async () => {
     if (loading || isImproving) return
@@ -134,8 +137,8 @@ const useMessage = (props) => {
     }
     const historyWithoutLastResponse = messages.slice(0, -1)
     setMessages(historyWithoutLastResponse)
-    await executeSendMessage(historyWithoutLastResponse)
-  }, [loading, isImproving, messages, executeSendMessage, notifyWarning, setMessages])
+    await executeSendMessage(historyWithoutLastResponse, selectedAgent)
+  }, [loading, isImproving, messages, executeSendMessage, notifyWarning, setMessages, selectedAgent])
 
   const improvePrompt = useCallback(async () => {
     if (!userPrompt.trim() || isImproving || loading) return
