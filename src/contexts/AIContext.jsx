@@ -61,7 +61,7 @@ const AIProvider = ({ children }) => {
   } = useMessage({
     aiProvider, aiKey, model, stream, activeTools, userPrompt, imageUrls, audioFile, messages,
     freeModels, payModels, groqModels, selectedAgent,
-    setUserPrompt, setImageUrls, setAudioFile, setMessages
+    setUserPrompt, setImageUrls, setAudioFile, setMessages, setSelectedAgent
   })
 
   useEffect(() => (localStorage.setItem("@Denkitsu:aiProvider", aiProvider)), [aiProvider])
