@@ -5,7 +5,7 @@ import {
 } from "lucide-react"
 
 const TOOL_DEFINITIONS = [
-  { key: "selectAgentTool", title: "Selecionador de Agente", Icon: Route, description: "Ferramenta interna para o Agente Roteador selecionar o especialista apropriado." },
+  // { key: "selectAgentTool", title: "Selecionador de Agente", Icon: Route, description: "Ferramenta interna para o Agente Roteador selecionar o especialista apropriado." },
 
   { key: "web", title: "Pesquisa Profunda", Icon: Globe, description: "Realiza uma busca aprofundada na web para encontrar respostas detalhadas sobre qualquer assunto." },
   { key: "browser_search", title: "Pesquisar no Navegador", Icon: MonitorPlay, description: "Permite que a IA navegue interativamente em sites para obter respostas detalhadas. (Apenas modelos gpt-oss)" },
