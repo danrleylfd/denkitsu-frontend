@@ -1,5 +1,5 @@
 import { memo } from "react"
-import { UserRound, Wrench, CheckCircle } from "lucide-react"
+import { UserRound, Wrench, CheckCircle, Route } from "lucide-react" // Adicionar Route
 import AIReactions from "./Reactions"
 import Markdown from "../Markdown"
 import Button from "../Button"
@@ -39,8 +39,15 @@ const AIMessage = ({ msg, user, toggleLousa, loading, onRegenerate, isLastMessag
         <img src="/denkitsu.png" alt="Denkitsu" className="w-8 h-8 rounded-full object-cover" />
       )}
       <div className="max-w-[90%] sm:max-w-[67%] md:max-w-[75%] lg:max-w-[90%] break-words rounded-md px-4 py-2 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] text-lightFg-secondary dark:text-darkFg-secondary bg-lightBg-secondary dark:bg-darkBg-secondary opacity-75 dark:opacity-90">
+        {msg.routingInfo && (
+          <div className="my-2 p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md">
+            <div className="flex items-center gap-2 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
+              <Route size={14} className="text-primary-base" />
+              <span>Roteador direcionou para: <strong>{msg.routingInfo.routedTo}</strong></span>
+            </div>
+          </div>
+        )}
         {isAssistant && msg.reasoning && <Markdown loading={loading} content={msg.reasoning} think />}
-
         {isAssistant && msg.toolCalls?.length > 0 && (
           <div className={`my-2 p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md ${!hasContentStarted ? 'animate-pulse' : ''}`}>
             <div className="flex flex-col gap-1">
