@@ -14,7 +14,7 @@ const useMessage = (props) => {
   const [loading, setLoading] = useState(false)
   const [isImproving, setIsImproving] = useState(false)
 
-  const createAssistantMessage = (data) => {
+  const createAssistantMessage = (data, routingInfo = null) => {
     const res = data?.choices?.[0]?.message
     if (!res) return null
     const allToolCalls = (data.tool_calls || []).map((call, idx) => ({
@@ -22,60 +22,44 @@ const useMessage = (props) => {
     }))
     return {
       id: Date.now(), role: "assistant", content: res.content || "",
-      reasoning: res.reasoning || "", toolCalls: allToolCalls, timestamp: new Date().toISOString()
+      reasoning: res.reasoning || "", toolCalls: allToolCalls, timestamp: new Date().toISOString(),
+      routingInfo
     }
   }
 
-  const executeSendMessage = useCallback(async (historyToProcess, agentForCall, attempt = 1) => {
+  const executeSendMessage = useCallback(async (historyToProcess, agentForCall, attempt = 1, routingInfo = null) => {
     if (attempt > 2) {
       notifyError("Erro de roteamento: Loop de agentes detectado.")
       setLoading(false)
       return
     }
-
     setLoading(true)
     const apiMessages = historyToProcess.map(({ role, content }) =>
       Array.isArray(content)
         ? { role, content: content.map(item => (item.type === "text" ? { type: "text", text: item.content } : item)) }
         : { role, content }
     )
-
     try {
       const isRouterPass = agentForCall === "Roteador"
       if (stream && isRouterPass) {
         notifyWarning("Roteador de Agentes não suporta streaming. Usando modo padrão.")
       }
-
       const shouldUseStream = stream && !isRouterPass
-
       if (shouldUseStream) {
-        // TODO: Implementar lógica de roteamento para streaming
         notifyError("Roteador + Streaming ainda não implementado.")
         setLoading(false)
       } else {
         const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, agentForCall, activeTools)
-
         if (isRouterPass && data.next_action?.type === "SWITCH_AGENT") {
-          console.log("passei aqui 1")
           const newAgent = data.next_action.agent
-          console.log("passei aqui 2")
-          notifyInfo(`Roteador direcionou para: ${newAgent}`)
-          console.log("passei aqui 3")
           setSelectedAgent(newAgent)
-          console.log("passei aqui 4")
-          await executeSendMessage(historyToProcess, newAgent, attempt + 1)
-          console.log("passei aqui 5")
+          await executeSendMessage(historyToProcess, newAgent, attempt + 1, { routedTo: newAgent })
         } else {
-          console.log("passei aqui 6")
-          const assistantMessage = createAssistantMessage(data)
-          console.log("passei aqui 7")
+          const assistantMessage = createAssistantMessage(data, routingInfo)
           if (assistantMessage) {
-            console.log("passei aqui 8")
             setMessages([...historyToProcess, assistantMessage])
-            console.log("passei aqui 9")
           }
           setLoading(false)
-          console.log("passei aqui 10")
         }
       }
     } catch (err) {
@@ -83,8 +67,7 @@ const useMessage = (props) => {
       else notifyError("Falha na comunicação com o servidor de IA.")
       setMessages(prev => {
         const lastMessage = prev[prev.length - 1]
-        // Remove a mensagem do usuário que falhou, apenas se ela foi a última a ser adicionada
-        if (lastMessage && lastMessage.role === 'user' && lastMessage.timestamp === historyToProcess[historyToProcess.length-1].timestamp){
+        if (lastMessage && lastMessage.role === 'user' && lastMessage.timestamp === historyToProcess[historyToProcess.length - 1].timestamp){
           return prev.slice(0, -1)
         }
         return prev
@@ -92,7 +75,7 @@ const useMessage = (props) => {
       setLoading(false)
     }
   }, [
-    aiKey, aiProvider, model, freeModels, payModels, groqModels, activeTools, stream, messages,
+    aiKey, aiProvider, model, freeModels, payModels, groqModels, activeTools, stream,
     notifyError, notifyInfo, notifyWarning, setMessages, setSelectedAgent
   ])
 
