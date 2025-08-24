@@ -4,20 +4,23 @@ import Marquee from "react-fast-marquee"
 import Paper from "../Paper"
 
 const TIPS = [
-  "Clique no ícone de cérebro para alternar entre os provedores de IA Groq & OpenRouter.",
-  "Configure as chaves de API dos provedores Groq e OpenRouter nas configurações para desbloquear a análise de imagens e as ferramentas.",
-  "Explore diferentes Agentes de IA nas configurações para tarefas específicas.",
-  "Descreva como Denkitsu deve se comportar em configurações.",
-  "Salve seu UID do Genshin no prompt personalizado, assim toda vez que precisar de uma analise, só precisará mencionar o nome do personagem.",
+  "Alterne entre os provedores de IA Groq & OpenRouter",
+  "Configure as chaves de API dos provedores nas configurações para desbloquear a análise de imagens e as ferramentas",
+  "Explore diferentes Agentes de IA nas configurações para tarefas específicas",
+  "Descreva como Denkitsu deve se comportar em configurações",
+  "Salve seu UID do Genshin no prompt personalizado, assim toda vez que precisar de uma analise, só precisará mencionar o nome do personagem",
   "A análise de imagens exige um modelo compatível ex: qwen/qwen2.5-vl-72b-instruct:free. Máximo 3 imagens.",
-  "As ferramentas exigem um modelo compatível ex: deepseek/deepseek-chat-v3-0324:free.",
-  "Use as ferramentas para contextualizar o Denkitsu.",
-  "Pressione Ctrl + Enter para enviar o prompt.",
-  "Para usar os comandos ative as ferramentas necessárias e digite / e uma lista de comandos aparecerá.",
-  "Limpe a conversa a qualquer momento clicando no ícone de nova mensagem.",
+  "Use as ferramentas para contextualizar o Denkitsu",
+  "As ferramentas exigem um modelo compatível ex: deepseek/deepseek-chat-v3-0324:free",
+  "Pressione Ctrl + Enter para enviar o prompt",
+  "Para usar os comandos ative as ferramentas necessárias e digite # e uma lista de comandos aparecerá",
+  "Limpe a conversa a qualquer momento clicando no ícone de nova mensagem",
   "Entregue a ferramenta Buscar Notícias ao Agente Redator e veja a mágica acontecer",
   "Experimente também entregar as ferramentas de cotação albion e cripto ao Agente Analista",
   "A Transcrição funciona melhor com o Agente Transcritor",
+  "🛠️ - Indica que o modelo é compatível com ferramentas",
+  "🖼️ - Indica que o modelo é compatível com visão computacional",
+  "📄 - Indica que o modelo é compatível com upload de arquivos",
 ]
 
 const AITip = () => {
