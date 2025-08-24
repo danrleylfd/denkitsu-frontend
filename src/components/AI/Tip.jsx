@@ -18,9 +18,7 @@ const TIPS = [
   "Entregue a ferramenta Buscar Notícias ao Agente Redator e veja a mágica acontecer",
   "Experimente também entregar as ferramentas de cotação albion e cripto ao Agente Analista",
   "A Transcrição funciona melhor com o Agente Transcritor",
-  "🛠️ - Indica que o modelo é compatível com ferramentas",
-  "🖼️ - Indica que o modelo é compatível com visão computacional",
-  "📄 - Indica que o modelo é compatível com upload de arquivos",
+  "🛠️🖼️📄 - Indica que o modelo é compatível com ferramentas / visão computacional / upload de arquivos",
 ]
 
 const AITip = () => {
