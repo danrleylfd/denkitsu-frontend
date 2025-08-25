@@ -46,8 +46,24 @@ const useMessage = (props) => {
       }
       const shouldUseStream = stream && !isRouterPass
       if (shouldUseStream) {
-        notifyError("Roteador + Streaming ainda não implementado.")
-        setLoading(false)
+        const placeholder = { id: Date.now(), role: "assistant", content: "", reasoning: "", toolCalls: [], timestamp: new Date().toISOString(), routingInfo }
+        setMessages(prev => [...prev, placeholder])
+        sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, activeTools, agentForCall, {
+          onDelta: (delta) => {
+            const currentMsg = { ...placeholder }
+            if (delta.reasoning) currentMsg.reasoning += delta.reasoning
+            if (delta.content) currentMsg.content += delta.content
+            Object.assign(placeholder, currentMsg)
+            setMessages(prev => prev.map(msg => (msg.id === placeholder.id ? { ...placeholder } : msg)))
+          },
+          onClose: () => setLoading(false),
+          onError: (err) => {
+            notifyError("A conexão de streaming falhou.")
+            setMessages(prev => prev.filter(msg => msg.id !== placeholder.id))
+            setLoading(false)
+          },
+          onSwitchAgent: () => {}
+        })
       } else {
         const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, agentForCall, activeTools)
         if (isRouterPass && data.next_action?.type === "SWITCH_AGENT") {
