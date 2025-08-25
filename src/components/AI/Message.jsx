@@ -57,7 +57,7 @@ const AIMessage = ({ msg, user, toggleLousa, loading, onRegenerate, isLastMessag
                     ? <CheckCircle size={14} className="text-green-base" />
                     : <Wrench size={14} className="animate-spin-fast" />
                   }
-                  <span>{hasContentStarted ? 'Denkitsu usou a ferramenta' : 'Usando a ferramenta'} <strong>{call.name}</strong></span>
+                  <span>{hasContentStarted ? 'Denkitsu usou a ferramenta' : 'Denkitsu está usando a ferramenta'} <strong>{call.name}</strong></span>
                 </div>
               ))}
             </div>
