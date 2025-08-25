@@ -16,10 +16,10 @@ const Button = forwardRef(({
 }, ref) => {
   const baseClasses = "relative flex select-none items-center justify-center font-bold uppercase transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-50 w-fit self-center"
   const variantClasses = {
-    primary: "border border-solid border-primary-base bg-primary-base hover:bg-primary-light active:bg-primary-dark text-white transform transition-transform hover:scale-105 active:scale-95",
+    primary: "border-solid bg-primary-base hover:bg-primary-light active:bg-primary-dark text-white transform transition-transform hover:scale-105 active:scale-95",
     mic: "bg-red-base hover:bg-red-light active:bg-red-dark text-white transform transition-transform hover:scale-105 active:scale-95",
     secondary: "bg-transparent hover:bg-lightBtnBg-light active:bg-lightBtnBg-dark dark:hover:bg-darkBtnBg-light dark:active:bg-darkBtnBg-dark text-lightFg-primary dark:text-darkFg-primary  transform transition-transform hover:scale-105 active:scale-95 transform transition-transform hover:scale-105 active:scale-95",
-    outline: "bg-transparent hover:bg-primary-light active:bg-primary-dark text-primary-base hover:text-white active:text-white transform transition-transform hover:scale-105 active:scale-95",
+    outline: "border border-solid border-primary-base bg-transparent hover:bg-primary-light active:bg-primary-dark text-primary-base hover:text-white active:text-white transform transition-transform hover:scale-105 active:scale-95",
     info: "bg-transparent hover:bg-blue-light active:bg-blue-dark text-blue-base hover:text-white active:text-white transform transition-transform hover:scale-105 active:scale-95",
     success: "bg-transparent hover:bg-green-light active:bg-green-dark text-green-base hover:text-white active:text-white transform transition-transform hover:scale-105 active:scale-95",
     warning: "bg-transparent hover:bg-amber-light active:bg-amber-dark text-amber-base hover:text-white active:text-white transform transition-transform hover:scale-105 active:scale-95",
