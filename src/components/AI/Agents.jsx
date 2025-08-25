@@ -12,7 +12,7 @@ import DynamicIcon from "../DynamicIcon"
 
 const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
   if (!agentsDoor) return null
-  const { agents } = useAgents()
+  const { agents: customAgents } = useAgents()
   const [builtInAgents, setBuiltInAgents] = useState([])
   useEffect(() => {
     const fetchDefinitions = async () => {
@@ -27,11 +27,6 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
     }
     fetchDefinitions()
   }, [])
-  // const builtInAgents = AGENTS_DEFINITIONS.map(agent => ({ ...agent, isCustom: false }))
-  const customAgents = agents.map(agent => ({
-    ...agent,
-    isCustom: true
-  }))
 
   const Separator = () => <div className="h-6 w-px bg-bLight dark:bg-bDark mx-1" />
 
