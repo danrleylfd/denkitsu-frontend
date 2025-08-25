@@ -18,6 +18,7 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
     const fetchDefinitions = async () => {
       try {
         const { data } = await listAgents()
+        console.log(data)
         setBuiltInAgents(data)
         console.log(builtInAgents[0])
       } catch (error) {
