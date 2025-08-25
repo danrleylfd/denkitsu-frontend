@@ -75,7 +75,7 @@ const useMessage = (props) => {
       setLoading(false)
     }
   }, [
-    aiKey, aiProvider, model, freeModels, payModels, groqModels, activeTools, stream,
+    aiKey, aiProvider, model, freeModels, payModels, groqModels, activeTools, stream, selectedAgent,
     notifyError, notifyInfo, notifyWarning, setMessages, setSelectedAgent
   ])
 
