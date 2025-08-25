@@ -46,25 +46,33 @@ const useMessage = (props) => {
       const shouldUseStream = stream && !isRouterPass
 
       if (shouldUseStream) {
-        const placeholder = { id: Date.now(), role: "assistant", content: "", reasoning: "", toolCalls: [], timestamp: new Date().toISOString(), routingInfo }
+        const placeholderId = Date.now()
+        const placeholder = { id: placeholderId, role: "assistant", content: "", reasoning: "", toolCalls: [], timestamp: new Date().toISOString(), routingInfo }
         setMessages(prev => [...prev, placeholder])
 
-        sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, activeTools, agentForCall, {
-          onDelta: (delta) => {
-            const currentMsg = { ...placeholder }
-            if (delta.reasoning) currentMsg.reasoning += delta.reasoning
-            if (delta.content) currentMsg.content += delta.content
-            Object.assign(placeholder, currentMsg)
-            setMessages(prev => prev.map(msg => (msg.id === placeholder.id ? { ...placeholder } : msg)))
-          },
-          onClose: () => setLoading(false),
-          onError: (err) => {
-            notifyError("A conexão de streaming falhou.")
-            setMessages(prev => prev.filter(msg => msg.id !== placeholder.id))
-            setLoading(false)
-          },
-          onSwitchAgent: () => {}
-        })
+        const streamGenerator = sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, activeTools, agentForCall)
+
+        for await (const event of streamGenerator) {
+          if (event.type === "DELTA") {
+            const { delta } = event
+            // 1. LÓGICA DE ATUALIZAÇÃO DE ESTADO MAIS ROBUSTA
+            // Em vez de mutar um placeholder externo, nós sempre operamos sobre o estado anterior (prevMessages)
+            // para criar um estado completamente novo. Isso evita bugs de "stale state".
+            setMessages(prevMessages =>
+              prevMessages.map(msg => {
+                if (msg.id === placeholderId) {
+                  const updatedMsg = { ...msg }
+                  if (delta.reasoning) updatedMsg.reasoning += delta.reasoning
+                  if (delta.content) updatedMsg.content += delta.content
+                  return updatedMsg
+                }
+                return msg
+              })
+            )
+          } else if (event.type === "ERROR") {
+            throw event.error
+          }
+        }
       } else {
         const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, agentForCall, activeTools)
 
@@ -90,10 +98,11 @@ const useMessage = (props) => {
         }
         return prev
       })
+    } finally {
       setLoading(false)
     }
   }, [
-    aiKey, aiProvider, model, freeModels, payModels, groqModels, activeTools, stream,
+    aiKey, aiProvider, model, freeModels, payModels, groqModels, activeTools, stream, selectedAgent,
     notifyError, notifyInfo, notifyWarning, setMessages, setSelectedAgent
   ])
 

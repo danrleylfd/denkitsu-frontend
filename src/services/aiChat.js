@@ -1,57 +1,63 @@
 import api from "./"
 
-const sendMessageStream = async (aiKey, aiProvider, model, models, messages, activeTools, mode, onDelta) => {
-  const finalPlugins = []
-  if (activeTools.has("web")) {
-    finalPlugins.push({ id: "web" })
-  }
-  const regularTools = Array.from(activeTools).filter(tool => tool !== "web")
-
-  const fullModel = models.find((item) => item.id === model)
-  const use_tools = (fullModel?.supports_tools && regularTools.length > 0) ? regularTools : undefined
-  const payload = { aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages, plugins: finalPlugins.length > 0 ? finalPlugins : undefined, use_tools, stream: true, mode }
-
+async function* sendMessageStream(aiKey, aiProvider, model, models, messages, activeTools, mode) {
+  const payload = { aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages, use_tools: Array.from(activeTools), stream: true, mode }
   const token = sessionStorage.getItem("@Denkitsu:token")
-  const headers = {
-    ...api.defaults.headers.common,
-    "Content-Type": "application/json",
-    authorization: `Bearer ${token}`
-  }
 
-  const response = await fetch(`${api.defaults.baseURL}/ai/chat/completions`, {
-    method: "POST",
-    headers,
-    body: JSON.stringify(payload)
-  })
-
-  if (!response.ok) {
-    const errorData = await response.json()
-    const errorToThrow = new Error("Erro na requisição de streaming da API.")
-    errorToThrow.response = { data: errorData }
-    throw errorToThrow
-  }
-
-  const reader = response.body.getReader()
-  const decoder = new TextDecoder("utf-8")
-  let done = false
-
-  while (!done) {
-    const { value, done: doneReading } = await reader.read()
-    done = doneReading
-    const chunk = decoder.decode(value)
-    chunk.split("\n").forEach((line) => {
-      if (line.startsWith("data: ")) {
-        const payload = line.replace("data: ", "")
-        if (payload === "[DONE]") return
-        try {
-          const json = JSON.parse(payload)
-          const delta = json.choices?.[0]?.delta
-          if (delta?.content || delta?.reasoning || delta?.tool_calls) onDelta(delta)
-        } catch (error) {
-          console.error("Error on sendMessageStream JSON.parse:", error)
-        }
-      }
+  try {
+    const response = await fetch(`${api.defaults.baseURL}/ai/chat/completions`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify(payload)
     })
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw { response: { data: errorData } }
+    }
+
+    const reader = response.body.getReader()
+    const decoder = new TextDecoder("utf-8")
+    let buffer = ""
+
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+
+      buffer += decoder.decode(value)
+      let boundary = buffer.indexOf("\n\n")
+
+      while (boundary !== -1) {
+        const chunk = buffer.substring(0, boundary)
+        buffer = buffer.substring(boundary + 2)
+
+        if (chunk.startsWith("event: SWITCH_AGENT")) {
+          const dataLine = chunk.split("\n").find(line => line.startsWith("data: "))
+          if (dataLine) {
+            const data = JSON.parse(dataLine.substring(6))
+            yield { type: "SWITCH_AGENT", agent: data.agent } // Entrega o evento de troca
+          }
+        } else if (chunk.startsWith("data: ")) {
+          const data = chunk.substring(6)
+          if (data !== "[DONE]") {
+            try {
+              const json = JSON.parse(data)
+              const delta = json.choices?.[0]?.delta
+              if (delta) yield { type: "DELTA", delta } // Entrega o pedaço de texto
+            } catch (error) {
+              console.error("Error parsing stream data chunk:", error)
+            }
+          }
+        }
+        boundary = buffer.indexOf("\n\n")
+      }
+    }
+  } catch (err) {
+    console.error("Error in sendMessageStream service:", err)
+    yield { type: "ERROR", error: err } // Entrega um evento de erro
   }
 }
 
