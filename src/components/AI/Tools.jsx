@@ -20,8 +20,8 @@ const AITools = ({ loading, toolsDoor }) => {
   useEffect(() => {
     const fetchDefinitions = async () => {
       try {
-        const definitions = await listTools()
-        setToolDefinitions(definitions)
+        const { data } = await listTools()
+        setToolDefinitions(data)
       } catch (error) {
         console.error("Failed to load tool definitions:", error)
       }
