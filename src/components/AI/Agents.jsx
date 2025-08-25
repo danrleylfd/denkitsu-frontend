@@ -18,7 +18,7 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
     const fetchDefinitions = async () => {
       try {
         const { data } = await listAgents()
-        setAgentsDefinitions({ backendAgents: data, customAgents: agents })
+        setAgentsDefinitions({ ...data, customAgents: agents })
       } catch (error) {
         console.error("Failed to load agent definitions:", error)
         setBuiltInAgents([])
