@@ -37,10 +37,10 @@ const AIMedia = ({ mediaDoor, onAddImage, loading, isImproving }) => {
       mb-1 py-2 gap-2 rounded-lg shadow-lg max-w-[95%]
       grid grid-cols-[repeat(auto-fit,minmax(2rem,1fr))] justify-center justify-items-center mx-auto`}
     >
-      <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={loading || isImproving}>
+      <Button $border={stream ? "outline" : "secondary"} variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={loading || isImproving}>
         <AudioWaveform size={16} />
       </Button>
-      <Button variant={autoScroll ? "outline" : "secondary"} size="icon" $rounded title="Rolagem Automática" onClick={toggleAutoScroll} disabled={loading || isImproving}>
+      <Button $border={autoScroll ? "outline" : "secondary"} variant={autoScroll ? "outline" : "secondary"} size="icon" $rounded title="Rolagem Automática" onClick={toggleAutoScroll} disabled={loading || isImproving}>
         <Mouse size={16} />
       </Button>
       <Button variant="secondary" size="icon" $rounded title="Adicionar imagem" onClick={onAddImage} disabled={isImageSupported === false || aiProvider === "groq" || loading || isImproving}>
