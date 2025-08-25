@@ -33,7 +33,7 @@ const AIMessage = ({ msg, user, toggleLousa, loading, onRegenerate, isLastMessag
         {msg.toolCalls.map((call) => (
           <div key={call.index || call.name} className="flex items-center gap-2 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
             {hasContentStarted ? <CheckCircle size={14} className="text-green-base" /> : <Wrench size={14} className="animate-spin-fast" />}
-            <span>{hasContentStarted ? "O Agente usou a ferramenta" : "O Agente está usando a ferramenta"} <strong>{call.name}</strong></span>
+            <span>{hasContentStarted ? "O Agente usou a ferramenta" : "O Agente está pegando a ferramenta"} <strong>{call.name}</strong></span>
           </div>
         ))}
       </div>
