@@ -8,7 +8,7 @@ const Button = forwardRef(({
   size = "sm",
   $rounded = false,
   $squared = false,
-  border = undefined,
+  $border = "secondary",
   loading = false,
   disabled = false,
   className,
@@ -37,10 +37,11 @@ const Button = forwardRef(({
     lg: "h-10 px-8 text-base"
   }
   const getBorderClasses = () => {
-    if ($rounded) return "rounded-full"
-    if ($squared) return "rounded-md"
-    if (border && border === "outline") return "border-primary-base"
-    return "rounded-none"
+    let borderClasses = []
+    if ($rounded && !$squared) borderClasses.push("rounded-full")
+    if ($squared && !$rounded) borderClasses.push("rounded-md")
+    if ($border === "outline") borderClasses.push("border-primary-base")
+    return borderClasses.join(" ")
   }
   return (
     <button

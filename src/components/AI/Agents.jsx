@@ -38,6 +38,7 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
       {agentsDefinitions.backendAgents.map(({ name, Icon, description }) => (
         <Button
           key={name}
+          $border={selectedAgent === name ? "outline" : "secondary"}
           variant={selectedAgent === name ? "outline" : "secondary"}
           size="icon"
           $rounded
@@ -52,6 +53,7 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
       {agentsDefinitions.customAgents.map(({ name, Icon, description }) => (
         <Button
           key={name}
+          $border={selectedAgent === name ? "outline" : "secondary"}
           variant={selectedAgent === name ? "outline" : "secondary"}
           size="icon"
           $rounded

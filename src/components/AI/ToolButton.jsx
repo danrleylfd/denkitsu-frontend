@@ -39,6 +39,7 @@ const ToolButton = ({
 
   return (
     <Button
+      $border={selectedAgent === name ? "outline" : "secondary"}
       variant={isActive ? "outline" : "secondary"}
       size="icon"
       $rounded
