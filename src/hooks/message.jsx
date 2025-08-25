@@ -33,24 +33,24 @@ const useMessage = (props) => {
       setLoading(false)
       return
     }
+
     setLoading(true)
     const apiMessages = historyToProcess.map(({ role, content }) =>
       Array.isArray(content)
         ? { role, content: content.map(item => (item.type === "text" ? { type: "text", text: item.content } : item)) }
         : { role, content }
     )
+
     try {
       const isRouterPass = agentForCall === "Roteador"
-      if (stream && isRouterPass) {
-        notifyWarning("Roteador de Agentes não suporta streaming. Usando modo padrão.")
-      }
       const shouldUseStream = stream && !isRouterPass
+
       if (shouldUseStream) {
         const placeholder = { id: Date.now(), role: "assistant", content: "", reasoning: "", toolCalls: [], timestamp: new Date().toISOString(), routingInfo }
         setMessages(prev => [...prev, placeholder])
+
         sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, activeTools, agentForCall, {
           onDelta: (delta) => {
-            console.log("veio aqui")
             const currentMsg = { ...placeholder }
             if (delta.reasoning) currentMsg.reasoning += delta.reasoning
             if (delta.content) currentMsg.content += delta.content
@@ -67,6 +67,7 @@ const useMessage = (props) => {
         })
       } else {
         const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, agentForCall, activeTools)
+
         if (isRouterPass && data.next_action?.type === "SWITCH_AGENT") {
           const newAgent = data.next_action.agent
           setSelectedAgent(newAgent)
@@ -74,7 +75,7 @@ const useMessage = (props) => {
         } else {
           const assistantMessage = createAssistantMessage(data, routingInfo)
           if (assistantMessage) {
-            setMessages([...historyToProcess, assistantMessage])
+            setMessages(prev => [...prev, assistantMessage])
           }
           setLoading(false)
         }
@@ -83,16 +84,16 @@ const useMessage = (props) => {
       if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
       else notifyError("Falha na comunicação com o servidor de IA.")
       setMessages(prev => {
-        const lastMessage = prev[prev.length - 1]
-        if (lastMessage && lastMessage.role === 'user' && lastMessage.timestamp === historyToProcess[historyToProcess.length - 1].timestamp){
-          return prev.slice(0, -1)
+        const lastUserMessageInHistory = historyToProcess.findLast(m => m.role === 'user')
+        if (lastUserMessageInHistory && prev.some(m => m.timestamp === lastUserMessageInHistory.timestamp)) {
+          return prev.filter(m => m.timestamp !== lastUserMessageInHistory.timestamp)
         }
         return prev
       })
       setLoading(false)
     }
   }, [
-    aiKey, aiProvider, model, freeModels, payModels, groqModels, activeTools, stream, selectedAgent,
+    aiKey, aiProvider, model, freeModels, payModels, groqModels, activeTools, stream,
     notifyError, notifyInfo, notifyWarning, setMessages, setSelectedAgent
   ])
 
