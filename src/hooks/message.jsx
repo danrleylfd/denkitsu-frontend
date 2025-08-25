@@ -55,15 +55,26 @@ const useMessage = (props) => {
         for await (const event of streamGenerator) {
           if (event.type === "DELTA") {
             const { delta } = event
-            // 1. LÓGICA DE ATUALIZAÇÃO DE ESTADO MAIS ROBUSTA
-            // Em vez de mutar um placeholder externo, nós sempre operamos sobre o estado anterior (prevMessages)
-            // para criar um estado completamente novo. Isso evita bugs de "stale state".
             setMessages(prevMessages =>
               prevMessages.map(msg => {
                 if (msg.id === placeholderId) {
                   const updatedMsg = { ...msg }
                   if (delta.reasoning) updatedMsg.reasoning += delta.reasoning
                   if (delta.content) updatedMsg.content += delta.content
+                  if (delta.tool_calls) {
+                    delta.tool_calls.forEach(toolCallChunk => {
+                      const index = toolCallChunk.index
+                      if (!updatedMsg.toolCalls[index]) {
+                        updatedMsg.toolCalls[index] = { name: "", arguments: "" }
+                      }
+                      if (toolCallChunk.function.name) {
+                        updatedMsg.toolCalls[index].name = toolCallChunk.function.name
+                      }
+                      if (toolCallChunk.function.arguments) {
+                        updatedMsg.toolCalls[index].arguments += toolCallChunk.function.arguments
+                      }
+                    })
+                  }
                   return updatedMsg
                 }
                 return msg
