@@ -82,7 +82,7 @@ const AITools = ({ loading, toolsDoor }) => {
           <DynamicIcon name={Icon} size={16} />
         </ToolButton>
       ))}
-      {((internalTools.length > 0 || backendTools.length > 0) && userTools.length > 0) && <Separator />}
+      {((internalTools.length > 0 || backendTools.length > 0) && customTools.length > 0) && <Separator />}
       {customTools.map(({ name, title, Icon, isDisabled }) => (
         <ToolButton key={name} toolKey={name} title={title} onToggle={handleToolToggle} disabled={isDisabled}>
           <DynamicIcon name={Icon} size={16} />
