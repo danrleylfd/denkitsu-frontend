@@ -29,7 +29,7 @@ const AITools = ({ loading, toolsDoor }) => {
     fetchDefinitions()
   }, [])
 
-  const { internalTools, backendTools, userTools } = useMemo(() => {
+  const { internalTools, backendTools, customTools } = useMemo(() => {
     const allModels = [...freeModels, ...payModels, ...groqModels]
     const selectedModel = allModels.find(m => m.id === model)
     const processTool = (tool) => {
@@ -56,7 +56,7 @@ const AITools = ({ loading, toolsDoor }) => {
     return {
       internalTools: toolDefinitions.internalTools.map(processTool),
       backendTools: toolDefinitions.backendTools.map(processTool),
-      customTools: tools.map(tool => ({
+      customTools: toolDefinitions.customTools.map(tool => ({
         ...tool,
         isDisabled: loading || aiKey.length === 0 || !selectedModel?.supports_tools
       }))
@@ -83,7 +83,7 @@ const AITools = ({ loading, toolsDoor }) => {
         </ToolButton>
       ))}
       {((internalTools.length > 0 || backendTools.length > 0) && userTools.length > 0) && <Separator />}
-      {userTools.map(({ name, title, Icon, isDisabled }) => (
+      {customTools.map(({ name, title, Icon, isDisabled }) => (
         <ToolButton key={name} toolKey={name} title={title} onToggle={handleToolToggle} disabled={isDisabled}>
           <DynamicIcon name={Icon} size={16} />
         </ToolButton>
