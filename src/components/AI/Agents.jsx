@@ -12,14 +12,13 @@ import DynamicIcon from "../DynamicIcon"
 
 const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
   if (!agentsDoor) return null
-  const { agents: customAgents } = useAgents()
-  const [builtInAgents, setBuiltInAgents] = useState([])
+  const { agents } = useAgents()
+  const [agentsDefinitions, setAgentsDefinitions] = useState({ backendAgents: [], customAgents: [] })
   useEffect(() => {
     const fetchDefinitions = async () => {
       try {
         const { data } = await listAgents()
-        console.log(data)
-        setBuiltInAgents(data)
+        setAgentsDefinitions({ backendAgents: data, customAgents: agents })
       } catch (error) {
         console.error("Failed to load agent definitions:", error)
         setBuiltInAgents([])
@@ -36,7 +35,7 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
       mb-1 py-2 gap-2 rounded-lg shadow-lg max-w-[95%]
       flex flex-wrap items-center justify-center mx-auto`}
     >
-      {builtInAgents.map(({ name, Icon, description }) => (
+      {agentsDefinitions.backendAgents.map(({ name, Icon, description }) => (
         <Button
           key={name}
           variant={selectedAgent === name ? "outline" : "secondary"}
@@ -49,8 +48,8 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
           <DynamicIcon name={Icon} size={16} />
         </Button>
       ))}
-      {builtInAgents.length > 0 && customAgents.length > 0 && <Separator />}
-      {customAgents.map(({ name, Icon, description }) => (
+      {agentsDefinitions.backendAgents.length > 0 && agentsDefinitions.customAgents.length > 0 && <Separator />}
+      {agentsDefinitions.customAgents.map(({ name, Icon, description }) => (
         <Button
           key={name}
           variant={selectedAgent === name ? "outline" : "secondary"}
