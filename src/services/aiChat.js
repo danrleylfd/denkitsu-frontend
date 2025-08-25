@@ -3,7 +3,6 @@ import api from "./"
 async function* sendMessageStream(aiKey, aiProvider, model, models, messages, activeTools, mode) {
   const payload = { aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages, use_tools: Array.from(activeTools), stream: true, mode }
   const token = sessionStorage.getItem("@Denkitsu:token")
-
   try {
     const response = await fetch(`${api.defaults.baseURL}/ai/chat/completions`, {
       method: "POST",
@@ -13,27 +12,21 @@ async function* sendMessageStream(aiKey, aiProvider, model, models, messages, ac
       },
       body: JSON.stringify(payload)
     })
-
     if (!response.ok) {
       const errorData = await response.json()
       throw { response: { data: errorData } }
     }
-
     const reader = response.body.getReader()
     const decoder = new TextDecoder("utf-8")
     let buffer = ""
-
     while (true) {
       const { done, value } = await reader.read()
       if (done) break
-
       buffer += decoder.decode(value)
       let boundary = buffer.indexOf("\n\n")
-
       while (boundary !== -1) {
         const chunk = buffer.substring(0, boundary)
         buffer = buffer.substring(boundary + 2)
-
         if (chunk.startsWith("event: SWITCH_AGENT")) {
           const dataLine = chunk.split("\n").find(line => line.startsWith("data: "))
           if (dataLine) {
@@ -46,7 +39,7 @@ async function* sendMessageStream(aiKey, aiProvider, model, models, messages, ac
             try {
               const json = JSON.parse(data)
               const delta = json.choices?.[0]?.delta
-              if (delta) yield { type: "DELTA", delta } // Entrega o pedaço de texto
+              if (delta) yield { type: "DELTA", delta }
             } catch (error) {
               console.error("Error parsing stream data chunk:", error)
             }
@@ -57,7 +50,7 @@ async function* sendMessageStream(aiKey, aiProvider, model, models, messages, ac
     }
   } catch (err) {
     console.error("Error in sendMessageStream service:", err)
-    yield { type: "ERROR", error: err } // Entrega um evento de erro
+    yield { type: "ERROR", error: err }
   }
 }
 
