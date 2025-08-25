@@ -1,5 +1,5 @@
 import { memo } from "react"
-import { UserRound, Wrench, CheckCircle, Route } from "lucide-react" // Adicionar Route
+import { UserRound, Wrench, CheckCircle, Route } from "lucide-react"
 import AIReactions from "./Reactions"
 import Markdown from "../Markdown"
 import Button from "../Button"
@@ -64,14 +64,11 @@ const AIMessage = ({ msg, user, toggleLousa, loading, onRegenerate, isLastMessag
             </div>
           </div>
         )}
-
         {hasContentStarted
           ? (<>{ReasoningBlock}{ToolCallBlock}</>)
           : (<>{ToolCallBlock}{ReasoningBlock}</>)
         }
-
         {loading && !hasContentStarted && msg.toolCalls?.length === 0 ? <Button variant="outline" size="icon" $rounded loading={true} disabled /> : renderContent()}
-
         {msg.timestamp && (
           <small className="ml-auto pl-2 text-xs text-lightFg-secondary dark:text-darkFg-secondary whitespace-nowrap">
             {new Date(msg.timestamp).toLocaleString("pt-BR")}
