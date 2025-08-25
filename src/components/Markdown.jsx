@@ -34,9 +34,12 @@ const [collapsed, setCollapsed] = useState((think && !loading))
   return (
     <div className={containerClass}>
       {think && (
-        <Button variant="secondary" size="icon" $rounded onClick={toggleCollapse}>
-          {collapsed ? <Maximize2 size={16}/> : <Minimize2 size={16}/>}
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="secondary" size="icon" $rounded onClick={toggleCollapse}>
+            {collapsed ? <Maximize2 size={16}/> : <Minimize2 size={16}/>}
+          </Button>
+          <span>Pensamentos de Denkitsu...</span>
+        </div>
       )}
       {!collapsed && (
         <ReactMarkdown
