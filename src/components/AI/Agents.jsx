@@ -19,6 +19,7 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
       try {
         const { data: definitions = [] } = await listAgents()
         setBuiltInAgents(definitions)
+        console.log(builtInAgents[0])
       } catch (error) {
         console.error("Failed to load agent definitions:", error)
         setBuiltInAgents([])
