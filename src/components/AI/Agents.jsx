@@ -20,7 +20,6 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
         const { data } = await listAgents()
         console.log(data)
         setBuiltInAgents(data)
-        console.log(builtInAgents[0])
       } catch (error) {
         console.error("Failed to load agent definitions:", error)
         setBuiltInAgents([])
@@ -42,7 +41,7 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
       mb-1 py-2 gap-2 rounded-lg shadow-lg max-w-[95%]
       flex flex-wrap items-center justify-center mx-auto`}
     >
-      {builtInAgents.map(({ name, Icon, description, isCustom }) => (
+      {builtInAgents.map(({ name, Icon, description }) => (
         <Button
           key={name}
           variant={selectedAgent === name ? "outline" : "secondary"}
@@ -52,11 +51,11 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
           onClick={() => onSelectAgent(name)}
           disabled={loading}
         >
-          {isCustom ? <DynamicIcon name={Icon} size={16} /> : <Icon size={16} />}
+          {<DynamicIcon name={Icon} size={16} />}
         </Button>
       ))}
       {builtInAgents.length > 0 && customAgents.length > 0 && <Separator />}
-      {customAgents.map(({ name, Icon, description, isCustom }) => (
+      {customAgents.map(({ name, Icon, description }) => (
         <Button
           key={name}
           variant={selectedAgent === name ? "outline" : "secondary"}
@@ -66,7 +65,7 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
           onClick={() => onSelectAgent(name)}
           disabled={loading}
         >
-          {isCustom ? <DynamicIcon name={Icon} size={16} /> : <Icon size={16} />}
+          {<DynamicIcon name={Icon} size={16} />}
         </Button>
       ))}
     </Paper>
