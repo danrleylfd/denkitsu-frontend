@@ -50,6 +50,7 @@ const useMessage = (props) => {
         setMessages(prev => [...prev, placeholder])
         sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, activeTools, agentForCall, {
           onDelta: (delta) => {
+            console.log("veio aqui")
             const currentMsg = { ...placeholder }
             if (delta.reasoning) currentMsg.reasoning += delta.reasoning
             if (delta.content) currentMsg.content += delta.content
