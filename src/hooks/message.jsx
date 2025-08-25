@@ -46,19 +46,17 @@ const useMessage = (props) => {
         const placeholderId = Date.now()
         const placeholder = { id: placeholderId, role: "assistant", content: "", reasoning: "", toolCalls: [], timestamp: new Date().toISOString(), routingInfo }
         setMessages(prev => [...prev, placeholder])
-
         const streamGenerator = sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, activeTools, agentForCall)
-
         for await (const event of streamGenerator) {
-          if (event.type === "SWITCH_AGENT") {
-            setSelectedAgent(event.agent)
-            const routingInfoForPlaceholder = { routedTo: event.agent }
-            setMessages(prev => prev.map(msg =>
-              msg.id === placeholderId
-                ? { ...msg, routingInfo: routingInfoForPlaceholder }
-                : msg
-            ))
-          } else if (event.type === "DELTA") {
+        if (event.type === "SWITCH_AGENT") {
+          setSelectedAgent(event.agent)
+          const routingInfoForPlaceholder = { routedTo: event.agent }
+          setMessages(prev => prev.map(msg =>
+            msg.id === placeholderId
+              ? { ...msg, routingInfo: routingInfoForPlaceholder, content: "", reasoning: "" }
+              : msg
+          ))
+        } else if (event.type === "DELTA") {
             const { delta } = event
             setMessages(prevMessages =>
               prevMessages.map(msg => {
