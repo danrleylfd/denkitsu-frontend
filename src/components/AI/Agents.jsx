@@ -1,4 +1,8 @@
-import { AGENTS_DEFINITIONS } from "../../constants/agents"
+import { useState, useEffect } from "react"
+
+// import { AGENTS_DEFINITIONS } from "../../constants/agents"
+
+import { listAgents } from "../../services/aiChat"
 
 import { useAgents } from "../../contexts/AgentContext"
 
@@ -9,11 +13,22 @@ import DynamicIcon from "../DynamicIcon"
 const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
   if (!agentsDoor) return null
   const { agents } = useAgents()
-  const builtInAgents = AGENTS_DEFINITIONS.map(agent => ({ ...agent, isCustom: false }))
+  const [builtInAgents, setBuiltInAgents] = useState([])
+  useEffect(() => {
+    const fetchDefinitions = async () => {
+      try {
+        const { data: definitions = [] } = await listAgents()
+        setBuiltInAgents(definitions)
+      } catch (error) {
+        console.error("Failed to load agent definitions:", error)
+        setBuiltInAgents([])
+      }
+    }
+    fetchDefinitions()
+  }, [])
+  // const builtInAgents = AGENTS_DEFINITIONS.map(agent => ({ ...agent, isCustom: false }))
   const customAgents = agents.map(agent => ({
-    value: agent.name,
-    Icon: agent.icon,
-    description: agent.description,
+    ...agent,
     isCustom: true
   }))
 
@@ -38,15 +53,15 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
           {isCustom ? <DynamicIcon name={Icon} size={16} /> : <Icon size={16} />}
         </Button>
       ))}
-      {builtInAgents.length > 0 && customAgents.length > 0 && <Separator />}
-      {customAgents.map(({ value, Icon, description, isCustom }) => (
+      {/* {builtInAgents.length > 0 && customAgents.length > 0 && <Separator />} */}
+      {customAgents.map(({ name, Icon, description, isCustom }) => (
         <Button
-          key={value}
-          variant={selectedAgent === value ? "outline" : "secondary"}
+          key={name}
+          variant={selectedAgent === name ? "outline" : "secondary"}
           size="icon"
           $rounded
-          title={`${value}: ${description}`}
-          onClick={() => onSelectAgent(value)}
+          title={`${name}: ${description}`}
+          onClick={() => onSelectAgent(name)}
           disabled={loading}
         >
           {isCustom ? <DynamicIcon name={Icon} size={16} /> : <Icon size={16} />}

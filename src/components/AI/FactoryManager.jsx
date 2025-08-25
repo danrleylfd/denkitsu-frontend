@@ -13,7 +13,7 @@ import IconPickerInput from "../IconPickerInput"
 const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
   const [formData, setFormData] = useState({
     name: agent?.name || "",
-    icon: agent?.icon || "Bot",
+    Icon: agent?.Icon || "Bot",
     description: agent?.description || "",
     prompt: {
       goal: agent?.prompt?.goal || "",
@@ -49,8 +49,8 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
         </div>
 
         <IconPickerInput
-          value={formData.icon}
-          onChange={(value) => handleChange("icon", value)}
+          value={formData.Icon}
+          onChange={(value) => handleChange("Icon", value)}
           disabled={loading}
         />
 
@@ -112,7 +112,7 @@ const AgentList = memo(({ agents, onCreate, onEdit, onDelete, canCreate }) => (
                 className="w-full text-left p-3 rounded-md transition-colors flex justify-between items-center group hover:bg-lightBg-tertiary dark:hover:bg-darkBg-secondary"
               >
                 <div className="flex items-center gap-3 flex-1 min-w-0">
-                  <DynamicIcon name={agent.icon} className="text-primary-base flex-shrink-0" size={20} />
+                  <DynamicIcon name={agent.Icon} className="text-primary-base flex-shrink-0" size={20} />
                   <div className="flex-1 min-w-0">
                     <p className="font-bold text-lightFg-primary dark:text-darkFg-primary truncate">{agent.name}</p>
                     <p className="text-xs text-lightFg-tertiary dark:text-darkFg-tertiary truncate">{agent.description}</p>
@@ -143,9 +143,9 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
   useEffect(() => {
     setFormData({
       name: tool?.name || "",
-      alias: tool?.alias || "",
+      title: tool?.title || "",
       description: tool?.description || "",
-      icon: tool?.icon || "PocketKnife",
+      Icon: tool?.Icon || "PocketKnife",
       method: tool?.httpConfig?.method || "GET",
       url: tool?.httpConfig?.url || "",
       parameters: JSON.stringify(tool?.parameters || { type: "object", properties: {}, required: [] }, null, 2),
@@ -165,8 +165,8 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
       const toolData = {
         name: formData.name,
         description: formData.description,
-        alias: formData.alias,
-        icon: formData.icon,
+        title: formData.title,
+        Icon: formData.Icon,
         parameters: JSON.parse(formData.parameters),
         httpConfig: {
           method: formData.method,
@@ -192,11 +192,11 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
       </div>
       <div className="flex-grow overflow-y-auto pr-2 flex flex-col gap-4">
         <div>
-          <Input placeholder="Apelido da Ferramenta (ex: Buscar CEP)" value={formData.alias} onChange={(e) => handleChange("alias", e.target.value)} disabled={loading} />
+          <Input placeholder="Apelido da Ferramenta (ex: Buscar CEP)" value={formData.title} onChange={(e) => handleChange("title", e.target.value)} disabled={loading} />
           <Input placeholder="Nome Técnico (ex: cepTool)" value={formData.name} onChange={(e) => handleChange("name", e.target.value)} disabled={loading} />
           <IconPickerInput
-            value={formData.icon}
-            onChange={(value) => handleChange("icon", value)}
+            value={formData.Icon}
+            onChange={(value) => handleChange("Icon", value)}
             disabled={loading}
           />
         </div>
@@ -266,10 +266,10 @@ const ToolList = memo(({ tools, onCreate, onEdit, onDelete, canCreate }) => (
                   className="w-full text-left p-3 rounded-md transition-colors flex justify-between items-center group hover:bg-lightBg-tertiary dark:hover:bg-darkBg-secondary"
                 >
                   <div className="flex items-center gap-3 flex-1 min-w-0">
-                    <DynamicIcon name={tool.icon || "PocketKnife"} className="text-primary-base flex-shrink-0" size={20} />
+                    <DynamicIcon name={tool.Icon || "PocketKnife"} className="text-primary-base flex-shrink-0" size={20} />
                     <div className="flex-1 min-w-0">
-                      <p className="font-bold text-lightFg-primary dark:text-darkFg-primary truncate">{tool.alias || tool.name}</p>
-                      {tool.alias && <p className="text-xs font-mono text-lightFg-tertiary dark:text-darkFg-tertiary truncate">{tool.description}</p>}
+                      <p className="font-bold text-lightFg-primary dark:text-darkFg-primary truncate">{tool.title || tool.name}</p>
+                      {tool.title && <p className="text-xs font-mono text-lightFg-tertiary dark:text-darkFg-tertiary truncate">{tool.description}</p>}
                     </div>
                   </div>
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 pl-2">
@@ -374,7 +374,7 @@ const AIFactoryManager = ({ factoryManagerDoor, toggleFactoryManagerDoor }) => {
   }
 
   const handleToolDelete = async (tool) => {
-    if (window.confirm(`Tem certeza que deseja excluir a ferramenta "${tool.alias || tool.name}"?`)) {
+    if (window.confirm(`Tem certeza que deseja excluir a ferramenta "${tool.title || tool.name}"?`)) {
       try {
         await removeTool(tool._id)
         notifyInfo("Ferramenta excluída com sucesso!")

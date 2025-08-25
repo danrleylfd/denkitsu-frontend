@@ -40,12 +40,10 @@ const AITools = ({ loading, toolsDoor }) => {
     }
     const nativeTools = TOOL_DEFINITIONS.map(processTool)
     return {
-      internalTools: nativeTools.filter(t => internalToolKeys.has(t.key)),
-      backendTools: nativeTools.filter(t => !internalToolKeys.has(t.key)),
+      internalTools: nativeTools.filter(t => internalToolKeys.has(t.name)),
+      backendTools: nativeTools.filter(t => !internalToolKeys.has(t.name)),
       userTools: customTools.map(tool => ({
-        key: tool.name,
-        title: tool.alias || tool.name,
-        Icon: tool.icon || "PocketKnife",
+        ...tool,
         isCustom: true,
         isDisabled: loading || aiKey.length === 0 || !selectedModel?.supports_tools
       }))
@@ -60,20 +58,20 @@ const AITools = ({ loading, toolsDoor }) => {
       mb-1 py-2 gap-2 rounded-lg shadow-lg max-w-[95%]
       flex flex-wrap items-center justify-center mx-auto`}
     >
-      {internalTools.map(({ key, title, Icon, isDisabled }) => (
-        <ToolButton key={key} toolKey={key} title={title} onToggle={handleToolToggle} disabled={isDisabled}>
+      {internalTools.map(({ name, title, Icon, isDisabled }) => (
+        <ToolButton key={name} toolKey={name} title={title} onToggle={handleToolToggle} disabled={isDisabled}>
           <Icon size={16} />
         </ToolButton>
       ))}
       {(internalTools.length > 0 && backendTools.length > 0) && <Separator />}
-      {backendTools.map(({ key, title, Icon, isDisabled }) => (
-        <ToolButton key={key} toolKey={key} title={title} onToggle={handleToolToggle} disabled={isDisabled}>
+      {backendTools.map(({ name, title, Icon, isDisabled }) => (
+        <ToolButton key={name} toolKey={name} title={title} onToggle={handleToolToggle} disabled={isDisabled}>
           <Icon size={16} />
         </ToolButton>
       ))}
       {(backendTools.length > 0 && userTools.length > 0) && <Separator />}
-      {userTools.map(({ key, title, Icon, isCustom, isDisabled }) => (
-        <ToolButton key={key} toolKey={key} title={title} onToggle={handleToolToggle} disabled={isDisabled}>
+      {userTools.map(({ name, title, Icon, isCustom, isDisabled }) => (
+        <ToolButton key={name} toolKey={name} title={title} onToggle={handleToolToggle} disabled={isDisabled}>
           {isCustom ? <DynamicIcon name={Icon} size={16} /> : <Icon size={16} />}
         </ToolButton>
       ))}

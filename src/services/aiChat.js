@@ -107,6 +107,24 @@ const getModels = async () => {
   }
 }
 
+const listAgents = async () => {
+  try {
+    return await api.get("/ai/agents")
+  } catch (error) {
+    console.error("Error on getAgentDefinitions:", error.response?.data?.error?.message || error.message)
+    throw error
+  }
+}
+
+const listTools = async () => {
+  try {
+    return await api.get("/ai/tools")
+  } catch (error) {
+    console.error("Error on getToolDefinitions:", error.response?.data?.error?.message || error.message)
+    throw error
+  }
+}
+
 const generateNews = async (searchTerm, aiProvider) => {
   try {
     const { data } = await api.post("/news/generate", { searchTerm, aiProvider })
@@ -117,4 +135,4 @@ const generateNews = async (searchTerm, aiProvider) => {
   }
 }
 
-export { sendMessageStream, sendMessage, getModels, getPrompt, generateNews }
+export { sendMessageStream, sendMessage, getPrompt, getModels, listAgents, listTools, generateNews }
