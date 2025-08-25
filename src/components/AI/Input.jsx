@@ -5,7 +5,7 @@ const AIInput = ({
   className,
   disabled,
   rows = 1,
-  maxLength = 2048,
+  maxLength = 4096,
   suggestions = ["#browser ","#duckduckgo ","#http ","#cripto ","#nasa ","#arquivosnasa ","#asteroides ","#terra ","#marte ","#climaespaço ","#climamarte ","#notícias ","#clima ","wikipedia ","#cinema ","#jogos ","#albion ","#genshin ","#pokédex "],
   value: externalValue,
   onChange: externalOnChange,
