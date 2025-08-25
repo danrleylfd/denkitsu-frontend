@@ -40,20 +40,20 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
       mb-1 py-2 gap-2 rounded-lg shadow-lg max-w-[95%]
       flex flex-wrap items-center justify-center mx-auto`}
     >
-      {builtInAgents.map(({ value, Icon, description, isCustom }) => (
+      {builtInAgents.map(({ name, Icon, description, isCustom }) => (
         <Button
-          key={value}
-          variant={selectedAgent === value ? "outline" : "secondary"}
+          key={name}
+          variant={selectedAgent === name ? "outline" : "secondary"}
           size="icon"
           $rounded
-          title={`${value}: ${description}`}
-          onClick={() => onSelectAgent(value)}
+          title={`${name}: ${description}`}
+          onClick={() => onSelectAgent(name)}
           disabled={loading}
         >
           {isCustom ? <DynamicIcon name={Icon} size={16} /> : <Icon size={16} />}
         </Button>
       ))}
-      {/* {builtInAgents.length > 0 && customAgents.length > 0 && <Separator />} */}
+      {builtInAgents.length > 0 && customAgents.length > 0 && <Separator />}
       {customAgents.map(({ name, Icon, description, isCustom }) => (
         <Button
           key={name}
