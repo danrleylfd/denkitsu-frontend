@@ -18,7 +18,7 @@ const Button = forwardRef(({
   const variantClasses = {
     primary: "border-solid bg-primary-base hover:bg-primary-light active:bg-primary-dark text-white transform transition-transform hover:scale-105 active:scale-95",
     mic: "bg-red-base hover:bg-red-light active:bg-red-dark text-white transform transition-transform hover:scale-105 active:scale-95",
-    secondary: "border border-solid bg-transparent hover:bg-lightBtnBg-light active:bg-lightBtnBg-dark dark:hover:bg-darkBtnBg-light dark:active:bg-darkBtnBg-dark text-lightFg-primary dark:text-darkFg-primary  transform transition-transform hover:scale-105 active:scale-95 transform transition-transform hover:scale-105 active:scale-95",
+    secondary: "border border-solid border-transparent bg-transparent hover:bg-lightBtnBg-light active:bg-lightBtnBg-dark dark:hover:bg-darkBtnBg-light dark:active:bg-darkBtnBg-dark text-lightFg-primary dark:text-darkFg-primary  transform transition-transform hover:scale-105 active:scale-95 transform transition-transform hover:scale-105 active:scale-95",
     outline: "border border-solid border-primary-base bg-transparent hover:bg-primary-light active:bg-primary-dark text-primary-base hover:text-white active:text-white transform transition-transform hover:scale-105 active:scale-95",
     info: "border border-solid border-blue-base bg-transparent hover:bg-blue-light active:bg-blue-dark text-blue-base hover:text-white active:text-white transform transition-transform hover:scale-105 active:scale-95",
     success: "border border-solid border-green-base bg-transparent hover:bg-green-light active:bg-green-dark text-green-base hover:text-white active:text-white transform transition-transform hover:scale-105 active:scale-95",
