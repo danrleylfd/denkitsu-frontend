@@ -43,7 +43,7 @@ const AIMessage = ({ msg, user, toggleLousa, loading, onRegenerate, isLastMessag
           <div className="my-2 p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md">
             <div className="flex items-center gap-2 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
               <Route size={14} className="text-primary-base" />
-              <span>Roteador direcionou para: <strong>{msg.routingInfo.routedTo}</strong></span>
+              <span>Denkitsu escolheu o agente <strong>{msg.routingInfo.routedTo}</strong></span>
             </div>
           </div>
         )}
@@ -57,7 +57,7 @@ const AIMessage = ({ msg, user, toggleLousa, loading, onRegenerate, isLastMessag
                     ? <CheckCircle size={14} className="text-green-base" />
                     : <Wrench size={14} className="animate-spin-fast" />
                   }
-                  <span>{hasContentStarted ? 'Ferramenta usada:' : 'Usando a ferramenta'} <strong>{call.name}</strong></span>
+                  <span>{hasContentStarted ? 'Denkitsu usou a ferramenta' : 'Usando a ferramenta'} <strong>{call.name}</strong></span>
                 </div>
               ))}
             </div>
