@@ -46,7 +46,7 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
           onClick={() => onSelectAgent(name)}
           disabled={loading}
         >
-          {<DynamicIcon name={Icon} size={16} />}
+          <DynamicIcon name={Icon} size={16} />
         </Button>
       ))}
       {builtInAgents.length > 0 && customAgents.length > 0 && <Separator />}
@@ -60,7 +60,7 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
           onClick={() => onSelectAgent(name)}
           disabled={loading}
         >
-          {<DynamicIcon name={Icon} size={16} />}
+          <DynamicIcon name={Icon} size={16} />
         </Button>
       ))}
     </Paper>

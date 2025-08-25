@@ -1,9 +1,10 @@
-import { useMemo } from "react"
+// src/components/AI/AITools.jsx
+
+import { useMemo, useState, useEffect } from "react"
 
 import { useAI } from "../../contexts/AIContext"
 import { useTools } from "../../contexts/ToolContext"
-
-import { TOOL_DEFINITIONS } from "../../constants/tools"
+import { listTools } from "../../services/aiChat"
 
 import Paper from "../Paper"
 import ToolButton from "./ToolButton"
@@ -11,17 +12,32 @@ import DynamicIcon from "../DynamicIcon"
 
 const AITools = ({ loading, toolsDoor }) => {
   if (!toolsDoor) return null
+
   const { aiProvider, aiKey, model, handleToolToggle, freeModels, payModels, groqModels } = useAI()
   const { tools: customTools } = useTools()
+  const [toolDefinitions, setToolDefinitions] = useState({ internalTools: [], backendTools: [] })
+
+  useEffect(() => {
+    const fetchDefinitions = async () => {
+      try {
+        const definitions = await listTools()
+        setToolDefinitions(definitions)
+      } catch (error) {
+        console.error("Failed to load tool definitions:", error)
+      }
+    }
+    fetchDefinitions()
+  }, [])
+
   const { internalTools, backendTools, userTools } = useMemo(() => {
     const allModels = [...freeModels, ...payModels, ...groqModels]
     const selectedModel = allModels.find(m => m.id === model)
-    const internalToolKeys = new Set(["web", "browser_search", "code_interpreter"])
+
     const processTool = (tool) => {
       let isDisabled = loading
       const isCompoundModel = model?.startsWith("compound-")
       const isGptOssModel = model?.startsWith("openai/gpt-oss-")
-      switch (tool.key) {
+      switch (tool.name) {
         case "web":
           if (aiProvider === "groq") isDisabled = isDisabled || !isCompoundModel
           else isDisabled = isDisabled || aiKey.length === 0 || !selectedModel?.supports_tools
@@ -38,17 +54,16 @@ const AITools = ({ loading, toolsDoor }) => {
       }
       return { ...tool, isDisabled }
     }
-    const nativeTools = TOOL_DEFINITIONS.map(processTool)
+
     return {
-      internalTools: nativeTools.filter(t => internalToolKeys.has(t.name)),
-      backendTools: nativeTools.filter(t => !internalToolKeys.has(t.name)),
+      internalTools: toolDefinitions.internalTools.map(processTool),
+      backendTools: toolDefinitions.backendTools.map(processTool),
       userTools: customTools.map(tool => ({
         ...tool,
-        isCustom: true,
         isDisabled: loading || aiKey.length === 0 || !selectedModel?.supports_tools
       }))
     }
-  }, [customTools, model, loading, aiKey, aiProvider, freeModels, payModels, groqModels])
+  }, [toolDefinitions, customTools, model, loading, aiKey, aiProvider, freeModels, payModels, groqModels])
 
   const Separator = () => <div className="h-6 w-px bg-bLight dark:bg-bDark mx-1" />
 
@@ -60,19 +75,19 @@ const AITools = ({ loading, toolsDoor }) => {
     >
       {internalTools.map(({ name, title, Icon, isDisabled }) => (
         <ToolButton key={name} toolKey={name} title={title} onToggle={handleToolToggle} disabled={isDisabled}>
-          <Icon size={16} />
+          <DynamicIcon name={Icon} size={16} />
         </ToolButton>
       ))}
       {(internalTools.length > 0 && backendTools.length > 0) && <Separator />}
       {backendTools.map(({ name, title, Icon, isDisabled }) => (
         <ToolButton key={name} toolKey={name} title={title} onToggle={handleToolToggle} disabled={isDisabled}>
-          <Icon size={16} />
+          <DynamicIcon name={Icon} size={16} />
         </ToolButton>
       ))}
-      {(backendTools.length > 0 && userTools.length > 0) && <Separator />}
-      {userTools.map(({ name, title, Icon, isCustom, isDisabled }) => (
+      {((internalTools.length > 0 || backendTools.length > 0) && userTools.length > 0) && <Separator />}
+      {userTools.map(({ name, title, Icon, isDisabled }) => (
         <ToolButton key={name} toolKey={name} title={title} onToggle={handleToolToggle} disabled={isDisabled}>
-          {isCustom ? <DynamicIcon name={Icon} size={16} /> : <Icon size={16} />}
+          <DynamicIcon name={Icon} size={16} />
         </ToolButton>
       ))}
     </Paper>
