@@ -23,6 +23,23 @@ const AIMessage = ({ msg, user, toggleLousa, loading, onRegenerate, isLastMessag
 
   const hasContentStarted = msg.content && msg.content.length > 0
 
+  const ReasoningBlock = isAssistant && msg.reasoning && (
+    <Markdown loading={loading} content={msg.reasoning} think />
+  )
+
+  const ToolCallBlock = isAssistant && msg.toolCalls?.length > 0 && (
+    <div className={`my-2 p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md ${!hasContentStarted ? "animate-pulse" : ""}`}>
+      <div className="flex flex-col gap-1">
+        {msg.toolCalls.map((call) => (
+          <div key={call.index || call.name} className="flex items-center gap-2 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
+            {hasContentStarted ? <CheckCircle size={14} className="text-green-base" /> : <Wrench size={14} className="animate-spin-fast" />}
+            <span>{hasContentStarted ? "Denkitsu usou a ferramenta" : "Denkitsu está usando a ferramenta"} <strong>{call.name}</strong></span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+
   return (
     <div className={`flex items-end gap-2 px-2 ${isUser ? "flex-row-reverse" : "flex-row"}`}>
       {isUser ? (
@@ -47,22 +64,11 @@ const AIMessage = ({ msg, user, toggleLousa, loading, onRegenerate, isLastMessag
             </div>
           </div>
         )}
-        {isAssistant && msg.reasoning && <Markdown loading={loading} content={msg.reasoning} think />}
-        {isAssistant && msg.toolCalls?.length > 0 && (
-          <div className={`my-2 p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md ${!hasContentStarted ? 'animate-pulse' : ''}`}>
-            <div className="flex flex-col gap-1">
-              {msg.toolCalls.map((call) => (
-                <div key={call.index || call.name} className="flex items-center gap-2 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
-                  {hasContentStarted
-                    ? <CheckCircle size={14} className="text-green-base" />
-                    : <Wrench size={14} className="animate-spin-fast" />
-                  }
-                  <span>{hasContentStarted ? 'Denkitsu usou a ferramenta' : 'Denkitsu está usando a ferramenta'} <strong>{call.name}</strong></span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+
+        {hasContentStarted
+          ? (<>{ReasoningBlock}{ToolCallBlock}</>)
+          : (<>{ToolCallBlock}{ReasoningBlock}</>)
+        }
 
         {loading && !hasContentStarted && msg.toolCalls?.length === 0 ? <Button variant="outline" size="icon" $rounded loading={true} disabled /> : renderContent()}
 
