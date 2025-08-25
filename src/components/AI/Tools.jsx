@@ -32,7 +32,6 @@ const AITools = ({ loading, toolsDoor }) => {
   const { internalTools, backendTools, userTools } = useMemo(() => {
     const allModels = [...freeModels, ...payModels, ...groqModels]
     const selectedModel = allModels.find(m => m.id === model)
-
     const processTool = (tool) => {
       let isDisabled = loading
       const isCompoundModel = model?.startsWith("compound-")
@@ -54,7 +53,6 @@ const AITools = ({ loading, toolsDoor }) => {
       }
       return { ...tool, isDisabled }
     }
-
     return {
       internalTools: toolDefinitions.internalTools.map(processTool),
       backendTools: toolDefinitions.backendTools.map(processTool),
