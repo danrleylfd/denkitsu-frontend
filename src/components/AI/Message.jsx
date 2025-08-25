@@ -33,7 +33,7 @@ const AIMessage = ({ msg, user, toggleLousa, loading, onRegenerate, isLastMessag
         {msg.toolCalls.map((call) => (
           <div key={call.index || call.name} className="flex items-center gap-2 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
             {hasContentStarted ? <CheckCircle size={14} className="text-green-base" /> : <Wrench size={14} className="animate-spin-fast" />}
-            <span>{hasContentStarted ? "Denkitsu usou a ferramenta" : "Denkitsu está usando a ferramenta"} <strong>{call.name}</strong></span>
+            <span>{hasContentStarted ? "O Agente usou a ferramenta" : "O Agente está usando a ferramenta"} <strong>{call.name}</strong></span>
           </div>
         ))}
       </div>
@@ -60,7 +60,7 @@ const AIMessage = ({ msg, user, toggleLousa, loading, onRegenerate, isLastMessag
           <div className="my-2 p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md">
             <div className="flex items-center gap-2 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
               <Route size={14} className="text-primary-base" />
-              <span>Denkitsu escolheu o agente <strong>{msg.routingInfo.routedTo}</strong></span>
+              <span>Denkitsu repassou a tarefa para o agente <strong>{msg.routingInfo.routedTo}</strong></span>
             </div>
           </div>
         )}
