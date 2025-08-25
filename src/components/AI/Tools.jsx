@@ -14,14 +14,14 @@ const AITools = ({ loading, toolsDoor }) => {
   if (!toolsDoor) return null
 
   const { aiProvider, aiKey, model, handleToolToggle, freeModels, payModels, groqModels } = useAI()
-  const { tools: customTools } = useTools()
-  const [toolDefinitions, setToolDefinitions] = useState({ internalTools: [], backendTools: [] })
+  const { tools } = useTools()
+  const [toolDefinitions, setToolDefinitions] = useState({ internalTools: [], backendTools: [], customTools: [] })
 
   useEffect(() => {
     const fetchDefinitions = async () => {
       try {
         const { data } = await listTools()
-        setToolDefinitions(data)
+        setToolDefinitions({ ...data, customTools: tools })
       } catch (error) {
         console.error("Failed to load tool definitions:", error)
       }
