@@ -8,6 +8,7 @@ const Button = forwardRef(({
   size = "sm",
   $rounded = false,
   $squared = false,
+  border = undefined,
   loading = false,
   disabled = false,
   className,
@@ -38,6 +39,7 @@ const Button = forwardRef(({
   const getBorderClasses = () => {
     if ($rounded) return "rounded-full"
     if ($squared) return "rounded-md"
+    if (border && border === "outline") return "border-primary-base"
     return "rounded-none"
   }
   return (
