@@ -17,8 +17,8 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
   useEffect(() => {
     const fetchDefinitions = async () => {
       try {
-        const { data: definitions = [] } = await listAgents()
-        setBuiltInAgents(definitions)
+        const { data } = await listAgents()
+        setBuiltInAgents(data)
         console.log(builtInAgents[0])
       } catch (error) {
         console.error("Failed to load agent definitions:", error)
