@@ -58,12 +58,12 @@ const AITools = ({ loading, toolsDoor }) => {
     return {
       internalTools: toolDefinitions.internalTools.map(processTool),
       backendTools: toolDefinitions.backendTools.map(processTool),
-      userTools: customTools.map(tool => ({
+      customTools: tools.map(tool => ({
         ...tool,
         isDisabled: loading || aiKey.length === 0 || !selectedModel?.supports_tools
       }))
     }
-  }, [toolDefinitions, customTools, model, loading, aiKey, aiProvider, freeModels, payModels, groqModels])
+  }, [toolDefinitions, tools, model, loading, aiKey, aiProvider, freeModels, payModels, groqModels])
 
   const Separator = () => <div className="h-6 w-px bg-bLight dark:bg-bDark mx-1" />
 
