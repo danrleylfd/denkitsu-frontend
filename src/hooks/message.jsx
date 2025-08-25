@@ -42,21 +42,18 @@ const useMessage = (props) => {
     )
 
     try {
-      if (stream) {
+      const isRouterPass = agentForCall === "Roteador"
+      const shouldUseStream = stream && !isRouterPass
+
+      if (shouldUseStream) {
         const placeholderId = Date.now()
         const placeholder = { id: placeholderId, role: "assistant", content: "", reasoning: "", toolCalls: [], timestamp: new Date().toISOString(), routingInfo }
         setMessages(prev => [...prev, placeholder])
+
         const streamGenerator = sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, activeTools, agentForCall)
+
         for await (const event of streamGenerator) {
-        if (event.type === "SWITCH_AGENT") {
-          setSelectedAgent(event.agent)
-          const routingInfoForPlaceholder = { routedTo: event.agent }
-          setMessages(prev => prev.map(msg =>
-            msg.id === placeholderId
-              ? { ...msg, routingInfo: routingInfoForPlaceholder, content: "", reasoning: "" }
-              : msg
-          ))
-        } else if (event.type === "DELTA") {
+          if (event.type === "DELTA") {
             const { delta } = event
             setMessages(prevMessages =>
               prevMessages.map(msg => {
@@ -90,7 +87,7 @@ const useMessage = (props) => {
       } else {
         const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, agentForCall, activeTools)
 
-        if (agentForCall === "Roteador" && data.next_action?.type === "SWITCH_AGENT") {
+        if (isRouterPass && data.next_action?.type === "SWITCH_AGENT") {
           const newAgent = data.next_action.agent
           setSelectedAgent(newAgent)
           await executeSendMessage(historyToProcess, newAgent, attempt + 1, { routedTo: newAgent })
@@ -106,7 +103,7 @@ const useMessage = (props) => {
       if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
       else notifyError("Falha na comunicação com o servidor de IA.")
       setMessages(prev => {
-        const lastUserMessageInHistory = historyToProcess.findLast(m => m.role === "user")
+        const lastUserMessageInHistory = historyToProcess.findLast(m => m.role === 'user')
         if (lastUserMessageInHistory && prev.some(m => m.timestamp === lastUserMessageInHistory.timestamp)) {
           return prev.filter(m => m.timestamp !== lastUserMessageInHistory.timestamp)
         }
@@ -116,8 +113,8 @@ const useMessage = (props) => {
       setLoading(false)
     }
   }, [
-    aiKey, aiProvider, model, freeModels, payModels, groqModels, activeTools, stream,
-    notifyError, setMessages, setSelectedAgent
+    aiKey, aiProvider, model, freeModels, payModels, groqModels, activeTools, stream, selectedAgent,
+    notifyError, notifyInfo, notifyWarning, setMessages, setSelectedAgent
   ])
 
   const onSendMessage = useCallback(async () => {
