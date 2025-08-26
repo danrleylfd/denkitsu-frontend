@@ -2,7 +2,7 @@ import { useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { ImagePlus, UploadIcon, Sparkle, Brain, Waypoints, } from "lucide-react"
 
-import { useAI } from "../../contexts/AIContext"
+import { useModels } from "../../contexts/ModelContext"
 import { useNotification } from "../../contexts/NotificationContext"
 
 import { sendMessage } from "../../services/aiChat"
@@ -22,8 +22,8 @@ const ContentView = ({ children }) => (
 )
 
 const Upload = () => {
-  const { aiKey, model, aiProvider, aiProviderToggle, freeModels, payModels, groqModels } = useAI()
-  const { notifyWarning, notifyError, notifyInfo } = useNotification()
+  const { aiProvider, aiKey, model, freeModels, payModels, groqModels, aiProviderToggle } = useModels()
+  const { notifyInfo, notifyWarning, notifyError } = useNotification()
   const [content, setContent] = useState("")
   const [thumbnail, setThumbnail] = useState("")
   const [fileUrl, setFileUrl] = useState("")

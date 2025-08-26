@@ -1,7 +1,7 @@
-import { useAI } from "../../contexts/AIContext"
+import { useModels } from "../../contexts/ModelContext"
 
 const AIModelSelect = ({ loading }) => {
-  const { aiProvider, freeModels, payModels, groqModels, model, setModel } = useAI()
+  const { aiProvider, model, freeModels, payModels, groqModels, setModel } = useModels()
   return (
     <select
       id="model-select"

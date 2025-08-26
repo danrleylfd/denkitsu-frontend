@@ -1,6 +1,6 @@
-import { createContext, useState, useEffect, useContext, useCallback } from "react"
+import { createContext, useState, useEffect, useContext, useCallback, useMemo } from "react"
 import { useAuth } from "./AuthContext"
-import { getAgents } from "../services/agent"
+import { getAgents, createAgent, updateAgent, deleteAgent } from "../services/agent"
 import { listAgents } from "../services/aiChat"
 
 const AgentContext = createContext({})
@@ -8,6 +8,7 @@ const AgentContext = createContext({})
 const AgentProvider = ({ children }) => {
   const [agents, setAgents] = useState({ backendAgents: [], customAgents: [] })
   const [loading, setLoading] = useState(true)
+  const [selectedAgent, setSelectedAgent] = useState("Roteador")
   const { signed } = useAuth()
 
   const fetchAgents = useCallback(async () => {
@@ -51,7 +52,11 @@ const AgentProvider = ({ children }) => {
     setAgents(prev => ({ ...prev, customAgents: prev.customAgents.filter(a => a._id !== agentId) }))
   }
 
-  const value = { agents, loading, fetchAgents, addAgent, editAgent, removeAgent }
+  const value = useMemo(() => ({
+    agents, loading, fetchAgents, addAgent, editAgent, removeAgent,
+    selectedAgent, setSelectedAgent
+  }), [agents, loading, fetchAgents, addAgent, editAgent, removeAgent, selectedAgent])
+
 
   return (
     <AgentContext.Provider value={value}>

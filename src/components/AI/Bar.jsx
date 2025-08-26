@@ -1,6 +1,9 @@
 import { Info, Waypoints, Settings, Speech, Sparkle, MessageCirclePlus, Send, Paperclip, Wrench, Factory } from "lucide-react"
+
 import { useAuth } from "../../contexts/AuthContext"
 import { useAI } from "../../contexts/AIContext"
+import { useModels } from "../../contexts/ModelContext"
+
 import AIBarSignOut from "./BarSignOut"
 import Paper from "../Paper"
 import AIInput from "./Input"
@@ -9,7 +12,8 @@ import Button from "../Button"
 const AIBar = ({ loading, isImproving, improvePrompt, imageCount, onSendMessage, toggleFeaturesDoor, toggleSettingsDoor, toggleFactoryManagerDoor, agentsDoor, toggleAgentsDoor, toolsDoor, toggleToolsDoor, mediaDoor, toggleMediaDoor }) => {
   const { signed } = useAuth()
   if (!signed) return <AIBarSignOut />
-  const { aiProvider, aiProviderToggle, userPrompt, setUserPrompt, clearHistory } = useAI()
+  const { userPrompt, setUserPrompt, clearHistory } = useAI()
+  const { aiProvider, aiProviderToggle } = useModels()
 
   const handleSendMessage = () => {
     if (loading || isImproving) return

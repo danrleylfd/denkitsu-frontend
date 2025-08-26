@@ -2,6 +2,7 @@ import { useState } from "react"
 import { X, Brain, Waypoints, Eye, EyeClosed, } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
+import { useModels } from "../../contexts/ModelContext"
 
 import AIModelSelect from "./ModelSelect"
 import Input from "../Input"
@@ -10,7 +11,8 @@ import Button from "../Button"
 
 const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
   const [showAIKey, setShowAIKey] = useState(false)
-  const { aiKey, aiProvider, customPrompt, loading, setAIKey, aiProviderToggle, setCustomPrompt } = useAI()
+  const { customPrompt, setCustomPrompt } = useAI()
+  const { aiProvider, aiKey, setAIKey, aiProviderToggle, loadingModels } = useModels()
   if (!settingsDoor) return null
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
@@ -42,7 +44,7 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
             placeholder="Sua chave de API"
             value={aiKey}
             onChange={(e) => setAIKey(e.target.value)}>
-            <Button type="button" variant="outline" size="icon" $rounded onClick={() => setShowAIKey(!showAIKey)} disabled={loading}>
+            <Button type="button" variant="outline" size="icon" $rounded onClick={() => setShowAIKey(!showAIKey)} disabled={loadingModels}>
               {showAIKey ? <Eye size={16} /> : <EyeClosed size={16} />}
             </Button>
           </Input>
@@ -62,7 +64,7 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
             title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"}>
             <Waypoints size={16} />
           </Button>
-          <AIModelSelect loading={loading} />
+          <AIModelSelect loadingModels={loadingModels} />
         </div>
         <div className="flex flex-col gap-2">
           <label htmlFor="custom-prompt" className="text-lightFg-secondary dark:text-darkFg-secondary">
@@ -75,7 +77,7 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
             rows={14}
             maxLength={6144}
             placeholder="Escreva seu prompt de sistema"
-            disabled={loading}
+            disabled={loadingModels}
           />
           <small className="text-right text-xs text-lightFg-tertiary dark:text-darkFg-tertiary self-end">{customPrompt.length} / 6144 caracteres.</small>
         </div>

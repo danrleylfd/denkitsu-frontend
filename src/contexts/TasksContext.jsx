@@ -3,7 +3,7 @@ import { createContext, useState, useEffect, useCallback, useContext } from "rea
 import { INITIAL_TASKS } from "../constants/tasks"
 import { sendMessage } from "../services/aiChat"
 
-import { useAI } from "./AIContext"
+import { useModels } from "./ModelContext"
 import { useNotification } from "./NotificationContext"
 
 const TasksContext = createContext({})
@@ -24,7 +24,7 @@ const TasksProvider = ({ children }) => {
   const [loading, setLoading] = useState(false)
   const [editingId, setEditingId] = useState(null)
 
-  const { aiKey, model, aiProvider, freeModels, payModels, groqModels } = useAI()
+  const { aiProvider, aiKey, model, freeModels, payModels, groqModels } = useModels()
   const { notifyError } = useNotification()
 
   useEffect(() => {
@@ -90,7 +90,7 @@ const TasksProvider = ({ children }) => {
     } finally {
       setLoading(false)
     }
-  }, [newTask, aiKey, aiProvider, model, notifyError])
+  }, [newTask, aiProvider, aiKey, model])
 
   const deleteTask = useCallback(
     (taskId) => {

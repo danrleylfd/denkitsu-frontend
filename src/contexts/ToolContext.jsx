@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect, useContext, useCallback, useMemo } from "react"
 import { useAuth } from "./AuthContext"
-import { getTools } from "../services/tool"
+import { getTools, createTool, updateTool, deleteTool } from "../services/tool"
 import { listTools } from "../services/aiChat"
 
 const ToolContext = createContext({})
@@ -36,7 +36,6 @@ const ToolProvider = ({ children }) => {
     fetchTools()
   }, [fetchTools])
 
-  // Inicializa as ferramentas ativas quando a lista de ferramentas é carregada
   useEffect(() => {
     if (loading) return
 
@@ -58,7 +57,6 @@ const ToolProvider = ({ children }) => {
     setActiveTools(initialActiveTools)
   }, [tools, loading])
 
-
   const handleToolToggle = useCallback((toolKey, isActive) => {
     setActiveTools(prev => {
       const newActiveTools = new Set(prev)
@@ -68,7 +66,6 @@ const ToolProvider = ({ children }) => {
     })
     localStorage.setItem(`@Denkitsu:${toolKey}`, JSON.stringify(isActive))
   }, [])
-
 
   const addTool = async (toolData) => {
     const newTool = await createTool(toolData)

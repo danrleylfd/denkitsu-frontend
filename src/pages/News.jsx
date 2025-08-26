@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import { SearchSlash, Brain, Waypoints, Copy, Mic } from "lucide-react"
 
 import { useAI } from "../contexts/AIContext"
+import { useModels } from "../contexts/ModelContext"
 import { useNotification } from "../contexts/NotificationContext"
 
 import { getNewsPaginate } from "../services/news"
@@ -21,7 +22,8 @@ const ContentView = ({ children }) => (
 )
 
 const News = () => {
-  const { aiProvider, aiProviderToggle, speakResponse } = useAI()
+  const { speakResponse } = useAI()
+  const { aiProvider, aiProviderToggle } = useModels()
   const { notifyError, notifyInfo } = useNotification()
   const [searchTerm, setSearchTerm] = useState("")
   const [news, setNews] = useState([])
