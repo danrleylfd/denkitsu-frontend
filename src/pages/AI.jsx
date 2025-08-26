@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 
+import { useAuth } from "../contexts/AuthContext"
 import { useAI } from "../contexts/AIContext"
 import { useNotification } from "../contexts/NotificationContext"
 
@@ -22,6 +23,7 @@ import Lousa from "../components/AI/Lousa"
 const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-dvh mx-auto">{children}</main>
 
 const AI = () => {
+  const { signed } = useAuth()
   const {
     setFreeModels, setPayModels, setGroqModels, aiKey, imageUrls, setImageUrls,
     selectedAgent, setSelectedAgent, loading, isImproving, onSendMessage,
@@ -46,6 +48,7 @@ const AI = () => {
   useEffect(() => {
     (async () => {
       try {
+        if(!signed) return
         const { freeModels: loadedFree, payModels: loadedPay, groqModels: loadedGroq } = await getModels()
         setFreeModels(loadedFree?.filter(model => !model.id.includes("whisper")) || [])
         if (aiKey) setPayModels(loadedPay?.filter(model => !model.id.includes("whisper")) || [])
@@ -54,7 +57,7 @@ const AI = () => {
         notifyError(error.message || "Falha ao carregar modelos de IA.")
       }
     })()
-  }, [aiKey])
+  }, [aiKey, signed])
 
   const onAddImage = () => {
     if (imageUrls.length >= 3) return notifyWarning("Você pode adicionar no máximo 3 imagens.")
