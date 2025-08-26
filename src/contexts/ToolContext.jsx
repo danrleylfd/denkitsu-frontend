@@ -1,27 +1,33 @@
 import { createContext, useState, useEffect, useContext, useCallback } from "react"
 import { useAuth } from "./AuthContext"
-import { getTools, createTool, updateTool, deleteTool } from "../services/tool"
+import { getTools } from "../services/tool"
+import { listTools } from "../services/aiChat" // Importar o serviço de listagem
 
 const ToolContext = createContext({})
 
 const ToolProvider = ({ children }) => {
-  const [tools, setTools] = useState([])
+  const [tools, setTools] = useState({ internalTools: [], backendTools: [], customTools: [] })
   const [loading, setLoading] = useState(true)
   const { signed } = useAuth()
 
   const fetchTools = useCallback(async () => {
     if (!signed) {
-      setTools([])
+      setTools({ internalTools: [], backendTools: [], customTools: [] })
       setLoading(false)
       return
     }
     try {
       setLoading(true)
-      const userTools = await getTools()
-      setTools(userTools || [])
+      const { data: backendData } = await listTools()
+      const customData = await getTools()
+      setTools({
+        internalTools: backendData?.internalTools || [],
+        backendTools: backendData?.backendTools || [],
+        customTools: customData || []
+      })
     } catch (error) {
       console.error("Failed to fetch user tools:", error)
-      setTools([])
+      setTools({ internalTools: [], backendTools: [], customTools: [] })
     } finally {
       setLoading(false)
     }
@@ -33,19 +39,19 @@ const ToolProvider = ({ children }) => {
 
   const addTool = async (toolData) => {
     const newTool = await createTool(toolData)
-    setTools(prev => [newTool, ...prev])
+    setTools(prev => ({ ...prev, customTools: [newTool, ...prev.customTools] }))
     return newTool
   }
 
   const editTool = async (toolId, toolData) => {
     const updatedTool = await updateTool(toolId, toolData)
-    setTools(prev => prev.map(t => t._id === toolId ? updatedTool : t))
+    setTools(prev => ({ ...prev, customTools: prev.customTools.map(t => t._id === toolId ? updatedTool : t) }))
     return updatedTool
   }
 
   const removeTool = async (toolId) => {
     await deleteTool(toolId)
-    setTools(prev => prev.filter(t => t._id !== toolId))
+    setTools(prev => ({ ...prev, customTools: prev.customTools.filter(t => t._id !== toolId) }))
   }
 
   const value = { tools, loading, fetchTools, addTool, editTool, removeTool }

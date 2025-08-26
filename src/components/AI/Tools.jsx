@@ -1,11 +1,6 @@
-// src/components/AI/AITools.jsx
-
-import { useMemo, useState, useEffect } from "react"
-
+import { useMemo } from "react"
 import { useAI } from "../../contexts/AIContext"
 import { useTools } from "../../contexts/ToolContext"
-import { listTools } from "../../services/aiChat"
-
 import Paper from "../Paper"
 import ToolButton from "./ToolButton"
 import DynamicIcon from "../DynamicIcon"
@@ -15,19 +10,6 @@ const AITools = ({ loading, toolsDoor }) => {
 
   const { aiProvider, aiKey, model, handleToolToggle, freeModels, payModels, groqModels } = useAI()
   const { tools } = useTools()
-  const [toolDefinitions, setToolDefinitions] = useState({ internalTools: [], backendTools: [], customTools: [] })
-
-  useEffect(() => {
-    const fetchDefinitions = async () => {
-      try {
-        const { data } = await listTools()
-        setToolDefinitions({ ...data, customTools: tools })
-      } catch (error) {
-        console.error("Failed to load tool definitions:", error)
-      }
-    }
-    fetchDefinitions()
-  }, [])
 
   const { internalTools, backendTools, customTools } = useMemo(() => {
     const allModels = [...freeModels, ...payModels, ...groqModels]
@@ -54,14 +36,14 @@ const AITools = ({ loading, toolsDoor }) => {
       return { ...tool, isDisabled }
     }
     return {
-      internalTools: toolDefinitions.internalTools.map(processTool),
-      backendTools: toolDefinitions.backendTools.map(processTool),
-      customTools: toolDefinitions.customTools.map(tool => ({
+      internalTools: tools.internalTools.map(processTool),
+      backendTools: tools.backendTools.map(processTool),
+      customTools: tools.customTools.map(tool => ({
         ...tool,
         isDisabled: loading || aiKey.length === 0 || !selectedModel?.supports_tools
       }))
     }
-  }, [toolDefinitions, tools, model, loading, aiKey, aiProvider, freeModels, payModels, groqModels])
+  }, [tools, model, loading, aiKey, aiProvider, freeModels, payModels, groqModels])
 
   const Separator = () => <div className="h-6 w-px bg-bLight dark:bg-bDark mx-1" />
 
