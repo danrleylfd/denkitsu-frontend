@@ -54,7 +54,7 @@ const AI = () => {
         notifyError(error.message || "Falha ao carregar modelos de IA.")
       }
     })()
-  }, [aiKey, notifyError, setFreeModels, setPayModels, setGroqModels])
+  }, [aiKey])
 
   const onAddImage = () => {
     if (imageUrls.length >= 3) return notifyWarning("Você pode adicionar no máximo 3 imagens.")
