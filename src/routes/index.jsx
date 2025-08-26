@@ -45,7 +45,7 @@ const AppRoutes = () => {
         <Routes>
           {signed ? (
             <>
-              <Route path="/" element={<News />} />
+              <Route path="/" element={<AI />} />
               <Route path="/editor" element={<Editor />} />
               <Route path="/cinema" element={<Cinema />} />
               <Route path="/news" element={<News />} />
@@ -69,7 +69,7 @@ const AppRoutes = () => {
             </>
           ) : (
             <>
-              <Route path="/" element={<News />} />
+              <Route path="/" element={<AI />} />
               <Route path="/news" element={<News />} />
               <Route path="/editor" element={<Editor />} />
               <Route path="/cinema" element={<Cinema />} />
