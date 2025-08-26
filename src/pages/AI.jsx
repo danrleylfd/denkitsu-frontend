@@ -46,9 +46,8 @@ const AI = () => {
   const mediaDoor = openDoor === "media"
 
   useEffect(() => {
-    (async () => {
+    const fetchModels = async () => {
       try {
-        if(!signed) return
         const { freeModels: loadedFree, payModels: loadedPay, groqModels: loadedGroq } = await getModels()
         setFreeModels(loadedFree?.filter(model => !model.id.includes("whisper")) || [])
         if (aiKey) setPayModels(loadedPay?.filter(model => !model.id.includes("whisper")) || [])
@@ -56,7 +55,8 @@ const AI = () => {
       } catch (error) {
         notifyError(error.message || "Falha ao carregar modelos de IA.")
       }
-    })()
+    }
+    if (signed) fetchModels()
   }, [aiKey, signed])
 
   const onAddImage = () => {
