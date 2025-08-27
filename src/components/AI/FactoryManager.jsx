@@ -96,7 +96,6 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
 
 const AgentList = memo(({ agents, onCreate, onEdit, onDelete, canCreate }) => (
   <div className="flex flex-col h-full">
-    <h3 className="font-bold text-xl text-lightFg-primary dark:text-darkFg-primary mb-2">Gerenciador de Agentes</h3>
     <div className="flex-1 overflow-y-auto py-2 pr-2">
       {agents.length === 0 ? (
         <div className="text-center py-10">
@@ -249,7 +248,6 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
 
 const ToolList = memo(({ tools, onCreate, onEdit, onDelete, canCreate }) => (
   <div className="flex flex-col h-full">
-    <h3 className="font-bold text-xl text-lightFg-primary dark:text-darkFg-primary mb-2">Gerenciador de Ferramentas</h3>
     <div className="flex-1 overflow-y-auto py-4 pr-2">
       {tools.length === 0 ? (
         <div className="text-center py-10">
