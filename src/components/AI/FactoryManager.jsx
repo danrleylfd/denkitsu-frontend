@@ -221,7 +221,7 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
           <div className="flex flex-col gap-2 mt-2">
             <div>
               <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Definição do Esquema da Ferramenta</label>
-              <textarea  placeholder={`{ "type": "object", "properties": {}, "required": [] }`} value={formData.parameters} onChange={(e) => handleChange("parameters", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
+              <textarea placeholder={`{ "type": "object", "properties": {}, "required": [] }`} value={formData.parameters} onChange={(e) => handleChange("parameters", e.target.value)} className="w-full h-40 p-2 mt-1 rounded-md resize-y font-mono text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary" />
             </div>
             <div>
               <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Parâmetros de Query (JSON)</label>
@@ -297,14 +297,14 @@ const AIFactoryManager = ({ factoryManagerDoor, toggleFactoryManagerDoor }) => {
   const [activeTab, setActiveTab] = useState("agents")
   const { notifyError, notifyInfo } = useNotification()
 
-  const { agents, loading: agentsLoading, addAgent, editAgent, removeAgent } = useAgents()
-  const canCreateAgent = agents.length < 7
+  const { agents, loadingAgents, addAgent, editAgent, removeAgent } = useAgents()
+  const canCreateAgent = agents.customAgents.length < 7
   const [agentView, setAgentView] = useState("list")
   const [currentAgent, setCurrentAgent] = useState(null)
   const [agentFormLoading, setAgentFormLoading] = useState(false)
 
-  const { tools, loading: toolsLoading, addTool, editTool, removeTool } = useTools()
-  const canCreateTool = tools.length < 6
+  const { tools, loadingTools, addTool, editTool, removeTool } = useTools()
+  const canCreateTool = tools.customTools.length < 6
   const [toolView, setToolView] = useState("list")
   const [currentTool, setCurrentTool] = useState(null)
   const [toolFormLoading, setToolFormLoading] = useState(false)
@@ -400,16 +400,16 @@ const AIFactoryManager = ({ factoryManagerDoor, toggleFactoryManagerDoor }) => {
   }
 
   const renderAgentContent = () => {
-    if (agentsLoading) return <Button variant="outline" loading disabled />
+    if (loadingAgents) return <Button variant="outline" loading disabled />
     return agentView === "list"
-      ? <AgentList agents={agents} onCreate={handleAgentCreate} onEdit={handleAgentEdit} onDelete={handleAgentDelete} canCreate={canCreateAgent} />
+      ? <AgentList agents={agents.customAgents} onCreate={handleAgentCreate} onEdit={handleAgentEdit} onDelete={handleAgentDelete} canCreate={canCreateAgent} />
       : <AgentForm agent={currentAgent} onSave={handleAgentSave} onBack={handleAgentBack} loading={agentFormLoading} />
   }
 
   const renderToolContent = () => {
-    if (toolsLoading) return <Button variant="outline" loading disabled />
+    if (loadingTools) return <Button variant="outline" loading disabled />
     return toolView === "list"
-      ? <ToolList tools={tools} onCreate={handleToolCreate} onEdit={handleToolEdit} onDelete={handleToolDelete} canCreate={canCreateTool} />
+      ? <ToolList tools={tools.customTools} onCreate={handleToolCreate} onEdit={handleToolEdit} onDelete={handleToolDelete} canCreate={canCreateTool} />
       : <ToolForm tool={currentTool} onSave={handleToolSave} onBack={handleToolBack} loading={toolFormLoading} />
   }
 
