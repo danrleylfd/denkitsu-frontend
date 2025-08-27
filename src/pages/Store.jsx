@@ -39,7 +39,7 @@ const Store = () => {
     } finally {
       setLoading(false)
     }
-  }, [notifyError])
+  }, [])
 
   useEffect(() => {
     fetchData()
