@@ -87,6 +87,16 @@ const getVideoLikes = async (videoId) => {
   }
 }
 
+const getLikeStatus = async (videoId) => {
+  try {
+    const response = await api.get(`/likes/${videoId}/status`)
+    return response.data
+  } catch (error) {
+    console.error(`Error on getLikeStatus for video ${videoId}:`, error.response?.data?.error?.message || error.message)
+    throw error
+  }
+}
+
 const getCommentsForVideo = async (videoId) => {
   try {
     const response = await api.get(`/comments/list/${videoId}`)
@@ -96,7 +106,6 @@ const getCommentsForVideo = async (videoId) => {
     return []
   }
 }
-
 
 const addComment = async (videoId, content) => {
   try {
@@ -176,6 +185,7 @@ export {
   likeVideo,
   unlikeVideo,
   getVideoLikes,
+  getLikeStatus,
   getCommentsForVideo,
   addComment,
   deleteComment,

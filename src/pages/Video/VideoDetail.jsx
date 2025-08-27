@@ -5,7 +5,11 @@ import { ThumbsUp, ThumbsDown, MessageCircle, Share2, Pencil, Trash } from "luci
 import { useAuth } from "../../contexts/AuthContext"
 import { useNotification } from "../../contexts/NotificationContext"
 
-import { getVideoById, deleteVideoById, likeVideo, unlikeVideo, shareVideo, addComment, replyToComment, getCommentsForVideo } from "../../services/video"
+import {
+  getVideoById, deleteVideoById, likeVideo, unlikeVideo, shareVideo,
+  addComment, replyToComment, getCommentsForVideo, getVideoLikes,
+  getVideoCommentCount, getVideoShares, getLikeStatus
+} from "../../services/video"
 
 import SideMenu from "../../components/SideMenu"
 import VideoPlayer from "../../components/Video/Player"
@@ -30,24 +34,33 @@ const VideoDetail = () => {
   const [video, setVideo] = useState(null)
   const [comments, setComments] = useState([])
   const [loading, setLoading] = useState(true)
+
+  // Novos estados para os dados que antes vinham no objeto video
   const [isLiked, setIsLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(0)
   const [shareCount, setShareCount] = useState(0)
   const [commentCount, setCommentCount] = useState(0)
 
-  const fetchVideoAndComments = useCallback(async () => {
+  const fetchVideoData = useCallback(async () => {
     try {
       setLoading(true)
       const videoData = await getVideoById(videoId)
       setVideo(videoData)
-      setLikeCount(videoData.likes?.length || 0)
-      setCommentCount(videoData.comments?.length || 0)
-      setShareCount((videoData.shares?.length || 0) + (videoData.sharesExtras || 0))
-      const commentsData = await getCommentsForVideo(videoId)
+
+      // Chamadas paralelas para buscar os dados relacionados
+      const [likes, commentsData, shares, likeStatus] = await Promise.all([
+        getVideoLikes(videoId),
+        getCommentsForVideo(videoId),
+        getVideoShares(videoId),
+        signed ? getLikeStatus(videoId) : Promise.resolve({ isLiked: false })
+      ])
+
+      setLikeCount(likes.likes)
       setComments(commentsData || [])
       setCommentCount(commentsData?.length || 0)
-      if (signed && videoData.likes?.includes(user?._id)) setIsLiked(true)
-      else setIsLiked(false)
+      setShareCount(shares.shares)
+      setIsLiked(likeStatus.isLiked)
+
     } catch (err) {
       if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
       else notifyError("Falha ao carregar os detalhes do vídeo.")
@@ -55,11 +68,11 @@ const VideoDetail = () => {
     } finally {
       setLoading(false)
     }
-  }, [videoId, signed, user?._id])
+  }, [videoId, signed, navigate, notifyError])
 
   useEffect(() => {
-    if (videoId) fetchVideoAndComments()
-  }, [videoId, fetchVideoAndComments])
+    if (videoId) fetchVideoData()
+  }, [videoId, fetchVideoData])
 
   const handleDeleteVideo = async () => {
     if (!signed) return notifyWarning("Você precisa estar logado para excluir um vídeo.")
@@ -82,11 +95,12 @@ const VideoDetail = () => {
 
   const handleLikeToggle = async () => {
     if (!signed) return notifyWarning("Você precisa estar logado para interagir.")
-    setLoading(true)
     const originalIsLiked = isLiked
     const originalLikeCount = likeCount
+
     setIsLiked(!originalIsLiked)
     setLikeCount(originalIsLiked ? originalLikeCount - 1 : originalLikeCount + 1)
+
     try {
       if (originalIsLiked) await unlikeVideo(videoId)
       else await likeVideo(videoId)
@@ -96,14 +110,11 @@ const VideoDetail = () => {
       console.error("Erro ao curtir/descurtir:", err)
       if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
       else notifyError("Ocorreu um erro ao processar sua curtida.")
-    } finally {
-      setLoading(false)
     }
   }
 
   const handleShare = async () => {
     if (!signed) return notifyWarning("Você precisa estar logado para compartilhar vídeos.")
-    setLoading(true)
     const originalShareCount = shareCount
     setShareCount(originalShareCount + 1)
     try {
@@ -113,8 +124,6 @@ const VideoDetail = () => {
       console.error("Erro ao compartilhar:", err)
       if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
       else notifyError("Ocorreu um erro ao compartilhar o vídeo.")
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -143,7 +152,7 @@ const VideoDetail = () => {
     if (!signed) notifyWarning("Você precisa estar logado para responder.")
     try {
       const reply = await replyToComment(commentId, replyContent)
-      fetchVideoAndComments()
+      fetchVideoData() // Recarrega tudo para mostrar a resposta
       return reply
     } catch (error) {
       console.error("Erro ao adicionar resposta:", error)
@@ -180,7 +189,8 @@ const VideoDetail = () => {
               $rounded
               title={isLiked ? "Descurtir" : "Curtir"}
               onClick={handleLikeToggle}
-              disabled={loading}>
+              disabled={loading}
+            >
               {isLiked ? <ThumbsDown size={16} /> : <ThumbsUp size={16} />}
             </Button>
             <Button type="button" size="icon" $rounded title="Compartilhar" onClick={handleShare} disabled={loading}>
