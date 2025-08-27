@@ -59,11 +59,22 @@ const acquireTool = async (toolId) => {
   }
 }
 
+const unacquireTool = async (toolId) => {
+  try {
+    const response = await api.delete(`/tools/store/${toolId}/acquire`)
+    return response.data
+  } catch (error) {
+    console.error(`Error on unacquireTool ${toolId}:`, error.response?.data?.error?.message || error.message)
+    throw error
+  }
+}
+
 export {
   getTools,
   createTool,
   updateTool,
   deleteTool,
   getPublishedTools,
-  acquireTool
+  acquireTool,
+  unacquireTool,
 }

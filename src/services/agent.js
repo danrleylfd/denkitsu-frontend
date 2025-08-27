@@ -59,11 +59,22 @@ const acquireAgent = async (agentId) => {
   }
 }
 
+const unacquireAgent = async (agentId) => {
+  try {
+    const response = await api.delete(`/agents/store/${agentId}/acquire`)
+    return response.data
+  } catch (error) {
+    console.error(`Error on unacquireAgent ${agentId}:`, error.response?.data?.error?.message || error.message)
+    throw error
+  }
+}
+
 export {
   getAgents,
   createAgent,
   updateAgent,
   deleteAgent,
   getPublishedAgents,
-  acquireAgent
+  acquireAgent,
+  unacquireAgent,
 }

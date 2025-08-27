@@ -3,8 +3,8 @@ import { Store as StoreIcon, Bot, PocketKnife } from "lucide-react"
 
 import { useAuth } from "../contexts/AuthContext"
 import { useNotification } from "../contexts/NotificationContext"
-import { getPublishedAgents, acquireAgent } from "../services/agent"
-import { getPublishedTools, acquireTool } from "../services/tool"
+import { getPublishedAgents, acquireAgent, unacquireAgent } from "../services/agent"
+import { getPublishedTools, acquireTool, unacquireTool } from "../services/tool"
 
 import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
@@ -69,6 +69,30 @@ const Store = () => {
     }
   }
 
+  const handleUnacquire = async (id, type) => {
+    setAcquireLoading(id)
+    try {
+      if (type === "agent") {
+        await unacquireAgent(id)
+        setStoreAgents(prev => prev.map(agent =>
+          agent._id === id ? { ...agent, clients: agent.clients.filter(clientId => clientId !== user._id) } : agent
+        ))
+        notifySuccess("Agente removido com sucesso!")
+      } else {
+        await unacquireTool(id)
+        setStoreTools(prev => prev.map(tool =>
+          tool._id === id ? { ...tool, clients: tool.clients.filter(clientId => clientId !== user._id) } : tool
+        ))
+        notifySuccess("Ferramenta removida com sucesso!")
+      }
+    } catch (err) {
+      if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
+      else notifyError("Falha ao remover o item.")
+    } finally {
+      setAcquireLoading(null)
+    }
+  }
+
   const renderContent = () => {
     if (loading) return <Button variant="outline" $rounded loading disabled />
 
@@ -93,6 +117,7 @@ const Store = () => {
             key={item._id}
             item={item}
             onAcquire={() => handleAcquire(item._id, type)}
+            onUnacquire={() => handleUnacquire(item._id, type)}
             isAcquired={item.clients.includes(user?._id)}
             loading={acquireLoading === item._id}
           />
