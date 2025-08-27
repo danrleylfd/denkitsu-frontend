@@ -32,7 +32,7 @@ const ToolProvider = ({ children }) => {
 
   useEffect(() => {
     if (signed) fetchTools()
-  }, [fetchTools])
+  }, [signed, fetchTools])
 
   useEffect(() => {
     if (loadingTools) return

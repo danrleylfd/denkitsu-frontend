@@ -33,7 +33,7 @@ const AgentProvider = ({ children }) => {
 
   useEffect(() => {
     if (signed) fetchAgents()
-  }, [fetchAgents])
+  }, [signed, fetchAgents])
 
   const addAgent = async (agentData) => {
     const newAgent = await createAgent(agentData)

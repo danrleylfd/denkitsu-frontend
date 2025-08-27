@@ -2,13 +2,16 @@ import { useState, useEffect, useCallback } from "react"
 import { Store as StoreIcon, Bot, PocketKnife } from "lucide-react"
 
 import { useAuth } from "../contexts/AuthContext"
+import { useAgents } from "../contexts/AgentContext"
+import { useTools } from "../contexts/ToolContext"
 import { useNotification } from "../contexts/NotificationContext"
+
 import { getPublishedAgents, acquireAgent, unacquireAgent } from "../services/agent"
 import { getPublishedTools, acquireTool, unacquireTool } from "../services/tool"
 
 import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
-import StoreItemCard from "../components/Store/ItemCard"
+import StoreItemCard from "../components/Store/StoreItemCard"
 
 const ContentView = ({ children }) => (
   <main className="flex flex-col p-2 gap-2 mx-auto min-h-dvh w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[85%] ml-[3.5rem] md:ml-auto">
@@ -19,6 +22,8 @@ const ContentView = ({ children }) => (
 const Store = () => {
   const { user } = useAuth()
   const { notifySuccess, notifyError } = useNotification()
+  const { fetchAgents } = useAgents()
+  const { fetchTools } = useTools()
   const [activeTab, setActiveTab] = useState("agents")
   const [storeAgents, setStoreAgents] = useState([])
   const [storeTools, setStoreTools] = useState([])
@@ -39,7 +44,7 @@ const Store = () => {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [notifyError])
 
   useEffect(() => {
     fetchData()
@@ -54,12 +59,14 @@ const Store = () => {
           agent._id === id ? { ...agent, clients: [...agent.clients, user._id] } : agent
         ))
         notifySuccess("Agente adicionado com sucesso!")
+        await fetchAgents()
       } else {
         await acquireTool(id)
         setStoreTools(prev => prev.map(tool =>
           tool._id === id ? { ...tool, clients: [...tool.clients, user._id] } : tool
         ))
         notifySuccess("Ferramenta adicionada com sucesso!")
+        await fetchTools()
       }
     } catch (err) {
       if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
@@ -78,12 +85,14 @@ const Store = () => {
           agent._id === id ? { ...agent, clients: agent.clients.filter(clientId => clientId !== user._id) } : agent
         ))
         notifySuccess("Agente removido com sucesso!")
+        await fetchAgents()
       } else {
         await unacquireTool(id)
         setStoreTools(prev => prev.map(tool =>
           tool._id === id ? { ...tool, clients: tool.clients.filter(clientId => clientId !== user._id) } : tool
         ))
         notifySuccess("Ferramenta removida com sucesso!")
+        await fetchTools()
       }
     } catch (err) {
       if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
