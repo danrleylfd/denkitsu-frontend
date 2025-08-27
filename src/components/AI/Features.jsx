@@ -70,9 +70,9 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
               Agentes permitem que você personalize a personalidade e comportamento da IA. Diferente das ferramentas, eles não conectam APIs externas, mas definem como a IA deve pensar e responder.
             </p>
             <div>
-              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 1: Abrindo o Gerenciador</h5>
+              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 1: Abrindo a Fábrica</h5>
               <p>
-                Clique no ícone de <Bot size={16} className="inline-block mx-1" /> na barra de chat para abrir o Gerenciador de Agentes e clique em "Criar Novo Agente".
+                Clique no ícone de <Bot size={16} className="inline-block mx-1" /> na barra de chat para abrir a Fábrica de Agentes e clique em "Criar Novo Agente".
               </p>
             </div>
             <div>
@@ -101,8 +101,8 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
               <p>A API de piadas é simples. Para pegar uma piada como texto, precisamos acessar a URL `https://icanhazdadjoke.com/` e enviar um "cabeçalho" (Header) especial dizendo que queremos a resposta em texto puro.</p>
             </div>
             <div>
-              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 2: Abrindo o Construtor</h5>
-              <p>Clique no ícone de <Factory size={16} className="inline-block mx-1" /> na barra de chat para abrir o Construtor de Ferramentas e clique em "Criar Nova Ferramenta".</p>
+              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 2: Abrindo a Fábrica</h5>
+              <p>Clique no ícone de <Factory size={16} className="inline-block mx-1" /> na barra de chat para abrir a Fábrica de Ferramentas e clique em "Criar Nova Ferramenta".</p>
             </div>
             <div>
               <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 3: Preenchendo o Formulário</h5>
