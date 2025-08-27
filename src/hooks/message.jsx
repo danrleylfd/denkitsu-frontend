@@ -9,6 +9,7 @@ const useMessage = (props) => {
     freeModels, payModels, groqModels, selectedAgent,
     setUserPrompt, setImageUrls, setAudioFile, setMessages, setSelectedAgent
   } = props
+  console.log(props)
 
   const { notifyError, notifyWarning, notifyInfo, notifySuccess } = useNotification()
   const [loadingMessages, setLoadingMessages] = useState(false)

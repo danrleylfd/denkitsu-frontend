@@ -1,6 +1,8 @@
 import { useState } from "react"
+
 import { useAI } from "../contexts/AIContext"
 import { useNotification } from "../contexts/NotificationContext"
+
 import SideMenu from "../components/SideMenu"
 import AIHistory from "../components/AI/History"
 import ImagePreview from "../components/AI/ImagePreview"

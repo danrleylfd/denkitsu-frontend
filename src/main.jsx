@@ -19,19 +19,19 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <BackgroundProvider>
         <ThemeProvider>
           <AuthProvider>
-            <AIProvider>
-              <ModelProvider>
-                <AgentProvider>
-                  <ToolProvider>
+            <ModelProvider>
+              <AgentProvider>
+                <ToolProvider>
+                  <AIProvider>
                     <TasksProvider>
                       <DndProvider>
                         <App />
                       </DndProvider>
                     </TasksProvider>
-                  </ToolProvider>
-                </AgentProvider>
-              </ModelProvider>
-            </AIProvider>
+                  </AIProvider>
+                </ToolProvider>
+              </AgentProvider>
+            </ModelProvider>
           </AuthProvider>
         </ThemeProvider>
       </BackgroundProvider>
