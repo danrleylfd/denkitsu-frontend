@@ -15,6 +15,7 @@ const Shortcut = lazy(() => import("../pages/Shortcut"))
 const Redirect = lazy(() => import("../pages/Redirect"))
 
 const AI = lazy(() => import("../pages/AI"))
+const Store = lazy(() => import("../pages/Store"))
 const Profile = lazy(() => import("../pages/Profile"))
 const UserVideos = lazy(() => import("../pages/Video/UserVideos"))
 const Popular = lazy(() => import("../pages/Video/Popular"))
@@ -46,6 +47,7 @@ const AppRoutes = () => {
           {signed ? (
             <>
               <Route path="/" element={<AI />} />
+              <Route path="/" element={<Store />} />
               <Route path="/editor" element={<Editor />} />
               <Route path="/cinema" element={<Cinema />} />
               <Route path="/news" element={<News />} />

@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom"
 import {
   Menu, X, Sun, Moon, Home, Newspaper, Cloud, Languages, Clock, Code, Bot, Kanban, Link2,
   User, LogIn, UserPlus, LogOut, Film, Edit2, ChevronDown, ChevronRight,
-  Upload, Video, TrendingUp, Play, Star, Lock, KeyRound,
+  Upload, Video, TrendingUp, Play, Star, Lock, KeyRound, Store,
 } from "lucide-react"
 import { useTheme } from "../contexts/ThemeContext"
 import { useAuth } from "../contexts/AuthContext"
@@ -102,6 +102,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
 
   const aiItems = [
     { icon: Bot, label: "Chat", to: "/chat" },
+    { icon: Store, label: "Loja", to: "/store" },
     { icon: Code, label: "Codebase", to: "/codebase" },
     { icon: Edit2, label: "Editor", to: "/editor" },
     { icon: Kanban, label: "Kanban", to: "/kanban" },
