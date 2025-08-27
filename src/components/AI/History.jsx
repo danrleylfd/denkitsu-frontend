@@ -7,12 +7,12 @@ import { useAI } from "../../contexts/AIContext"
 
 const AIHistory = ({ toggleLousa, onRegenerate }) => {
   const { user } = useAuth()
-  const { autoScroll, messages, loading } = useAI()
+  const { autoScroll, messages, loadingMessages } = useAI()
   const messagesEndRef = useRef(null)
   // Descomente a linha abaixo para rolar automaticamente para o final da conversa quando novas mensagens chegarem
   useEffect(() => () => {
     if (autoScroll && messagesEndRef.current && messages.length > 0) messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
-  }, [autoScroll, messages, loading])
+  }, [autoScroll, messages, loadingMessages])
   return (
     <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-2">
       {messages.map((msg, pos) => (
@@ -23,7 +23,7 @@ const AIHistory = ({ toggleLousa, onRegenerate }) => {
           toggleLousa={toggleLousa}
           onRegenerate={onRegenerate}
           isLastMessage={pos === messages.length - 1}
-          loading={loading && !msg.content}
+          loading={loadingMessages && !msg.content}
         />
       ))}
       <div ref={messagesEndRef} />

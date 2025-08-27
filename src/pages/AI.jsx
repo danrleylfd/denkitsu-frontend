@@ -26,7 +26,7 @@ const AI = () => {
   const { signed } = useAuth()
   const {
     setFreeModels, setPayModels, setGroqModels, aiKey, imageUrls, setImageUrls,
-    selectedAgent, setSelectedAgent, loading, isImproving, onSendMessage,
+    selectedAgent, setSelectedAgent, loadingMessages, isImproving, onSendMessage,
     handleRegenerateResponse, improvePrompt, fileInputRef, handleFileChange,
     audioFile, setAudioFile, handleSendAudioMessage,
   } = useAI()
@@ -77,12 +77,12 @@ const AI = () => {
       <AIHistory toggleLousa={toggleLousa} onRegenerate={handleRegenerateResponse} />
       <ImagePreview />
       {audioFile && <AIAudio audioFile={audioFile} onCancel={() => setAudioFile(null)} onSend={handleSendAudioMessage} />}
-      <AIMedia mediaDoor={mediaDoor} onAddImage={onAddImage} loading={loading} isImproving={isImproving} />
-      <AIAgents loading={loading || isImproving} agentsDoor={agentsDoor} selectedAgent={selectedAgent} onSelectAgent={setSelectedAgent} />
-      <AITools loading={loading || isImproving} toolsDoor={toolsDoor} />
+      <AIMedia mediaDoor={mediaDoor} onAddImage={onAddImage} loading={loadingMessages} isImproving={isImproving} />
+      <AIAgents loading={loadingMessages || isImproving} agentsDoor={agentsDoor} selectedAgent={selectedAgent} onSelectAgent={setSelectedAgent} />
+      <AITools loading={loadingMessages || isImproving} toolsDoor={toolsDoor} />
       {openDoor === null && <AITip />}
       <AIBar
-        loading={loading}
+        loading={loadingMessages}
         isImproving={isImproving}
         imageCount={imageUrls.length}
         onSendMessage={onSendMessage}
