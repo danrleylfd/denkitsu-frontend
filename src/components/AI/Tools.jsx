@@ -1,5 +1,6 @@
 import { useMemo } from "react"
 
+import { useAuth } from "../../contexts/AuthContext"
 import { useAI } from "../../contexts/AIContext"
 import { useModels } from "../../contexts/ModelContext"
 import { useTools } from "../../contexts/ToolContext"
@@ -9,7 +10,8 @@ import ToolButton from "./ToolButton"
 import DynamicIcon from "../DynamicIcon"
 
 const AITools = ({ toolsDoor }) => {
-  if (!toolsDoor) return null
+  const { signed } = useAuth()
+  if (!signed || !toolsDoor) return null
 
   const { loadingMessages, isImproving } = useAI()
   const { aiProvider, aiKey, model, freeModels, payModels, groqModels, loadingModels } = useModels()
