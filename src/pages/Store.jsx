@@ -10,7 +10,7 @@ import { getPublishedTools, acquireTool, unacquireTool } from "../services/tool"
 
 import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
-import StoreItemCard from "../components/Store/StoreItemCard"
+import StoreItemCard from "../components/Store/ItemCard"
 
 const ContentView = ({ children }) => (
   <main className="flex flex-col p-2 gap-2 mx-auto min-h-dvh w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[85%] ml-[3.5rem] md:ml-auto">
