@@ -16,9 +16,7 @@ const ToolProvider = ({ children }) => {
       setLoadingTools(true)
       const { data: backendData } = await listTools()
       let customData = []
-      if (signed) {
-        customData = await getTools()
-      }
+      if (signed) customData = await getTools()
       setTools({
         internalTools: backendData?.internalTools || [],
         backendTools: backendData?.backendTools || [],
@@ -33,7 +31,7 @@ const ToolProvider = ({ children }) => {
   }, [signed])
 
   useEffect(() => {
-    fetchTools()
+    if (signed) fetchTools()
   }, [fetchTools])
 
   useEffect(() => {

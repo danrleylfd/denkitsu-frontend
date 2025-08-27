@@ -1,5 +1,7 @@
 import { createContext, useState, useEffect, useContext, useCallback, useMemo } from "react"
+
 import { useAuth } from "./AuthContext"
+
 import { getAgents, createAgent, updateAgent, deleteAgent } from "../services/agent"
 import { listAgents } from "../services/aiChat"
 
@@ -16,9 +18,7 @@ const AgentProvider = ({ children }) => {
       setLoadingAgents(true)
       const { data: backendData } = await listAgents()
       let customData = []
-      if (signed) {
-        customData = await getAgents()
-      }
+      if (signed) customData = await getAgents()
       setAgents({
         backendAgents: backendData?.backendAgents || [],
         customAgents: customData || []
@@ -32,7 +32,7 @@ const AgentProvider = ({ children }) => {
   }, [signed])
 
   useEffect(() => {
-    fetchAgents()
+    if (signed) fetchAgents()
   }, [fetchAgents])
 
   const addAgent = async (agentData) => {

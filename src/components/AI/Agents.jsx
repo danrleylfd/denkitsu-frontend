@@ -1,3 +1,4 @@
+import { useAuth } from "../../contexts/AuthContext"
 import { useAgents } from "../../contexts/AgentContext"
 import { useAI } from "../../contexts/AIContext"
 import Paper from "../Paper"
@@ -5,7 +6,8 @@ import Button from "../Button"
 import DynamicIcon from "../DynamicIcon"
 
 const AIAgents = ({ agentsDoor }) => {
-  if (!agentsDoor) return null
+  const { signed } = useAuth()
+  if (!signed || !agentsDoor) return null
   const { agents, selectedAgent, setSelectedAgent, loadingAgents } = useAgents()
   const { loadingMessages, isImproving } = useAI()
 
