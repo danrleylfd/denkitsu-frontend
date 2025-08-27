@@ -1,11 +1,6 @@
-import { useState, useEffect } from "react"
-
-import { useAuth } from "../contexts/AuthContext"
+import { useState } from "react"
 import { useAI } from "../contexts/AIContext"
 import { useNotification } from "../contexts/NotificationContext"
-
-import { getModels } from "../services/aiChat"
-
 import SideMenu from "../components/SideMenu"
 import AIHistory from "../components/AI/History"
 import ImagePreview from "../components/AI/ImagePreview"
@@ -23,12 +18,9 @@ import Lousa from "../components/AI/Lousa"
 const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-dvh mx-auto">{children}</main>
 
 const AI = () => {
-  const { signed } = useAuth()
   const {
-    setFreeModels, setPayModels, setGroqModels, aiKey, imageUrls, setImageUrls,
-    selectedAgent, setSelectedAgent, onSendMessage,
-    handleRegenerateResponse, improvePrompt, fileInputRef, handleFileChange,
-    audioFile, setAudioFile, handleSendAudioMessage,
+    imageUrls, setImageUrls, onSendMessage, handleRegenerateResponse, improvePrompt,
+    fileInputRef, handleFileChange, audioFile, setAudioFile, handleSendAudioMessage, isImproving
   } = useAI()
   const { notifyWarning, notifyError } = useNotification()
   const [lousaContent, setLousaContent] = useState(null)
@@ -44,20 +36,6 @@ const AI = () => {
   const agentsDoor = openDoor === "agents"
   const toolsDoor = openDoor === "tools"
   const mediaDoor = openDoor === "media"
-
-  useEffect(() => {
-    const fetchModels = async () => {
-      try {
-        const { freeModels: loadedFree, payModels: loadedPay, groqModels: loadedGroq } = await getModels()
-        setFreeModels(loadedFree?.filter(model => !model.id.includes("whisper")) || [])
-        if (aiKey) setPayModels(loadedPay?.filter(model => !model.id.includes("whisper")) || [])
-        setGroqModels(loadedGroq?.filter(model => !model.id.includes("whisper")) || [])
-      } catch (error) {
-        notifyError(error.message || "Falha ao carregar modelos de IA.")
-      }
-    }
-    if (signed) fetchModels()
-  }, [aiKey, signed])
 
   const onAddImage = () => {
     if (imageUrls.length >= 3) return notifyWarning("Você pode adicionar no máximo 3 imagens.")
@@ -78,10 +56,11 @@ const AI = () => {
       <ImagePreview />
       {audioFile && <AIAudio audioFile={audioFile} onCancel={() => setAudioFile(null)} onSend={handleSendAudioMessage} />}
       <AIMedia mediaDoor={mediaDoor} onAddImage={onAddImage} />
-      <AIAgents agentsDoor={agentsDoor} selectedAgent={selectedAgent} onSelectAgent={setSelectedAgent} />
+      <AIAgents agentsDoor={agentsDoor} />
       <AITools toolsDoor={toolsDoor} />
       {openDoor === null && <AITip />}
       <AIBar
+        isImproving={isImproving}
         imageCount={imageUrls.length}
         onSendMessage={onSendMessage}
         improvePrompt={improvePrompt}

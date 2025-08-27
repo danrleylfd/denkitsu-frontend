@@ -1,15 +1,29 @@
 import { ImagePlus, AudioWaveform, Mic, AudioLines, FileAudio, Mouse } from "lucide-react"
-
 import { useAI } from "../../contexts/AIContext"
 import { useModels } from "../../contexts/ModelContext"
-
 import Paper from "../Paper"
 import Button from "../Button"
 
 const AIMedia = ({ mediaDoor, onAddImage }) => {
   if (!mediaDoor) return null
-  const { loadingMessages, isImproving, stream, toggleStream, autoScroll, toggleAutoScroll, listening, toggleListening, recording, handleStartRecording, handleStopRecording, handleUploadClick } = useAI()
+
+  const {
+    stream,
+    toggleStream,
+    autoScroll,
+    toggleAutoScroll,
+    listening,
+    toggleListening,
+    recording,
+    handleStartRecording,
+    handleStopRecording,
+    handleUploadClick,
+    loadingMessages,
+    isImproving,
+  } = useAI()
+
   const { aiProvider, model, freeModels, payModels, groqModels } = useModels()
+
   const allModels = [...freeModels, ...payModels, ...groqModels]
   const selectedModel = allModels.find((m) => m.id === model)
   const isImageSupported = selectedModel?.supports_images ?? false
