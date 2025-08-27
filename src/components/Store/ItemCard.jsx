@@ -1,11 +1,13 @@
 import { memo } from "react"
-import { Plus, Trash2 } from "lucide-react"
+import { Check, Plus, Trash2 } from "lucide-react"
 import Paper from "../Paper"
 import DynamicIcon from "../DynamicIcon"
 import PurpleLink from "../Embeds/PurpleLink"
 import Button from "../Button"
 
-const StoreItemCard = memo(({ item, onAcquire, onUnacquire, isAcquired, loading }) => {
+const StoreItemCard = memo(({ item, user, onAcquire, onUnacquire, isAcquired, loading }) => {
+  const isAuthor = item.author?._id === user?._id
+
   const handleAction = (e) => {
     e.stopPropagation()
     if (isAcquired) {
@@ -31,7 +33,13 @@ const StoreItemCard = memo(({ item, onAcquire, onUnacquire, isAcquired, loading 
           <img src={item.author.avatarUrl} alt={item.author.name} className="w-6 h-6 rounded-full object-cover transition-transform group-hover:scale-110" />
           <span className="text-xs font-medium group-hover:underline">{item.author.name}</span>
         </PurpleLink>
-        {isAcquired ? (
+
+        {isAuthor ? (
+          <Button variant="success" $rounded disabled title="Você é o criador deste item">
+            <Check size={16} className="mr-1" />
+            Adicionado
+          </Button>
+        ) : isAcquired ? (
           <Button
             onClick={handleAction}
             variant="danger"
