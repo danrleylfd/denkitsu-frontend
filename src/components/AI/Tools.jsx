@@ -1,21 +1,25 @@
 import { useMemo } from "react"
+
 import { useAI } from "../../contexts/AIContext"
+import { useModels } from "../../contexts/ModelContext"
 import { useTools } from "../../contexts/ToolContext"
+
 import Paper from "../Paper"
 import ToolButton from "./ToolButton"
 import DynamicIcon from "../DynamicIcon"
 
-const AITools = ({ loading, toolsDoor }) => {
+const AITools = ({ toolsDoor }) => {
   if (!toolsDoor) return null
 
-  const { aiProvider, aiKey, model, handleToolToggle, freeModels, payModels, groqModels } = useAI()
-  const { tools } = useTools()
+  const { loading } = useAI()
+  const { aiProvider, aiKey, model, freeModels, payModels, groqModels, loadingModels } = useModels()
+  const { tools, activeTools, handleToolToggle } = useTools()
 
   const { internalTools, backendTools, customTools } = useMemo(() => {
     const allModels = [...freeModels, ...payModels, ...groqModels]
     const selectedModel = allModels.find(m => m.id === model)
     const processTool = (tool) => {
-      let isDisabled = loading
+      let isDisabled = loading || loadingModels
       const isCompoundModel = model?.startsWith("compound-")
       const isGptOssModel = model?.startsWith("openai/gpt-oss-")
       switch (tool.name) {
@@ -40,10 +44,10 @@ const AITools = ({ loading, toolsDoor }) => {
       backendTools: tools.backendTools.map(processTool),
       customTools: tools.customTools.map(tool => ({
         ...tool,
-        isDisabled: loading || aiKey.length === 0 || !selectedModel?.supports_tools
+        isDisabled: loading || loadingModels || aiKey.length === 0 || !selectedModel?.supports_tools
       }))
     }
-  }, [tools, model, loading, aiKey, aiProvider, freeModels, payModels, groqModels])
+  }, [tools, model, loading, loadingModels, aiKey, aiProvider, freeModels, payModels, groqModels])
 
   const Separator = () => <div className="h-6 w-px bg-bLight dark:bg-bDark mx-1" />
 
@@ -54,19 +58,19 @@ const AITools = ({ loading, toolsDoor }) => {
       flex flex-wrap items-center justify-center mx-auto`}
     >
       {internalTools.map(({ name, title, Icon, isDisabled }) => (
-        <ToolButton key={name} toolKey={name} title={title} onToggle={handleToolToggle} disabled={isDisabled}>
+        <ToolButton key={name} toolKey={name} title={title} onToggle={handleToolToggle} isActive={activeTools.has(name)} disabled={isDisabled}>
           <DynamicIcon name={Icon} size={16} />
         </ToolButton>
       ))}
       {(internalTools.length > 0 && backendTools.length > 0) && <Separator />}
       {backendTools.map(({ name, title, Icon, isDisabled }) => (
-        <ToolButton key={name} toolKey={name} title={title} onToggle={handleToolToggle} disabled={isDisabled}>
+        <ToolButton key={name} toolKey={name} title={title} onToggle={handleToolToggle} isActive={activeTools.has(name)} disabled={isDisabled}>
           <DynamicIcon name={Icon} size={16} />
         </ToolButton>
       ))}
       {((internalTools.length > 0 || backendTools.length > 0) && customTools.length > 0) && <Separator />}
       {customTools.map(({ name, title, Icon, isDisabled }) => (
-        <ToolButton key={name} toolKey={name} title={title} onToggle={handleToolToggle} disabled={isDisabled}>
+        <ToolButton key={name} toolKey={name} title={title} onToggle={handleToolToggle} isActive={activeTools.has(name)} disabled={isDisabled}>
           <DynamicIcon name={Icon} size={16} />
         </ToolButton>
       ))}
