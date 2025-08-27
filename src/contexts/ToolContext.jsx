@@ -7,13 +7,13 @@ const ToolContext = createContext({})
 
 const ToolProvider = ({ children }) => {
   const [tools, setTools] = useState({ internalTools: [], backendTools: [], customTools: [] })
-  const [loading, setLoading] = useState(true)
+  const [loadingTools, setLoadingTools] = useState(true)
   const [activeTools, setActiveTools] = useState(new Set())
   const { signed } = useAuth()
 
   const fetchTools = useCallback(async () => {
     try {
-      setLoading(true)
+      setLoadingTools(true)
       const { data: backendData } = await listTools()
       let customData = []
       if (signed) {
@@ -28,7 +28,7 @@ const ToolProvider = ({ children }) => {
       console.error("Failed to fetch user tools:", error)
       setTools({ internalTools: [], backendTools: [], customTools: [] })
     } finally {
-      setLoading(false)
+      setLoadingTools(false)
     }
   }, [signed])
 
@@ -37,7 +37,7 @@ const ToolProvider = ({ children }) => {
   }, [fetchTools])
 
   useEffect(() => {
-    if (loading) return
+    if (loadingTools) return
 
     const allTools = [
       ...tools.internalTools,
@@ -55,7 +55,7 @@ const ToolProvider = ({ children }) => {
       } catch {}
     })
     setActiveTools(initialActiveTools)
-  }, [tools, loading])
+  }, [tools, loadingTools])
 
   const handleToolToggle = useCallback((toolKey, isActive) => {
     setActiveTools(prev => {
@@ -85,9 +85,9 @@ const ToolProvider = ({ children }) => {
   }
 
   const value = useMemo(() => ({
-    tools, loading, fetchTools, addTool, editTool, removeTool,
+    tools, loadingTools, fetchTools, addTool, editTool, removeTool,
     activeTools, handleToolToggle
-  }), [tools, loading, fetchTools, addTool, editTool, removeTool, activeTools, handleToolToggle])
+  }), [tools, loadingTools, fetchTools, addTool, editTool, removeTool, activeTools, handleToolToggle])
 
   return (
     <ToolContext.Provider value={value}>

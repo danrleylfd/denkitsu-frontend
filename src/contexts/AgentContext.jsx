@@ -7,13 +7,13 @@ const AgentContext = createContext({})
 
 const AgentProvider = ({ children }) => {
   const [agents, setAgents] = useState({ backendAgents: [], customAgents: [] })
-  const [loading, setLoading] = useState(true)
+  const [loadingAgents, setLoadingAgents] = useState(true)
   const [selectedAgent, setSelectedAgent] = useState("Roteador")
   const { signed } = useAuth()
 
   const fetchAgents = useCallback(async () => {
     try {
-      setLoading(true)
+      setLoadingAgents(true)
       const { data: backendData } = await listAgents()
       let customData = []
       if (signed) {
@@ -27,7 +27,7 @@ const AgentProvider = ({ children }) => {
       console.error("Failed to fetch agents:", error)
       setAgents({ backendAgents: [], customAgents: [] })
     } finally {
-      setLoading(false)
+      setLoadingAgents(false)
     }
   }, [signed])
 
@@ -53,9 +53,9 @@ const AgentProvider = ({ children }) => {
   }
 
   const value = useMemo(() => ({
-    agents, loading, fetchAgents, addAgent, editAgent, removeAgent,
+    agents, loadingAgents, fetchAgents, addAgent, editAgent, removeAgent,
     selectedAgent, setSelectedAgent
-  }), [agents, loading, fetchAgents, addAgent, editAgent, removeAgent, selectedAgent])
+  }), [agents, loadingAgents, fetchAgents, addAgent, editAgent, removeAgent, selectedAgent])
 
 
   return (

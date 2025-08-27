@@ -11,7 +11,7 @@ const useMessage = (props) => {
   } = props
 
   const { notifyError, notifyWarning, notifyInfo, notifySuccess } = useNotification()
-  const [loading, setLoading] = useState(false)
+  const [loadingMessages, setLoadingMessages] = useState(false)
   const [isImproving, setIsImproving] = useState(false)
 
   const createAssistantMessage = (data, routingInfo = null) => {
@@ -30,11 +30,11 @@ const useMessage = (props) => {
   const executeSendMessage = useCallback(async (historyToProcess, agentForCall, attempt = 1, routingInfo = null) => {
     if (attempt > 2) {
       notifyError("Erro de roteamento: Loop de agentes detectado.")
-      setLoading(false)
+      setLoadingMessages(false)
       return
     }
 
-    setLoading(true)
+    setLoadingMessages(true)
     const apiMessages = historyToProcess.map(({ role, content }) =>
       Array.isArray(content)
         ? { role, content: content.map(item => (item.type === "text" ? { type: "text", text: item.content } : item)) }
@@ -96,7 +96,7 @@ const useMessage = (props) => {
           if (assistantMessage) {
             setMessages(prev => [...prev, assistantMessage])
           }
-          setLoading(false)
+          setLoadingMessages(false)
         }
       }
     } catch (err) {
@@ -110,7 +110,7 @@ const useMessage = (props) => {
         return prev
       })
     } finally {
-      setLoading(false)
+      setLoadingMessages(false)
     }
   }, [
     aiKey, aiProvider, model, freeModels, payModels, groqModels, activeTools, stream, selectedAgent,
@@ -118,7 +118,7 @@ const useMessage = (props) => {
   ])
 
   const onSendMessage = useCallback(async () => {
-    if (loading || isImproving) return
+    if (loadingMessages || isImproving) return
     const promptText = userPrompt.trim()
     if (!promptText && imageUrls.length === 0) return
 
@@ -135,11 +135,11 @@ const useMessage = (props) => {
     setAudioFile(null)
 
     await executeSendMessage(history, selectedAgent)
-  }, [loading, isImproving, userPrompt, imageUrls, messages, selectedAgent, executeSendMessage, setMessages, setUserPrompt, setImageUrls, setAudioFile])
+  }, [loadingMessages, isImproving, userPrompt, imageUrls, messages, selectedAgent, executeSendMessage, setMessages, setUserPrompt, setImageUrls, setAudioFile])
 
   const handleSendAudioMessage = useCallback(async () => {
     if (!audioFile) return
-    setLoading(true)
+    setLoadingMessages(true)
     const userMessagePlaceholder = { role: "user", content: `[Áudio: ${audioFile.name || "Gravação"}]`, timestamp: new Date().toISOString() }
     const historyWithPlaceholder = [...messages, userMessagePlaceholder]
     setMessages(historyWithPlaceholder)
@@ -154,12 +154,12 @@ const useMessage = (props) => {
       if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
       else notifyError("Falha ao transcrever o áudio.")
       setMessages(prev => prev.filter(m => m.timestamp !== userMessagePlaceholder.timestamp))
-      setLoading(false)
+      setLoadingMessages(false)
     }
   }, [audioFile, messages, executeSendMessage, setAudioFile, setMessages, notifyError, selectedAgent])
 
   const handleRegenerateResponse = useCallback(async () => {
-    if (loading || isImproving) return
+    if (loadingMessages || isImproving) return
     const lastMessage = messages[messages.length - 1]
     if (lastMessage?.role !== "assistant") {
       notifyWarning("Apenas a última resposta da IA pode ser regenerada.")
@@ -168,10 +168,10 @@ const useMessage = (props) => {
     const historyWithoutLastResponse = messages.slice(0, -1)
     setMessages(historyWithoutLastResponse)
     await executeSendMessage(historyWithoutLastResponse, selectedAgent)
-  }, [loading, isImproving, messages, executeSendMessage, notifyWarning, setMessages, selectedAgent])
+  }, [loadingMessages, isImproving, messages, executeSendMessage, notifyWarning, setMessages, selectedAgent])
 
   const improvePrompt = useCallback(async () => {
-    if (!userPrompt.trim() || isImproving || loading) return
+    if (!userPrompt.trim() || isImproving || loadingMessages) return
     setIsImproving(true)
     notifyInfo("Aperfeiçoando seu prompt...")
     const systemMessage = { role: "system", content: `Sempre responda em ${navigator.language}` }
@@ -194,9 +194,9 @@ const useMessage = (props) => {
     } finally {
       setIsImproving(false)
     }
-  }, [userPrompt, isImproving, loading, aiKey, aiProvider, model, freeModels, payModels, groqModels, setUserPrompt, notifyInfo, notifySuccess, notifyError])
+  }, [userPrompt, isImproving, loadingMessages, aiKey, aiProvider, model, freeModels, payModels, groqModels, setUserPrompt, notifyInfo, notifySuccess, notifyError])
 
-  return { loading, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt, handleSendAudioMessage }
+  return { loadingMessages, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt, handleSendAudioMessage }
 }
 
 export default useMessage
