@@ -4,11 +4,13 @@ import {
   Bold, Italic, Underline, Strikethrough, Heading, Link as LinkIcon, List, Image as ImageIcon
 } from "lucide-react"
 
+import { useModels } from "../contexts/ModelContext"
+
+import { sendMessage } from "../services/aiChat"
+
 import SideMenu from "../components/SideMenu"
 import Markdown from "../components/Markdown"
 import Button from "../components/Button"
-import { useAI } from "../contexts/AIContext"
-import { sendMessage } from "../services/aiChat"
 
 const EditorContentView = ({ children }) => (
   <main className="flex flex-1 flex-col h-dvh">{children}</main>
@@ -20,7 +22,7 @@ const Editor = () => {
   )
   const [activeTab, setActiveTab] = useState("editor")
   const [loadingAi, setLoadingAi] = useState(false)
-  const { aiKey, model, aiProvider, freeModels, payModels, groqModels } = useAI()
+  const { aiKey, aiProvider, model, freeModels, payModels, groqModels } = useModels()
 
   const textAreaRef = useRef(null)
 

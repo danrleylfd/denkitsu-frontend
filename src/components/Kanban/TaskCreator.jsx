@@ -1,6 +1,6 @@
 import { Plus, Sparkle, Brain, Waypoints, } from "lucide-react"
 
-import { useAI } from "../../contexts/AIContext"
+import { useModels } from "../../contexts/ModelContext"
 import { useTasks } from "../../contexts/TasksContext"
 
 import Paper from "../Paper"
@@ -8,7 +8,7 @@ import Input from "../Input"
 import Button from "../Button"
 
 const TaskCreator = () => {
-  const { aiProvider, aiProviderToggle } = useAI()
+  const { aiProvider, aiProviderToggle } = useModels()
   const { newTask, setNewTask, addTask, generateTasksWithAI, loading } = useTasks()
   return (
     <Paper className="bg-lightBg-primary dark:bg-darkBg-primary">

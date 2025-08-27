@@ -8,7 +8,7 @@ import useAudio from "../hooks/audio"
 const AIContext = createContext()
 
 const AIProvider = ({ children }) => {
-  const { aiProvider, model, aiKey, freeModels, payModels, groqModels } = useModels()
+  const { aiProvider, aiKey, model, freeModels, payModels, groqModels } = useModels()
   const { activeTools } = useTools()
   const { selectedAgent, setSelectedAgent } = useAgents()
 
