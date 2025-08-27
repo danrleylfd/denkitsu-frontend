@@ -39,9 +39,31 @@ const deleteTool = async (toolId) => {
   }
 }
 
+const getPublishedTools = async () => {
+  try {
+    const response = await api.get("/tools/store")
+    return response.data
+  } catch (error) {
+    console.error("Error on getPublishedTools:", error.response?.data?.error?.message || error.message)
+    throw error
+  }
+}
+
+const acquireTool = async (toolId) => {
+  try {
+    const response = await api.post(`/tools/store/${toolId}/acquire`)
+    return response.data
+  } catch (error) {
+    console.error(`Error on acquireTool ${toolId}:`, error.response?.data?.error?.message || error.message)
+    throw error
+  }
+}
+
 export {
   getTools,
   createTool,
   updateTool,
   deleteTool,
+  getPublishedTools,
+  acquireTool
 }

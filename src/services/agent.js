@@ -39,9 +39,31 @@ const deleteAgent = async (agentId) => {
   }
 }
 
+const getPublishedAgents = async () => {
+  try {
+    const response = await api.get("/agents/store")
+    return response.data
+  } catch (error) {
+    console.error("Error on getPublishedAgents:", error.response?.data?.error?.message || error.message)
+    throw error
+  }
+}
+
+const acquireAgent = async (agentId) => {
+  try {
+    const response = await api.post(`/agents/store/${agentId}/acquire`)
+    return response.data
+  } catch (error) {
+    console.error(`Error on acquireAgent ${agentId}:`, error.response?.data?.error?.message || error.message)
+    throw error
+  }
+}
+
 export {
   getAgents,
   createAgent,
   updateAgent,
   deleteAgent,
+  getPublishedAgents,
+  acquireAgent
 }

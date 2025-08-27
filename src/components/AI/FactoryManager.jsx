@@ -1,5 +1,5 @@
 import { useState, memo, useEffect } from "react"
-import { Plus, Trash2, Pencil, Save, X, ArrowLeft, Bot, Code, PocketKnife, Factory } from "lucide-react"
+import { Plus, Trash2, Pencil, Save, X, ArrowLeft, Bot, Code, PocketKnife, Factory, Share2 } from "lucide-react"
 
 import { useAgents } from "../../contexts/AgentContext"
 import { useTools } from "../../contexts/ToolContext"
@@ -15,11 +15,12 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
     name: agent?.name || "",
     Icon: agent?.Icon || "Bot",
     description: agent?.description || "",
+    published: agent?.published || false,
     prompt: {
       goal: agent?.prompt?.goal || "",
       returnFormat: agent?.prompt?.returnFormat || "",
       warning: agent?.prompt?.warning || "",
-      contextDump: agent?.prompt?.contextDump || "",
+      contextDump: agent?.prompt?.contextDump || ""
     }
   })
 
@@ -85,7 +86,19 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
         </details>
 
       </div>
-      <div className="flex justify-end pt-2 border-t border-bLight dark:border-bDark">
+      <div className="flex justify-between items-center pt-2 border-t border-bLight dark:border-bDark">
+        <label htmlFor="agent-published" className="flex items-center gap-2 cursor-pointer text-sm font-bold text-lightFg-secondary dark:text-darkFg-secondary">
+          <Share2 size={16} />
+          Publicar na Loja
+          <input
+            id="agent-published"
+            type="checkbox"
+            checked={formData.published}
+            onChange={(e) => handleChange("published", e.target.checked)}
+            disabled={loading}
+            className="w-4 h-4 rounded text-primary-base bg-lightBg-tertiary border-gray-300 focus:ring-primary-base dark:focus:ring-primary-base dark:ring-offset-darkBg-primary dark:bg-darkBg-tertiary dark:border-gray-600"
+          />
+        </label>
         <Button type="submit" variant="primary" $rounded loading={loading} disabled={loading || !formData.name || !formData.description}>
           {!loading && <Save size={16} className="mr-2" />} Salvar Agente
         </Button>
@@ -145,6 +158,7 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
       title: tool?.title || "",
       description: tool?.description || "",
       Icon: tool?.Icon || "PocketKnife",
+      published: tool?.published || false,
       method: tool?.httpConfig?.method || "GET",
       url: tool?.httpConfig?.url || "",
       parameters: JSON.stringify(tool?.parameters || { type: "object", properties: {}, required: [] }, null, 2),
@@ -166,13 +180,14 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
         description: formData.description,
         title: formData.title,
         Icon: formData.Icon,
+        published: formData.published,
         parameters: JSON.parse(formData.parameters),
         httpConfig: {
           method: formData.method,
           url: formData.url,
           queryParams: JSON.parse(formData.queryParams),
           headers: JSON.parse(formData.headers),
-          body: JSON.parse(formData.body),
+          body: JSON.parse(formData.body)
         }
       }
       onSave(toolData)
@@ -237,7 +252,19 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
           </div>
         </details>
       </div>
-      <div className="flex justify-end pt-4 border-t border-bLight dark:border-bDark">
+      <div className="flex justify-between items-center pt-4 border-t border-bLight dark:border-bDark">
+        <label htmlFor="tool-published" className="flex items-center gap-2 cursor-pointer text-sm font-bold text-lightFg-secondary dark:text-darkFg-secondary">
+          <Share2 size={16} />
+          Publicar na Loja
+          <input
+            id="tool-published"
+            type="checkbox"
+            checked={formData.published}
+            onChange={(e) => handleChange("published", e.target.checked)}
+            disabled={loading}
+            className="w-4 h-4 rounded text-primary-base bg-lightBg-tertiary border-gray-300 focus:ring-primary-base dark:focus:ring-primary-base dark:ring-offset-darkBg-primary dark:bg-darkBg-tertiary dark:border-gray-600"
+          />
+        </label>
         <Button type="submit" variant="primary" $rounded loading={loading} disabled={loading || !formData.name || !formData.url}>
           {!loading && <Save size={16} className="mr-2" />} Salvar Ferramenta
         </Button>
