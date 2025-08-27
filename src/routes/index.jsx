@@ -47,7 +47,7 @@ const AppRoutes = () => {
           {signed ? (
             <>
               <Route path="/" element={<AI />} />
-              <Route path="/" element={<Store />} />
+              <Route path="/store" element={<Store />} />
               <Route path="/editor" element={<Editor />} />
               <Route path="/cinema" element={<Cinema />} />
               <Route path="/news" element={<News />} />
