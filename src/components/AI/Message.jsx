@@ -5,7 +5,7 @@ import Markdown from "../Markdown"
 import Button from "../Button"
 import PurpleLink from "../Embeds/PurpleLink"
 
-const AIMessage = ({ msg, user, toggleLousa, loading, onRegenerate, isLastMessage }) => {
+const AIMessage = ({ msg, user, toggleLousa, loadingMessage, onRegenerate, isLastMessage }) => {
   const isSystem = msg.role === "system"
   if (isSystem) return null
   const isAssistant = msg.role === "assistant"
@@ -24,7 +24,7 @@ const AIMessage = ({ msg, user, toggleLousa, loading, onRegenerate, isLastMessag
   const hasContentStarted = msg.content && msg.content.length > 0
 
   const ReasoningBlock = isAssistant && msg.reasoning && (
-    <Markdown loading={loading} content={msg.reasoning} think />
+    <Markdown loading={loadingMessage} content={msg.reasoning} think />
   )
 
   const ToolCallBlock = isAssistant && msg.toolCalls?.length > 0 && (
@@ -68,13 +68,13 @@ const AIMessage = ({ msg, user, toggleLousa, loading, onRegenerate, isLastMessag
           ? (<>{ReasoningBlock}{ToolCallBlock}</>)
           : (<>{ToolCallBlock}{ReasoningBlock}</>)
         }
-        {loading && !hasContentStarted && msg.toolCalls?.length === 0 ? <Button variant="outline" size="icon" $rounded loading={true} disabled /> : renderContent()}
+        {loadingMessage && !hasContentStarted && msg.toolCalls?.length === 0 ? <Button variant="outline" size="icon" $rounded loading={true} disabled /> : renderContent()}
         {msg.timestamp && (
           <small className="ml-auto pl-2 text-xs text-lightFg-secondary dark:text-darkFg-secondary whitespace-nowrap">
             {new Date(msg.timestamp).toLocaleString("pt-BR")}
           </small>
         )}
-        {!loading && isAssistant && (
+        {!loadingMessage && isAssistant && (
           <AIReactions message={msg} toggleLousa={toggleLousa} onRegenerate={onRegenerate} isLastMessage={isLastMessage} />
         )}
       </div>

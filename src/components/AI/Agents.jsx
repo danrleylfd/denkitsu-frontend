@@ -1,11 +1,13 @@
+import { useAI } from "../../contexts/AIContext"
 import { useAgents } from "../../contexts/AgentContext"
 
 import Paper from "../Paper"
 import Button from "../Button"
 import DynamicIcon from "../DynamicIcon"
 
-const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
+const AIAgents = ({ selectedAgent, onSelectAgent, agentsDoor }) => {
   if (!agentsDoor) return null
+  const { loadingMessages, isImproving } = useAI()
   const { agents } = useAgents()
 
   const Separator = () => <div className="h-6 w-px bg-bLight dark:bg-bDark mx-1" />
@@ -25,7 +27,7 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
           $rounded
           title={`${name}: ${description}`}
           onClick={() => onSelectAgent(name)}
-          disabled={loading}
+          disabled={loadingMessages || isImproving}
         >
           <DynamicIcon name={Icon} size={16} />
         </Button>
@@ -40,7 +42,7 @@ const AIAgents = ({ loading, selectedAgent, onSelectAgent, agentsDoor }) => {
           $rounded
           title={`${name}: ${description}`}
           onClick={() => onSelectAgent(name)}
-          disabled={loading}
+          disabled={loadingMessages || isImproving}
         >
           <DynamicIcon name={Icon} size={16} />
         </Button>

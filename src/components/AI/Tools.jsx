@@ -11,7 +11,7 @@ import DynamicIcon from "../DynamicIcon"
 const AITools = ({ toolsDoor }) => {
   if (!toolsDoor) return null
 
-  const { loading } = useAI()
+  const { loadingMessages, isImproving } = useAI()
   const { aiProvider, aiKey, model, freeModels, payModels, groqModels, loadingModels } = useModels()
   const { tools, activeTools, handleToolToggle } = useTools()
 
@@ -19,7 +19,7 @@ const AITools = ({ toolsDoor }) => {
     const allModels = [...freeModels, ...payModels, ...groqModels]
     const selectedModel = allModels.find(m => m.id === model)
     const processTool = (tool) => {
-      let isDisabled = loading || loadingModels
+      let isDisabled = loadingMessages || isImproving || loadingModels
       const isCompoundModel = model?.startsWith("compound-")
       const isGptOssModel = model?.startsWith("openai/gpt-oss-")
       switch (tool.name) {
@@ -44,10 +44,10 @@ const AITools = ({ toolsDoor }) => {
       backendTools: tools.backendTools.map(processTool),
       customTools: tools.customTools.map(tool => ({
         ...tool,
-        isDisabled: loading || loadingModels || aiKey.length === 0 || !selectedModel?.supports_tools
+        isDisabled: loadingMessages || isImproving || loadingModels || aiKey.length === 0 || !selectedModel?.supports_tools
       }))
     }
-  }, [tools, model, loading, loadingModels, aiKey, aiProvider, freeModels, payModels, groqModels])
+  }, [tools, model, loadingMessages || isImproving, loadingModels, aiKey, aiProvider, freeModels, payModels, groqModels])
 
   const Separator = () => <div className="h-6 w-px bg-bLight dark:bg-bDark mx-1" />
 
