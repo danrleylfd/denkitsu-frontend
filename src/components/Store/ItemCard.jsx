@@ -6,6 +6,11 @@ import PurpleLink from "../Embeds/PurpleLink"
 import Button from "../Button"
 
 const StoreItemCard = memo(({ item, user, onAcquire, onUnacquire, isAcquired, loading }) => {
+  console.log("DEBUG CARD:", {
+    "Item Author ID": item.author?._id,
+    "Logged In User ID": user?._id,
+    "Are IDs Equal?": item.author?._id === user?._id
+  })
   const isAuthor = item.author?._id === user?._id
 
   const handleAction = (e) => {
