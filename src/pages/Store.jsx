@@ -124,6 +124,7 @@ const Store = () => {
           <StoreItemCard
             key={item._id}
             item={item}
+            user={user}
             onAcquire={() => handleAcquire(item._id, type)}
             onUnacquire={() => handleUnacquire(item._id, type)}
             isAcquired={item.isAcquired}
