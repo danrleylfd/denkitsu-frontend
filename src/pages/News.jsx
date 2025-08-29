@@ -5,7 +5,7 @@ import { useAI } from "../contexts/AIContext"
 import { useModels } from "../contexts/ModelContext"
 import { useNotification } from "../contexts/NotificationContext"
 
-import { getNewsPaginate } from "../services/news"
+import { getNews, getNewsByPageByPage } from "../services/news"
 import { generateNews } from "../services/aiChat"
 
 import SideMenu from "../components/SideMenu"
@@ -35,7 +35,7 @@ const News = () => {
   const loadNews = useCallback(async (currentPage) => {
     setLoading(true)
     try {
-      const data = await getNewsPaginate(currentPage)
+      const data = await getNewsByPage(currentPage)
       if (data && data.news) {
         setNews((prevNews) => [...prevNews, ...data.news])
         setHasMore(data.pagination.hasNextPage)

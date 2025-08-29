@@ -10,7 +10,7 @@ const publishNews = async (content, source) => {
   }
 }
 
-const getNews = async () => {
+const getAllNews = async () => {
   try {
     const response = await api.get(`/news/`)
     return response.data
@@ -20,7 +20,7 @@ const getNews = async () => {
   }
 }
 
-const getNewsPaginate = async (page) => {
+const getNewsByPage = async (page) => {
   try {
     const response = await api.get(`/news/pages?page=${page}`)
     return response.data
@@ -30,4 +30,16 @@ const getNewsPaginate = async (page) => {
   }
 }
 
-export { publishNews, getNews, getNewsPaginate }
+const getNewsByCursor = async (cursor = null, limit = 10) => {
+  try {
+    const params = new URLSearchParams({ limit })
+    if (cursor) params.append("cursor", cursor)
+    const response = await api.get(`/news/cursor?${params.toString()}`)
+    return response.data
+  } catch (error) {
+    console.log("Error on getNewsByCursor:", error.response?.data?.error?.message || error.message)
+    throw error
+  }
+}
+
+export { publishNews, getAllNews, getNewsByPage, getNewsByCursor }
