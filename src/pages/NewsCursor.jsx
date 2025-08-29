@@ -37,26 +37,18 @@ const News = () => {
 
   const loadNews = useCallback(async () => {
     if (isFetching.current || !hasMore) return
-
     isFetching.current = true
     setLoading(true)
-
     const cursorToFetch = initialLoadDone.current ? nextCursor : null
-
     try {
       const data = await getNewsByCursor(cursorToFetch)
       if (data && data.news) {
-        if (!initialLoadDone.current) {
-          setNews(data.news)
-        } else {
-          setNews(prev => [...prev, ...data.news])
-        }
+        if (!initialLoadDone.current) setNews(data.news)
+        else setNews(prev => [...prev, ...data.news])
         setNextCursor(data.nextCursor)
         setHasMore(data.nextCursor !== null)
         initialLoadDone.current = true
-      } else {
-        setHasMore(false)
-      }
+      } else setHasMore(false)
     } catch (err) {
       if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
       else notifyError("Não foi possível carregar as notícias.")
@@ -67,18 +59,14 @@ const News = () => {
   }, [nextCursor, hasMore, notifyError])
 
   useEffect(() => {
-    if (!initialLoadDone.current) {
-      loadNews()
-    }
+    if (!initialLoadDone.current) loadNews()
   }, [loadNews])
 
   const lastNewsElementRef = useCallback(node => {
     if (loading) return
     if (observer.current) observer.current.disconnect()
     observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMore) {
-        loadNews()
-      }
+      if (entries[0].isIntersecting && hasMore) loadNews()
     })
     if (node) observer.current.observe(node)
   }, [loading, hasMore, loadNews])
@@ -153,11 +141,8 @@ const News = () => {
           </>
         )
 
-        if (news.length === index + 1) {
-          return (<Paper ref={lastNewsElementRef} key={article._id || index}>{cardContent}</Paper>)
-        } else {
-          return (<Paper key={article._id || index}>{cardContent}</Paper>)
-        }
+        if (news.length === index + 1) return (<Paper ref={lastNewsElementRef} key={article._id || index}>{cardContent}</Paper>)
+        else return (<Paper key={article._id || index}>{cardContent}</Paper>)
       })}
       {loading && <Button variant="outline" $rounded loading={true} disabled />}
       {!hasMore && news.length > 0 && <p className="text-center text-white mt-4">Fim das notícias.</p>}
