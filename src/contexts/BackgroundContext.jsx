@@ -6,7 +6,7 @@ const unsplashApiUrl = "https://api.unsplash.com/photos/random"
 const unsplashAccessKey = "G0_VOjkauHvBWnVTKcMVKGlpumo7trpktjRD-y7YHMQ"
 
 const BackgroundProvider = ({ children }) => {
-  const [background, setBackground] = useState("/background.jpg")
+  const [background, setBackground] = useState(null)
 
   const fetchNewBackground = useCallback(async () => {
     if (!unsplashAccessKey) {
