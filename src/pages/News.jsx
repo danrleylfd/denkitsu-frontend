@@ -5,7 +5,7 @@ import { useAI } from "../contexts/AIContext"
 import { useModels } from "../contexts/ModelContext"
 import { useNotification } from "../contexts/NotificationContext"
 
-import { getNews, getNewsByPageByPage } from "../services/news"
+import { getNewsByPage } from "../services/news"
 import { generateNews } from "../services/aiChat"
 
 import SideMenu from "../components/SideMenu"
