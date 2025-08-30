@@ -13,6 +13,9 @@ const AIAgents = ({ agentsDoor }) => {
 
   const isDisabled = loadingMessages || isImproving || loadingAgents
 
+  const allAgents = [...agents.backendAgents, ...agents.customAgents]
+  const activeAgent = allAgents.find((agent) => agent.name === selectedAgent)
+
   const Separator = () => <div className="h-6 w-px bg-bLight dark:bg-bDark mx-1" />
 
   return (
@@ -21,6 +24,12 @@ const AIAgents = ({ agentsDoor }) => {
       mb-1 py-2 gap-2 rounded-lg shadow-lg max-w-[95%]
       flex flex-wrap items-center justify-center mx-auto`}
     >
+      {activeAgent && (
+        <div className="flex items-center justify-center gap-2 text-lightFg-primary dark:text-darkFg-primary">
+          <DynamicIcon name={activeAgent.Icon} size={16} />
+          <span className="font-bold text-sm select-none">{activeAgent.name}</span>
+        </div>
+      )}
       {agents.backendAgents.map(({ name, Icon, description }) => (
         <Button
           key={name}
