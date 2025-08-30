@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react"
 import api from "../services"
+import { storage } from "../utils/storage"
 
 const AuthContext = createContext({})
 
@@ -9,50 +10,30 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  const storage = {
-    getItem: async (key) => {
-      if (isExtension) {
-        const result = await chrome.storage.local.get(key)
-        return result[key] || null
-      }
-      return localStorage.getItem(key)
-    },
-    setItem: async (key, value) => {
-      if (isExtension) {
-        return chrome.storage.local.set({ [key]: value })
-      }
-      return localStorage.setItem(key, value)
-    },
-    removeItem: async (key) => {
-      if (isExtension) {
-        return chrome.storage.local.remove(key)
-      }
-      return localStorage.removeItem(key)
-    }
-  }
-
   const signOut = useCallback(async () => {
-    await storage.removeItem("@Denkitsu:refreshToken")
-    await storage.removeItem("@Denkitsu:user")
-    if (!isExtension) sessionStorage.removeItem("@Denkitsu:token")
+    await storage.local.removeItem("@Denkitsu:refreshToken")
+    await storage.local.removeItem("@Denkitsu:user")
+    await storage.session.removeItem("@Denkitsu:token")
 
     setUser(null)
     delete api.defaults.headers.Authorization
   }, [])
 
   const completeSignIn = useCallback(async (token, refreshToken, userData) => {
-    await storage.setItem("@Denkitsu:user", JSON.stringify(userData))
-    if (refreshToken) await storage.setItem("@Denkitsu:refreshToken", refreshToken)
-    if (!isExtension) sessionStorage.setItem("@Denkitsu:token", token)
+    await storage.local.setItem("@Denkitsu:user", JSON.stringify(userData))
+    if (refreshToken) await storage.local.setItem("@Denkitsu:refreshToken", refreshToken)
+    await storage.session.setItem("@Denkitsu:token", token)
+
     api.defaults.headers.Authorization = `Bearer ${token}`
     setUser(userData)
   }, [])
 
   useEffect(() => {
     const loadStorageData = async () => {
-      const storagedUser = await storage.getItem("@Denkitsu:user")
-      const storagedRefreshToken = await storage.getItem("@Denkitsu:refreshToken")
-      const storagedToken = isExtension ? null : sessionStorage.getItem("@Denkitsu:token")
+      const storagedUser = await storage.local.getItem("@Denkitsu:user")
+      const storagedRefreshToken = await storage.local.getItem("@Denkitsu:refreshToken")
+      const storagedToken = await storage.session.getItem("@Denkitsu:token")
+
       if (storagedToken && storagedUser) {
         api.defaults.headers.Authorization = `Bearer ${storagedToken}`
         setUser(JSON.parse(storagedUser))
@@ -69,17 +50,19 @@ const AuthProvider = ({ children }) => {
       setLoading(false)
     }
     loadStorageData()
+
     if (isExtension) {
       const listener = (changes, area) => {
-        if (area === 'local' && (changes["@Denkitsu:user"] || changes["@Denkitsu:refreshToken"])) {
-          console.log("AuthContext: Detectou mudança no storage, recarregando estado.")
-          loadStorageData()
+        if (area === 'local' || area === 'session') {
+          if (changes["@Denkitsu:user"] || changes["@Denkitsu:refreshToken"] || changes["@Denkitsu:token"]) {
+            console.log("AuthContext: Detectou mudança no storage da extensão, recarregando estado.")
+            loadStorageData()
+          }
         }
       }
       chrome.storage.onChanged.addListener(listener)
       return () => chrome.storage.onChanged.removeListener(listener)
     }
-
   }, [signOut, completeSignIn])
 
   const signIn = useCallback(async ({ email, password }) => {
@@ -99,7 +82,7 @@ const AuthProvider = ({ children }) => {
   }, [completeSignIn])
 
   const updateUser = useCallback(async (newUserData) => {
-    await storage.setItem("@Denkitsu:user", JSON.stringify(newUserData))
+    await storage.local.setItem("@Denkitsu:user", JSON.stringify(newUserData))
     setUser(newUserData)
   }, [])
 

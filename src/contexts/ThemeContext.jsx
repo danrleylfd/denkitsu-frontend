@@ -1,25 +1,29 @@
 import { createContext, useState, useEffect, useContext } from "react"
+import { storage } from "../utils/storage"
 
 const ThemeContext = createContext()
 
 const ThemeProvider = ({ children }) => {
-  const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
-  let themeStorage = localStorage.getItem("@Denkitsu:theme")
-  const [theme, setTheme] = useState(themeStorage || (mediaQuery.matches ? "dark" : "light"))
-  !themeStorage && localStorage.setItem("@Denkitsu:theme", mediaQuery.matches ? "dark" : "light")
-  themeStorage = localStorage.getItem("@Denkitsu:theme")
+  const [theme, setTheme] = useState(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
+    return mediaQuery.matches ? "dark" : "light"
+  })
 
   useEffect(() => {
-    themeStorage !== theme && localStorage.setItem("@Denkitsu:theme", theme)
-    // Tailwind:
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark")
-    } else {
-      document.documentElement.classList.remove("dark")
+    const loadPersistedTheme = async () => {
+      const themeStorage = await storage.local.getItem("@Denkitsu:theme")
+      if (themeStorage) setTheme(themeStorage)
     }
+    loadPersistedTheme()
+  }, [])
+
+  useEffect(() => {
+    if (theme === "dark") document.documentElement.classList.add("dark")
+    else document.documentElement.classList.remove("dark")
+    storage.local.setItem("@Denkitsu:theme", theme)
   }, [theme])
 
-  const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light")
+  const toggleTheme = () => setTheme(prevTheme => (prevTheme === "light" ? "dark" : "light"))
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>

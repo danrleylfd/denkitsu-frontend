@@ -1,8 +1,10 @@
 import api from "./"
 
+import { storage } from "../utils/storage"
+
 async function* sendMessageStream(aiKey, aiProvider, model, models, messages, activeTools, mode) {
   const payload = { aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages, use_tools: Array.from(activeTools), stream: true, mode }
-  const token = sessionStorage.getItem("@Denkitsu:token")
+  const token = await storage.session.getItem("@Denkitsu:token")
   try {
     const response = await fetch(`${api.defaults.baseURL}/ai/chat/completions`, {
       method: "POST",

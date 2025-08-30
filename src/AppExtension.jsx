@@ -1,4 +1,4 @@
-import { useCallback } from "react"
+import { useCallback, useEffect } from "react"
 import { LogIn, UserPlus } from "lucide-react"
 
 import { useAuth } from "./contexts/AuthContext"
@@ -50,6 +50,19 @@ const WelcomeScreen = () => {
 const SidePanelChat = () => {
   const { setUserPrompt, onSendMessage, improvePrompt, messages } = useAI()
   const { notifyInfo, notifyError } = useNotification()
+
+  useEffect(() => {
+    const checkForOmniboxMessage = async () => {
+      const result = await chrome.storage.local.get("omniboxMessage")
+      if (result.omniboxMessage) {
+        const { content } = result.omniboxMessage
+        await chrome.storage.local.remove("omniboxMessage")
+        setUserPrompt(content)
+        setTimeout(() => onSendMessage(content), 50)
+      }
+    }
+    checkForOmniboxMessage()
+  }, [])
 
   const handleAnalyzePage = useCallback(() => {
     notifyInfo("Analisando o conteúdo da página...")

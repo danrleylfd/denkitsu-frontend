@@ -1,40 +1,43 @@
 import { createContext, useState, useEffect, useCallback, useContext } from "react"
 
 import { INITIAL_TASKS } from "../constants/tasks"
-import { sendMessage } from "../services/aiChat"
 
 import { useModels } from "./ModelContext"
 import { useNotification } from "./NotificationContext"
+
+import { sendMessage } from "../services/aiChat"
+
+import { storage } from "../utils/storage"
 
 const TasksContext = createContext({})
 
 const TasksProvider = ({ children }) => {
   const STORAGE_KEY = "@Denkitsu:kanban-tasks"
-  const [tasks, setTasks] = useState(() => {
-    try {
-      const savedTasks = window.localStorage.getItem(STORAGE_KEY)
-      return savedTasks ? JSON.parse(savedTasks) : INITIAL_TASKS
-    } catch (error) {
-      console.error("Failed to parse tasks from localStorage", error)
-      return INITIAL_TASKS
-    }
-  })
-
+  const [tasks, setTasks] = useState(INITIAL_TASKS)
   const [newTask, setNewTask] = useState("")
   const [loading, setLoading] = useState(false)
   const [editingId, setEditingId] = useState(null)
-
   const { aiProvider, aiKey, model, freeModels, payModels, groqModels } = useModels()
   const { notifyError } = useNotification()
 
   useEffect(() => {
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
-    } catch (error) {
-      console.error(error)
-      notifyError("Falha ao salvar as tarefas no localStorage.")
+    const loadPersistedTasks = async () => {
+      const savedTasks = await storage.local.getItem(STORAGE_KEY)
+      if (savedTasks) {
+        try {
+          setTasks(JSON.parse(savedTasks))
+        } catch (error) {
+          console.error("Falha ao analisar tarefas salvas do storage", error)
+          setTasks(INITIAL_TASKS)
+        }
+      }
     }
-  }, [tasks, notifyError])
+    loadPersistedTasks()
+  }, [])
+
+  useEffect(() => {
+    if (JSON.stringify(tasks) !== JSON.stringify(INITIAL_TASKS)) storage.local.setItem(STORAGE_KEY, JSON.stringify(tasks))
+  }, [tasks])
 
   const findTaskContainer = useCallback(
     (taskId) => {
@@ -90,7 +93,7 @@ const TasksProvider = ({ children }) => {
     } finally {
       setLoading(false)
     }
-  }, [newTask, aiProvider, aiKey, model])
+  }, [newTask, aiProvider, aiKey, model, freeModels, payModels, groqModels, notifyError])
 
   const deleteTask = useCallback(
     (taskId) => {
@@ -119,8 +122,8 @@ const TasksProvider = ({ children }) => {
     [findTaskContainer]
   )
 
-  const resetTasks = useCallback(() => {
-    window.localStorage.removeItem(STORAGE_KEY)
+  const resetTasks = useCallback(async () => {
+    await storage.local.removeItem(STORAGE_KEY)
     setTasks(INITIAL_TASKS)
   }, [])
 

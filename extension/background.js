@@ -2,6 +2,31 @@ console.log("Service Worker (background.js) iniciado.")
 
 chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch((error) => console.error(error))
 
+chrome.commands.onCommand.addListener((command) => {
+  if (command === "_execute_action") {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0]) chrome.sidePanel.open({ tabId: tabs[0].id })
+    })
+  }
+})
+
+chrome.omnibox.onInputChanged.addListener((text, suggest) => {
+  suggest([{ content: text, description: `Enviar para Denkitsu AI: "${text}"` }])
+})
+
+chrome.omnibox.onInputEntered.addListener((text) => {
+  if (!text.trim()) return
+  chrome.storage.local.set({
+    omniboxMessage: {
+      content: text,
+      timestamp: Date.now()
+    }
+  })
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs[0]) chrome.sidePanel.open({ tabId: tabs[0].id })
+  })
+})
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log("Background: Mensagem recebida.", message)
   if (message.type === "GET_PAGE_CONTENT") {

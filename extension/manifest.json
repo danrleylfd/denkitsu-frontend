@@ -20,6 +20,18 @@
   "action": {
     "default_title": "Abrir Denkitsu AI"
   },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+I",
+        "mac": "Alt+I"
+      },
+      "description": "Abrir/Fechar o painel lateral do Denkitsu AI"
+    }
+  },
+  "omnibox": {
+    "keyword": "@Denkitsu"
+  },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],

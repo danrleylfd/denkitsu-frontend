@@ -3,6 +3,7 @@ import { Timer, Settings, Play, Pause, RefreshCw } from "lucide-react"
 
 import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
+import { storage } from "../utils/storage"
 
 const ContentView = ({ children }) => (
   <main className="flex justify-center items-center p-2 gap-2 w-full min-h-dvh">
@@ -17,7 +18,7 @@ const Pomodoro = () => {
   const [mode, setMode] = useState("work")
   const [cycles, setCycles] = useState(0)
   useEffect(() => {
-    const savedState = localStorage.getItem("pomodoroState")
+    const savedState = storage.local.getItem("pomodoroState")
     if (savedState) {
       const { minutes, seconds, mode, cycles, isActive } = JSON.parse(savedState)
       setMinutes(minutes)
@@ -32,7 +33,7 @@ const Pomodoro = () => {
     let interval
     if (isActive) {
       interval = setInterval(() => {
-        localStorage.setItem("pomodoroState", JSON.stringify({ minutes, seconds, mode, cycles, isActive }))
+        storage.local.setItem("pomodoroState", JSON.stringify({ minutes, seconds, mode, cycles, isActive }))
         if (seconds === 0) {
           if (minutes === 0) {
             const notification = new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3")
@@ -64,7 +65,7 @@ const Pomodoro = () => {
     setMinutes(25)
     setSeconds(0)
     setCycles(0)
-    localStorage.removeItem("pomodoroState")
+    storage.local.removeItem("pomodoroState")
   }
 
   return (

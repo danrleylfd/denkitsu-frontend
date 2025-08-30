@@ -1,7 +1,11 @@
 import { createContext, useState, useEffect, useContext, useCallback, useMemo } from "react"
+
 import { useAuth } from "./AuthContext"
 import { useNotification } from "./NotificationContext"
+
 import { getModels } from "../services/aiChat"
+
+import { storage } from "../utils/storage"
 
 const ModelContext = createContext({})
 
@@ -9,44 +13,57 @@ const ModelProvider = ({ children }) => {
   const { signed } = useAuth()
   const { notifyError } = useNotification()
 
-  const storedAIProvider = localStorage.getItem("@Denkitsu:aiProvider") || "groq"
-  const storedGroqModel = localStorage.getItem("@Denkitsu:GroqModel") || "openai/gpt-oss-120b"
-  const storedOpenRouterModel = localStorage.getItem("@Denkitsu:OpenRouterModel") || "deepseek/deepseek-r1-0528:free"
-  const storedGroqKey = localStorage.getItem("@Denkitsu:Groq") || ""
-  const storedOpenRouterKey = localStorage.getItem("@Denkitsu:OpenRouter") || ""
-
-  const [aiProvider, setAIProvider] = useState(storedAIProvider)
-  const [groqModel, setGroqModel] = useState(storedGroqModel)
-  const [openRouterModel, setOpenRouterModel] = useState(storedOpenRouterModel)
-  const [groqKey, setGroqKey] = useState(storedGroqKey)
-  const [openRouterKey, setOpenRouterKey] = useState(storedOpenRouterKey)
+  const [aiProvider, setAIProvider] = useState("groq")
+  const [groqModel, setGroqModel] = useState("openai/gpt-oss-120b")
+  const [openRouterModel, setOpenRouterModel] = useState("deepseek/deepseek-r1-0528:free")
+  const [groqKey, setGroqKey] = useState("")
+  const [openRouterKey, setOpenRouterKey] = useState("")
 
   const [freeModels, setFreeModels] = useState([])
   const [payModels, setPayModels] = useState([])
   const [groqModels, setGroqModels] = useState([])
   const [loadingModels, setLoadingModels] = useState(true)
 
+  useEffect(() => {
+    const loadSettings = async () => {
+      const storedProvider = await storage.local.getItem("@Denkitsu:aiProvider")
+      const storedGroqModel = await storage.local.getItem("@Denkitsu:GroqModel")
+      const storedOpenRouterModel = await storage.local.getItem("@Denkitsu:OpenRouterModel")
+      const storedGroqKey = await storage.local.getItem("@Denkitsu:Groq")
+      const storedOpenRouterKey = await storage.local.getItem("@Denkitsu:OpenRouter")
+      if (storedProvider) setAIProvider(storedProvider)
+      if (storedGroqModel) setGroqModel(storedGroqModel)
+      if (storedOpenRouterModel) setOpenRouterModel(storedOpenRouterModel)
+      if (storedGroqKey) setGroqKey(storedGroqKey)
+      if (storedOpenRouterKey) setOpenRouterKey(storedOpenRouterKey)
+    }
+    loadSettings()
+  }, [])
+
   const aiKey = useMemo(() => (aiProvider === "groq" ? groqKey : openRouterKey), [aiProvider, groqKey, openRouterKey])
   const model = useMemo(() => (aiProvider === "groq" ? groqModel : openRouterModel), [aiProvider, groqModel, openRouterModel])
   const setModel = useCallback((newModel) => (aiProvider === "groq" ? setGroqModel(newModel) : setOpenRouterModel(newModel)), [aiProvider])
   const setAIKey = useCallback((newKey) => (aiProvider === "groq" ? setGroqKey(newKey) : setOpenRouterKey(newKey)), [aiProvider])
-
   const aiProviderToggle = useCallback(() => setAIProvider(prev => (prev === "groq" ? "openrouter" : "groq")), [])
 
   useEffect(() => {
-    localStorage.setItem("@Denkitsu:aiProvider", aiProvider)
-    localStorage.setItem("@Denkitsu:GroqModel", groqModel)
-    localStorage.setItem("@Denkitsu:OpenRouterModel", openRouterModel)
-    if (groqKey) localStorage.setItem("@Denkitsu:Groq", groqKey)
-    else localStorage.removeItem("@Denkitsu:Groq")
-    if (openRouterKey) localStorage.setItem("@Denkitsu:OpenRouter", openRouterKey)
-    else localStorage.removeItem("@Denkitsu:OpenRouter")
+    storage.local.setItem("@Denkitsu:aiProvider", aiProvider)
+    storage.local.setItem("@Denkitsu:GroqModel", groqModel)
+    storage.local.setItem("@Denkitsu:OpenRouterModel", openRouterModel)
+    if (groqKey) storage.local.setItem("@Denkitsu:Groq", groqKey)
+    else storage.local.removeItem("@Denkitsu:Groq")
+    if (openRouterKey) storage.local.setItem("@Denkitsu:OpenRouter", openRouterKey)
+    else storage.local.removeItem("@Denkitsu:OpenRouter")
   }, [aiProvider, groqModel, openRouterModel, groqKey, openRouterKey])
 
   useEffect(() => {
-    if (!signed) return
-    setLoadingModels(true)
-    ;(async () => {
+    if (!signed) {
+      setLoadingModels(false)
+      return
+    }
+
+    const fetchModels = async () => {
+      setLoadingModels(true)
       try {
         const { freeModels: loadedFree, payModels: loadedPay, groqModels: loadedGroq } = await getModels()
         setFreeModels(loadedFree?.filter(m => !m.id.includes("whisper")) || [])
@@ -55,12 +72,15 @@ const ModelProvider = ({ children }) => {
         setGroqModels(loadedGroq?.filter(m => !m.id.includes("whisper")) || [])
       } catch (error) {
         notifyError(error.message || "Falha ao carregar modelos de IA.")
+        setFreeModels([])
+        setPayModels([])
+        setGroqModels([])
       } finally {
         setLoadingModels(false)
       }
-    })()
+    }
+    fetchModels()
   }, [aiKey, signed, notifyError])
-
 
   const value = useMemo(() => ({
     aiProvider, aiProviderToggle,

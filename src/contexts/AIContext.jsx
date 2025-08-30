@@ -4,6 +4,7 @@ import { useTools } from "./ToolContext"
 import { useAgents } from "./AgentContext"
 import useMessage from "../hooks/message"
 import useAudio from "../hooks/audio"
+import { storage } from "../utils/storage"
 
 const AIContext = createContext()
 
@@ -12,20 +13,29 @@ const AIProvider = ({ children }) => {
   const { activeTools } = useTools()
   const { selectedAgent, setSelectedAgent } = useAgents()
 
-  const storedCustomPrompt = localStorage.getItem("@Denkitsu:customPrompt")
-  const storedStream = JSON.parse(localStorage.getItem("@Denkitsu:Stream"))
-  const storedMessages = localStorage.getItem("@Denkitsu:messages")
-  const storedAutoScroll = JSON.parse(localStorage.getItem("@Denkitsu:AutoScroll"))
-
-  const [customPrompt, setCustomPrompt] = useState(storedCustomPrompt || `Goal\n  Responda em ${navigator.language}\nReturn Format\n  Padrão\nWarning\nContext Dump\n`)
-  const [stream, setStream] = useState(storedStream === null ? false : storedStream)
+  const [customPrompt, setCustomPrompt] = useState(`Goal\n  Responda em ${navigator.language}\nReturn Format\n  Padrão\nWarning\nContext Dump\n`)
+  const [stream, setStream] = useState(false)
   const [imageUrls, setImageUrls] = useState([])
   const [userPrompt, setUserPrompt] = useState("")
-  const [messages, setMessages] = useState(storedMessages ? JSON.parse(storedMessages) : [])
-  const [autoScroll, setAutoScroll] = useState(storedAutoScroll === null ? false : storedAutoScroll)
+  const [messages, setMessages] = useState([])
+  const [autoScroll, setAutoScroll] = useState(false)
   const [speaking, setSpeaking] = useState(false)
   const [listening, setListening] = useState(false)
   const [audioFile, setAudioFile] = useState(null)
+
+  useEffect(() => {
+    const loadPersistedState = async () => {
+      const storedCustomPrompt = await storage.local.getItem("@Denkitsu:customPrompt")
+      const storedStream = await storage.local.getItem("@Denkitsu:Stream")
+      const storedMessages = await storage.local.getItem("@Denkitsu:messages")
+      const storedAutoScroll = await storage.local.getItem("@Denkitsu:AutoScroll")
+      if (storedCustomPrompt) setCustomPrompt(storedCustomPrompt)
+      if (storedStream !== null) setStream(JSON.parse(storedStream))
+      if (storedMessages) setMessages(JSON.parse(storedMessages))
+      if (storedAutoScroll !== null) setAutoScroll(JSON.parse(storedAutoScroll))
+    }
+    loadPersistedState()
+  }, [])
 
   const toggleListening = useCallback(() => setListening(l => !l), [])
 
@@ -42,20 +52,19 @@ const AIProvider = ({ children }) => {
     setUserPrompt, setImageUrls, setAudioFile, setMessages, setSelectedAgent
   })
 
-  useEffect(() => localStorage.setItem("@Denkitsu:customPrompt", customPrompt), [customPrompt])
-  useEffect(() => localStorage.setItem("@Denkitsu:Stream", stream), [stream])
-  useEffect(() => localStorage.setItem("@Denkitsu:AutoScroll", autoScroll), [autoScroll])
-
+  useEffect(() => { storage.local.setItem("@Denkitsu:customPrompt", customPrompt) }, [customPrompt])
+  useEffect(() => { storage.local.setItem("@Denkitsu:Stream", JSON.stringify(stream)) }, [stream])
+  useEffect(() => { storage.local.setItem("@Denkitsu:AutoScroll", JSON.stringify(autoScroll)) }, [autoScroll])
   useEffect(() => {
-    setMessages((prev) => {
-      const hasSystemMessage = prev.some((msg) => msg.role === "system")
-      if (!hasSystemMessage) return [{ role: "system", content: customPrompt }]
-      return prev
-    })
-    localStorage.setItem("@Denkitsu:messages", JSON.stringify(messages))
-  }, [messages, customPrompt])
+    if (messages.length > 0) storage.local.setItem("@Denkitsu:messages", JSON.stringify(messages))
+  }, [messages])
 
-  const clearHistory = useCallback(() => setMessages([{ role: "system", content: customPrompt }]), [customPrompt])
+  const clearHistory = useCallback(() => {
+    const systemMessage = { role: "system", content: customPrompt }
+    setMessages([systemMessage])
+    storage.local.setItem("@Denkitsu:messages", JSON.stringify([systemMessage]))
+  }, [customPrompt])
+
   const toggleStream = useCallback(() => setStream(prev => !prev), [])
   const toggleAutoScroll = useCallback(() => setAutoScroll(prev => !prev), [])
 
@@ -73,9 +82,7 @@ const AIProvider = ({ children }) => {
       utterance.onend = () => setSpeaking(false)
       utterance.onerror = () => setSpeaking(false)
       window.speechSynthesis.speak(utterance)
-    } else {
-      console.warn("Speech Synthesis API not supported in this browser.")
-    }
+    } else console.warn("Speech Synthesis API not supported in this browser.")
   }, [])
 
   const values = useMemo(() => ({

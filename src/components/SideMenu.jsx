@@ -5,9 +5,12 @@ import {
   User, LogIn, UserPlus, LogOut, Film, Edit2, ChevronDown, ChevronRight,
   Upload, Video, TrendingUp, Play, Star, Lock, KeyRound, Store,
 } from "lucide-react"
+
 import { useTheme } from "../contexts/ThemeContext"
 import { useAuth } from "../contexts/AuthContext"
 import { useBackground } from "../contexts/BackgroundContext"
+
+import { storage } from "../utils/storage"
 
 const MainContent = ({ children }) => (
   <main className="flex flex-col items-center p-2 gap-2 mx-auto min-h-dvh w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[75%] lg:max-w-[67%] ml-[3.5rem] md:ml-auto">
@@ -77,23 +80,28 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
   const { theme, toggleTheme } = useTheme()
   const { signed, signOut } = useAuth()
 
-  const getInitialMenuState = () => localStorage.getItem("@Denkitsu:menuState") === "opened"
-  const [isOpen, setOpen] = useState(getInitialMenuState)
+  const [isOpen, setOpen] = useState(false)
+  const [openSubMenu, setOpenSubMenu] = useState(null)
 
-  const [openSubMenu, setOpenSubMenu] = useState(() => localStorage.getItem("@Denkitsu:openSubMenu") || null)
+  useEffect(() => {
+    const loadMenuState = async () => {
+      const savedMenuState = await storage.local.getItem("@Denkitsu:menuState")
+      const savedOpenSubMenu = await storage.local.getItem("@Denkitsu:openSubMenu")
+      setOpen(savedMenuState === "opened")
+      if (savedOpenSubMenu) setOpenSubMenu(savedOpenSubMenu)
+    }
+    loadMenuState()
+  }, [])
 
   const toggleMenu = () => setOpen((prev) => !prev)
 
   useEffect(() => {
-    localStorage.setItem("@Denkitsu:menuState", isOpen ? "opened" : "closed")
+    storage.local.setItem("@Denkitsu:menuState", isOpen ? "opened" : "closed")
   }, [isOpen])
 
   useEffect(() => {
-    if (openSubMenu) {
-      localStorage.setItem("@Denkitsu:openSubMenu", openSubMenu)
-    } else {
-      localStorage.removeItem("@Denkitsu:openSubMenu")
-    }
+    if (openSubMenu) storage.local.setItem("@Denkitsu:openSubMenu", openSubMenu)
+    else storage.local.removeItem("@Denkitsu:openSubMenu")
   }, [openSubMenu])
 
   const handleSubMenuToggle = (submenuName) => {
@@ -125,14 +133,15 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
 
   const accountItems = signed
     ? [
-      { icon: User, label: "Perfil", to: "/profile" },
-      { icon: Link2, label: "Atalho", to: "/atalho" },
-    ] : [
-      { icon: LogIn, label: "Entrar", to: "/signin" },
-      { icon: UserPlus, label: "Cadastrar", to: "/signup" },
-      { icon: Lock, label: "Esqueci a senha", to: "/forgot_password" },
-      { icon: KeyRound, label: "Redefinir senha", to: "/reset_password" }
-    ]
+        { icon: User, label: "Perfil", to: "/profile" },
+        { icon: Link2, label: "Atalho", to: "/atalho" },
+      ]
+    : [
+        { icon: LogIn, label: "Entrar", to: "/signin" },
+        { icon: UserPlus, label: "Cadastrar", to: "/signup" },
+        { icon: Lock, label: "Esqueci a senha", to: "/forgot_password" },
+        { icon: KeyRound, label: "Redefinir senha", to: "/reset_password" }
+      ]
 
   const menuItemClass = `
     flex items-center px-4 py-1 rounded-xl w-full

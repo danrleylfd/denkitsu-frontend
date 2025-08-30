@@ -6,9 +6,13 @@ import Paper from "../components/Paper"
 import Button from "../components/Button"
 import Input from "../components/Input"
 import Markdown from "../components/Markdown"
+
 import { useNotification } from "../contexts/NotificationContext"
 import { useAuth } from "../contexts/AuthContext"
+
 import api from "../services"
+
+import { storage } from "../utils/storage"
 
 const RECENTS_KEY = "codebase_recents"
 const MAX_RECENTS = 3
@@ -64,7 +68,7 @@ const deleteHandle = async (key) => {
 
 const getRecentItems = () => {
   try {
-    const items = localStorage.getItem(RECENTS_KEY)
+    const items = storage.local.getItem(RECENTS_KEY)
     return items ? JSON.parse(items) : []
   } catch (error) {
     console.error("Falha ao ler itens recentes do localStorage", error)
@@ -77,19 +81,19 @@ const addRecentItem = (newItem) => {
   items = items.filter(item => item.id !== newItem.id)
   items.unshift(newItem)
   items.splice(MAX_RECENTS)
-  localStorage.setItem(RECENTS_KEY, JSON.stringify(items))
+  storage.local.setItem(RECENTS_KEY, JSON.stringify(items))
   return items
 }
 
 const removeRecentItem = (itemId) => {
   let items = getRecentItems()
   items = items.filter(item => item.id !== itemId)
-  localStorage.setItem(RECENTS_KEY, JSON.stringify(items))
+  storage.local.setItem(RECENTS_KEY, JSON.stringify(items))
   return items
 }
 
 const clearRecentItems = () => {
-  localStorage.removeItem(RECENTS_KEY)
+  storage.local.removeItem(RECENTS_KEY)
   return []
 }
 

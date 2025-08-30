@@ -1,7 +1,10 @@
 import { createContext, useState, useEffect, useContext, useCallback, useMemo } from "react"
+
 import { useAuth } from "./AuthContext"
 import { getTools, createTool, updateTool, deleteTool } from "../services/tool"
 import { listTools } from "../services/aiChat"
+
+import { storage } from "../utils/storage"
 
 const ToolContext = createContext({})
 
@@ -36,20 +39,16 @@ const ToolProvider = ({ children }) => {
 
   useEffect(() => {
     if (loadingTools) return
-
     const allTools = [
       ...tools.internalTools,
       ...tools.backendTools,
       ...tools.customTools,
     ]
-
     const initialActiveTools = new Set()
     allTools.forEach((tool) => {
       try {
-        const storedValue = localStorage.getItem(`@Denkitsu:${tool.name}`)
-        if (JSON.parse(storedValue) === true) {
-          initialActiveTools.add(tool.name)
-        }
+        const storedValue = storage.local.getItem(`@Denkitsu:${tool.name}`)
+        if (JSON.parse(storedValue) === true) initialActiveTools.add(tool.name)
       } catch {}
     })
     setActiveTools(initialActiveTools)
@@ -62,7 +61,7 @@ const ToolProvider = ({ children }) => {
       else newActiveTools.delete(toolKey)
       return newActiveTools
     })
-    localStorage.setItem(`@Denkitsu:${toolKey}`, JSON.stringify(isActive))
+    storage.local.setItem(`@Denkitsu:${toolKey}`, JSON.stringify(isActive))
   }, [])
 
   const addTool = async (toolData) => {

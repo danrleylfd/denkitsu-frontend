@@ -1,6 +1,8 @@
 import { useRef, useState, useEffect, useCallback } from "react"
 import { Play, Pause, Volume2, VolumeX, Expand, RefreshCw, Minimize, Camera } from "lucide-react"
 
+import { storage } from "../../utils/storage"
+
 const formatTime = (timeInSeconds) => {
   const time = Math.round(timeInSeconds)
   const hours = Math.floor(time / 3600)
@@ -24,11 +26,11 @@ const VideoPlayer = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poste
 
   const [playing, setPlaying] = useState(false)
   const [repeat, setRepeat] = useState(false)
-  const [muted, setMuted] = useState(() => localStorage.getItem("@Denkitsu:muted") === "true")
+  const [muted, setMuted] = useState(() => storage.local.getItem("@Denkitsu:muted") === "true")
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [controlsVisible, setControlsVisible] = useState(true)
   const [volume, setVolume] = useState(() => {
-    const savedVolume = localStorage.getItem("@Denkitsu:volume")
+    const savedVolume = storage.local.getItem("@Denkitsu:volume")
     if (savedVolume !== null) return parseFloat(savedVolume)
     return 1
   })
@@ -47,15 +49,15 @@ const VideoPlayer = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poste
   }, [playing])
 
   useEffect(() => {
-    localStorage.setItem("@Denkitsu:muted", muted)
+    storage.local.setItem("@Denkitsu:muted", muted)
     if (videoRef.current) videoRef.current.muted = muted
   }, [muted])
   useEffect(() => {
-    localStorage.setItem("@Denkitsu:repeat", muted)
+    storage.local.setItem("@Denkitsu:repeat", muted)
     if (videoRef.current) videoRef.current.repeat = repeat
   }, [repeat])
   useEffect(() => {
-    localStorage.setItem("@Denkitsu:volume", volume)
+    storage.local.setItem("@Denkitsu:volume", volume)
     if (videoRef.current) videoRef.current.volume = volume
   }, [volume])
   useEffect(() => {
