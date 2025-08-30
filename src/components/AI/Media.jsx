@@ -6,7 +6,6 @@ import Button from "../Button"
 
 const AIMedia = ({ mediaDoor, onAddImage }) => {
   if (!mediaDoor) return null
-
   const {
     stream,
     toggleStream,
@@ -21,10 +20,8 @@ const AIMedia = ({ mediaDoor, onAddImage }) => {
     loadingMessages,
     isImproving,
   } = useAI()
-
   const { aiProvider, model, freeModels, payModels, groqModels } = useModels()
-
-  const allModels = [...freeModels, ...payModels, ...groqModels]
+  const allModels = [...(freeModels || []), ...(payModels || []), ...(groqModels || [])]
   const selectedModel = allModels.find((m) => m.id === model)
   const isImageSupported = selectedModel?.supports_images ?? false
 

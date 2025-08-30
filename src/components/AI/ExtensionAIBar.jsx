@@ -1,4 +1,4 @@
-import { LogIn, UserPlus, Settings, Send, ImagePlus, Wrench, Speech, AudioWaveform, AudioLines, FileAudio, Waypoints, MessageCirclePlus, Mic, ScanText, Lock, Sparkle, Info, Factory, Store } from "lucide-react"
+import { LogIn, UserPlus, Settings, Send, Paperclip, Wrench, Speech, Waypoints, MessageCirclePlus, Mic, ScanText, Lock, Sparkle, Info, Factory, Store } from "lucide-react"
 
 import { useAuth } from "../../contexts/AuthContext"
 import { useAI } from "../../contexts/AIContext"
@@ -12,7 +12,6 @@ const ExtensionAIBar = ({
   loading,
   isImproving,
   improvePrompt,
-  onAddImage,
   imageCount,
   onSendMessage,
   toggleSettingsDoor,
@@ -22,7 +21,9 @@ const ExtensionAIBar = ({
   toggleToolsDoor,
   onAnalyzePage,
   toggleFeaturesDoor,
-  toggleFactoryManagerDoor
+  toggleFactoryManagerDoor,
+  mediaDoor,
+  toggleMediaDoor
 }) => {
   const { signed } = useAuth()
   const {
@@ -30,22 +31,10 @@ const ExtensionAIBar = ({
     setUserPrompt,
     audioFile,
     clearHistory,
-    stream,
-    toggleStream,
-    listening,
-    toggleListening,
-    recording,
     fileInputRef,
-    handleStartRecording,
-    handleStopRecording,
-    handleUploadClick,
     handleFileChange
   } = useAI()
-  const { aiProvider, aiProviderToggle, model, freeModels, payModels, groqModels } = useModels()
-
-  const allModels = [...(freeModels || []), ...(payModels || []), ...(groqModels || [])]
-  const selectedModel = allModels.find((m) => m.id === model)
-  const isImageSupported = selectedModel?.supports_images ?? false
+  const { aiProvider, aiProviderToggle } = useModels()
 
   const handleSendMessage = () => {
     if (loading || isImproving) return
@@ -90,19 +79,13 @@ const ExtensionAIBar = ({
             <Button variant="secondary" size="icon" $rounded title="Recursos" onClick={toggleFeaturesDoor}><Info size={16} /></Button>
             <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loading || isImproving}><Settings size={16} /></Button>
             <Button variant={aiProvider === "groq" ? "orange" : "info"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"} disabled={loading || isImproving}><Waypoints size={16} /></Button>
+            <Button variant={mediaDoor ? "outline" : "secondary"} size="icon" $rounded title="Mídia" onClick={toggleMediaDoor}><Paperclip size={16} /></Button>
             <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgentsDoor}><Speech size={16} /></Button>
             <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor}><Wrench size={16} /></Button>
             <Button variant="secondary" size="icon" $rounded title="Fábrica" onClick={toggleFactoryManagerDoor} disabled={loading || isImproving}><Factory size={16} /></Button>
-            <Button variant="secondary" size="icon" $rounded title="Abrir Loja em nova aba" onClick={() => chrome.tabs.create({ url: "https://denkitsu.vercel.app/store" })}><Store size={16} /></Button>
+            <Button variant="secondary" size="icon" $rounded title="Abrir Loja" onClick={() => chrome.tabs.create({ url: "https://denkitsu.vercel.app/store" })}><Store size={16} /></Button>
             <Button variant="outline" size="icon" $rounded title="Aperfeiçoar Prompt" onClick={improvePrompt} loading={isImproving} disabled={loading || isImproving || !userPrompt.trim()}>{!isImproving && <Sparkle size={16} />}</Button>
             <Button variant="secondary" size="icon" $rounded title="Analisar Página" onClick={onAnalyzePage} disabled={loading || isImproving}><ScanText size={16} /></Button>
-          </div>
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <Button variant="secondary" size="icon" $rounded title="Adicionar Imagem" onClick={onAddImage} disabled={!isImageSupported || loading || isImproving}><ImagePlus size={16} /></Button>
-            <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={loading || isImproving}><AudioWaveform size={16} /></Button>
-            <Button variant={listening ? "mic" : "secondary"} size="icon" $rounded title={listening ? "Parar Ditado" : "Ditar"} onClick={toggleListening} disabled={loading || isImproving || recording}><Mic size={16} /></Button>
-            <Button variant={recording ? "mic" : "secondary"} size="icon" $rounded title={recording ? "Parar Gravação" : "Gravar"} onClick={recording ? handleStopRecording : handleStartRecording} disabled={loading || isImproving || listening}><AudioLines size={16} /></Button>
-            <Button variant="secondary" size="icon" $rounded title="Upload de Áudio" onClick={handleUploadClick} disabled={loading || isImproving || listening || recording}><FileAudio size={16} /></Button>
           </div>
           <div className="flex items-center gap-2 w-full">
             <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading || isImproving}><MessageCirclePlus size={16} /></Button>
@@ -114,18 +97,14 @@ const ExtensionAIBar = ({
           <Button variant="secondary" size="icon" $rounded title="Recursos" onClick={toggleFeaturesDoor}><Info size={16} /></Button>
           <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loading || isImproving}><Settings size={16} /></Button>
           <Button variant={aiProvider === "groq" ? "orange" : "info"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"} disabled={loading || isImproving}><Waypoints size={16} /></Button>
+          <Button variant={mediaDoor ? "outline" : "secondary"} size="icon" $rounded title="Mídia" onClick={toggleMediaDoor}><Paperclip size={16} /></Button>
           <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgentsDoor}><Speech size={16} /></Button>
           <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor}><Wrench size={16} /></Button>
           <Button variant="secondary" size="icon" $rounded title="Fábrica" onClick={toggleFactoryManagerDoor} disabled={loading || isImproving}><Factory size={16} /></Button>
-          <Button variant="secondary" size="icon" $rounded title="Abrir Loja em nova aba" onClick={() => chrome.tabs.create({ url: "https://denkitsu.vercel.app/store" })}><Store size={16} /></Button>
+          <Button variant="secondary" size="icon" $rounded title="Abrir Loja" onClick={() => chrome.tabs.create({ url: "https://denkitsu.vercel.app/store" })}><Store size={16} /></Button>
           <AIInput id="prompt-input-desktop" value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} onKeyDown={handleKeyDown} className="resize-y" disabled={loading || isImproving} />
           <div className="flex items-center gap-2">
             <Button variant="secondary" size="icon" $rounded title="Analisar Página" onClick={onAnalyzePage} disabled={loading || isImproving}><ScanText size={16} /></Button>
-            <Button variant="secondary" size="icon" $rounded title="Adicionar Imagem" onClick={onAddImage} disabled={!isImageSupported || loading || isImproving}><ImagePlus size={16} /></Button>
-            <Button variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={loading || isImproving}><AudioWaveform size={16} /></Button>
-            <Button variant={listening ? "mic" : "secondary"} size="icon" $rounded title={listening ? "Parar Ditado" : "Ditar"} onClick={toggleListening} disabled={loading || isImproving || recording}><Mic size={16} /></Button>
-            <Button variant={recording ? "mic" : "secondary"} size="icon" $rounded title={recording ? "Parar Gravação" : "Gravar"} onClick={recording ? handleStopRecording : handleStartRecording} disabled={loading || isImproving || listening}><AudioLines size={16} /></Button>
-            <Button variant="secondary" size="icon" $rounded title="Upload de Áudio" onClick={handleUploadClick} disabled={loading || isImproving || listening || recording}><FileAudio size={16} /></Button>
             <Button variant="outline" size="icon" $rounded title="Aperfeiçoar Prompt" onClick={improvePrompt} loading={isImproving} disabled={loading || isImproving || !userPrompt.trim()}>{!isImproving && <Sparkle size={16} />}</Button>
             <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading || isImproving}><MessageCirclePlus size={16} /></Button>
           </div>
