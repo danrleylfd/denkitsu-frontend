@@ -12,7 +12,7 @@ const config = defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, "index.html"),
-        sidepanel: resolve(__dirname, "src/sidepanel/index.html"),
+        extension: resolve(__dirname, "extension.html"),
       },
     },
     outDir: "dist",
