@@ -14,6 +14,13 @@ const config = defineConfig({
         main: resolve(__dirname, "index.html"),
         extension: resolve(__dirname, "extension.html"),
       },
+      output: {
+        manualChunks(id) {
+          if (id.includes("lucide-react")) {
+            return "vendor-icons"
+          }
+        }
+      }
     },
     outDir: "dist",
   },

@@ -4,24 +4,11 @@ import ReactMarkdown from "react-markdown"
 import rehypeHighlight from "rehype-highlight"
 import rehypeRaw from "rehype-raw"
 import remarkGfm from "remark-gfm"
-
-import hljs from "highlight.js/lib/core"
-import javascript from "highlight.js/lib/languages/javascript"
-import html from "highlight.js/lib/languages/xml"
-import css from "highlight.js/lib/languages/css"
-import json from "highlight.js/lib/languages/json"
-import bash from "highlight.js/lib/languages/bash"
 import "highlight.js/styles/atom-one-dark.css"
 
 import Button from "./Button"
 import YoutubeEmbed from "./Embeds/YoutubeEmbed"
 import TweetEmbed from "./Embeds/TweetEmbed"
-
-hljs.registerLanguage("javascript", javascript)
-hljs.registerLanguage("html", html)
-hljs.registerLanguage("css", css)
-hljs.registerLanguage("json", json)
-hljs.registerLanguage("bash", bash)
 
 const getYouTubeVideoId = (url) => {
   const regex = /(?:https?:\/\/)?(?:www\.)?(?:m\.)?(?:youtube\.com|music\.youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|shorts\/|browse\/)?([\w-]{11})(?:\S+)?/
@@ -36,8 +23,10 @@ const getTweetId = (url) => {
 }
 
 const Markdown = ({ loading, content, think }) => {
-  const [collapsed, setCollapsed] = useState((think && !loading))
+const [collapsed, setCollapsed] = useState((think && !loading))
+
   const toggleCollapse = () => setCollapsed((prev) => !prev)
+
   const containerClass = think
     ? "italic break-words p-2 rounded-md text-lightFg-secondary dark:text-darkFg-secondary bg-lightBg-tertiary dark:bg-darkBg-tertiary opacity-75 dark:opacity-90"
     : ""
@@ -55,7 +44,7 @@ const Markdown = ({ loading, content, think }) => {
       {!collapsed && (
         <ReactMarkdown
           children={content}
-          rehypePlugins={[rehypeRaw, [rehypeHighlight, { detect: true, plainText: ["text", "txt"] }]]}
+          rehypePlugins={[rehypeHighlight, rehypeRaw]}
           remarkPlugins={[remarkGfm]}
           components={{
             h1: ({ node, children, ...props }) => (
@@ -107,9 +96,13 @@ const Markdown = ({ loading, content, think }) => {
             ),
             a: ({ node, href, children, ...props }) => {
               const videoId = getYouTubeVideoId(href)
-              if (videoId) return <YoutubeEmbed videoId={videoId} />
+              if (videoId) {
+                return <YoutubeEmbed videoId={videoId} />
+              }
               const tweetId = getTweetId(href)
-              if (tweetId) return <TweetEmbed tweetID={tweetId} />
+              if (tweetId) {
+                return <TweetEmbed tweetID={tweetId} />
+              }
               return (
                 <a
                   href={href}
@@ -179,6 +172,7 @@ const Markdown = ({ loading, content, think }) => {
               </td>
             )
           }}
+
         />
       )}
       {think && !collapsed && (
