@@ -5,7 +5,7 @@ import Paper from "../Paper"
 
 const StoreBar = ({ activeTab, setActiveTab }) => {
   return (
-    <Paper className="bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-2">
+    <Paper className="relative bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 max-w-[95%] mb-2 mx-auto">
       <h1 className="text-3xl font-bold text-lightFg-primary dark:text-darkFg-primary flex items-center gap-3">
         <StoreIcon size={32} />
         Loja da Comunidade
