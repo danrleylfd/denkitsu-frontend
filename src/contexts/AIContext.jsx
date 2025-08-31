@@ -1,9 +1,12 @@
 import { createContext, useState, useEffect, useContext, useMemo, useCallback } from "react"
+
 import { useModels } from "./ModelContext"
 import { useTools } from "./ToolContext"
 import { useAgents } from "./AgentContext"
+
 import useMessage from "../hooks/message"
 import useAudio from "../hooks/audio"
+
 import { storage } from "../utils/storage"
 
 const AIContext = createContext()
@@ -12,7 +15,6 @@ const AIProvider = ({ children }) => {
   const { aiProvider, aiKey, model, freeModels, payModels, groqModels } = useModels()
   const { activeTools } = useTools()
   const { selectedAgent, setSelectedAgent } = useAgents()
-
   const [customPrompt, setCustomPrompt] = useState(`Goal\n  Responda em ${navigator.language}\nReturn Format\n  Padrão\nWarning\nContext Dump\n`)
   const [stream, setStream] = useState(false)
   const [imageUrls, setImageUrls] = useState([])
@@ -22,7 +24,6 @@ const AIProvider = ({ children }) => {
   const [speaking, setSpeaking] = useState(false)
   const [listening, setListening] = useState(false)
   const [audioFile, setAudioFile] = useState(null)
-
   const [isInitialized, setIsInitialized] = useState(false)
 
   useEffect(() => {
@@ -32,7 +33,6 @@ const AIProvider = ({ children }) => {
         const storedStream = await storage.local.getItem("@Denkitsu:Stream")
         const storedMessages = await storage.local.getItem("@Denkitsu:messages")
         const storedAutoScroll = await storage.local.getItem("@Denkitsu:AutoScroll")
-
         if (storedCustomPrompt) setCustomPrompt(storedCustomPrompt)
         if (storedStream !== null) setStream(JSON.parse(storedStream))
         if (storedMessages) setMessages(JSON.parse(storedMessages))
@@ -104,9 +104,7 @@ const AIProvider = ({ children }) => {
       utterance.onend = () => setSpeaking(false)
       utterance.onerror = () => setSpeaking(false)
       window.speechSynthesis.speak(utterance)
-    } else {
-      console.warn("Speech Synthesis API not supported in this browser.")
-    }
+    } else console.warn("Speech Synthesis API not supported in this browser.")
   }, [])
 
   const values = useMemo(() => ({
