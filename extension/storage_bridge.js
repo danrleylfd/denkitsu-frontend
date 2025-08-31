@@ -1,5 +1,17 @@
 const APP_PREFIX = "@Denkitsu:"
 
+// 1. Lista explícita (whitelist) das chaves que devem ser sincronizadas em tempo real.
+const REAL_TIME_SYNC_KEYS = new Set([
+  `${APP_PREFIX}user`,
+  `${APP_PREFIX}refreshToken`,
+  `${APP_PREFIX}theme`,
+  `${APP_PREFIX}aiProvider`,
+  `${APP_PREFIX}GroqModel`,
+  `${APP_PREFIX}OpenRouterModel`,
+  `${APP_PREFIX}Groq`,
+  `${APP_PREFIX}OpenRouter`,
+])
+
 const syncAllDenkitsuStorage = async () => {
   try {
     const siteStorageData = {}
@@ -23,7 +35,7 @@ const syncAllDenkitsuStorage = async () => {
       console.log(`Denkitsu Bridge: Chaves antigas removidas da extensão: ${keysToRemove.join(", ")}`)
     }
     await chrome.storage.local.set(siteStorageData)
-    console.log(`Denkitsu Bridge: Sincronização completa. ${Object.keys(siteStorageData).length} itens sincronizados para a extensão.`)
+    console.log(`Denkitsu Bridge: Sincronização completa na carga. ${Object.keys(siteStorageData).length} itens sincronizados.`)
   } catch (error) {
     console.error("Denkitsu Bridge: Falha na sincronização completa.", error)
   }
@@ -35,14 +47,10 @@ const originalClear = localStorage.clear
 
 localStorage.setItem = function (key, value) {
   originalSetItem.apply(this, arguments)
-  if (key.startsWith(APP_PREFIX)) {
+  if (REAL_TIME_SYNC_KEYS.has(key)) {
     chrome.storage.local.set({ [key]: value }, () => {
-      console.log(`Denkitsu Bridge: Item '${key}' atualizado na extensão.`)
+      console.log(`Denkitsu Bridge: Chave essencial '${key}' atualizada na extensão.`)
     })
-    if (key === `${APP_PREFIX}user`) {
-      console.log("Denkitsu Bridge: Login detectado, executando sincronização completa.")
-      syncAllDenkitsuStorage()
-    }
   }
 }
 
@@ -60,7 +68,6 @@ localStorage.clear = async function () {
   try {
     const extensionStorage = await chrome.storage.local.get(null)
     const keysToRemove = Object.keys(extensionStorage).filter(key => key.startsWith(APP_PREFIX))
-
     if (keysToRemove.length > 0) {
       await chrome.storage.local.remove(keysToRemove)
       console.log("Denkitsu Bridge: localStorage.clear() detectado. Itens relevantes removidos da extensão.")
