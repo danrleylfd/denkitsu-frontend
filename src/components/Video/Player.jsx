@@ -1,9 +1,9 @@
 import { useRef, useState, useEffect, useCallback } from "react"
 import { Play, Pause, Volume2, VolumeX, Expand, RefreshCw, Minimize, Camera } from "lucide-react"
-
 import { storage } from "../../utils/storage"
 
 const formatTime = (timeInSeconds) => {
+  if (isNaN(timeInSeconds) || timeInSeconds < 0) return "00:00"
   const time = Math.round(timeInSeconds)
   const hours = Math.floor(time / 3600)
   const minutes = Math.floor((time % 3600) / 60)
@@ -17,26 +17,47 @@ const formatTime = (timeInSeconds) => {
   return `${paddedMinutes}:${paddedSeconds}`
 }
 
-
 const VideoPlayer = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poster = "/thumbnail.png" }) => {
   const videoRef = useRef(null)
   const playerContainerRef = useRef(null)
   const controlsTimeoutRef = useRef(null)
   const clickTimeoutRef = useRef(null)
-
   const [playing, setPlaying] = useState(false)
-  const [repeat, setRepeat] = useState(false)
-  const [muted, setMuted] = useState(() => storage.local.getItem("@Denkitsu:muted") === "true")
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [controlsVisible, setControlsVisible] = useState(true)
-  const [volume, setVolume] = useState(() => {
-    const savedVolume = storage.local.getItem("@Denkitsu:volume")
-    if (savedVolume !== null) return parseFloat(savedVolume)
-    return 1
-  })
   const [duration, setDuration] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
   const [showVolumeSlider, setShowVolumeSlider] = useState(false)
+  const [repeat, setRepeat] = useState(false)
+  const [muted, setMuted] = useState(false)
+  const [volume, setVolume] = useState(1)
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      const savedMuted = await storage.local.getItem("@Denkitsu:muted")
+      const savedRepeat = await storage.local.getItem("@Denkitsu:repeat")
+      const savedVolume = await storage.local.getItem("@Denkitsu:volume")
+      if (savedMuted !== null) setMuted(JSON.parse(savedMuted))
+      if (savedRepeat !== null) setRepeat(JSON.parse(savedRepeat))
+      if (savedVolume !== null) setVolume(parseFloat(savedVolume))
+    }
+    loadSettings()
+  }, [])
+
+  useEffect(() => {
+    storage.local.setItem("@Denkitsu:muted", JSON.stringify(muted))
+    if (videoRef.current) videoRef.current.muted = muted
+  }, [muted])
+
+  useEffect(() => {
+    storage.local.setItem("@Denkitsu:repeat", JSON.stringify(repeat))
+    if (videoRef.current) videoRef.current.loop = repeat
+  }, [repeat])
+
+  useEffect(() => {
+    storage.local.setItem("@Denkitsu:volume", volume)
+    if (videoRef.current) videoRef.current.volume = volume
+  }, [volume])
 
   const showControlsTemporarily = useCallback(() => {
     clearTimeout(controlsTimeoutRef.current)
@@ -49,36 +70,16 @@ const VideoPlayer = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poste
   }, [playing])
 
   useEffect(() => {
-    storage.local.setItem("@Denkitsu:muted", muted)
-    if (videoRef.current) videoRef.current.muted = muted
-  }, [muted])
-  useEffect(() => {
-    storage.local.setItem("@Denkitsu:repeat", muted)
-    if (videoRef.current) videoRef.current.repeat = repeat
-  }, [repeat])
-  useEffect(() => {
-    storage.local.setItem("@Denkitsu:volume", volume)
-    if (videoRef.current) videoRef.current.volume = volume
-  }, [volume])
-  useEffect(() => {
     const handleEnded = () => setPlaying(false)
+    const handleFullscreenChange = () => setIsFullscreen(document.fullscreenElement !== null)
     const video = videoRef.current
     if (video) {
-      video.volume = volume
-      video.muted = muted
       video.addEventListener("ended", handleEnded)
+      document.addEventListener("fullscreenchange", handleFullscreenChange)
     }
-
-    const handleFullscreenChange = () => {
-      const isCurrentlyFullscreen = document.fullscreenElement !== null
-      setIsFullscreen(isCurrentlyFullscreen)
-    }
-
-    document.addEventListener("fullscreenchange", handleFullscreenChange)
-
     return () => {
-        video?.removeEventListener("ended", handleEnded)
-        document.removeEventListener("fullscreenchange", handleFullscreenChange)
+      video?.removeEventListener("ended", handleEnded)
+      document.removeEventListener("fullscreenchange", handleFullscreenChange)
     }
   }, [])
 
@@ -87,37 +88,24 @@ const VideoPlayer = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poste
     if (videoRef.current.paused) {
       videoRef.current.play()
       setPlaying(true)
-      clearTimeout(controlsTimeoutRef.current)
-      setControlsVisible(false)
+      controlsTimeoutRef.current = setTimeout(() => setControlsVisible(false), 2500)
     } else {
       videoRef.current.pause()
       setPlaying(false)
     }
   }, [])
 
-  const toggleRepeat = () => {
-    if (!videoRef.current) return
-    const isNowRepeating = !videoRef.current.loop
-    videoRef.current.loop = isNowRepeating
-    setRepeat(isNowRepeating)
-  }
-  const toggleMute = () => {
-    if (!videoRef.current) return
-    const isNowMuted = !videoRef.current.muted
-    videoRef.current.muted = isNowMuted
-    setMuted(isNowMuted)
-  }
+  const toggleRepeat = () => setRepeat(prev => !prev)
+
+  const toggleMute = () => setMuted(prev => !prev)
+
   const handleVolumeChange = (newVolume) => {
     setVolume(newVolume)
-    if (newVolume > 0 && muted) {
-      setMuted(false)
-    }
+    if (newVolume > 0 && muted) setMuted(false)
   }
 
   const seek = (time) => {
-    if (videoRef.current) {
-      videoRef.current.currentTime = time
-    }
+    if (videoRef.current) videoRef.current.currentTime = time
   }
 
   const handleSeek = (e) => {
@@ -126,40 +114,33 @@ const VideoPlayer = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poste
     seek(newTime)
     setCurrentTime(newTime)
   }
+
   const handleTimeUpdate = () => {
-    if (!videoRef.current) return
-    setCurrentTime(videoRef.current.currentTime)
+    if (videoRef.current) setCurrentTime(videoRef.current.currentTime)
   }
+
   const handleLoadedMetadata = () => {
-    if (!videoRef.current) return
-    setDuration(videoRef.current.duration)
+    if (videoRef.current) setDuration(videoRef.current.duration)
   }
 
   const handleFullscreen = () => {
     const playerContainer = playerContainerRef.current
     if (!playerContainer) return
-
     if (!isFullscreen) {
-      if (playerContainer.requestFullscreen) {
-        playerContainer.requestFullscreen()
-      }
+      if (playerContainer.requestFullscreen) playerContainer.requestFullscreen()
     } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen()
-      }
+      if (document.exitFullscreen) document.exitFullscreen()
     }
   }
 
   const handleScreenshot = () => {
     const video = videoRef.current
     if (!video) return
-
     const canvas = document.createElement("canvas")
     canvas.width = video.videoWidth
     canvas.height = video.videoHeight
     const ctx = canvas.getContext("2d")
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
-
     const link = document.createElement("a")
     link.href = canvas.toDataURL("image/png")
     link.download = `screenshot-${new Date().getTime()}.png`
@@ -230,9 +211,11 @@ const VideoPlayer = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poste
         poster={poster}
         onClick={handleVideoSingleClick}
         onDoubleClick={handleVideoDoubleClick}
+        onMouseMove={showControlsTemporarily}
         className="w-full h-full object-contain"
         onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={handleLoadedMetadata}>
+        onLoadedMetadata={handleLoadedMetadata}
+      >
         Seu navegador não suporta o elemento de vídeo.
       </video>
       <div
@@ -249,7 +232,6 @@ const VideoPlayer = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poste
           onChange={handleSeek}
           className="relative z-10 mb-2 h-1 w-full accent-primary-base"
         />
-
         <div className="relative z-10 flex items-center gap-4">
           <button onClick={togglePlay} className="transition-transform hover:scale-110">
             {playing ? <Pause size={20} /> : <Play size={20} />}
@@ -260,7 +242,8 @@ const VideoPlayer = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poste
           <div
             className="group relative flex items-center gap-2"
             onMouseEnter={() => setShowVolumeSlider(true)}
-            onMouseLeave={() => setShowVolumeSlider(false)}>
+            onMouseLeave={() => setShowVolumeSlider(false)}
+          >
             <button onClick={toggleMute} className="transition-transform hover:scale-110">
               {muted || volume === 0 ? <VolumeX size={20} /> : <Volume2 size={20} />}
             </button>
@@ -278,10 +261,9 @@ const VideoPlayer = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poste
               />
             </div>
           </div>
-            {/* NOVO: Label de tempo adicionada */}
-            <span className="text-xs font-mono select-none">
-              {`${formatTime(currentTime)} / ${formatTime(duration)} \\ -${formatTime(duration - currentTime)}`}
-            </span>
+          <span className="text-xs font-mono select-none">
+            {`${formatTime(currentTime)} / ${formatTime(duration)}`}
+          </span>
           <div className="flex-1" />
           <button onClick={handleScreenshot} className="transition-transform hover:scale-110">
             <Camera size={20} />
