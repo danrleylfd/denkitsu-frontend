@@ -152,10 +152,10 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
     { icon: Clock, label: "Pomodoro", to: "/pomodoro" },
     { icon: Cloud, label: "Clima", to: "/clima" },
     { icon: Languages, label: "Tradutor", to: "/translator" },
-    { icon: Film, label: "Cinema", to: "/cinema" },
   ]
 
   const videoItems = [
+    { icon: Film, label: "Cinema", to: "/cinema" },
     { icon: Video, label: "Meus Vídeos", to: "/my-videos" },
     { icon: Upload, label: "Upload", to: "/upload" },
     { icon: TrendingUp, label: "Populares", to: "/popular" },
