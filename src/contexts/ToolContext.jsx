@@ -1,9 +1,7 @@
 import { createContext, useState, useEffect, useContext, useCallback, useMemo } from "react"
-
 import { useAuth } from "./AuthContext"
 import { getTools, createTool, updateTool, deleteTool } from "../services/tool"
 import { listTools } from "../services/aiChat"
-
 import { storage } from "../utils/storage"
 
 const ToolContext = createContext({})
@@ -39,29 +37,42 @@ const ToolProvider = ({ children }) => {
 
   useEffect(() => {
     if (loadingTools) return
-    const allTools = [
-      ...tools.internalTools,
-      ...tools.backendTools,
-      ...tools.customTools,
-    ]
-    const initialActiveTools = new Set()
-    allTools.forEach((tool) => {
-      try {
-        const storedValue = storage.local.getItem(`@Denkitsu:${tool.name}`)
-        if (JSON.parse(storedValue) === true) initialActiveTools.add(tool.name)
-      } catch {}
-    })
-    setActiveTools(initialActiveTools)
+
+    const loadActiveTools = async () => {
+      const allTools = [
+        ...tools.internalTools,
+        ...tools.backendTools,
+        ...tools.customTools,
+      ]
+      const initialActiveTools = new Set()
+
+      for (const tool of allTools) {
+        if (tool && tool.name) {
+          try {
+            const storedValue = await storage.local.getItem(`@Denkitsu:${tool.name}`)
+            if (JSON.parse(storedValue) === true) initialActiveTools.add(tool.name)
+          } catch {}
+        }
+      }
+      setActiveTools(initialActiveTools)
+    }
+    loadActiveTools()
   }, [tools, loadingTools])
 
-  const handleToolToggle = useCallback((toolKey, isActive) => {
-    setActiveTools(prev => {
-      const newActiveTools = new Set(prev)
-      if (isActive) newActiveTools.add(toolKey)
-      else newActiveTools.delete(toolKey)
+  const handleToolToggle = useCallback((toolKey) => {
+    if (typeof toolKey === 'undefined') {
+      console.error("handleToolToggle foi chamado com uma toolKey indefinida.")
+      return
+    }
+
+    setActiveTools(prevActiveTools => {
+      const newActiveTools = new Set(prevActiveTools)
+      const wasActive = newActiveTools.has(toolKey)
+      if (wasActive) newActiveTools.delete(toolKey)
+      else newActiveTools.add(toolKey)
+      storage.local.setItem(`@Denkitsu:${toolKey}`, JSON.stringify(!wasActive))
       return newActiveTools
     })
-    storage.local.setItem(`@Denkitsu:${toolKey}`, JSON.stringify(isActive))
   }, [])
 
   const addTool = async (toolData) => {
@@ -84,7 +95,7 @@ const ToolProvider = ({ children }) => {
   const value = useMemo(() => ({
     tools, loadingTools, fetchTools, addTool, editTool, removeTool,
     activeTools, handleToolToggle
-  }), [tools, loadingTools, fetchTools, addTool, editTool, removeTool, activeTools, handleToolToggle])
+  }), [tools, loadingTools, activeTools, fetchTools, addTool, editTool, removeTool, handleToolToggle])
 
   return (
     <ToolContext.Provider value={value}>

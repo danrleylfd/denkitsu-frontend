@@ -24,18 +24,26 @@ const ModelProvider = ({ children }) => {
   const [groqModels, setGroqModels] = useState([])
   const [loadingModels, setLoadingModels] = useState(true)
 
+  const [isInitialized, setIsInitialized] = useState(false)
+
   useEffect(() => {
     const loadSettings = async () => {
-      const storedProvider = await storage.local.getItem("@Denkitsu:aiProvider")
-      const storedGroqModel = await storage.local.getItem("@Denkitsu:GroqModel")
-      const storedOpenRouterModel = await storage.local.getItem("@Denkitsu:OpenRouterModel")
-      const storedGroqKey = await storage.local.getItem("@Denkitsu:Groq")
-      const storedOpenRouterKey = await storage.local.getItem("@Denkitsu:OpenRouter")
-      if (storedProvider) setAIProvider(storedProvider)
-      if (storedGroqModel) setGroqModel(storedGroqModel)
-      if (storedOpenRouterModel) setOpenRouterModel(storedOpenRouterModel)
-      if (storedGroqKey) setGroqKey(storedGroqKey)
-      if (storedOpenRouterKey) setOpenRouterKey(storedOpenRouterKey)
+      try {
+        const storedProvider = await storage.local.getItem("@Denkitsu:aiProvider")
+        const storedGroqModel = await storage.local.getItem("@Denkitsu:GroqModel")
+        const storedOpenRouterModel = await storage.local.getItem("@Denkitsu:OpenRouterModel")
+        const storedGroqKey = await storage.local.getItem("@Denkitsu:Groq")
+        const storedOpenRouterKey = await storage.local.getItem("@Denkitsu:OpenRouter")
+        if (storedProvider) setAIProvider(storedProvider)
+        if (storedGroqModel) setGroqModel(storedGroqModel)
+        if (storedOpenRouterModel) setOpenRouterModel(storedOpenRouterModel)
+        if (storedGroqKey) setGroqKey(storedGroqKey)
+        if (storedOpenRouterKey) setOpenRouterKey(storedOpenRouterKey)
+      } catch (error) {
+        console.error("Falha ao carregar as configurações:", error)
+      } finally {
+        setIsInitialized(true)
+      }
     }
     loadSettings()
   }, [])
@@ -47,6 +55,7 @@ const ModelProvider = ({ children }) => {
   const aiProviderToggle = useCallback(() => setAIProvider(prev => (prev === "groq" ? "openrouter" : "groq")), [])
 
   useEffect(() => {
+    if (!isInitialized) return
     storage.local.setItem("@Denkitsu:aiProvider", aiProvider)
     storage.local.setItem("@Denkitsu:GroqModel", groqModel)
     storage.local.setItem("@Denkitsu:OpenRouterModel", openRouterModel)
@@ -54,7 +63,7 @@ const ModelProvider = ({ children }) => {
     else storage.local.removeItem("@Denkitsu:Groq")
     if (openRouterKey) storage.local.setItem("@Denkitsu:OpenRouter", openRouterKey)
     else storage.local.removeItem("@Denkitsu:OpenRouter")
-  }, [aiProvider, groqModel, openRouterModel, groqKey, openRouterKey])
+  }, [aiProvider, groqModel, openRouterModel, groqKey, openRouterKey, isInitialized]) // Adicionamos 'isInitialized' às dependências
 
   useEffect(() => {
     if (!signed) {
