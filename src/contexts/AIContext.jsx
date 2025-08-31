@@ -23,16 +23,25 @@ const AIProvider = ({ children }) => {
   const [listening, setListening] = useState(false)
   const [audioFile, setAudioFile] = useState(null)
 
+  const [isInitialized, setIsInitialized] = useState(false)
+
   useEffect(() => {
     const loadPersistedState = async () => {
-      const storedCustomPrompt = await storage.local.getItem("@Denkitsu:customPrompt")
-      const storedStream = await storage.local.getItem("@Denkitsu:Stream")
-      const storedMessages = await storage.local.getItem("@Denkitsu:messages")
-      const storedAutoScroll = await storage.local.getItem("@Denkitsu:AutoScroll")
-      if (storedCustomPrompt) setCustomPrompt(storedCustomPrompt)
-      if (storedStream !== null) setStream(JSON.parse(storedStream))
-      if (storedMessages) setMessages(JSON.parse(storedMessages))
-      if (storedAutoScroll !== null) setAutoScroll(JSON.parse(storedAutoScroll))
+      try {
+        const storedCustomPrompt = await storage.local.getItem("@Denkitsu:customPrompt")
+        const storedStream = await storage.local.getItem("@Denkitsu:Stream")
+        const storedMessages = await storage.local.getItem("@Denkitsu:messages")
+        const storedAutoScroll = await storage.local.getItem("@Denkitsu:AutoScroll")
+
+        if (storedCustomPrompt) setCustomPrompt(storedCustomPrompt)
+        if (storedStream !== null) setStream(JSON.parse(storedStream))
+        if (storedMessages) setMessages(JSON.parse(storedMessages))
+        if (storedAutoScroll !== null) setAutoScroll(JSON.parse(storedAutoScroll))
+      } catch (error) {
+        console.error("Falha ao carregar estado do AIContext:", error)
+      } finally {
+        setIsInitialized(true)
+      }
     }
     loadPersistedState()
   }, [])
@@ -52,12 +61,25 @@ const AIProvider = ({ children }) => {
     setUserPrompt, setImageUrls, setAudioFile, setMessages, setSelectedAgent
   })
 
-  useEffect(() => { storage.local.setItem("@Denkitsu:customPrompt", customPrompt) }, [customPrompt])
-  useEffect(() => { storage.local.setItem("@Denkitsu:Stream", JSON.stringify(stream)) }, [stream])
-  useEffect(() => { storage.local.setItem("@Denkitsu:AutoScroll", JSON.stringify(autoScroll)) }, [autoScroll])
   useEffect(() => {
-    if (messages.length > 0) storage.local.setItem("@Denkitsu:messages", JSON.stringify(messages))
-  }, [messages])
+    if (!isInitialized) return
+    storage.local.setItem("@Denkitsu:customPrompt", customPrompt)
+  }, [customPrompt, isInitialized])
+
+  useEffect(() => {
+    if (!isInitialized) return
+    storage.local.setItem("@Denkitsu:Stream", JSON.stringify(stream))
+  }, [stream, isInitialized])
+
+  useEffect(() => {
+    if (!isInitialized) return
+    storage.local.setItem("@Denkitsu:AutoScroll", JSON.stringify(autoScroll))
+  }, [autoScroll, isInitialized])
+
+  useEffect(() => {
+    if (!isInitialized || messages.length === 0) return
+    storage.local.setItem("@Denkitsu:messages", JSON.stringify(messages))
+  }, [messages, isInitialized])
 
   const clearHistory = useCallback(() => {
     const systemMessage = { role: "system", content: customPrompt }
@@ -82,7 +104,9 @@ const AIProvider = ({ children }) => {
       utterance.onend = () => setSpeaking(false)
       utterance.onerror = () => setSpeaking(false)
       window.speechSynthesis.speak(utterance)
-    } else console.warn("Speech Synthesis API not supported in this browser.")
+    } else {
+      console.warn("Speech Synthesis API not supported in this browser.")
+    }
   }, [])
 
   const values = useMemo(() => ({
