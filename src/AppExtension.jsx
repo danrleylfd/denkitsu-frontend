@@ -18,18 +18,18 @@ const AuthScreen = () => {
     <div className="flex flex-col justify-center items-center h-full p-4">
       <Paper className="flex flex-col items-center gap-4 text-center">
         <img src="/denkitsu-rounded.png" alt="Denkitsu Logo" className="w-24 h-24" />
-        <h2 className="text-xl font-bold">"Bem-vindo ao Denkitsu"</h2>
+        <h2 className="text-xl font-bold text-lightFg-primary dark:text-darkFg-primary">Bem-vindo, Eu sou o Denkitsu</h2>
         <p className="text-lightFg-secondary dark:text-darkFg-secondary">
-          "Para usar a inteligência artificial, por favor, faça login ou crie sua conta."
+          Antes de começar, por favor, faça login ou crie uma conta.
         </p>
         <div className="flex gap-4 mt-4">
           <Button $rounded variant="secondary" onClick={() => openPage("/signup")}>
             <UserPlus size={16} className="mr-2" />
-            "Cadastrar"
+            Cadastrar
           </Button>
           <Button $rounded variant="primary" onClick={() => openPage("/signin")}>
             <LogIn size={16} className="mr-2" />
-            "Entrar"
+            Entrar
           </Button>
         </div>
       </Paper>
@@ -38,11 +38,12 @@ const AuthScreen = () => {
 }
 
 const WelcomeScreen = () => {
+  const { user } = useAuth()
   return (
     <div className="flex grow justify-center items-center flex-col p-4 text-center">
       <img src="/denkitsu-rounded.png" alt="Denkitsu Logo" className="w-24 h-24 mb-4" />
-      <h2 className="text-xl font-bold text-lightFg-primary dark:text-darkFg-primary">Denkitsu AI</h2>
-      <p className="text-lightFg-primary dark:text-darkFg-primary">Como posso te ajudar hoje?</p>
+      <h2 className="text-xl font-bold text-lightFg-primary dark:text-darkFg-primary">Olá, {user?.name}</h2>
+      <p className="text-lightFg-primary dark:text-darkFg-primary">Eu sou o Denkitsu, Como posso te ajudar hoje?</p>
     </div>
   )
 }
@@ -51,18 +52,35 @@ const SidePanelChat = () => {
   const { setUserPrompt, onSendMessage, improvePrompt, messages } = useAI()
   const { notifyInfo, notifyError } = useNotification()
 
-  useEffect(() => {
-    const checkForOmniboxMessage = async () => {
-      const result = await chrome.storage.local.get("omniboxMessage")
+  const processOmniboxMessage = useCallback(async () => {
+    try {
+      const result = await chrome.storage.session.get("omniboxMessage")
       if (result.omniboxMessage) {
         const { content } = result.omniboxMessage
-        await chrome.storage.local.remove("omniboxMessage")
+        await chrome.storage.session.remove("omniboxMessage")
         setUserPrompt(content)
-        setTimeout(() => onSendMessage(content), 50)
+      }
+    } catch (e) {
+      console.error("Erro ao processar mensagem da omnibox:", e)
+    }
+  }, [])
+
+  useEffect(() => {
+    processOmniboxMessage()
+  }, [processOmniboxMessage])
+
+  useEffect(() => {
+    const storageListener = (changes, area) => {
+      if (area === 'session' && changes.omniboxMessage?.newValue) {
+        console.log("Nova mensagem da omnibox detectada enquanto o painel está aberto.")
+        processOmniboxMessage()
       }
     }
-    checkForOmniboxMessage()
-  }, [])
+    chrome.storage.onChanged.addListener(storageListener)
+    return () => {
+      chrome.storage.onChanged.removeListener(storageListener)
+    }
+  }, [processOmniboxMessage])
 
   const handleAnalyzePage = useCallback(() => {
     notifyInfo("Analisando o conteúdo da página...")

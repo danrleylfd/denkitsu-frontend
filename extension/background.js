@@ -10,14 +10,14 @@ chrome.omnibox.onInputChanged.addListener((text, suggest) => {
 chrome.omnibox.onInputEntered.addListener((text) => {
   if (!text.trim()) return
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs && tabs[0]) chrome.sidePanel.open({ tabId: tabs[0].id })
+    if (tabs && tabs.length > 0 && tabs[0]) chrome.sidePanel.open({ tabId: tabs[0].id })
   })
-  setTimeout(() => {
-    chrome.runtime.sendMessage({
-      type: "NEW_OMNIBOX_MESSAGE",
-      content: text
-    })
-  }, 333)
+  chrome.storage.session.set({
+    omniboxMessage: {
+      content: text,
+      timestamp: Date.now()
+    }
+  })
 })
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
