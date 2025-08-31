@@ -103,14 +103,14 @@ const Store = () => {
   }
 
   const renderContent = () => {
-    if (loading) return <Button variant="outline" $rounded loading disabled />
+    if (loading) return <div className="flex-1 flex items-center justify-center"><Button variant="outline" $rounded loading disabled /></div>
 
     const items = activeTab === "agents" ? storeAgents : storeTools
     const type = activeTab === "agents" ? "agent" : "tool"
 
     if (items.length === 0) {
       return (
-        <div className="text-center py-20">
+        <div className="flex-1 flex flex-col items-center justify-center text-center">
           <StoreIcon size={64} className="mx-auto text-lightFg-tertiary dark:text-darkFg-tertiary" />
           <p className="mt-4 text-lightFg-secondary dark:text-darkFg-secondary">
             Nenhum(a) {activeTab === "agents" ? "agente" : "ferramenta"} disponível na loja no momento.
