@@ -24,7 +24,6 @@ const AuthProvider = ({ children }) => {
     await storage.local.setItem("@Denkitsu:user", JSON.stringify(userData))
     if (refreshToken) await storage.local.setItem("@Denkitsu:refreshToken", refreshToken)
     await storage.session.setItem("@Denkitsu:token", token)
-
     api.defaults.headers.Authorization = `Bearer ${token}`
     setUser(userData)
   }, [])
@@ -34,7 +33,6 @@ const AuthProvider = ({ children }) => {
       const storagedUser = await storage.local.getItem("@Denkitsu:user")
       const storagedRefreshToken = await storage.local.getItem("@Denkitsu:refreshToken")
       const storagedToken = await storage.session.getItem("@Denkitsu:token")
-
       if (storagedToken && storagedUser) {
         api.defaults.headers.Authorization = `Bearer ${storagedToken}`
         setUser(JSON.parse(storagedUser))
@@ -51,7 +49,6 @@ const AuthProvider = ({ children }) => {
       setLoading(false)
     }
     loadStorageData()
-
     if (isExtension) {
       const listener = (changes, area) => {
         if (area === 'local' || area === 'session') {

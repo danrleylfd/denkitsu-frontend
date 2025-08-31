@@ -17,6 +17,10 @@ export const storage = {
       if (isExtension) return chrome.storage.local.remove(key)
       return localStorage.removeItem(key)
     },
+    clear: async () => {
+      if (isExtension) return chrome.storage.local.clear()
+      return localStorage.clear()
+    }
   },
   session: {
     getItem: async (key) => {
@@ -34,5 +38,9 @@ export const storage = {
       if (isExtension) return chrome.storage.session.remove(key)
       return sessionStorage.removeItem(key)
     },
+    clear: async () => {
+      if (isExtension) return chrome.storage.session.clear()
+      return sessionStorage.clear()
+    }
   }
 }

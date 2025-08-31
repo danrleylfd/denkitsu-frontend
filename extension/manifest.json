@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Denkitsu AI",
   "version": "1.2.1.1",
-  "description": "Acesse o chat Denkitsu no painel lateral e interaja com o contexto da sua página atual.",
+  "description": "Converse sobre o conteúdo das páginas enquanto navega, fabrique seus próprios agentes e ferramentas ou adicione um da loja...",
   "permissions": [
     "sidePanel",
     "activeTab",
@@ -18,7 +18,7 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_title": "Abrir Denkitsu AI"
+    "default_title": "Denkitsu"
   },
   "commands": {
     "_execute_action": {
@@ -26,7 +26,7 @@
         "default": "Alt+I",
         "mac": "Alt+I"
       },
-      "description": "Abrir/Fechar o painel lateral do Denkitsu AI"
+      "description": "Abrir/Fechar o painel lateral do Denkitsu"
     }
   },
   "omnibox": {
