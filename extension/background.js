@@ -1,14 +1,5 @@
-console.log("Service Worker (background.js) iniciado.")
-
-chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch((error) => console.error(error))
-
-chrome.commands.onCommand.addListener((command) => {
-  if (command === "_execute_action") {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs[0]) chrome.sidePanel.open({ tabId: tabs[0].id })
-    })
-  }
-})
+if (chrome.sidePanel) chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch((error) => console.error(error))
+else console.error("A API chrome.sidePanel não está disponível.")
 
 chrome.omnibox.onInputChanged.addListener((text, suggest) => {
   suggest([{ content: text, description: `Enviar para Denkitsu AI: "${text}"` }])

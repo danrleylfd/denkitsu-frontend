@@ -30,7 +30,7 @@
     }
   },
   "omnibox": {
-    "keyword": "@Denkitsu"
+    "keyword": "@denkitsu"
   },
   "content_scripts": [
     {
