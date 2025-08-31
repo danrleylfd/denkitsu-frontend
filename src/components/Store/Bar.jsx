@@ -1,9 +1,11 @@
 import { Store as StoreIcon, Bot, PocketKnife } from "lucide-react"
+
 import Button from "../Button"
+import Paper from "../Paper"
 
 const StoreBar = ({ activeTab, setActiveTab }) => {
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <Paper className="bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-2">
       <h1 className="text-3xl font-bold text-lightFg-primary dark:text-darkFg-primary flex items-center gap-3">
         <StoreIcon size={32} />
         Loja da Comunidade
@@ -24,7 +26,7 @@ const StoreBar = ({ activeTab, setActiveTab }) => {
           <PocketKnife size={16} className="mr-2" /> Ferramentas
         </Button>
       </div>
-    </div>
+    </Paper>
   )
 }
 

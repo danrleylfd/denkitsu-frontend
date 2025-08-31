@@ -139,8 +139,8 @@ const Store = () => {
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
       <div className="flex flex-col gap-4 w-full">
-        <StoreBar activeTab={activeTab} setActiveTab={setActiveTab} />
         {renderContent()}
+        <StoreBar activeTab={activeTab} setActiveTab={setActiveTab} />
       </div>
     </SideMenu>
   )
