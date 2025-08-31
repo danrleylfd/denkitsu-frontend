@@ -39,6 +39,10 @@ localStorage.setItem = function (key, value) {
     chrome.storage.local.set({ [key]: value }, () => {
       console.log(`Denkitsu Bridge: Item '${key}' atualizado na extensão.`)
     })
+    if (key === `${APP_PREFIX}user`) {
+      console.log("Denkitsu Bridge: Login detectado, executando sincronização completa.")
+      syncAllDenkitsuStorage()
+    }
   }
 }
 

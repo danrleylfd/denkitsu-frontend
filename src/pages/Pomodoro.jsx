@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react"
 import { Timer, Settings, Play, Pause, RefreshCw } from "lucide-react"
 
+import { storage } from "../utils/storage"
+
 import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
-
-import { storage } from "../utils/storage"
 
 const ContentView = ({ children }) => (
   <main className="flex justify-center items-center p-2 gap-2 w-full min-h-dvh">
@@ -13,6 +13,7 @@ const ContentView = ({ children }) => (
 )
 
 const Pomodoro = () => {
+  const STORAGE_KEY = "@Denkitsu:pomodoroState"
   const [minutes, setMinutes] = useState(25)
   const [seconds, setSeconds] = useState(0)
   const [isActive, setIsActive] = useState(false)
@@ -21,7 +22,7 @@ const Pomodoro = () => {
 
   useEffect(() => {
     const loadPomodoroState = async () => {
-      const savedStateJSON = await storage.local.getItem("pomodoroState")
+      const savedStateJSON = await storage.local.getItem(STORAGE_KEY)
       if (savedStateJSON) {
         try {
           const savedState = JSON.parse(savedStateJSON)
@@ -39,22 +40,21 @@ const Pomodoro = () => {
     loadPomodoroState()
   }, [])
 
-
   useEffect(() => {
     let interval = null
     if (isActive) {
-      const currentState = JSON.stringify({ minutes, seconds, mode, cycles, isActive: false }) // Salva como inativo
-      storage.local.setItem("pomodoroState", currentState)
+      const currentState = JSON.stringify({ minutes, seconds, mode, cycles, isActive: false })
+      storage.local.setItem(STORAGE_KEY, currentState)
       interval = setInterval(() => {
         setSeconds(prevSeconds => {
           if (prevSeconds === 0) {
             if (minutes === 0) {
               const notification = new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3")
               notification.play()
+              const newCycles = cycles + 1
+              setCycles(newCycles)
               if (mode === "work") {
-                const newCycles = cycles + 1
                 setMode("break")
-                setCycles(newCycles)
                 setMinutes(newCycles % 4 === 0 ? 15 : 5)
               } else {
                 setMode("work")
@@ -65,12 +65,11 @@ const Pomodoro = () => {
               setMinutes(prevMinutes => prevMinutes - 1)
               return 59
             }
-          } else {
-            return prevSeconds - 1
-          }
+          } else return prevSeconds - 1
         })
       }, 1000)
-    } else clearInterval(interval)
+    }
+
     return () => clearInterval(interval)
   }, [isActive, minutes, seconds, mode, cycles])
 
@@ -82,7 +81,7 @@ const Pomodoro = () => {
     setMinutes(25)
     setSeconds(0)
     setCycles(0)
-    storage.local.removeItem("pomodoroState")
+    storage.local.removeItem(STORAGE_KEY)
   }
 
   return (
