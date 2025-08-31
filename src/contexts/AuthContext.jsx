@@ -11,10 +11,11 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
 
   const signOut = useCallback(async () => {
-    await storage.local.removeItem("@Denkitsu:refreshToken")
-    await storage.local.removeItem("@Denkitsu:user")
-    await storage.session.removeItem("@Denkitsu:token")
-
+    // await storage.local.removeItem("@Denkitsu:refreshToken")
+    // await storage.local.removeItem("@Denkitsu:user")
+    // await storage.session.removeItem("@Denkitsu:token")
+    await storage.local.clear()
+    await storage.local.clear()
     setUser(null)
     delete api.defaults.headers.Authorization
   }, [])
