@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useSyncExternalStore } from "react"
 import { Link, useLocation } from "react-router-dom"
 import {
   Menu, X, Sun, Moon, Home, Newspaper, Cloud, Languages, Clock, Code, Bot, Kanban, Link2,
@@ -11,6 +11,59 @@ import { useAuth } from "../contexts/AuthContext"
 import { useBackground } from "../contexts/BackgroundContext"
 
 import { storage } from "../utils/storage"
+
+let menuState = {
+  isOpen: false,
+  openSubMenu: null,
+}
+
+let listeners = []
+let isInitialized = false
+
+const emitChange = () => {
+  for (let listener of listeners) {
+    listener()
+  }
+}
+
+const initializeMenuState = async () => {
+  if (isInitialized) return
+  isInitialized = true
+  const savedMenuState = await storage.local.getItem("@Denkitsu:menuState")
+  const savedOpenSubMenu = await storage.local.getItem("@Denkitsu:openSubMenu")
+  menuState = {
+    isOpen: savedMenuState === "opened",
+    openSubMenu: savedOpenSubMenu || null,
+  }
+  emitChange()
+}
+
+const toggleMenu = () => {
+  menuState = { ...menuState, isOpen: !menuState.isOpen }
+  storage.local.setItem("@Denkitsu:menuState", menuState.isOpen ? "opened" : "closed")
+  emitChange()
+}
+
+const handleSubMenuToggle = (submenuName) => {
+  const newOpenSubMenu = menuState.openSubMenu === submenuName ? null : submenuName
+  menuState = { ...menuState, openSubMenu: newOpenSubMenu }
+  if (newOpenSubMenu) storage.local.setItem("@Denkitsu:openSubMenu", newOpenSubMenu)
+  else storage.local.removeItem("@Denkitsu:openSubMenu")
+  emitChange()
+}
+
+const useMenuStore = () => {
+  const subscribe = (callback) => {
+    listeners.push(callback)
+    return () => {
+      listeners = listeners.filter(l => l !== callback)
+    }
+  }
+  const getSnapshot = () => {
+    return menuState
+  }
+  return useSyncExternalStore(subscribe, getSnapshot)
+}
 
 const MainContent = ({ children }) => (
   <main className="flex flex-col items-center p-2 gap-2 mx-auto min-h-dvh w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[75%] lg:max-w-[67%] ml-[3.5rem] md:ml-auto">
@@ -80,33 +133,11 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
   const { theme, toggleTheme } = useTheme()
   const { signed, signOut } = useAuth()
 
-  const [isOpen, setOpen] = useState(false)
-  const [openSubMenu, setOpenSubMenu] = useState(null)
+  const { isOpen, openSubMenu } = useMenuStore()
 
   useEffect(() => {
-    const loadMenuState = async () => {
-      const savedMenuState = await storage.local.getItem("@Denkitsu:menuState")
-      const savedOpenSubMenu = await storage.local.getItem("@Denkitsu:openSubMenu")
-      setOpen(savedMenuState === "opened")
-      if (savedOpenSubMenu) setOpenSubMenu(savedOpenSubMenu)
-    }
-    loadMenuState()
+    initializeMenuState()
   }, [])
-
-  const toggleMenu = () => setOpen((prev) => !prev)
-
-  useEffect(() => {
-    storage.local.setItem("@Denkitsu:menuState", isOpen ? "opened" : "closed")
-  }, [isOpen])
-
-  useEffect(() => {
-    if (openSubMenu) storage.local.setItem("@Denkitsu:openSubMenu", openSubMenu)
-    else storage.local.removeItem("@Denkitsu:openSubMenu")
-  }, [openSubMenu])
-
-  const handleSubMenuToggle = (submenuName) => {
-    setOpenSubMenu((prev) => (prev === submenuName ? null : submenuName))
-  }
 
   const aiItems = [
     { icon: Bot, label: "Chat", to: "/chat" },
@@ -133,15 +164,14 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
 
   const accountItems = signed
     ? [
-        { icon: User, label: "Perfil", to: "/profile" },
-        { icon: Link2, label: "Atalho", to: "/atalho" },
-      ]
-    : [
-        { icon: LogIn, label: "Entrar", to: "/signin" },
-        { icon: UserPlus, label: "Cadastrar", to: "/signup" },
-        { icon: Lock, label: "Esqueci a senha", to: "/forgot_password" },
-        { icon: KeyRound, label: "Redefinir senha", to: "/reset_password" }
-      ]
+      { icon: User, label: "Perfil", to: "/profile" },
+      { icon: Link2, label: "Atalho", to: "/atalho" },
+    ] : [
+      { icon: LogIn, label: "Entrar", to: "/signin" },
+      { icon: UserPlus, label: "Cadastrar", to: "/signup" },
+      { icon: Lock, label: "Esqueci a senha", to: "/forgot_password" },
+      { icon: KeyRound, label: "Redefinir senha", to: "/reset_password" }
+    ]
 
   const menuItemClass = `
     flex items-center px-4 py-1 rounded-xl w-full
