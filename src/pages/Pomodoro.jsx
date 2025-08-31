@@ -3,6 +3,7 @@ import { Timer, Settings, Play, Pause, RefreshCw } from "lucide-react"
 
 import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
+
 import { storage } from "../utils/storage"
 
 const ContentView = ({ children }) => (
@@ -17,48 +18,64 @@ const Pomodoro = () => {
   const [isActive, setIsActive] = useState(false)
   const [mode, setMode] = useState("work")
   const [cycles, setCycles] = useState(0)
+
   useEffect(() => {
-    const savedState = storage.local.getItem("pomodoroState")
-    if (savedState) {
-      const { minutes, seconds, mode, cycles, isActive } = JSON.parse(savedState)
-      setMinutes(minutes)
-      setSeconds(seconds)
-      setMode(mode)
-      setCycles(cycles)
-      setIsActive(isActive)
+    const loadPomodoroState = async () => {
+      const savedStateJSON = await storage.local.getItem("pomodoroState")
+      if (savedStateJSON) {
+        try {
+          const savedState = JSON.parse(savedStateJSON)
+          if (savedState.hasOwnProperty('minutes') && savedState.hasOwnProperty('seconds')) {
+            setMinutes(savedState.minutes)
+            setSeconds(savedState.seconds)
+            setMode(savedState.mode)
+            setCycles(savedState.cycles)
+          }
+        } catch (error) {
+          console.error("Falha ao analisar o estado do pomodoro:", error)
+        }
+      }
     }
+    loadPomodoroState()
   }, [])
 
+
   useEffect(() => {
-    let interval
+    let interval = null
     if (isActive) {
+      const currentState = JSON.stringify({ minutes, seconds, mode, cycles, isActive: false }) // Salva como inativo
+      storage.local.setItem("pomodoroState", currentState)
       interval = setInterval(() => {
-        storage.local.setItem("pomodoroState", JSON.stringify({ minutes, seconds, mode, cycles, isActive }))
-        if (seconds === 0) {
-          if (minutes === 0) {
-            const notification = new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3")
-            notification.play()
-            if (mode === "work") {
-              setMode("break")
-              setMinutes(5)
-              setCycles((c) => c + 1)
+        setSeconds(prevSeconds => {
+          if (prevSeconds === 0) {
+            if (minutes === 0) {
+              const notification = new Audio("https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3")
+              notification.play()
+              if (mode === "work") {
+                const newCycles = cycles + 1
+                setMode("break")
+                setCycles(newCycles)
+                setMinutes(newCycles % 4 === 0 ? 15 : 5)
+              } else {
+                setMode("work")
+                setMinutes(25)
+              }
+              return 0
             } else {
-              setMode("work")
-              setMinutes(25)
+              setMinutes(prevMinutes => prevMinutes - 1)
+              return 59
             }
           } else {
-            setMinutes(minutes - 1)
-            setSeconds(59)
+            return prevSeconds - 1
           }
-        } else {
-          setSeconds(seconds - 1)
-        }
+        })
       }, 1000)
-    }
-    return () => interval && clearInterval(interval)
+    } else clearInterval(interval)
+    return () => clearInterval(interval)
   }, [isActive, minutes, seconds, mode, cycles])
 
-  const toggleTimer = () => setIsActive(!isActive)
+  const toggleTimer = () => setIsActive(prev => !prev)
+
   const resetTimer = () => {
     setIsActive(false)
     setMode("work")
@@ -70,7 +87,7 @@ const Pomodoro = () => {
 
   return (
     <SideMenu ContentView={ContentView} className="bg-cover bg-brand-purple">
-      <div className="bg-white dark:bg-zinc-900 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] p-4 rounded-lg w-full max-w-96 transition-colors opacity-75 dark:opacity-90">
+      <div className="bg-white dark:bg-zinc-900 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] p-4 rounded-lg w-full max-w-sm transition-colors opacity-75 dark:opacity-90">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center">
             <span className="w-8 h-8 text-zinc-700 dark:text-zinc-100 mr-2 flex items-center justify-center">
@@ -90,7 +107,7 @@ const Pomodoro = () => {
           <div className="text-sm text-zinc-600 dark:text-zinc-400">Ciclos Completados: {cycles}</div>
         </div>
         <div className="flex justify-center mb-8 gap-4">
-          <Button variant="secondary" size="icon" $rounded title={isActive ? "Pause" : "Play"} onClick={toggleTimer}>
+          <Button variant="secondary" size="icon" $rounded title={isActive ? "Pausar" : "Iniciar"} onClick={toggleTimer}>
             {isActive ? <Pause size={16} /> : <Play size={16} />}
           </Button>
           <Button variant="secondary" size="icon" $rounded title="Reiniciar" onClick={resetTimer}>
@@ -102,7 +119,7 @@ const Pomodoro = () => {
             <span className="w-4 h-4 mr-2 flex items-center justify-center">
               <Settings size={16} />
             </span>
-            <span>Trabalho: 25 minutos • Intervalo: 5 minutos</span>
+            <span>Trabalho: 25 min • Intervalo: 5 min • Pausa longa: 15 min</span>
           </div>
         </div>
       </div>
