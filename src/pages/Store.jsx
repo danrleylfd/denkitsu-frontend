@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
-import { Store as StoreIcon, Bot, PocketKnife } from "lucide-react"
+import { Store as StoreIcon } from "lucide-react"
 
 import { useAuth } from "../contexts/AuthContext"
 import { useNotification } from "../contexts/NotificationContext"
@@ -11,6 +11,7 @@ import { getPublishedTools, acquireTool, unacquireTool } from "../services/tool"
 import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
 import StoreItemCard from "../components/Store/ItemCard"
+import StoreBar from "../components/Store/Bar"
 
 const ContentView = ({ children }) => (
   <main className="flex flex-col p-2 gap-2 mx-auto min-h-dvh w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[85%] ml-[3.5rem] md:ml-auto">
@@ -112,7 +113,7 @@ const Store = () => {
         <div className="text-center py-20">
           <StoreIcon size={64} className="mx-auto text-lightFg-tertiary dark:text-darkFg-tertiary" />
           <p className="mt-4 text-lightFg-secondary dark:text-darkFg-secondary">
-            Nenhum {activeTab === "agents" ? "agente" : "ferramenta"} disponível na loja no momento.
+            Nenhum(a) {activeTab === "agents" ? "agente" : "ferramenta"} disponível na loja no momento.
           </p>
         </div>
       )
@@ -138,28 +139,7 @@ const Store = () => {
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
       <div className="flex flex-col gap-4 w-full">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <h1 className="text-3xl font-bold text-lightFg-primary dark:text-darkFg-primary flex items-center gap-3">
-            <StoreIcon size={32} />
-            Loja da Comunidade
-          </h1>
-          <div className="flex items-center gap-2 p-1 bg-lightBg-secondary dark:bg-darkBg-secondary rounded-full">
-            <Button
-              variant={activeTab === "agents" ? "primary" : "secondary"}
-              $rounded
-              onClick={() => setActiveTab("agents")}
-            >
-              <Bot size={16} className="mr-2" /> Agentes
-            </Button>
-            <Button
-              variant={activeTab === "tools" ? "primary" : "secondary"}
-              $rounded
-              onClick={() => setActiveTab("tools")}
-            >
-              <PocketKnife size={16} className="mr-2" /> Ferramentas
-            </Button>
-          </div>
-        </div>
+        <StoreBar activeTab={activeTab} setActiveTab={setActiveTab} />
         {renderContent()}
       </div>
     </SideMenu>
