@@ -1,3 +1,5 @@
+console.log("Service Worker (background.js) iniciado.")
+
 if (chrome.sidePanel) chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch((error) => console.error(error))
 else console.error("A API chrome.sidePanel não está disponível.")
 
@@ -7,15 +9,15 @@ chrome.omnibox.onInputChanged.addListener((text, suggest) => {
 
 chrome.omnibox.onInputEntered.addListener((text) => {
   if (!text.trim()) return
-  chrome.storage.local.set({
-    omniboxMessage: {
-      content: text,
-      timestamp: Date.now()
-    }
-  })
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs[0]) chrome.sidePanel.open({ tabId: tabs[0].id })
+    if (tabs && tabs[0]) chrome.sidePanel.open({ tabId: tabs[0].id })
   })
+  setTimeout(() => {
+    chrome.runtime.sendMessage({
+      type: "NEW_OMNIBOX_MESSAGE",
+      content: text
+    })
+  }, 333)
 })
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
