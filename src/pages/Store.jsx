@@ -1,10 +1,12 @@
+
 import { useState, useEffect, useCallback } from "react"
 import { Store as StoreIcon } from "lucide-react"
 
 import { useAuth } from "../contexts/AuthContext"
-import { useNotification } from "../contexts/NotificationContext"
 import { useAgents } from "../contexts/AgentContext"
 import { useTools } from "../contexts/ToolContext"
+import { useNotification } from "../contexts/NotificationContext"
+
 import { getPublishedAgents, acquireAgent, unacquireAgent } from "../services/agent"
 import { getPublishedTools, acquireTool, unacquireTool } from "../services/tool"
 
@@ -13,7 +15,11 @@ import Button from "../components/Button"
 import StoreItemCard from "../components/Store/ItemCard"
 import StoreBar from "../components/Store/Bar"
 
-const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-dvh mx-auto">{children}</main>
+const ContentView = ({ children }) => (
+  <main className="flex flex-col flex-1 h-dvh">
+    {children}
+  </main>
+)
 
 const Store = () => {
   const { user } = useAuth()
@@ -40,7 +46,7 @@ const Store = () => {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [notifyError])
 
   useEffect(() => {
     fetchData()
@@ -116,7 +122,7 @@ const Store = () => {
     }
 
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-2">
         {items.map(item => (
           <StoreItemCard
             key={item._id}
@@ -133,13 +139,11 @@ const Store = () => {
   }
 
   return (
-    <SideMenu ContentView={ContentView} className="bg-brand-purple bg-cover bg-center">
-      <div className="flex flex-col h-full w-full gap-2">
-        <div className="flex-1 overflow-y-auto pr-2">
-          {renderContent()}
-        </div>
-        <StoreBar activeTab={activeTab} setActiveTab={setActiveTab} />
+    <SideMenu ContentView={ContentView} className="bg-cover bg-brand-purple">
+      <div className="flex-1 overflow-y-auto">
+        {renderContent()}
       </div>
+      <StoreBar activeTab={activeTab} setActiveTab={setActiveTab} />
     </SideMenu>
   )
 }
