@@ -1,106 +1,79 @@
-import { createContext, useState, useEffect, useContext, useCallback, useMemo } from "react"
-
+import { createContext, useState, useEffect, useContext } from "react"
 import { useAuth } from "./AuthContext"
 import { useNotification } from "./NotificationContext"
-
 import { getModels } from "../services/aiChat"
-
 import { storage } from "../utils/storage"
 
-const ModelContext = createContext({})
+const ModelContext = createContext(null)
 
 const ModelProvider = ({ children }) => {
   const { signed } = useAuth()
   const { notifyError } = useNotification()
-
-  const [aiProvider, setAIProvider] = useState("groq")
-  const [groqModel, setGroqModel] = useState("openai/gpt-oss-120b")
-  const [openRouterModel, setOpenRouterModel] = useState("deepseek/deepseek-r1-0528:free")
-  const [groqKey, setGroqKey] = useState("")
-  const [openRouterKey, setOpenRouterKey] = useState("")
-
-  const [freeModels, setFreeModels] = useState([])
-  const [payModels, setPayModels] = useState([])
-  const [groqModels, setGroqModels] = useState([])
-  const [loadingModels, setLoadingModels] = useState(true)
-
-  const [isInitialized, setIsInitialized] = useState(false)
-
-  useEffect(() => {
-    const loadSettings = async () => {
-      try {
-        const storedProvider = await storage.local.getItem("@Denkitsu:aiProvider")
-        const storedGroqModel = await storage.local.getItem("@Denkitsu:GroqModel")
-        const storedOpenRouterModel = await storage.local.getItem("@Denkitsu:OpenRouterModel")
-        const storedGroqKey = await storage.local.getItem("@Denkitsu:Groq")
-        const storedOpenRouterKey = await storage.local.getItem("@Denkitsu:OpenRouter")
-        if (storedProvider) setAIProvider(storedProvider)
-        if (storedGroqModel) setGroqModel(storedGroqModel)
-        if (storedOpenRouterModel) setOpenRouterModel(storedOpenRouterModel)
-        if (storedGroqKey) setGroqKey(storedGroqKey)
-        if (storedOpenRouterKey) setOpenRouterKey(storedOpenRouterKey)
-      } catch (error) {
-        console.error("Falha ao carregar as configurações:", error)
-      } finally {
-        setIsInitialized(true)
-      }
-    }
-    loadSettings()
-  }, [])
-
-  const aiKey = useMemo(() => (aiProvider === "groq" ? groqKey : openRouterKey), [aiProvider, groqKey, openRouterKey])
-  const model = useMemo(() => (aiProvider === "groq" ? groqModel : openRouterModel), [aiProvider, groqModel, openRouterModel])
-  const setModel = useCallback((newModel) => (aiProvider === "groq" ? setGroqModel(newModel) : setOpenRouterModel(newModel)), [aiProvider])
-  const setAIKey = useCallback((newKey) => (aiProvider === "groq" ? setGroqKey(newKey) : setOpenRouterKey(newKey)), [aiProvider])
-  const aiProviderToggle = useCallback(() => setAIProvider(prev => (prev === "groq" ? "openrouter" : "groq")), [])
-
-  useEffect(() => {
-    if (!isInitialized) return
-    storage.local.setItem("@Denkitsu:aiProvider", aiProvider)
-    storage.local.setItem("@Denkitsu:GroqModel", groqModel)
-    storage.local.setItem("@Denkitsu:OpenRouterModel", openRouterModel)
-    if (groqKey) storage.local.setItem("@Denkitsu:Groq", groqKey)
-    else storage.local.removeItem("@Denkitsu:Groq")
-    if (openRouterKey) storage.local.setItem("@Denkitsu:OpenRouter", openRouterKey)
-    else storage.local.removeItem("@Denkitsu:OpenRouter")
-  }, [aiProvider, groqModel, openRouterModel, groqKey, openRouterKey, isInitialized]) // Adicionamos 'isInitialized' às dependências
-
-  useEffect(() => {
-    if (!signed) {
-      setLoadingModels(false)
-      return
-    }
-
-    const fetchModels = async () => {
-      setLoadingModels(true)
-      try {
-        const { freeModels: loadedFree, payModels: loadedPay, groqModels: loadedGroq } = await getModels()
-        setFreeModels(loadedFree?.filter(m => !m.id.includes("whisper")) || [])
-        if (aiKey) setPayModels(loadedPay?.filter(m => !m.id.includes("whisper")) || [])
-        else setPayModels([])
-        setGroqModels(loadedGroq?.filter(m => !m.id.includes("whisper")) || [])
-      } catch (error) {
-        notifyError(error.message || "Falha ao carregar modelos de IA.")
-        setFreeModels([])
-        setPayModels([])
-        setGroqModels([])
-      } finally {
-        setLoadingModels(false)
-      }
-    }
-    fetchModels()
-  }, [aiKey, signed, notifyError])
-
-  const value = useMemo(() => ({
-    aiProvider, aiProviderToggle,
-    model, setModel,
-    aiKey, setAIKey,
-    freeModels, payModels, groqModels,
-    loadingModels
-  }), [
-    aiProvider, aiProviderToggle, model, setModel, aiKey, setAIKey,
-    freeModels, payModels, groqModels, loadingModels
+  const [providers, setProviders] = useState([
+    { id: "groq", name: "Groq", defaultModel: "openai/gpt-oss-120b" },
+    { id: "openrouter", name: "OpenRouter", defaultModel: "deepseek/deepseek-r1-0528:free" },
+    { id: "custom", name: "Personalizado", defaultModel: "" }
   ])
+  const [selectedProvider, setSelectedProvider] = useState(storage.get("aiProvider") || "groq")
+  const [customProviderConfig, setCustomProviderConfig] = useState(() => {
+    const saved = storage.get("customProviderConfig")
+    return saved || { apiUrl: "", apiKey: "" }
+  })
+  const [models, setModels] = useState([])
+  const [loadingModels, setLoadingModels] = useState(false)
+
+  const fetchModels = async () => {
+    if (!signed) return
+    setLoadingModels(true)
+    try {
+      let config = null
+      if (selectedProvider === "custom") {
+        if (!customProviderConfig.apiUrl || !customProviderConfig.apiKey) {
+          notifyError("Configure a URL e a chave da API para o provedor personalizado.")
+          setLoadingModels(false)
+          return
+        }
+        config = customProviderConfig
+      }
+      const modelsData = await getModels(selectedProvider, null, config)
+      setModels(modelsData)
+    } catch (error) {
+      notifyError(error.message || "Erro ao carregar modelos. Verifique suas configurações.")
+      console.error("Erro ao carregar modelos:", error)
+    } finally {
+      setLoadingModels(false)
+    }
+  }
+
+  const saveCustomProviderConfig = (apiUrl, apiKey) => {
+    const newConfig = { apiUrl, apiKey }
+    setCustomProviderConfig(newConfig)
+    storage.set("customProviderConfig", newConfig)
+  }
+
+  const selectProvider = (providerId) => {
+    setSelectedProvider(providerId)
+    storage.set("aiProvider", providerId)
+    if (providerId !== "custom") {
+      const provider = providers.find(p => p.id === providerId)
+      if (provider && provider.defaultModel) storage.set("aiModel", provider.defaultModel)
+    }
+  }
+
+  useEffect(() => {
+    if (signed && selectedProvider) fetchModels()
+  }, [signed, selectedProvider, customProviderConfig])
+
+  const value = {
+    providers,
+    selectedProvider,
+    selectProvider,
+    models,
+    loadingModels,
+    fetchModels,
+    customProviderConfig,
+    saveCustomProviderConfig
+  }
 
   return (
     <ModelContext.Provider value={value}>
@@ -111,9 +84,7 @@ const ModelProvider = ({ children }) => {
 
 const useModels = () => {
   const context = useContext(ModelContext)
-  if (!context) {
-    throw new Error("useModels must be used within a ModelProvider")
-  }
+  if (!context) throw new Error("useModels deve ser usado dentro de um <ModelProvider>")
   return context
 }
 

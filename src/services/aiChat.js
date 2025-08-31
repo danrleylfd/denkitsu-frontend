@@ -2,8 +2,8 @@ import api from "./"
 
 import { storage } from "../utils/storage"
 
-async function* sendMessageStream(aiKey, aiProvider, model, models, messages, activeTools, mode) {
-  const payload = { aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages, use_tools: Array.from(activeTools), stream: true, mode }
+async function* sendMessageStream(aiKey, aiProvider, model, models, messages, activeTools, mode, customProviderConfig) {
+  const payload = { customConfig: customProviderConfig, aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages, use_tools: Array.from(activeTools), stream: true, mode }
   const token = await storage.session.getItem("@Denkitsu:token")
   try {
     const response = await fetch(`${api.defaults.baseURL}/ai/chat/completions`, {
@@ -56,13 +56,13 @@ async function* sendMessageStream(aiKey, aiProvider, model, models, messages, ac
   }
 }
 
-const sendMessage = async (aiKey, aiProvider, model, models, messages, mode = "Padrão", activeTools = new Set()) => {
+const sendMessage = async (aiKey, aiProvider, model, models, messages, mode = "Padrão", activeTools = new Set(), customProviderConfig = null) => {
   const finalPlugins = []
   if (activeTools.has("web")) finalPlugins.push({ id: "web" })
   const regularTools = Array.from(activeTools).filter(tool => tool !== "web")
   const fullModel = models.find((item) => item.id === model)
   const use_tools = (fullModel?.supports_tools && regularTools.length > 0) ? regularTools : undefined
-  const payload = { aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages: [...messages], plugins: finalPlugins.length > 0 ? finalPlugins : undefined, use_tools, mode }
+  const payload = { customConfig: customProviderConfig,aiProvider, aiKey: aiKey.length > 0 ? aiKey : undefined, model, messages: [...messages], plugins: finalPlugins.length > 0 ? finalPlugins : undefined, use_tools, mode }
   try {
     return await api.post("/ai/chat/completions", payload)
   } catch (error) {
