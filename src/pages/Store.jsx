@@ -13,11 +13,7 @@ import Button from "../components/Button"
 import StoreItemCard from "../components/Store/ItemCard"
 import StoreBar from "../components/Store/Bar"
 
-const ContentView = ({ children }) => (
-  <main className="flex flex-col p-2 gap-2 mx-auto min-h-dvh w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[85%] ml-[3.5rem] md:ml-auto">
-    {children}
-  </main>
-)
+const ContentView = ({ children }) => <main className="flex flex-col flex-1 h-dvh mx-auto">{children}</main>
 
 const Store = () => {
   const { user } = useAuth()
