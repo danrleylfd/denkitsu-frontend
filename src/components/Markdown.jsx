@@ -4,6 +4,7 @@ import ReactMarkdown from "react-markdown"
 import rehypeHighlight from "rehype-highlight"
 import rehypeRaw from "rehype-raw"
 import remarkGfm from "remark-gfm"
+import Mermaid from "./Mermaid"
 import "highlight.js/styles/atom-one-dark.css"
 
 import Button from "./Button"
@@ -23,7 +24,7 @@ const getTweetId = (url) => {
 }
 
 const Markdown = ({ loading, content, think }) => {
-const [collapsed, setCollapsed] = useState((think && !loading))
+  const [collapsed, setCollapsed] = useState((think && !loading))
 
   const toggleCollapse = () => setCollapsed((prev) => !prev)
 
@@ -36,7 +37,7 @@ const [collapsed, setCollapsed] = useState((think && !loading))
       {think && (
         <div className="flex gap-2 items-center">
           <Button variant="secondary" size="icon" $rounded onClick={toggleCollapse}>
-            {collapsed ? <Maximize2 size={16}/> : <Minimize2 size={16}/>}
+            {collapsed ? <Maximize2 size={16} /> : <Minimize2 size={16} />}
           </Button>
           <span>Pensamentos de Denkitsu...</span>
         </div>
@@ -129,13 +130,23 @@ const [collapsed, setCollapsed] = useState((think && !loading))
                 {children}
               </pre>
             ),
-            code: ({ node, className, children, ...props }) => (
-              <code
-                className={`bg-lightBg-tertiary dark:bg-darkBg-tertiary break-words text-pretty text-xs p-2 rounded-md ${className}`}
-                {...props}>
-                {children}
-              </code>
-            ),
+            code({ node, className, children, ...props }) {
+              const match = /language-(\w+)/.exec(className || "")
+              if (match && match[1] === "mermaid") {
+                return (
+                  <div className="flex justify-center bg-white rounded-md p-2 my-2">
+                    <Mermaid chart={String(children).trim()} />
+                  </div>
+                )
+              }
+              return (
+                <code
+                  className={`bg-lightBg-tertiary dark:bg-darkBg-tertiary break-words text-pretty text-xs p-2 rounded-md ${className}`}
+                  {...props}>
+                  {children}
+                </code>
+              )
+            },
             li: ({ node, children, ...props }) => (
               <li {...props} className="text-lightFg-primary dark:text-darkFg-primary">
                 {children}
@@ -177,7 +188,7 @@ const [collapsed, setCollapsed] = useState((think && !loading))
       )}
       {think && !collapsed && (
         <Button variant="secondary" size="icon" $rounded onClick={toggleCollapse}>
-          <Minimize2 size={16}/>
+          <Minimize2 size={16} />
         </Button>
       )}
     </div>

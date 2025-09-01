@@ -1,4 +1,4 @@
-import { LogIn, UserPlus, Settings, Send, Paperclip, Wrench, Speech, Waypoints, MessageCirclePlus, Mic, ScanText, Lock, Sparkle, Info, Factory, Store, Server } from "lucide-react"
+import { LogIn, UserPlus, Settings, Send, Paperclip, Wrench, Speech, Waypoints, MessageCirclePlus, ScanText, Lock, Sparkle, Factory, Store, Server } from "lucide-react"
 
 import { useAuth } from "../../contexts/AuthContext"
 import { useAI } from "../../contexts/AIContext"
@@ -20,7 +20,6 @@ const ExtensionAIBar = ({
   toolsDoor,
   toggleToolsDoor,
   onAnalyzePage,
-  toggleFeaturesDoor,
   toggleFactoryManagerDoor,
   mediaDoor,
   toggleMediaDoor
@@ -83,7 +82,6 @@ const ExtensionAIBar = ({
         <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="audio/*" style={{ display: "none" }} />
         <div className="w-full flex flex-col gap-2 md:hidden">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <Button variant="secondary" size="icon" $rounded title="Recursos" onClick={toggleFeaturesDoor}><Info size={16} /></Button>
             <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loading || isImproving}><Settings size={16} /></Button>
             <Button
               variant={aiProvider === "groq" ? "orange" : aiProvider === "openrouter" ? "info" : "success"}
@@ -109,7 +107,6 @@ const ExtensionAIBar = ({
           </div>
         </div>
         <div className="w-full hidden md:flex items-center gap-2">
-          <Button variant="secondary" size="icon" $rounded title="Recursos" onClick={toggleFeaturesDoor}><Info size={16} /></Button>
           <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loading || isImproving}><Settings size={16} /></Button>
           <Button
             variant={aiProvider === "groq" ? "orange" : aiProvider === "openrouter" ? "info" : "success"}

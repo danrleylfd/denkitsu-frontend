@@ -53,7 +53,7 @@ const ChatInterface = ({ renderBar }) => {
       <AIMedia mediaDoor={mediaDoor} onAddImage={onAddImage} />
       <AIAgents agentsDoor={agentsDoor} />
       <AITools toolsDoor={toolsDoor} />
-      {openDoor === null && <AITip />}
+      {openDoor === null && <AITip toggleFeaturesDoor={() => setFeaturesDoor(prev => !prev)} />}
       {renderBar({
         imageCount: imageUrls.length,
         agentsDoor,
@@ -62,7 +62,6 @@ const ChatInterface = ({ renderBar }) => {
         toggleAgentsDoor: () => handleDoorToggle("agents"),
         toggleToolsDoor: () => handleDoorToggle("tools"),
         toggleMediaDoor: () => handleDoorToggle("media"),
-        toggleFeaturesDoor: () => setFeaturesDoor((prev) => !prev),
         toggleSettingsDoor: () => setSettingsDoor((prev) => !prev),
         toggleFactoryManagerDoor: () => setFactoryManagerDoor((prev) => !prev)
       })}

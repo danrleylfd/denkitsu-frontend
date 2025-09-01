@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { X, Bot, Wrench, Sparkle, Paperclip, Factory, AlertTriangle, Settings, ImagePlus, AudioLines, Mic, Languages, Waypoints, Star, Newspaper, Kanban, Upload, Speech } from "lucide-react"
+import { X, Bot, Wrench, Sparkle, Paperclip, Factory, AlertTriangle, Settings, ImagePlus, AudioLines, Mic, Languages, Waypoints, Star, Newspaper, Kanban, Upload, Speech, History, Store } from "lucide-react"
 
 import { AGENTS_DEFINITIONS } from "../../constants/agents"
 import { TOOL_DEFINITIONS } from "../../constants/tools"
@@ -25,6 +25,7 @@ const tabs = [
   { id: "extras", label: "Extras", icon: Star },
   { id: "customization", label: "Personalização", icon: Sparkle },
   { id: "settings", label: "Configurações", icon: Settings },
+  { id: "changelog", label: "Changelog", icon: History },
 ]
 
 const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
@@ -147,6 +148,36 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
                 Isso pode causar um erro e impedir que a IA formule uma resposta final. Portanto, **prefira usar APIs que retornem dados concisos** ou que permitam filtrar a quantidade de informação através de parâmetros na URL!
               </p>
             </div>
+            <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary mt-4">Tutorial: Conectando a um Provedor de IA Personalizado</h4>
+            <p>
+              O Denkitsu permite que você se conecte a qualquer endpoint de API compatível com a API da OpenAI. Isso é útil para usar modelos auto-hospedados (com LM Studio, por exemplo) ou outros serviços de proxy.
+            </p>
+            <div>
+              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 1: Alternar para o Provedor Personalizado</h5>
+              <p>
+                Na barra de chat, clique no ícone do provedor atual (<Waypoints size={16} className="inline-block mx-1" />) até que ele se torne um ícone de servidor (<Wrench size={16} className="inline-block mx-1" />) e o título mude para "Provedor: Personalizado".
+              </p>
+            </div>
+            <div>
+              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 2: Abrir as Configurações</h5>
+              <p>
+                Clique no ícone de engrenagem (<Settings size={16} className="inline-block mx-1" />) para abrir o painel de configurações.
+              </p>
+            </div>
+            <div>
+              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 3: Preencher os Dados</h5>
+              <ul className="list-disc list-inside space-y-2 pl-2">
+                <li><strong>URL da API (Personalizado):</strong> Insira a URL base do seu servidor. Por exemplo, se você está usando LM Studio, o padrão é `http://localhost:1234/v1`.</li>
+                <li><strong>Chave da API:</strong> Muitos servidores locais não exigem uma chave. Você pode digitar `nao-usado` ou qualquer outro texto.</li>
+                <li><strong>Modelo:</strong> Insira o identificador exato do modelo que você carregou no seu servidor. No LM Studio, você pode encontrar isso na página principal. Ex: `lmstudio-community/Meta-Llama-3-8B-Instruct-GGUF`.</li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Pronto!</h5>
+              <p>
+                Feche as configurações. O Denkitsu agora enviará todas as requisições para o seu servidor local. Lembre-se que o desempenho e a compatibilidade com ferramentas dependerão do modelo que você está utilizando.
+              </p>
+            </div>
           </div>
         )
       case "media":
@@ -179,6 +210,9 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
             <FeatureListItem title="Planejar Projetos no Kanban" icon={Kanban}>
               Na página Kanban, descreva um objetivo (ex: "lançar meu site") e use o Agente <strong>Secretário</strong> para que a IA gere automaticamente uma lista de tarefas passo a passo.
             </FeatureListItem>
+            <FeatureListItem title="Loja da Comunidade" icon={Store}>
+              Acesse a Loja para descobrir e adquirir Agentes e Ferramentas criados por outros usuários, expandindo as capacidades do seu assistente.
+            </FeatureListItem>
           </>
         )
       case "customization":
@@ -188,7 +222,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
               Tem uma ideia mas não sabe como formular a pergunta? Escreva o que vier à mente e use o aperfeiçoador para que a IA transforme seu rascunho em um prompt claro e eficaz.
             </FeatureListItem>
             <FeatureListItem title="Comportamento Personalizado" icon={Languages}>
-              Acesse as configurações e defina um "prompt de sistema". Diga à IA como ela deve se comportar, qual sua personalidade, e que regras deve seguir em todas as suas respostas.
+              Acesse as configurações e defina um "prompt de sistema". Diga à IA como ela deve se comportar, qual sua personalidade, и que regras deve seguir em todas as suas respostas.
             </FeatureListItem>
           </>
         )
@@ -203,6 +237,27 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
             </FeatureListItem>
           </>
         )
+      case "changelog":
+        return (
+          <>
+            <div className="flex flex-col gap-2">
+              <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Versão 1.2.2 (Atual)</h4>
+              <ul className="list-disc list-inside text-sm space-y-1">
+                <li>Adicionado suporte para renderização de diagramas com Mermaid.</li>
+                <li>Implementado o Changelog e novos tutoriais na janela de Recursos.</li>
+                <li>O botão de Recursos foi movido para um local mais acessível na barra de dicas.</li>
+              </ul>
+            </div>
+            <div className="flex flex-col gap-2 mt-4">
+              <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Versão 1.2.1</h4>
+              <ul className="list-disc list-inside text-sm space-y-1">
+                <li>Lançamento da Loja da Comunidade para compartilhamento de Agentes e Ferramentas.</li>
+                <li>Implementada a Fábrica de Agentes e Ferramentas para criação personalizada.</li>
+                <li>Refatoração completa do sistema de autenticação e gerenciamento de estado.</li>
+              </ul>
+            </div>
+          </>
+        )
       default:
         return null
     }
@@ -211,7 +266,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <Paper
-        className="relative flex w-full max-w-3xl flex-col gap-2 rounded-lg bg-lightBg-primary p-2 shadow-2xl dark:bg-darkBg-primary border border-solid border-brand-purple"
+        className="relative flex w-full max-w-4xl flex-col gap-2 rounded-lg bg-lightBg-primary p-2 shadow-2xl dark:bg-darkBg-primary border border-solid border-brand-purple"
         onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between border-b border-bLight dark:border-bDark">
           <div className="flex flex-col gap-2">
@@ -229,8 +284,8 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
               key={id}
               onClick={() => setActiveTab(id)}
               className={`flex items-center gap-2 px-2 py-2 text-sm font-bold transition-colors ${activeTab === id
-                ? "border-primary-base text-primary-base"
-                : "border-transparent text-lightFg-secondary dark:text-darkFg-secondary hover:text-lightFg-primary dark:hover:text-darkFg-primary"
+                  ? "border-primary-base text-primary-base"
+                  : "border-transparent text-lightFg-secondary dark:text-darkFg-secondary hover:text-lightFg-primary dark:hover:text-darkFg-primary"
                 }`}>
               <Icon size={16} />
               <span className="hidden sm:inline">{label}</span>

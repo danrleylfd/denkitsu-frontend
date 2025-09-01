@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from "react"
 import Marquee from "react-fast-marquee"
+import { Info } from "lucide-react"
 
 import Paper from "../Paper"
+import Button from "../Button"
 
 const TIPS = [
   "Alterne entre os provedores de IA Groq & OpenRouter",
@@ -21,7 +23,7 @@ const TIPS = [
   "🛠️🖼️📄 | Indica que o modelo é compatível com 🛠️ ferramentas / 🖼️ visão computacional / 📄 upload de arquivos",
 ]
 
-const AITip = () => {
+const AITip = ({ toggleFeaturesDoor }) => {
   const [tip, setTip] = useState("")
   const tipIndexRef = useRef(0)
   const intervalIdRef = useRef(null)
@@ -40,10 +42,15 @@ const AITip = () => {
   }, [advanceToNextTip])
   if (!tip) return null
   return (
-    <Paper onClick={advanceToNextTip} className="bg-lightBg-primary dark:bg-darkBg-primary p-0 h-8 max-w-[95%] mb-1 mx-auto overflow-hidden flex items-center">
-      <Marquee speed={50} direction="left" pauseOnHover={true} gradient={false}>
-        <p className="text-xs text-lightFg-primary dark:text-darkFg-primary">{tip}</p>
-      </Marquee>
+    <Paper onClick={advanceToNextTip} className="bg-lightBg-primary dark:bg-darkBg-primary p-0 h-8 max-w-[95%] mb-1 mx-auto overflow-hidden flex items-center justify-between">
+      <div className="flex-grow overflow-hidden">
+        <Marquee speed={50} direction="left" pauseOnHover={true} gradient={false}>
+          <p className="text-xs text-lightFg-primary dark:text-darkFg-primary pr-8">{tip}</p>
+        </Marquee>
+      </div>
+      <Button variant="secondary" size="icon" $rounded title="Recursos" onClick={(e) => { e.stopPropagation(); toggleFeaturesDoor() }} className="mx-1 flex-shrink-0">
+        <Info size={16} />
+      </Button>
     </Paper>
   )
 }
