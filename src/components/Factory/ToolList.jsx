@@ -1,8 +1,8 @@
 import { memo } from "react"
 import { Plus, Trash2, Pencil, PocketKnife } from "lucide-react"
 
-import Button from "../../Button"
-import DynamicIcon from "../../DynamicIcon"
+import Button from "../Button"
+import DynamicIcon from "../DynamicIcon"
 
 const ToolList = memo(({ tools, onCreate, onEdit, onDelete, canCreate }) => (
   <div className="flex flex-col h-full">

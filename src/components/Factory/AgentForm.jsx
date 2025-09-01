@@ -1,9 +1,9 @@
 import { useState, memo } from "react"
 import { Save, X, ArrowLeft, Code, Share2 } from "lucide-react"
 
-import Button from "../../Button"
-import Input from "../../Input"
-import IconPickerInput from "../../IconPickerInput"
+import Button from "../Button"
+import Input from "../Input"
+import IconPickerInput from "../IconPickerInput"
 
 const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
   const [formData, setFormData] = useState({
