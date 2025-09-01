@@ -1,9 +1,15 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useId } from "react"
 import mermaid from "mermaid"
 import { TransformWrapper, TransformComponent, useControls } from "react-zoom-pan-pinch"
 import { ZoomIn, ZoomOut, RotateCcw } from "lucide-react"
 
 import Button from "./Button"
+
+mermaid.initialize({
+  startOnLoad: false,
+  theme: "default",
+  securityLevel: "loose"
+})
 
 const Controls = () => {
   const { zoomIn, zoomOut, resetTransform } = useControls()
@@ -18,25 +24,14 @@ const Controls = () => {
 
 const Mermaid = ({ chart }) => {
   const containerRef = useRef(null)
-  const hasRendered = useRef(false)
-
+  const uniqueId = useId()
   useEffect(() => {
     if (!chart || !containerRef.current) return
-    if (hasRendered.current && process.env.NODE_ENV === "development") {
-      hasRendered.current = false
-      return
-    }
-    const id = `mermaid-graph-${Math.floor(Math.random() * 1000000)}`
+    let isMounted = true
     const renderChart = async () => {
       try {
-        containerRef.current.innerHTML = ""
-        mermaid.initialize({
-          startOnLoad: false,
-          theme: "default",
-          securityLevel: "loose"
-        })
-        const { svg } = await mermaid.render(id, chart)
-        if (containerRef.current) {
+        const { svg } = await mermaid.render(uniqueId, chart)
+        if (isMounted && containerRef.current) {
           containerRef.current.innerHTML = svg
           const svgEl = containerRef.current.querySelector("svg")
           if (svgEl) {
@@ -45,18 +40,20 @@ const Mermaid = ({ chart }) => {
           }
         }
       } catch (error) {
-        console.error("Falha ao renderizar o diagrama Mermaid:", error)
-        if (containerRef.current) {
-          containerRef.current.innerHTML = `<pre>Erro no diagrama:\n${error.message}</pre>`
+        console.error("Mermaid render error:", error)
+        if (isMounted && containerRef.current) {
+          containerRef.current.innerHTML = `<pre class="text-red-base p-2">Erro de sintaxe no diagrama:\n${error.message}</pre>`
         }
       }
     }
     renderChart()
-    hasRendered.current = true
-  }, [chart])
+    return () => {
+      isMounted = false
+    }
+  }, [chart, uniqueId])
 
   return (
-    <div className="relative w-full h-full border border-bLight dark:border-bDark rounded-md overflow-hidden bg-lightBg-tertiary dark:bg-darkBg-tertiary">
+    <div className="relative w-full h-full border border-bLight dark:border-bDark rounded-md overflow-hidden bg-white dark:bg-white">
       <TransformWrapper
         initialScale={1}
         minScale={0.5}
