@@ -241,7 +241,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
         return (
           <>
             <div className="flex flex-col gap-2">
-              <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Versão 1.2.1.3 (Futura)</h4>
+              <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Em Breve</h4>
               <ul className="list-disc list-inside text-sm space-y-1">
                 <li className="text-lightFg-secondary dark:text-darkFg-secondary">O botão de Recursos foi movido para um local mais acessível na barra de dicas.</li>
                 <li className="text-lightFg-secondary dark:text-darkFg-secondary">Adicionado suporte para renderização de diagramas com Mermaid (Fase de testes).</li>
@@ -250,20 +250,38 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
             <div className="flex flex-col gap-2 mt-4">
               <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Versão 1.2.1.2 (Atual)</h4>
               <ul className="list-disc list-inside text-sm space-y-1">
-                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Implementado o Changelog e novos tutoriais na janela de Recursos.</li>
-                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Implementados a configuração de provedores de IA personalizados.</li>
+                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Changelog.</li>
+                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Provedores de IA personalizados.</li>
               </ul>
             </div>
             <div className="flex flex-col gap-2 mt-4">
               <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Versão 1.2.1.1</h4>
               <ul className="list-disc list-inside text-sm space-y-1">
-                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Lançamento da Loja da Comunidade para compartilhamento de Agentes e Ferramentas.</li>
+                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Roteador de Agentes / Ferramentas.</li>
+                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Loja da Comunidade para compartilhamento de Agentes e Ferramentas.</li>
               </ul>
             </div>
             <div className="flex flex-col gap-2 mt-4">
               <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Versão 1.2.1</h4>
               <ul className="list-disc list-inside text-sm space-y-1">
-                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Implementada a Fábrica de Agentes e Ferramentas para criação personalizada.</li>
+                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Fábrica de Agentes / Ferramentas para criação personalizada.</li>
+              </ul>
+            </div>
+            <div className="flex flex-col gap-2 mt-4">
+              <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Versão 1.2</h4>
+              <ul className="list-disc list-inside text-sm space-y-1">
+                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Implementamos as ferramentas Groq e OpenRouter (Pesquisa Profunda, Pesquisar no Navegador, Interpretador de Código).</li>
+              </ul>
+            </div>
+            <div className="flex flex-col gap-2 mt-4">
+              <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Versão 1.1.x</h4>
+              <ul className="list-disc list-inside text-sm space-y-1">
+                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Novos Agentes / Ferramentas de IA.</li>
+                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Prompt Personalizado.</li>
+                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Aperfeiçoador de Prompt.</li>
+                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Análise de Imagens.</li>
+                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Transcrição de áudio.</li>
+                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Ditar texto ouvido.</li>
               </ul>
             </div>
           </>
