@@ -56,14 +56,14 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 h-full">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-2 h-full">
       <div className="flex items-center gap-2">
         <Button variant="secondary" size="icon" $rounded onClick={onBack} title="Voltar para a lista">
           <ArrowLeft size={16} />
         </Button>
         <h3 className="font-bold text-xl text-lightFg-primary dark:text-darkFg-primary truncate">{tool ? `Editando: ${tool.name}` : "Criar Nova Ferramenta"}</h3>
       </div>
-      <div className="flex-grow overflow-y-auto pr-2 flex flex-col gap-4">
+      <div className="flex-grow overflow-y-auto pr-2 flex flex-col gap-2">
         <div>
           <Input
             placeholder="Apelido da Ferramenta (ex: Buscar CEP)"
