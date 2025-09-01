@@ -18,6 +18,7 @@ const FeatureListItem = ({ icon: Icon, title, children }) => (
 )
 
 const tabs = [
+  { id: "changelog", label: "Changelog", icon: History },
   { id: "agents", label: "Agentes", icon: Bot },
   { id: "tools", label: "Ferramentas", icon: Wrench },
   { id: "factory", label: "Fábrica", icon: Factory },
@@ -25,7 +26,6 @@ const tabs = [
   { id: "extras", label: "Extras", icon: Star },
   { id: "customization", label: "Personalização", icon: Sparkle },
   { id: "settings", label: "Configurações", icon: Settings },
-  { id: "changelog", label: "Changelog", icon: History },
 ]
 
 const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
