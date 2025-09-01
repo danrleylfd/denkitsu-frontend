@@ -1,4 +1,4 @@
-import { LogIn, UserPlus, Settings, Send, Paperclip, Wrench, Speech, Waypoints, MessageCirclePlus, Mic, ScanText, Lock, Sparkle, Info, Factory, Store } from "lucide-react"
+import { LogIn, UserPlus, Settings, Send, Paperclip, Wrench, Speech, Waypoints, MessageCirclePlus, Mic, ScanText, Lock, Sparkle, Info, Factory, Store, Server } from "lucide-react"
 
 import { useAuth } from "../../contexts/AuthContext"
 import { useAI } from "../../contexts/AIContext"
@@ -49,6 +49,13 @@ const ExtensionAIBar = ({
     }
   }
 
+  const providerTitle =
+    aiProvider === "groq"
+      ? "Provedor: Groq"
+      : aiProvider === "openrouter"
+        ? "Provedor: OpenRouter"
+        : "Provedor: Personalizado"
+
   if (!signed) {
     return (
       <Paper className="relative bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 max-w-[95%] mb-2 mx-auto">
@@ -78,7 +85,15 @@ const ExtensionAIBar = ({
           <div className="flex items-center justify-between flex-wrap gap-2">
             <Button variant="secondary" size="icon" $rounded title="Recursos" onClick={toggleFeaturesDoor}><Info size={16} /></Button>
             <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loading || isImproving}><Settings size={16} /></Button>
-            <Button variant={aiProvider === "groq" ? "orange" : "info"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"} disabled={loading || isImproving}><Waypoints size={16} /></Button>
+            <Button
+              variant={aiProvider === "groq" ? "orange" : aiProvider === "openrouter" ? "info" : "success"}
+              size="icon"
+              $rounded
+              onClick={aiProviderToggle}
+              title={providerTitle}
+              disabled={loading || isImproving}>
+              {aiProvider === "custom" ? <Server size={16} /> : <Waypoints size={16} />}
+            </Button>
             <Button variant={mediaDoor ? "outline" : "secondary"} size="icon" $rounded title="Mídia" onClick={toggleMediaDoor}><Paperclip size={16} /></Button>
             <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgentsDoor}><Speech size={16} /></Button>
             <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor}><Wrench size={16} /></Button>
@@ -96,7 +111,15 @@ const ExtensionAIBar = ({
         <div className="w-full hidden md:flex items-center gap-2">
           <Button variant="secondary" size="icon" $rounded title="Recursos" onClick={toggleFeaturesDoor}><Info size={16} /></Button>
           <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loading || isImproving}><Settings size={16} /></Button>
-          <Button variant={aiProvider === "groq" ? "orange" : "info"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"} disabled={loading || isImproving}><Waypoints size={16} /></Button>
+          <Button
+            variant={aiProvider === "groq" ? "orange" : aiProvider === "openrouter" ? "info" : "success"}
+            size="icon"
+            $rounded
+            onClick={aiProviderToggle}
+            title={providerTitle}
+            disabled={loading || isImproving}>
+            {aiProvider === "custom" ? <Server size={16} /> : <Waypoints size={16} />}
+          </Button>
           <Button variant={mediaDoor ? "outline" : "secondary"} size="icon" $rounded title="Mídia" onClick={toggleMediaDoor}><Paperclip size={16} /></Button>
           <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgentsDoor}><Speech size={16} /></Button>
           <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor}><Wrench size={16} /></Button>

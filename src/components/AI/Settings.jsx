@@ -35,7 +35,7 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <div
-        className="relative flex w-full max-w-md flex-col gap-2 rounded-lg bg-lightBg-primary p-4 shadow-2xl dark:bg-darkBg-primary border border-solid border-brand-purple"
+        className="relative flex h-[95%] w-full max-w-md flex-col gap-2 rounded-lg bg-lightBg-primary p-4 shadow-2xl dark:bg-darkBg-primary border border-solid border-brand-purple"
         onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <h3 className="font-bold text-lightFg-primary dark:text-darkFg-primary">Configurações do Denkitsu</h3>
@@ -93,7 +93,7 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
           </Input>
         </div>
         <small className="text-xs -mt-2 text-lightFg-tertiary dark:text-darkFg-tertiary">
-          Sua chave é salva localmente no seu navegador e nunca será salva em nossos servidores.
+          Sua chave é salva apenas localmente no seu navegador.
         </small>
         <label htmlFor="model-select" className="text-lightFg-secondary dark:text-darkFg-secondary">
           Modelo
