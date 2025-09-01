@@ -87,10 +87,10 @@ const ModelProvider = ({ children }) => {
   const aiProviderToggle = useCallback(() => {
     setAIProvider(prev => {
       if (prev === "groq") return "openrouter"
-      if (prev === "openrouter" && customProviderUrl) return "custom"
-      return "groq"
+      if (prev === "openrouter") return "custom"
+      return "groq" // Volta para o início do ciclo
     })
-  }, [customProviderUrl])
+  }, [])
 
 
   useEffect(() => {
