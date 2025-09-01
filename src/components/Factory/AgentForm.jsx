@@ -60,10 +60,7 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
               maxLength="32"
             />
           </div>
-          <div className="flex items-center gap-2">
-            <label className="text-lightFg-tertiary dark:text-darkFg-tertiary">icon:</label>
-            <IconPickerInput value={formData.Icon} onChange={(value) => handleChange("Icon", value)} disabled={loading} />
-          </div>
+          <IconPickerInput value={formData.Icon} onChange={(value) => handleChange("Icon", value)} disabled={loading} />
           <div className="flex items-start gap-2">
             <label className="text-lightFg-tertiary dark:text-darkFg-tertiary pt-2">description:</label>
             <textarea
