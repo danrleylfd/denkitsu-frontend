@@ -1,11 +1,11 @@
 import { useState, memo, useEffect } from "react"
-import { Save, Code, Share2 } from "lucide-react"
+import { Save, ArrowLeft, Code, Share2 } from "lucide-react"
 
 import Button from "../Button"
 import Input from "../Input"
 import IconPickerInput from "../IconPickerInput"
 
-const AgentForm = memo(({ agent, onSave, loading }) => {
+const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
   const [formData, setFormData] = useState({
     name: "",
     Icon: "Bot",
@@ -15,18 +15,20 @@ const AgentForm = memo(({ agent, onSave, loading }) => {
   })
 
   useEffect(() => {
-    setFormData({
-      name: agent.name || "",
-      Icon: agent.Icon || "Bot",
-      description: agent.description || "",
-      published: agent.published || false,
-      prompt: {
-        goal: agent.prompt?.goal || "",
-        returnFormat: agent.prompt?.returnFormat || "",
-        warning: agent.prompt?.warning || "",
-        contextDump: agent.prompt?.contextDump || ""
-      }
-    })
+    if (agent) {
+      setFormData({
+        name: agent.name || "",
+        Icon: agent.Icon || "Bot",
+        description: agent.description || "",
+        published: agent.published || false,
+        prompt: {
+          goal: agent.prompt?.goal || "",
+          returnFormat: agent.prompt?.returnFormat || "",
+          warning: agent.prompt?.warning || "",
+          contextDump: agent.prompt?.contextDump || ""
+        }
+      })
+    }
   }, [agent])
 
   const handleChange = (field, value) => setFormData((prev) => ({ ...prev, [field]: value }))
@@ -37,37 +39,46 @@ const AgentForm = memo(({ agent, onSave, loading }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col h-full bg-lightBg-secondary dark:bg-darkBg-secondary rounded-lg p-1">
-      <div className="flex-grow overflow-y-auto p-3 flex flex-col gap-2 font-mono text-sm">
-        <div className="flex items-center gap-2">
-          <label className="text-lightFg-tertiary dark:text-darkFg-tertiary min-w-[100px]">name:</label>
-          <Input
-            containerClassName="my-0"
-            className="font-mono text-sm"
-            placeholder="NomeDoAgente"
-            value={formData.name}
-            onChange={(e) => handleChange("name", e.target.value)}
-            disabled={loading}
-            maxLength="32"
-          />
+    <form onSubmit={handleSubmit} className="flex flex-col h-full">
+      <div className="flex items-center gap-2 flex-shrink-0 mb-2">
+        <Button variant="secondary" size="icon" $rounded onClick={onBack} title="Voltar">
+          <ArrowLeft size={16} />
+        </Button>
+        <h3 className="font-bold text-xl text-lightFg-primary dark:text-darkFg-primary truncate">{agent._id ? `Editando: ${agent.name}` : "Criar Novo Agente"}</h3>
+      </div>
+      <div className="flex-grow overflow-y-auto pr-2 flex flex-col gap-4">
+        <div className="flex flex-col gap-2 p-3 rounded-md bg-lightBg-tertiary dark:bg-darkBg-tertiary font-mono text-sm">
+          <div className="flex items-center gap-2">
+            <label className="text-lightFg-tertiary dark:text-darkFg-tertiary">name:</label>
+            <Input
+              containerClassName="my-0"
+              className="font-mono text-sm"
+              placeholder="NomeDoAgente"
+              value={formData.name}
+              onChange={(e) => handleChange("name", e.target.value)}
+              disabled={loading}
+              maxLength="32"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <label className="text-lightFg-tertiary dark:text-darkFg-tertiary">icon:</label>
+            <IconPickerInput value={formData.Icon} onChange={(value) => handleChange("Icon", value)} disabled={loading} />
+          </div>
+          <div className="flex items-start gap-2">
+            <label className="text-lightFg-tertiary dark:text-darkFg-tertiary pt-2">description:</label>
+            <textarea
+              placeholder="Descrição curta sobre a função do agente..."
+              value={formData.description}
+              onChange={(e) => handleChange("description", e.target.value)}
+              className="w-full flex-1 h-20 p-2 rounded-md resize-y font-mono text-sm bg-lightBg-primary dark:bg-darkBg-primary text-lightFg-primary dark:text-darkFg-primary focus:outline-primary-base"
+              disabled={loading}
+              maxLength="256"
+            />
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <label className="text-lightFg-tertiary dark:text-darkFg-tertiary min-w-[100px]">icon:</label>
-          <IconPickerInput value={formData.Icon} onChange={(value) => handleChange("Icon", value)} disabled={loading} />
-        </div>
-        <div className="flex items-start gap-2">
-          <label className="text-lightFg-tertiary dark:text-darkFg-tertiary min-w-[100px] pt-2">description:</label>
-          <textarea
-            placeholder="Descrição curta sobre a função do agente..."
-            value={formData.description}
-            onChange={(e) => handleChange("description", e.target.value)}
-            className="w-full flex-1 h-20 p-2 rounded-md resize-y font-mono text-sm bg-lightBg-primary dark:bg-darkBg-primary text-lightFg-primary dark:text-darkFg-primary focus:outline-primary-base"
-            disabled={loading}
-            maxLength="256"
-          />
-        </div>
-        <details className="pt-2" open>
-          <summary className="cursor-pointer font-bold text-lightFg-secondary dark:text-darkFg-secondary">
+
+        <details className="p-3 rounded-md bg-lightBg-tertiary dark:bg-darkBg-tertiary" open>
+          <summary className="cursor-pointer font-bold text-sm text-lightFg-secondary dark:text-darkFg-secondary font-mono">
             <Code size={16} className="inline mr-2" />
             prompt:
           </summary>
@@ -103,7 +114,7 @@ const AgentForm = memo(({ agent, onSave, loading }) => {
           </div>
         </details>
       </div>
-      <div className="flex justify-between items-center p-2 border-t border-bLight dark:border-bDark flex-shrink-0">
+      <div className="flex justify-between items-center pt-2 mt-2 border-t border-bLight dark:border-bDark flex-shrink-0">
         <label htmlFor="agent-published" className="flex items-center gap-2 cursor-pointer text-sm font-bold text-lightFg-secondary dark:text-darkFg-secondary">
           <Share2 size={16} />
           Publicar na Loja
