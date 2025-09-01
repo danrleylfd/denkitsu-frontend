@@ -21,23 +21,23 @@ Denkitsu valoriza a privacidade dos seus usuários ("você" ou "seu"). Esta Pol�
 
 Denkitsu coleta as seguintes informações:
 
-**Informações da Página Atual**: A extensão extrai informações da página web que você está visualizando para exibir no side panel do Chrome. Essas informações podem incluir texto, imagens, links e outros dados presentes na página.
+**Informações da Página Atual**: A extensão extrai informações da página web que você está visualizando para exibir no painel lateral do Chrome. Essas informações podem incluir texto, imagens, links e outros dados presentes na página.
 
 **Importante**: Essa extração é realizada apenas para fornecer uma resposta imediata e não é salva de forma alguma.
 
-**Prompts do Usuário**: A extensão coleta os prompts que você insere para enviar para o Deepseek, Gemini ou Qwen. Esses prompts são usados para gerar respostas relevantes para suas solicitações.
+**Prompts do Usuário**: A extensão coleta os prompts que você insere para enviar para as LLMs. Esses prompts são usados para gerar respostas relevantes para suas solicitações.
 
 **Como Denkitsu Usa Suas Informações**
 
 Denkitsu usa as informações coletadas para:
 
-**Fornecer Funcionalidades**: As informações da página atual são usadas para exibir informações relevantes no side panel, enquanto os prompts do usuário são usados para enviar para o Deepseek, Gemini ou Qwen e gerar respostas.
+**Fornecer Funcionalidades**: As informações da página atual são usadas para exibir informações relevantes no painel lateral, enquanto os prompts do usuário são usados para enviar para as LLMs e gerar respostas.
 
 Compartilhamento de Informações
 
-**Deepseek, Gemini e Qwen**: Os prompts do usuário são compartilhados com o Deepseek, Gemini ou Qwen para gerar respostas. Esses serviços podem ter suas próprias políticas de privacidade, que recomendamos que você consulte.
+**LLMs**: Os prompts do usuário são compartilhados com as LLMs para gerar respostas. Esses serviços podem ter suas próprias políticas de privacidade, que recomendamos que você consulte.
 
-**Terceiros**: Denkitsu não compartilha suas informações com terceiros além do Deepseek, Gemini ou Qwen, conforme especificado nesta política. Em nenhuma hipótese seus dados pessoais serão vendidos ou alugados.
+**Terceiros**: Denkitsu não compartilha suas informações com terceiros além do Denkitsu, LLMs, conforme especificado nesta política. Em nenhuma hipótese seus dados pessoais serão vendidos ou alugados.
 
 **Armazenamento e Segurança de Dados**
 
