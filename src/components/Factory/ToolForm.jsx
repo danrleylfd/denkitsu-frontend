@@ -1,7 +1,7 @@
 import { useState, memo, useEffect } from "react"
 import { Save, ArrowLeft, Code, Share2 } from "lucide-react"
 
-import { useNotification } from "../../../contexts/NotificationContext"
+import { useNotification } from "../../contexts/NotificationContext"
 
 import Button from "../Button"
 import Input from "../Input"
