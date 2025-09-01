@@ -243,15 +243,15 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
             <div className="flex flex-col gap-2">
               <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Em Breve</h4>
               <ul className="list-disc list-inside text-sm space-y-1">
-                <li className="text-lightFg-secondary dark:text-darkFg-secondary">O botão de Recursos foi movido para um local mais acessível na barra de dicas.</li>
-                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Adicionado suporte para renderização de diagramas com Mermaid (Fase de testes).</li>
+                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Adicionado suporte para renderização de diagramas com Mermaid.</li>
               </ul>
             </div>
             <div className="flex flex-col gap-2 mt-4">
               <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Versão 1.2.1.2 (Atual)</h4>
               <ul className="list-disc list-inside text-sm space-y-1">
-                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Changelog.</li>
                 <li className="text-lightFg-secondary dark:text-darkFg-secondary">Provedores de IA personalizados.</li>
+                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Changelog.</li>
+                <li className="text-lightFg-secondary dark:text-darkFg-secondary">O botão de Recursos foi movido para um local mais acessível na barra de dicas.</li>
               </ul>
             </div>
             <div className="flex flex-col gap-2 mt-4">
