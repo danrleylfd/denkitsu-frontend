@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { X, Brain, Waypoints, Eye, EyeClosed, Server, } from "lucide-react"
+import { X, Waypoints, Eye, EyeClosed, Server } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 import { useModels } from "../../contexts/ModelContext"
@@ -12,8 +12,26 @@ import Button from "../Button"
 const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
   const [showAIKey, setShowAIKey] = useState(false)
   const { customPrompt, setCustomPrompt } = useAI()
-  const { aiProvider, aiKey, setAIKey, aiProviderToggle, loadingModels, customProviderUrl, setCustomProviderUrl, model, setModel } = useModels()
+  const {
+    aiProvider,
+    aiKey,
+    setAIKey,
+    aiProviderToggle,
+    loadingModels,
+    customProviderUrl,
+    setCustomProviderUrl,
+    model,
+    setModel
+  } = useModels()
+
   if (!settingsDoor) return null
+
+  const getProviderTitle = () => {
+    if (aiProvider === "groq") return "Provedor: Groq"
+    if (aiProvider === "openrouter") return "Provedor: OpenRouter"
+    return "Provedor: Personalizado"
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <div
@@ -36,7 +54,7 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
                 size="icon"
                 $rounded
                 onClick={aiProviderToggle}
-                title="Provedor: Personalizado">
+                title={getProviderTitle()}>
                 <Server size={16} />
               </Button>
               <Input
@@ -59,7 +77,7 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
             size="icon"
             $rounded
             onClick={aiProviderToggle}
-            title={`Provedor: ${aiProvider}`}>
+            title={getProviderTitle()}>
             {aiProvider === "custom" ? <Server size={16} /> : <Waypoints size={16} />}
           </Button>
           <Input
@@ -86,7 +104,7 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
             size="icon"
             $rounded
             onClick={aiProviderToggle}
-            title={`Provedor: ${aiProvider}`}>
+            title={getProviderTitle()}>
             {aiProvider === "custom" ? <Server size={16} /> : <Waypoints size={16} />}
           </Button>
           {aiProvider === "custom" ? (
