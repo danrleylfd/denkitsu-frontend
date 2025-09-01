@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { useAuth } from "../contexts/AuthContext"
 
 import Button from "../components/Button"
+import Privacidade from "../pages/Privacidade"
 
 const SignUp = lazy(() => import("../pages/Auth/SignUp"))
 const SignIn = lazy(() => import("../pages/Auth/SignIn"))
@@ -65,6 +66,7 @@ const AppRoutes = () => {
               <Route path="/profile/:userId" element={<Profile />} />
               <Route path="/atalho" element={<Shortcut />} />
               <Route path="/chat" element={<AI />} />
+              <Route path="/privacidade" element={<Privacidade />} />
               <Route path="/access/:label" element={<Redirect />} />
               <Route path="/auth/:label" element={<Redirect />} />
               <Route path="/*" element={<Redirect />} />
@@ -87,6 +89,7 @@ const AppRoutes = () => {
               <Route path="/reset_password" element={<ResetPassword />} />
               <Route path="/auth/github/callback" element={<GithubCallback />} />
               <Route path="/access/:label" element={<Redirect />} />
+              <Route path="/privacidade" element={<Privacidade />} />
               <Route path="/*" element={<Redirect />} />
             </>
           )}
