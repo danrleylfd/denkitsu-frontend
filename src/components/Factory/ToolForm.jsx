@@ -8,23 +8,25 @@ import Input from "../../Input"
 import IconPickerInput from "../../IconPickerInput"
 
 const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
-  const [formData, setFormData] = useState({})
+  const getInitialState = (toolProp) => ({
+    name: toolProp?.name || "",
+    title: toolProp?.title || "",
+    description: toolProp?.description || "",
+    Icon: toolProp?.Icon || "PocketKnife",
+    published: toolProp?.published || false,
+    method: toolProp?.httpConfig?.method || "GET",
+    url: toolProp?.httpConfig?.url || "",
+    parameters: JSON.stringify(toolProp?.parameters || { type: "object", properties: {}, required: [] }, null, 2),
+    queryParams: JSON.stringify(toolProp?.httpConfig?.queryParams || {}, null, 2),
+    headers: JSON.stringify(toolProp?.httpConfig?.headers || {}, null, 2),
+    body: JSON.stringify(toolProp?.httpConfig?.body || {}, null, 2)
+  })
+
+  const [formData, setFormData] = useState(getInitialState(tool))
   const { notifyError } = useNotification()
 
   useEffect(() => {
-    setFormData({
-      name: tool?.name || "",
-      title: tool?.title || "",
-      description: tool?.description || "",
-      Icon: tool?.Icon || "PocketKnife",
-      published: tool?.published || false,
-      method: tool?.httpConfig?.method || "GET",
-      url: tool?.httpConfig?.url || "",
-      parameters: JSON.stringify(tool?.parameters || { type: "object", properties: {}, required: [] }, null, 2),
-      queryParams: JSON.stringify(tool?.httpConfig?.queryParams || {}, null, 2),
-      headers: JSON.stringify(tool?.httpConfig?.headers || {}, null, 2),
-      body: JSON.stringify(tool?.httpConfig?.body || {}, null, 2)
-    })
+    setFormData(getInitialState(tool))
   }, [tool])
 
   const handleChange = (field, value) => {
