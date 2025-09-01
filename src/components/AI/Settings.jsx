@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { X, Brain, Waypoints, Eye, EyeClosed, } from "lucide-react"
+import { X, Brain, Waypoints, Eye, EyeClosed, Server, } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 import { useModels } from "../../contexts/ModelContext"
@@ -12,7 +12,7 @@ import Button from "../Button"
 const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
   const [showAIKey, setShowAIKey] = useState(false)
   const { customPrompt, setCustomPrompt } = useAI()
-  const { aiProvider, aiKey, setAIKey, aiProviderToggle, loadingModels } = useModels()
+  const { aiProvider, aiKey, setAIKey, aiProviderToggle, loadingModels, customProviderUrl, setCustomProviderUrl, model, setModel } = useModels()
   if (!settingsDoor) return null
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
@@ -25,17 +25,42 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
             <X size={16} />
           </Button>
         </div>
+        {aiProvider === "custom" && (
+          <>
+            <label htmlFor="custom-api-url" className="text-lightFg-secondary dark:text-darkFg-secondary">
+              URL da API (Personalizado)
+            </label>
+            <div className="flex gap-2 -mt-2">
+              <Button
+                variant="success"
+                size="icon"
+                $rounded
+                onClick={aiProviderToggle}
+                title="Provedor: Personalizado">
+                <Server size={16} />
+              </Button>
+              <Input
+                id="custom-api-url"
+                type="text"
+                autoComplete="off"
+                placeholder="https://seu-proxy.com/v1"
+                value={customProviderUrl}
+                onChange={(e) => setCustomProviderUrl(e.target.value)}
+              />
+            </div>
+          </>
+        )}
         <label htmlFor="api-key" className="text-lightFg-secondary dark:text-darkFg-secondary">
           Chave da API ({aiProvider})
         </label>
         <div className="flex gap-2 -mt-2">
           <Button
-            variant={aiProvider === "groq" ? "warning" : "info"}
+            variant={aiProvider === "groq" ? "orange" : aiProvider === "openrouter" ? "info" : "success"}
             size="icon"
             $rounded
             onClick={aiProviderToggle}
-            title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"}>
-            <Waypoints size={16} />
+            title={`Provedor: ${aiProvider}`}>
+            {aiProvider === "custom" ? <Server size={16} /> : <Waypoints size={16} />}
           </Button>
           <Input
             id="api-key"
@@ -57,14 +82,24 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
         </label>
         <div className="flex items-end gap-2 -mt-2">
           <Button
-            variant={aiProvider === "groq" ? "warning" : "info"}
+            variant={aiProvider === "groq" ? "orange" : aiProvider === "openrouter" ? "info" : "success"}
             size="icon"
             $rounded
             onClick={aiProviderToggle}
-            title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"}>
-            <Waypoints size={16} />
+            title={`Provedor: ${aiProvider}`}>
+            {aiProvider === "custom" ? <Server size={16} /> : <Waypoints size={16} />}
           </Button>
-          <AIModelSelect loadingModels={loadingModels} />
+          {aiProvider === "custom" ? (
+            <Input
+              id="custom-model"
+              type="text"
+              placeholder="ID do Modelo Personalizado"
+              value={model}
+              onChange={(e) => setModel(e.target.value)}
+            />
+          ) : (
+            <AIModelSelect loadingModels={loadingModels} />
+          )}
         </div>
         <div className="flex flex-col gap-2">
           <label htmlFor="custom-prompt" className="text-lightFg-secondary dark:text-darkFg-secondary">

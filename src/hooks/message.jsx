@@ -6,7 +6,7 @@ import { transcribeAudio } from "../services/audio"
 const useMessage = (props) => {
   const {
     aiProvider, aiKey, model, stream, activeTools, userPrompt, imageUrls, audioFile, messages,
-    freeModels, payModels, groqModels, selectedAgent,
+    freeModels, payModels, groqModels, selectedAgent, customProviderUrl,
     setUserPrompt, setImageUrls, setAudioFile, setMessages, setSelectedAgent
   } = props
 
@@ -50,7 +50,7 @@ const useMessage = (props) => {
         const placeholder = { id: placeholderId, role: "assistant", content: "", reasoning: "", toolCalls: [], timestamp: new Date().toISOString(), routingInfo }
         setMessages(prev => [...prev, placeholder])
 
-        const streamGenerator = sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, activeTools, agentForCall)
+        const streamGenerator = sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, activeTools, agentForCall, customProviderUrl)
 
         for await (const event of streamGenerator) {
           if (event.type === "DELTA") {
@@ -85,7 +85,7 @@ const useMessage = (props) => {
           }
         }
       } else {
-        const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, agentForCall, activeTools)
+        const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, agentForCall, activeTools, customProviderUrl)
 
         if (isRouterPass && data.next_action?.type === "SWITCH_AGENT") {
           const newAgent = data.next_action.agent
@@ -113,7 +113,7 @@ const useMessage = (props) => {
       setLoadingMessages(false)
     }
   }, [
-    aiKey, aiProvider, model, freeModels, payModels, groqModels, activeTools, stream, selectedAgent,
+    aiKey, aiProvider, model, freeModels, payModels, groqModels, activeTools, stream, selectedAgent, customProviderUrl,
     notifyError, notifyInfo, notifyWarning, setMessages, setSelectedAgent
   ])
 

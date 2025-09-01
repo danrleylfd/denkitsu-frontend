@@ -16,8 +16,12 @@ const ModelProvider = ({ children }) => {
   const [aiProvider, setAIProvider] = useState("groq")
   const [groqModel, setGroqModel] = useState("openai/gpt-oss-120b")
   const [openRouterModel, setOpenRouterModel] = useState("deepseek/deepseek-r1-0528:free")
+  const [customModel, setCustomModel] = useState("custom/model")
   const [groqKey, setGroqKey] = useState("")
   const [openRouterKey, setOpenRouterKey] = useState("")
+  const [customProviderUrl, setCustomProviderUrl] = useState("")
+  const [customProviderKey, setCustomProviderKey] = useState("")
+
 
   const [freeModels, setFreeModels] = useState([])
   const [payModels, setPayModels] = useState([])
@@ -32,13 +36,19 @@ const ModelProvider = ({ children }) => {
         const storedProvider = await storage.local.getItem("@Denkitsu:aiProvider")
         const storedGroqModel = await storage.local.getItem("@Denkitsu:GroqModel")
         const storedOpenRouterModel = await storage.local.getItem("@Denkitsu:OpenRouterModel")
+        const storedCustomModel = await storage.local.getItem("@Denkitsu:CustomModel")
         const storedGroqKey = await storage.local.getItem("@Denkitsu:Groq")
         const storedOpenRouterKey = await storage.local.getItem("@Denkitsu:OpenRouter")
+        const storedCustomUrl = await storage.local.getItem("@Denkitsu:CustomProviderUrl")
+        const storedCustomKey = await storage.local.getItem("@Denkitsu:CustomProviderKey")
         if (storedProvider) setAIProvider(storedProvider)
         if (storedGroqModel) setGroqModel(storedGroqModel)
         if (storedOpenRouterModel) setOpenRouterModel(storedOpenRouterModel)
+        if (storedCustomModel) setCustomModel(storedCustomModel)
         if (storedGroqKey) setGroqKey(storedGroqKey)
         if (storedOpenRouterKey) setOpenRouterKey(storedOpenRouterKey)
+        if (storedCustomUrl) setCustomProviderUrl(storedCustomUrl)
+        if (storedCustomKey) setCustomProviderKey(storedCustomKey)
       } catch (error) {
         console.error("Falha ao carregar as configurações:", error)
       } finally {
@@ -48,22 +58,52 @@ const ModelProvider = ({ children }) => {
     loadSettings()
   }, [])
 
-  const aiKey = useMemo(() => (aiProvider === "groq" ? groqKey : openRouterKey), [aiProvider, groqKey, openRouterKey])
-  const model = useMemo(() => (aiProvider === "groq" ? groqModel : openRouterModel), [aiProvider, groqModel, openRouterModel])
-  const setModel = useCallback((newModel) => (aiProvider === "groq" ? setGroqModel(newModel) : setOpenRouterModel(newModel)), [aiProvider])
-  const setAIKey = useCallback((newKey) => (aiProvider === "groq" ? setGroqKey(newKey) : setOpenRouterKey(newKey)), [aiProvider])
-  const aiProviderToggle = useCallback(() => setAIProvider(prev => (prev === "groq" ? "openrouter" : "groq")), [])
+  const aiKey = useMemo(() => {
+    if (aiProvider === "groq") return groqKey
+    if (aiProvider === "openrouter") return openRouterKey
+    if (aiProvider === "custom") return customProviderKey
+    return ""
+  }, [aiProvider, groqKey, openRouterKey, customProviderKey])
+
+  const model = useMemo(() => {
+    if (aiProvider === "groq") return groqModel
+    if (aiProvider === "openrouter") return openRouterModel
+    if (aiProvider === "custom") return customModel
+    return ""
+  }, [aiProvider, groqModel, openRouterModel, customModel])
+
+  const setModel = useCallback((newModel) => {
+    if (aiProvider === "groq") setGroqModel(newModel)
+    else if (aiProvider === "openrouter") setOpenRouterModel(newModel)
+    else if (aiProvider === "custom") setCustomModel(newModel)
+  }, [aiProvider])
+
+  const setAIKey = useCallback((newKey) => {
+    if (aiProvider === "groq") setGroqKey(newKey)
+    else if (aiProvider === "openrouter") setOpenRouterKey(newKey)
+    else if (aiProvider === "custom") setCustomProviderKey(newKey)
+  }, [aiProvider])
+
+  const aiProviderToggle = useCallback(() => {
+    setAIProvider(prev => {
+      if (prev === "groq") return "openrouter"
+      if (prev === "openrouter" && customProviderUrl) return "custom"
+      return "groq"
+    })
+  }, [customProviderUrl])
+
 
   useEffect(() => {
     if (!isInitialized) return
     storage.local.setItem("@Denkitsu:aiProvider", aiProvider)
     storage.local.setItem("@Denkitsu:GroqModel", groqModel)
     storage.local.setItem("@Denkitsu:OpenRouterModel", openRouterModel)
-    if (groqKey) storage.local.setItem("@Denkitsu:Groq", groqKey)
-    else storage.local.removeItem("@Denkitsu:Groq")
-    if (openRouterKey) storage.local.setItem("@Denkitsu:OpenRouter", openRouterKey)
-    else storage.local.removeItem("@Denkitsu:OpenRouter")
-  }, [aiProvider, groqModel, openRouterModel, groqKey, openRouterKey, isInitialized]) // Adicionamos 'isInitialized' às dependências
+    storage.local.setItem("@Denkitsu:CustomModel", customModel)
+    if (groqKey) storage.local.setItem("@Denkitsu:Groq", groqKey); else storage.local.removeItem("@Denkitsu:Groq")
+    if (openRouterKey) storage.local.setItem("@Denkitsu:OpenRouter", openRouterKey); else storage.local.removeItem("@Denkitsu:OpenRouter")
+    if (customProviderUrl) storage.local.setItem("@Denkitsu:CustomProviderUrl", customProviderUrl); else storage.local.removeItem("@Denkitsu:CustomProviderUrl")
+    if (customProviderKey) storage.local.setItem("@Denkitsu:CustomProviderKey", customProviderKey); else storage.local.removeItem("@Denkitsu:CustomProviderKey")
+  }, [aiProvider, groqModel, openRouterModel, customModel, groqKey, openRouterKey, customProviderUrl, customProviderKey, isInitialized])
 
   useEffect(() => {
     if (!signed) {
@@ -95,10 +135,12 @@ const ModelProvider = ({ children }) => {
     aiProvider, aiProviderToggle,
     model, setModel,
     aiKey, setAIKey,
+    customProviderUrl, setCustomProviderUrl,
     freeModels, payModels, groqModels,
     loadingModels
   }), [
     aiProvider, aiProviderToggle, model, setModel, aiKey, setAIKey,
+    customProviderUrl, setCustomProviderUrl,
     freeModels, payModels, groqModels, loadingModels
   ])
 
