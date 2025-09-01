@@ -12,7 +12,7 @@ import { storage } from "../utils/storage"
 const AIContext = createContext()
 
 const AIProvider = ({ children }) => {
-  const { aiProvider, aiKey, model, freeModels, payModels, groqModels } = useModels()
+  const { aiProvider, aiKey, model, freeModels, payModels, groqModels, customProviderUrl } = useModels()
   const { activeTools } = useTools()
   const { selectedAgent, setSelectedAgent } = useAgents()
   const [customPrompt, setCustomPrompt] = useState(`Goal\n  Responda em ${navigator.language}\nReturn Format\n  Padrão\nWarning\nContext Dump\n`)
@@ -57,7 +57,7 @@ const AIProvider = ({ children }) => {
     loadingMessages, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt, handleSendAudioMessage
   } = useMessage({
     aiProvider, aiKey, model, stream, activeTools, userPrompt, imageUrls, audioFile, messages,
-    freeModels, payModels, groqModels, selectedAgent,
+    freeModels, payModels, groqModels, selectedAgent, customProviderUrl,
     setUserPrompt, setImageUrls, setAudioFile, setMessages, setSelectedAgent
   })
 
