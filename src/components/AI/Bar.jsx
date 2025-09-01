@@ -1,4 +1,4 @@
-import { Info, Waypoints, Settings, Speech, Sparkle, MessageCirclePlus, Send, Paperclip, Wrench, Factory } from "lucide-react"
+import { Info, Waypoints, Settings, Speech, Sparkle, MessageCirclePlus, Send, Paperclip, Wrench, Factory, Server } from "lucide-react"
 import { useAuth } from "../../contexts/AuthContext"
 import { useAI } from "../../contexts/AIContext"
 import { useModels } from "../../contexts/ModelContext"
@@ -27,13 +27,28 @@ const AIBar = ({ imageCount, onSendMessage, improvePrompt, toggleFeaturesDoor, t
     }
   }
 
+  const providerTitle =
+    aiProvider === "groq"
+      ? "Provedor: Groq"
+      : aiProvider === "openrouter"
+        ? "Provedor: OpenRouter"
+        : "Provedor: Personalizado"
+
   return (
     <Paper className="relative bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center gap-2 max-w-[95%] mb-2 mx-auto">
       <div className="w-full flex flex-col gap-2 md:hidden">
         <div className="flex items-center justify-between flex-wrap gap-2">
           <Button variant="secondary" size="icon" $rounded title="Recursos" onClick={toggleFeaturesDoor}><Info size={16} /></Button>
           <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loadingMessages || isImproving}><Settings size={16} /></Button>
-          <Button variant={aiProvider === "groq" ? "orange" : "info"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"} disabled={loadingMessages || isImproving}><Waypoints size={16} /></Button>
+          <Button
+            variant={aiProvider === "groq" ? "orange" : aiProvider === "openrouter" ? "info" : "success"}
+            size="icon"
+            $rounded
+            onClick={aiProviderToggle}
+            title={providerTitle}
+            disabled={loadingMessages || isImproving}>
+            {aiProvider === "custom" ? <Server size={16} /> : <Waypoints size={16} />}
+          </Button>
           <Button variant={mediaDoor ? "outline" : "secondary"} size="icon" $rounded title="Mídia" onClick={toggleMediaDoor}><Paperclip size={16} /></Button>
           <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgentsDoor}><Speech size={16} /></Button>
           <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor}><Wrench size={16} /></Button>
@@ -49,7 +64,15 @@ const AIBar = ({ imageCount, onSendMessage, improvePrompt, toggleFeaturesDoor, t
       <div className="w-full hidden md:flex items-center gap-2">
         <Button variant="secondary" size="icon" $rounded title="Recursos" onClick={toggleFeaturesDoor}><Info size={16} /></Button>
         <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loadingMessages || isImproving}><Settings size={16} /></Button>
-        <Button variant={aiProvider === "groq" ? "orange" : "info"} size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"} disabled={loadingMessages || isImproving}><Waypoints size={16} /></Button>
+        <Button
+          variant={aiProvider === "groq" ? "orange" : aiProvider === "openrouter" ? "info" : "success"}
+          size="icon"
+          $rounded
+          onClick={aiProviderToggle}
+          title={providerTitle}
+          disabled={loadingMessages || isImproving}>
+          {aiProvider === "custom" ? <Server size={16} /> : <Waypoints size={16} />}
+        </Button>
         <Button variant={mediaDoor ? "outline" : "secondary"} size="icon" $rounded title="Mídia" onClick={toggleMediaDoor}><Paperclip size={16} /></Button>
         <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgentsDoor}><Speech size={16} /></Button>
         <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor}><Wrench size={16} /></Button>
