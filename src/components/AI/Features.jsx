@@ -241,19 +241,29 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
         return (
           <>
             <div className="flex flex-col gap-2">
-              <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Versão 1.2.2 (Atual)</h4>
+              <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Versão 1.2.1.3 (Futura)</h4>
               <ul className="list-disc list-inside text-sm space-y-1">
-                <li>Adicionado suporte para renderização de diagramas com Mermaid.</li>
-                <li>Implementado o Changelog e novos tutoriais na janela de Recursos.</li>
-                <li>O botão de Recursos foi movido para um local mais acessível na barra de dicas.</li>
+                <li className="text-lightFg-secondary dark:text-darkFg-secondary">O botão de Recursos foi movido para um local mais acessível na barra de dicas.</li>
+                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Adicionado suporte para renderização de diagramas com Mermaid (Fase de testes).</li>
+              </ul>
+            </div>
+            <div className="flex flex-col gap-2 mt-4">
+              <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Versão 1.2.1.2 (Atual)</h4>
+              <ul className="list-disc list-inside text-sm space-y-1">
+                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Implementado o Changelog e novos tutoriais na janela de Recursos.</li>
+                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Implementados a configuração de provedores de IA personalizados.</li>
+              </ul>
+            </div>
+            <div className="flex flex-col gap-2 mt-4">
+              <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Versão 1.2.1.1</h4>
+              <ul className="list-disc list-inside text-sm space-y-1">
+                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Lançamento da Loja da Comunidade para compartilhamento de Agentes e Ferramentas.</li>
               </ul>
             </div>
             <div className="flex flex-col gap-2 mt-4">
               <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Versão 1.2.1</h4>
               <ul className="list-disc list-inside text-sm space-y-1">
-                <li>Lançamento da Loja da Comunidade para compartilhamento de Agentes e Ferramentas.</li>
-                <li>Implementada a Fábrica de Agentes e Ferramentas para criação personalizada.</li>
-                <li>Refatoração completa do sistema de autenticação e gerenciamento de estado.</li>
+                <li className="text-lightFg-secondary dark:text-darkFg-secondary">Implementada a Fábrica de Agentes e Ferramentas para criação personalizada.</li>
               </ul>
             </div>
           </>
