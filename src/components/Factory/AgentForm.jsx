@@ -1,5 +1,5 @@
 import { useState, memo, useEffect } from "react"
-import { Save, ArrowLeft, Code, Share2 } from "lucide-react"
+import { Save, ArrowLeft, Share2 } from "lucide-react"
 
 import Button from "../Button"
 import Input from "../Input"
@@ -45,19 +45,17 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
         <Button variant="secondary" size="icon" $rounded onClick={onBack} title="Voltar">
           <ArrowLeft size={16} />
         </Button>
-        <h3 className="text-lightFg-primary dark:text-darkFg-primary truncate">{agent._id ? `Editando: ${agent.name}` : "Criar Novo Agente"}</h3>
+        <h5 className="text-lightFg-primary dark:text-darkFg-primary">
+          {agent._id ? "Editar Agente" : "Fabricar Agente"}
+        </h5>
       </div>
       <div className="overflow-y-auto flex flex-col">
         <div className="flex flex-col gap-1">
           <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Agent Name (Nome do Agente)</label>
-          <div className="flex items-center gap-2">
-            <Input placeholder="NomeDoAgente" value={formData.name} onChange={(e) => handleChange("name", e.target.value)} disabled={loading} maxLength="32">
-              <IconPickerInput value={formData.Icon} onChange={(value) => handleChange("Icon", value)} disabled={loading} />
-            </Input>
-          </div>
-          <small className="text-right text-xs text-lightFg-tertiary dark:text-darkFg-tertiary self-end pr-2">
-            {formData.name.length} / {32}
-          </small>
+          <Input placeholder="NomeDoAgente" value={formData.name} onChange={(e) => handleChange("name", e.target.value)} disabled={loading} maxLength="32">
+            <IconPickerInput value={formData.Icon} onChange={(value) => handleChange("Icon", value)} disabled={loading} />
+          </Input>
+          <small className="text-right text-xs text-lightFg-tertiary dark:text-darkFg-tertiary self-end pr-2">{formData.name.length} / {32}</small>
           <div className="flex items-start gap-2">
             <TextArea
               variant="secondary"

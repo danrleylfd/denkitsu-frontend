@@ -42,7 +42,7 @@ const AITip = ({ toggleFeaturesDoor }) => {
   }, [advanceToNextTip])
   if (!tip) return null
   return (
-    <Paper onClick={advanceToNextTip} className="bg-lightBg-primary dark:bg-darkBg-primary p-0 h-8 max-w-[95%] mb-1 mx-auto overflow-hidden flex items-center justify-between">
+    <Paper onClick={advanceToNextTip} className="bg-lightBg-primary dark:bg-darkBg-primary px-2 py-2 h-8 max-w-[95%] mb-1 mx-auto overflow-hidden flex items-center justify-between">
       <Button variant="secondary" size="icon" $rounded title="Recursos" onClick={(e) => { e.stopPropagation(); toggleFeaturesDoor() }}>
         <Info size={16} />
       </Button>

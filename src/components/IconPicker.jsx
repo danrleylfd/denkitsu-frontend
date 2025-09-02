@@ -31,23 +31,15 @@ const IconPicker = ({ isOpen, onClose, onSelect, currentIcon }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center flex-shrink-0">
-          <h3 className="font-bold text-xl text-lightFg-primary dark:text-darkFg-primary">Selecione um Ícone</h3>
-          <Button variant="danger" size="icon" $rounded onClick={onClose}>
-            <X size={16} />
-          </Button>
+          <h3>Selecione um Ícone</h3>
+          <Button variant="danger" size="icon" $rounded onClick={onClose}><X size={16} /></Button>
         </div>
-
         <Input
           placeholder="Buscar ícone..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          leftContent={
-            <div className="pl-2">
-              <Search size={16} className="text-lightFg-secondary dark:text-darkFg-secondary" />
-            </div>
-          }
+          leftContent={<div className="pl-3"><Search size={16} /></div>}
         />
-
         <div className="flex-1 overflow-y-auto pr-2">
           <div className="grid grid-cols-[repeat(auto-fit,minmax(3rem,1fr))] gap-2">
             {filteredIcons.map(name => (
@@ -62,15 +54,10 @@ const IconPicker = ({ isOpen, onClose, onSelect, currentIcon }) => {
                     : "bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary hover:bg-lightBg-tertiary dark:hover:bg-darkBg-tertiary"
                 }`}
               >
-                <DynamicIcon name={name} size={24} />
+                <DynamicIcon name={name} size={20} />
               </button>
             ))}
-            {searchTerm && filteredIcons.length === 0 && (
-              <p className="col-span-full text-center text-lightFg-secondary dark:text-darkFg-secondary">Nenhum ícone encontrado.</p>
-            )}
-             {!searchTerm && (
-              <p className="col-span-full text-center text-sm text-lightFg-tertiary dark:text-darkFg-tertiary">Mostrando 150 de {iconNames.length}. Use a busca para ver mais.</p>
-            )}
+            {searchTerm && filteredIcons.length === 0 && (<p className="col-span-full text-center text-lightFg-secondary dark:text-darkFg-secondary">Nenhum ícone encontrado.</p>)}
           </div>
         </div>
       </div>

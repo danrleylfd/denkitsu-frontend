@@ -72,29 +72,20 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
         <Button variant="secondary" size="icon" $rounded onClick={onBack} title="Voltar">
           <ArrowLeft size={16} />
         </Button>
-        <h3 className="text-lightFg-primary dark:text-darkFg-primary truncate">{tool._id ? `Editando: ${tool.name}` : "Criar Nova Ferramenta"}</h3>
+        <h5 className="text-lightFg-primary dark:text-darkFg-primary">
+          {tool._id ? "Editar Ferramenta" : "Fabricar Ferramenta"}
+        </h5>
       </div>
       <div className="overflow-y-auto flex flex-col">
         <div className="flex flex-col gap-1">
           <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Alias (Apelido da Ferramenta)</label>
-          <div className="flex items-center gap-2">
-            <Input
-              placeholder="ApelidoDaFerramenta"
-              value={formData.title}
-              onChange={(e) => handleChange("title", e.target.value)}
-              disabled={loading}
-              maxLength="32"
-            />
-          </div>
+          <Input placeholder="ApelidoDaFerramenta" value={formData.title} onChange={(e) => handleChange("title", e.target.value)} disabled={loading} maxLength="32" />
           <small className="text-right text-xs text-lightFg-tertiary dark:text-darkFg-tertiary self-end pr-2">{formData.title.length} / 32</small>
           <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Tool Name (Nome da Ferramenta)</label>
-          <div className="flex items-center gap-2">
-            <Input placeholder="NomeTécnicoDaTool" value={formData.name} onChange={(e) => handleChange("name", e.target.value)} disabled={loading} maxLength="32">
-              <IconPickerInput value={formData.Icon} onChange={(value) => handleChange("Icon", value)} disabled={loading} />
-            </Input>
-          </div>
+          <Input placeholder="NomeTécnicoDaTool" value={formData.name} onChange={(e) => handleChange("name", e.target.value)} disabled={loading} maxLength="32">
+            <IconPickerInput value={formData.Icon} onChange={(value) => handleChange("Icon", value)} disabled={loading} />
+          </Input>
           <small className="text-right text-xs text-lightFg-tertiary dark:text-darkFg-tertiary self-end pr-2">{formData.name.length} / 32</small>
-
           <TextArea
             variant="secondary"
             label="Description (Descrição)"

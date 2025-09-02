@@ -27,27 +27,11 @@ const AgentList = memo(({ agents, onCreate, onEdit, onDelete }) => (
                   </div>
                 </div>
                 <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 pl-2">
-                  <Button
-                    variant="warning"
-                    size="icon"
-                    $rounded
-                    title="Editar"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      onEdit(agent)
-                    }}>
-                    <Pencil size={14} />
+                  <Button variant="warning" size="icon" $rounded title="Editar" onClick={(e) => { e.stopPropagation(); onEdit(agent) }}>
+                    <Pencil size={16} />
                   </Button>
-                  <Button
-                    variant="danger"
-                    size="icon"
-                    $rounded
-                    title="Excluir"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      onDelete(agent)
-                    }}>
-                    <Trash2 size={14} />
+                  <Button variant="danger" size="icon" $rounded title="Excluir" onClick={(e) => { e.stopPropagation(); onDelete(agent) }}>
+                    <Trash2 size={16} />
                   </Button>
                 </div>
               </button>
@@ -56,9 +40,9 @@ const AgentList = memo(({ agents, onCreate, onEdit, onDelete }) => (
         </ul>
       )}
     </div>
-    <div className="pt-2 border-t border-bLight dark:border-bDark">
+    <div className="max-w-fit self-center pt-2 border-t border-bLight dark:border-bDark">
       <Button variant="primary" $rounded onClick={onCreate} className="w-full justify-center">
-        <Plus size={16} className="mr-2" /> Criar Novo Agente
+        <Plus size={16} className="mr-2" /> Fabricar Agente
       </Button>
     </div>
   </div>
