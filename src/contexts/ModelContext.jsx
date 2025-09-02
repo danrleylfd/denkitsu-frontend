@@ -88,7 +88,7 @@ const ModelProvider = ({ children }) => {
     setAIProvider(prev => {
       if (prev === "groq") return "openrouter"
       if (prev === "openrouter") return "custom"
-      return "groq" // Volta para o início do ciclo
+      return "groq"
     })
   }, [])
 
@@ -129,7 +129,7 @@ const ModelProvider = ({ children }) => {
       }
     }
     fetchModels()
-  }, [aiKey, signed, notifyError])
+  }, [signed, aiKey])
 
   const value = useMemo(() => ({
     aiProvider, aiProviderToggle,
@@ -153,9 +153,7 @@ const ModelProvider = ({ children }) => {
 
 const useModels = () => {
   const context = useContext(ModelContext)
-  if (!context) {
-    throw new Error("useModels must be used within a ModelProvider")
-  }
+  if (!context) throw new Error("useModels must be used within a ModelProvider")
   return context
 }
 
