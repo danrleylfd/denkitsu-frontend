@@ -5,7 +5,7 @@ import { useAuth } from "./contexts/AuthContext"
 import { useAI } from "./contexts/AIContext"
 import { useNotification } from "./contexts/NotificationContext"
 
-import AIBar from "./components/AI/ExtensionAIBar"
+import AIBar from "./components/AI/ExtensionBar"
 import ChatInterface from "./components/AI/ChatInterface"
 import Button from "./components/Button"
 import Paper from "./components/Paper"
@@ -16,13 +16,13 @@ const AuthScreen = () => {
   }
   return (
     <div className="flex flex-col justify-center items-center h-full p-4">
-      <Paper className="flex flex-col items-center gap-4 text-center">
-        <img src="/denkitsu-rounded.png" alt="Denkitsu Logo" className="w-24 h-24" />
+      <Paper className="flex flex-col items-center gap-2 text-center">
+        <img src="/denkitsu-rounded.png" alt="Denkitsu Logo" className="w-20 h-20" />
         <h2 className="text-xl font-bold text-lightFg-primary dark:text-darkFg-primary">Bem-vindo, Eu sou o Denkitsu</h2>
         <p className="text-lightFg-secondary dark:text-darkFg-secondary">
           Antes de começar, por favor, faça login ou crie uma conta.
         </p>
-        <div className="flex gap-4 mt-4">
+        <div className="flex gap-2 mt-4">
           <Button $rounded variant="secondary" onClick={() => openPage("/signup")}>
             <UserPlus size={16} className="mr-2" />
             Cadastrar
@@ -40,8 +40,8 @@ const AuthScreen = () => {
 const WelcomeScreen = () => {
   const { user } = useAuth()
   return (
-    <div className="flex grow justify-center items-center flex-col p-4 text-center">
-      <img src="/denkitsu-rounded.png" alt="Denkitsu Logo" className="w-24 h-24 mb-4" />
+    <div className="flex grow justify-center items-center flex-col p-4 gap-2 text-center">
+      <img src="/denkitsu-rounded.png" alt="Denkitsu Logo" className="w-20 h-20" />
       <h2 className="text-xl font-bold text-lightFg-primary dark:text-darkFg-primary">Olá, {user?.name}</h2>
       <p className="text-lightFg-primary dark:text-darkFg-primary">Eu sou o Denkitsu, Como posso te ajudar hoje?</p>
     </div>
