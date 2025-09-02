@@ -1,5 +1,5 @@
 import { memo } from "react"
-import { Plus, PocketKnife, Trash2, Pencil } from "lucide-react"
+import { Plus, PocketKnife, Trash2 } from "lucide-react"
 
 import Button from "../Button"
 import DynamicIcon from "../DynamicIcon"
@@ -26,14 +26,9 @@ const ToolList = memo(({ tools, onCreate, onEdit, onDelete }) => (
                     <p className="text-xs text-lightFg-tertiary dark:text-darkFg-tertiary truncate">{tool.description}</p>
                   </div>
                 </div>
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 pl-2">
-                  <Button variant="warning" size="icon" $rounded title="Editar" onClick={(e) => { e.stopPropagation(); onEdit(tool) }}>
-                    <Pencil size={16} />
-                  </Button>
-                  <Button variant="danger" size="icon" $rounded title="Excluir" onClick={(e) => { e.stopPropagation(); onDelete(tool) }}>
-                    <Trash2 size={16} />
-                  </Button>
-                </div>
+                <Button variant="danger" size="icon" $rounded title="Excluir" onClick={(e) => { e.stopPropagation(); onDelete(tool) }}>
+                  <Trash2 size={16} />
+                </Button>
               </button>
             </li>
           ))}

@@ -51,7 +51,7 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
       </div>
       <div className="overflow-y-auto flex flex-col">
         <div className="flex flex-col gap-1">
-          <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Agent Name (Nome do Agente)</label>
+          <label className="text-xs font-bold text-lightFg-secondary dark:text-darkFg-secondary">Agent Name / Icon (Nome do Agente / Ícone)</label>
           <Input placeholder="NomeDoAgente" value={formData.name} onChange={(e) => handleChange("name", e.target.value)} disabled={loading} maxLength="32">
             <IconPickerInput value={formData.Icon} onChange={(value) => handleChange("Icon", value)} disabled={loading} />
           </Input>

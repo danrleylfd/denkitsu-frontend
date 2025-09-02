@@ -78,13 +78,13 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
       </div>
       <div className="overflow-y-auto flex flex-col">
         <div className="flex flex-col gap-1">
-          <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Alias (Apelido da Ferramenta)</label>
-          <Input placeholder="ApelidoDaFerramenta" value={formData.title} onChange={(e) => handleChange("title", e.target.value)} disabled={loading} maxLength="32" />
-          <small className="text-right text-xs text-lightFg-tertiary dark:text-darkFg-tertiary self-end pr-2">{formData.title.length} / 32</small>
-          <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Tool Name (Nome da Ferramenta)</label>
-          <Input placeholder="NomeTécnicoDaTool" value={formData.name} onChange={(e) => handleChange("name", e.target.value)} disabled={loading} maxLength="32">
+          <label className="text-xs font-bold text-lightFg-secondary dark:text-darkFg-secondary">Alias / Icon (Apelido / Ícone)</label>
+          <Input placeholder="ApelidoDaFerramenta" value={formData.title} onChange={(e) => handleChange("title", e.target.value)} disabled={loading} maxLength="32">
             <IconPickerInput value={formData.Icon} onChange={(value) => handleChange("Icon", value)} disabled={loading} />
           </Input>
+          <small className="text-right text-xs text-lightFg-tertiary dark:text-darkFg-tertiary self-end pr-2">{formData.title.length} / 32</small>
+          <label className="text-xs font-bold text-lightFg-secondary dark:text-darkFg-secondary">Tool Name (Nome da Ferramenta)</label>
+          <Input placeholder="NomeTécnicoDaTool" value={formData.name} onChange={(e) => handleChange("name", e.target.value)} disabled={loading} maxLength="32" />
           <small className="text-right text-xs text-lightFg-tertiary dark:text-darkFg-tertiary self-end pr-2">{formData.name.length} / 32</small>
           <TextArea
             label="Description (Descrição)"
@@ -96,7 +96,7 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
             rows={3}
           />
 
-          <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary mt-2">URL / Method (URL / Método HTTP)</label>
+          <label className="text-xs font-bold text-lightFg-secondary dark:text-darkFg-secondary mt-2">URL / Method (URL / Método HTTP)</label>
           <div className="flex items-center gap-2">
             <Input
               placeholder="https://api.example.com/data"
