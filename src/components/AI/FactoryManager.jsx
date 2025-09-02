@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Bot, PocketKnife, Factory, X } from "lucide-react"
+import { Speech, Wrench, Factory, X } from "lucide-react"
 
 import { useAgents } from "../../contexts/AgentContext"
 import { useTools } from "../../contexts/ToolContext"
@@ -147,12 +147,12 @@ const AIFactoryManager = ({ factoryManagerDoor, toggleFactoryManagerDoor }) => {
           <button
             onClick={() => setActiveTab("agents")}
             className={`px-2 py-2 text-sm font-bold flex items-center gap-2 ${activeTab === "agents" ? "border-b-2 border-primary-base text-primary-base" : "text-lightFg-secondary"}`}>
-            <Bot size={16} /> Agentes
+            <Speech size={16} /> Agentes
           </button>
           <button
             onClick={() => setActiveTab("tools")}
             className={`px-2 py-2 text-sm font-bold flex items-center gap-2 ${activeTab === "tools" ? "border-b-2 border-primary-base text-primary-base" : "text-lightFg-secondary"}`}>
-            <PocketKnife size={16} /> Ferramentas
+            <Wrench size={16} /> Ferramentas
           </button>
         </div>
           <Button variant="danger" size="icon" $rounded onClick={toggleFactoryManagerDoor}>
