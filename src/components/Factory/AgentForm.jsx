@@ -58,7 +58,6 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
           <small className="text-right text-xs text-lightFg-tertiary dark:text-darkFg-tertiary self-end pr-2">{formData.name.length} / {32}</small>
           <div className="flex items-start gap-2">
             <TextArea
-              variant="secondary"
               label="Description (Descrição)"
               placeholder="Descrição curta sobre a função do agente..."
               value={formData.description}
@@ -70,7 +69,6 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
           </div>
           <div className="flex items-start gap-2">
             <TextArea
-              variant="secondary"
               label="Goal (Objetivo)"
               placeholder="O objetivo principal do agente..."
               value={formData.prompt.goal}
@@ -82,7 +80,6 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
           </div>
           <div className="flex items-start gap-2">
             <TextArea
-              variant="secondary"
               label="Return Format (Formato de Retorno)"
               placeholder="O formato de saída esperado..."
               value={formData.prompt.returnFormat}
@@ -94,7 +91,6 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
           </div>
           <div className="flex items-start gap-2">
             <TextArea
-              variant="secondary"
               label="Warning (Aviso)"
               placeholder="Restrições críticas ou advertências..."
               value={formData.prompt.warning}
@@ -106,7 +102,6 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
           </div>
           <div className="flex items-start gap-2">
             <TextArea
-              variant="secondary"
               label="Context Dump (Contexto)"
               placeholder="Dados contextuais relevantes..."
               value={formData.prompt.contextDump}

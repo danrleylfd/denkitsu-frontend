@@ -87,7 +87,6 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
           </Input>
           <small className="text-right text-xs text-lightFg-tertiary dark:text-darkFg-tertiary self-end pr-2">{formData.name.length} / 32</small>
           <TextArea
-            variant="secondary"
             label="Description (Descrição)"
             placeholder="Descrição para a IA sobre como e quando usar a ferramenta..."
             value={formData.description}
@@ -118,7 +117,6 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
             </Input>
           </div>
           <TextArea
-            variant="secondary"
             label="Parameters Schema (Esquema de Parâmetros)"
             placeholder={`{ "type": "object", "properties": {} }`}
             value={formData.parameters}
@@ -128,7 +126,6 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
             rows={4}
           />
           <TextArea
-            variant="secondary"
             label="Query Params (Parâmetros de Query)"
             placeholder={`{ "chave": "valor", "dinamico": "{{variavel}}" }`}
             value={formData.queryParams}
@@ -138,7 +135,6 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
             rows={4}
           />
           <TextArea
-            variant="secondary"
             label="Headers (Cabeçalhos)"
             placeholder={`{ "Content-Type": "application/json" }`}
             value={formData.headers}
@@ -148,7 +144,6 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
             rows={4}
           />
           <TextArea
-            variant="secondary"
             label="Body (Corpo da Requisição)"
             placeholder={`{ "chave": "valor" }`}
             value={formData.body}

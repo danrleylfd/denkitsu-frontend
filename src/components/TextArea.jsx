@@ -3,8 +3,8 @@ import { forwardRef } from "react"
 const TextArea = forwardRef(({ label, value = "", maxLength, showCounter = true, variant = "primary", ...props }, ref) => {
   const baseClasses = "w-full p-2 rounded-md resize-y"
   const variants = {
-    primary: "bg-lightBg-primary dark:bg-darkBg-primary text-lightFg-primary dark:text-darkFg-primary",
-    secondary: "bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-secondary dark:text-darkFg-secondary",
+    primary: "bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-primary dark:text-darkFg-primary",
+    secondary: "bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-secondary dark:text-darkFg-secondary",
     tertiary: "bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-tertiary dark:text-darkFg-tertiary"
   }
   return (
