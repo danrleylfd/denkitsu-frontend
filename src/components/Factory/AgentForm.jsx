@@ -4,6 +4,7 @@ import { Save, ArrowLeft, Code, Share2 } from "lucide-react"
 import Button from "../Button"
 import Input from "../Input"
 import IconPickerInput from "../IconPickerInput"
+import TextArea from "../TextArea"
 
 const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
   const [formData, setFormData] = useState({
@@ -40,76 +41,84 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col h-full">
-      <div className="flex items-center gap-2 flex-shrink-0 mb-2">
+      <div className="flex items-center gap-2 flex-shrink-0">
         <Button variant="secondary" size="icon" $rounded onClick={onBack} title="Voltar">
           <ArrowLeft size={16} />
         </Button>
-        <h3 className="font-bold text-xl text-lightFg-primary dark:text-darkFg-primary truncate">{agent._id ? `Editando: ${agent.name}` : "Criar Novo Agente"}</h3>
+        <h3 className="text-lightFg-primary dark:text-darkFg-primary truncate">{agent._id ? `Editando: ${agent.name}` : "Criar Novo Agente"}</h3>
       </div>
-      <div className="flex-grow overflow-y-auto pr-2 flex flex-col gap-4">
-        <div className="flex flex-col gap-2 p-3 rounded-md bg-lightBg-tertiary dark:bg-darkBg-tertiary font-mono text-sm">
+      <div className="overflow-y-auto flex flex-col">
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-bold text-lightFg-tertiary dark:text-darkFg-tertiary">Agent Name (Nome do Agente)</label>
           <div className="flex items-center gap-2">
-            <label className="text-lightFg-tertiary dark:text-darkFg-tertiary">name:</label>
-            <Input
-              containerClassName="my-0"
-              className="font-mono text-sm"
-              placeholder="NomeDoAgente"
-              value={formData.name}
-              onChange={(e) => handleChange("name", e.target.value)}
-              disabled={loading}
-              maxLength="32"
-            />
+            <Input placeholder="NomeDoAgente" value={formData.name} onChange={(e) => handleChange("name", e.target.value)} disabled={loading} maxLength="32">
+              <IconPickerInput value={formData.Icon} onChange={(value) => handleChange("Icon", value)} disabled={loading} />
+            </Input>
           </div>
-          <IconPickerInput value={formData.Icon} onChange={(value) => handleChange("Icon", value)} disabled={loading} />
+          <small className="text-right text-xs text-lightFg-tertiary dark:text-darkFg-tertiary self-end pr-2">
+            {formData.name.length} / {32}
+          </small>
           <div className="flex items-start gap-2">
-            <label className="text-lightFg-tertiary dark:text-darkFg-tertiary pt-2">description:</label>
-            <textarea
+            <TextArea
+              variant="secondary"
+              label="Description (Descrição)"
               placeholder="Descrição curta sobre a função do agente..."
               value={formData.description}
               onChange={(e) => handleChange("description", e.target.value)}
-              className="w-full flex-1 h-20 p-2 rounded-md resize-y font-mono text-sm bg-lightBg-primary dark:bg-darkBg-primary text-lightFg-primary dark:text-darkFg-primary focus:outline-primary-base"
               disabled={loading}
-              maxLength="256"
+              maxLength={256}
+              rows={3}
+            />
+          </div>
+          <div className="flex items-start gap-2">
+            <TextArea
+              variant="secondary"
+              label="Goal (Objetivo)"
+              placeholder="O objetivo principal do agente..."
+              value={formData.prompt.goal}
+              onChange={(e) => handlePromptChange("goal", e.target.value)}
+              disabled={loading}
+              maxLength={512}
+              rows={4}
+            />
+          </div>
+          <div className="flex items-start gap-2">
+            <TextArea
+              variant="secondary"
+              label="Return Format (Formato de Retorno)"
+              placeholder="O formato de saída esperado..."
+              value={formData.prompt.returnFormat}
+              onChange={(e) => handlePromptChange("returnFormat", e.target.value)}
+              disabled={loading}
+              maxLength={512}
+              rows={4}
+            />
+          </div>
+          <div className="flex items-start gap-2">
+            <TextArea
+              variant="secondary"
+              label="Warning (Aviso)"
+              placeholder="Restrições críticas ou advertências..."
+              value={formData.prompt.warning}
+              onChange={(e) => handlePromptChange("warning", e.target.value)}
+              disabled={loading}
+              maxLength={512}
+              rows={4}
+            />
+          </div>
+          <div className="flex items-start gap-2">
+            <TextArea
+              variant="secondary"
+              label="Context Dump (Contexto)"
+              placeholder="Dados contextuais relevantes..."
+              value={formData.prompt.contextDump}
+              onChange={(e) => handlePromptChange("contextDump", e.target.value)}
+              disabled={loading}
+              maxLength={512}
+              rows={4}
             />
           </div>
         </div>
-
-        <details className="p-3 rounded-md bg-lightBg-tertiary dark:bg-darkBg-tertiary" open>
-          <summary className="cursor-pointer font-bold text-sm text-lightFg-secondary dark:text-darkFg-secondary font-mono">
-            <Code size={16} className="inline mr-2" />
-            prompt:
-          </summary>
-          <div className="flex flex-col gap-2 mt-2 pl-4 border-l border-bLight dark:border-bDark">
-            <textarea
-              placeholder="Goal: O objetivo principal do agente..."
-              value={formData.prompt.goal}
-              onChange={(e) => handlePromptChange("goal", e.target.value)}
-              className="w-full h-24 p-2 rounded-md resize-y font-mono text-sm bg-lightBg-primary dark:bg-darkBg-primary text-lightFg-primary dark:text-darkFg-primary focus:outline-primary-base"
-              disabled={loading}
-            />
-            <textarea
-              placeholder="Return Format: O formato de saída esperado..."
-              value={formData.prompt.returnFormat}
-              onChange={(e) => handlePromptChange("returnFormat", e.target.value)}
-              className="w-full h-24 p-2 rounded-md resize-y font-mono text-sm bg-lightBg-primary dark:bg-darkBg-primary text-lightFg-primary dark:text-darkFg-primary focus:outline-primary-base"
-              disabled={loading}
-            />
-            <textarea
-              placeholder="Warning: Restrições críticas ou advertências..."
-              value={formData.prompt.warning}
-              onChange={(e) => handlePromptChange("warning", e.target.value)}
-              className="w-full h-24 p-2 rounded-md resize-y font-mono text-sm bg-lightBg-primary dark:bg-darkBg-primary text-lightFg-primary dark:text-darkFg-primary focus:outline-primary-base"
-              disabled={loading}
-            />
-            <textarea
-              placeholder="Context Dump: Dados contextuais relevantes..."
-              value={formData.prompt.contextDump}
-              onChange={(e) => handlePromptChange("contextDump", e.target.value)}
-              className="w-full h-24 p-2 rounded-md resize-y font-mono text-sm bg-lightBg-primary dark:bg-darkBg-primary text-lightFg-primary dark:text-darkFg-primary focus:outline-primary-base"
-              disabled={loading}
-            />
-          </div>
-        </details>
       </div>
       <div className="flex justify-between items-center pt-2 mt-2 border-t border-bLight dark:border-bDark flex-shrink-0">
         <label htmlFor="agent-published" className="flex items-center gap-2 cursor-pointer text-sm font-bold text-lightFg-secondary dark:text-darkFg-secondary">
