@@ -21,7 +21,7 @@ const AIAgents = ({ agentsDoor }) => {
       mb-1 py-2 gap-2 rounded-lg shadow-lg max-w-[95%]
       flex flex-wrap items-center justify-center mx-auto`}
     >
-      {agents.backendAgents.map(({ name, Icon, description }) => (
+      {agents.backendAgents.map(({ name, Icon, description, disabled = false }) => (
         <Button
           key={name}
           $border={selectedAgent === name ? "outline" : "secondary"}
@@ -30,7 +30,7 @@ const AIAgents = ({ agentsDoor }) => {
           $rounded
           title={`${name}: ${description}`}
           onClick={() => setSelectedAgent(name)}
-          disabled={isDisabled}
+          disabled={disabled || isDisabled}
         >
           <DynamicIcon name={Icon} size={16} />
         </Button>
