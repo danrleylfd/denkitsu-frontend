@@ -136,25 +136,22 @@ const AIFactoryManager = ({ factoryManagerDoor, toggleFactoryManagerDoor }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <div
-        className="relative flex h-[95%] w-full max-w-md flex-col gap-2 rounded-lg bg-lightBg-primary p-4 shadow-2xl dark:bg-darkBg-primary border border-solid border-brand-purple"
+        className="relative flex h-[95%] w-full max-w-xl flex-col gap-2 rounded-lg bg-lightBg-primary p-4 shadow-2xl dark:bg-darkBg-primary border border-solid border-brand-purple"
         onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Factory size={24} className="text-primary-base" />
-            <h3 className="text-lightFg-primary dark:text-darkFg-primary">Fábrica</h3>
+          <Factory size={20} className="text-primary-base" />
+          <div className="flex gap-1">
+            <button
+              onClick={() => setActiveTab("agents")}
+              className={`px-2 py-2 text-sm font-bold flex items-center gap-2 ${activeTab === "agents" ? "border-b-2 border-primary-base text-primary-base" : "text-lightFg-secondary"}`}>
+              <Speech size={16} /> Agentes
+            </button>
+            <button
+              onClick={() => setActiveTab("tools")}
+              className={`px-2 py-2 text-sm font-bold flex items-center gap-2 ${activeTab === "tools" ? "border-b-2 border-primary-base text-primary-base" : "text-lightFg-secondary"}`}>
+              <Wrench size={16} /> Ferramentas
+            </button>
           </div>
-        <div className="flex gap-1">
-          <button
-            onClick={() => setActiveTab("agents")}
-            className={`px-2 py-2 text-sm font-bold flex items-center gap-2 ${activeTab === "agents" ? "border-b-2 border-primary-base text-primary-base" : "text-lightFg-secondary"}`}>
-            <Speech size={16} /> Agentes
-          </button>
-          <button
-            onClick={() => setActiveTab("tools")}
-            className={`px-2 py-2 text-sm font-bold flex items-center gap-2 ${activeTab === "tools" ? "border-b-2 border-primary-base text-primary-base" : "text-lightFg-secondary"}`}>
-            <Wrench size={16} /> Ferramentas
-          </button>
-        </div>
           <Button variant="danger" size="icon" $rounded onClick={toggleFactoryManagerDoor}>
             <X size={16} />
           </Button>
