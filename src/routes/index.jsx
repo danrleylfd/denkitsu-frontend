@@ -18,6 +18,7 @@ const Redirect = lazy(() => import("../pages/Redirect"))
 const AI = lazy(() => import("../pages/AI"))
 const Store = lazy(() => import("../pages/Store"))
 const Profile = lazy(() => import("../pages/Profile"))
+const Subscription = lazy(() => import("../pages/Subscription"))
 const UserVideos = lazy(() => import("../pages/Video/UserVideos"))
 const Popular = lazy(() => import("../pages/Video/Popular"))
 const Recents = lazy(() => import("../pages/Video/Recents"))
@@ -64,6 +65,7 @@ const AppRoutes = () => {
               <Route path="/video/:videoId" element={<VideoDetail />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/profile/:userId" element={<Profile />} />
+              <Route path="/subscription" element={<Subscription />} />
               <Route path="/atalho" element={<Shortcut />} />
               <Route path="/chat" element={<AI />} />
               <Route path="/privacidade" element={<Privacidade />} />
