@@ -6,7 +6,7 @@ import DynamicIcon from "../DynamicIcon"
 
 const ToolList = memo(({ tools, onCreate, onEdit, onDelete }) => (
   <div className="flex flex-col h-full">
-    <div className="flex-1 overflow-y-auto py-2 pr-2">
+    <div className="flex-1 overflow-y-auto py-2">
       {tools.length === 0 ? (
         <div className="text-center py-10 ">
           <PocketKnife size={48} className="mx-auto text-lightFg-tertiary dark:text-darkFg-tertiary" />

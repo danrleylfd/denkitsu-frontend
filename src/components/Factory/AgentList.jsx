@@ -6,7 +6,7 @@ import DynamicIcon from "../DynamicIcon"
 
 const AgentList = memo(({ agents, onCreate, onEdit, onDelete }) => (
   <div className="flex flex-col h-full">
-    <div className="flex-1 overflow-y-auto py-2 pr-2">
+    <div className="flex-1 overflow-y-auto py-2">
       {agents.length === 0 ? (
         <div className="text-center py-10 ">
           <Bot size={48} className="mx-auto text-lightFg-tertiary dark:text-darkFg-tertiary" />
