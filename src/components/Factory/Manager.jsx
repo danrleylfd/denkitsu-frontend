@@ -5,14 +5,14 @@ import { useAgents } from "../../contexts/AgentContext"
 import { useTools } from "../../contexts/ToolContext"
 import { useNotification } from "../../contexts/NotificationContext"
 
+import Paper from "../Paper"
 import Button from "../Button"
 
-import AgentForm from "../Factory/AgentForm"
-import AgentList from "../Factory/AgentList"
-import ToolForm from "../Factory/ToolForm"
-import ToolList from "../Factory/ToolList"
+import FactoryList from "./List"
+import AgentForm from "./AgentForm"
+import ToolForm from "./ToolForm"
 
-const AIFactoryManager = ({ factoryManagerDoor, toggleFactoryManagerDoor }) => {
+const FactoryManager = ({ factoryManagerDoor, toggleFactoryManagerDoor }) => {
   if (!factoryManagerDoor) return null
   const [activeTab, setActiveTab] = useState("agents")
   const { notifyError, notifyInfo } = useNotification()
@@ -116,27 +116,33 @@ const AIFactoryManager = ({ factoryManagerDoor, toggleFactoryManagerDoor }) => {
   }
 
   const renderAgentContent = () => {
-    if (loadingAgents) return <Button variant="outline" loading disabled />
-    return agentView === "list" ? (
-      <AgentList agents={agents.customAgents} onCreate={handleAgentCreate} onEdit={handleAgentEdit} onDelete={handleAgentDelete} />
-    ) : (
-      <AgentForm agent={currentAgent} onSave={handleAgentSave} onBack={handleAgentBack} loading={agentFormLoading} />
-    )
+    if (loadingAgents) return <div className="flex h-full items-center justify-center"><Button variant="outline" loading disabled /></div>
+    if (agentView === "form") return <AgentForm agent={currentAgent} onSave={handleAgentSave} onBack={handleAgentBack} loading={agentFormLoading} />
+    return <FactoryList
+      items={agents.customAgents}
+      itemType="agent"
+      onCreate={handleAgentCreate}
+      onEdit={handleAgentEdit}
+      onDelete={handleAgentDelete}
+    />
   }
 
   const renderToolContent = () => {
-    if (loadingTools) return <Button variant="outline" loading disabled />
-    return toolView === "list" ? (
-      <ToolList tools={tools.customTools} onCreate={handleToolCreate} onEdit={handleToolEdit} onDelete={handleToolDelete} />
-    ) : (
-      <ToolForm tool={currentTool} onSave={handleToolSave} onBack={handleToolBack} loading={toolFormLoading} />
-    )
+    if (loadingTools) return <div className="flex h-full items-center justify-center"><Button variant="outline" loading disabled /></div>
+    if (toolView === "form") return <ToolForm tool={currentTool} onSave={handleToolSave} onBack={handleToolBack} loading={toolFormLoading} />
+    return <FactoryList
+      items={tools.customTools}
+      itemType="tool"
+      onCreate={handleToolCreate}
+      onEdit={handleToolEdit}
+      onDelete={handleToolDelete}
+    />
   }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-      <div
-        className="relative flex h-[95%] w-full max-w-xl flex-col gap-2 rounded-lg bg-lightBg-primary px-4 py-2 shadow-2xl dark:bg-darkBg-primary border border-solid border-brand-purple"
+      <Paper
+        className="relative w-full max-w-[95%] h-full max-h-[95%] flex flex-col px-2 pt-2 pb-0 gap-2 rounded-lg bg-lightBg-primary p-2 shadow-2xl dark:bg-darkBg-primary border border-solid border-brand-purple"
         onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <Factory size={20} className="text-primary-base" />
@@ -157,9 +163,9 @@ const AIFactoryManager = ({ factoryManagerDoor, toggleFactoryManagerDoor }) => {
           </Button>
         </div>
         <div className="flex-grow overflow-hidden">{activeTab === "agents" ? renderAgentContent() : renderToolContent()}</div>
-      </div>
+      </Paper>
     </div>
   )
 }
 
-export default AIFactoryManager
+export default FactoryManager

@@ -5,6 +5,7 @@ import { useAI } from "../../contexts/AIContext"
 import { useModels } from "../../contexts/ModelContext"
 
 import AIModelSelect from "./ModelSelect"
+import Paper from "../Paper"
 import Input from "../Input"
 import AIInput from "./Input"
 import Button from "../Button"
@@ -34,8 +35,8 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-      <div
-        className="relative flex h-[95%] w-full max-w-md flex-col gap-2 rounded-lg bg-lightBg-primary p-4 shadow-2xl dark:bg-darkBg-primary border border-solid border-brand-purple"
+      <Paper
+        className="relative w-full max-w-[95%] h-full max-h-[95%] flex flex-col px-2 pt-2 pb-0 gap-2 rounded-lg bg-lightBg-primary p-2 shadow-2xl dark:bg-darkBg-primary border border-solid border-brand-purple"
         onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <h3 className="font-bold text-lightFg-primary dark:text-darkFg-primary">Configurações do Denkitsu</h3>
@@ -134,7 +135,7 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
           />
           <small className="text-right text-xs text-lightFg-tertiary dark:text-darkFg-tertiary self-end">{customPrompt.length} / 6144 caracteres.</small>
         </div>
-      </div>
+      </Paper>
     </div>
   )
 }

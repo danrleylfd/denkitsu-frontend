@@ -9,7 +9,7 @@ import Paper from "../Paper"
 
 const FeatureListItem = ({ icon: Icon, title, children }) => (
   <div className="flex items-start gap-2">
-    <Icon size={18} className="text-primary-base flex-shrink-0 mt-1" />
+    <Icon size={18} className="text-primary-base flex-shrink-0" />
     <div>
       <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary">{title}</h5>
       <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary">{children}</p>
@@ -29,15 +29,13 @@ const tabs = [
 ]
 
 const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
-  const [activeTab, setActiveTab] = useState("agents")
-
+  const [activeTab, setActiveTab] = useState("changelog")
   if (!featuresDoor) return null
-
   const renderContent = () => {
     switch (activeTab) {
       case "agents":
         return (
-          <>
+          <div className="flex flex-col gap-2">
             <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary">
               Dê à IA um papel específico. Cada agente é otimizado para um tipo de tarefa, alterando o estilo e o formato da resposta.
             </p>
@@ -46,38 +44,37 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
                 {description}
               </FeatureListItem>
             ))}
-          </>
+          </div>
         )
       case "tools":
         return (
-          <>
+          <div className="flex flex-col gap-2">
             <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary">Conecte a IA a fontes de dados externas para obter respostas mais ricas e atualizadas. Requer chave de API e um modelo compatível.</p>
             <FeatureListItem title="Fábrica de Ferramentas" icon={Factory}>
               Crie suas próprias ferramentas para se conectar a qualquer API. Automatize tarefas e ensine novas habilidades ao Denkitsu através de uma interface simples. Acesse pelo ícone de <Factory size={16} className="inline-block mx-1" /> na barra de chat.
             </FeatureListItem>
-            <div className="w-full border-t border-bLight dark:border-bDark my-2"></div>
             {TOOL_DEFINITIONS.map(({ key, title, description, Icon }) => (
               <FeatureListItem key={key} title={title} icon={Icon}>
                 {description}
               </FeatureListItem>
             ))}
-          </>
+          </div>
         )
       case "factory":
         return (
-          <div className="flex flex-col gap-4 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
-            <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Tutorial: Criando seu Primeiro Agente</h4>
+          <div className="flex flex-col gap-1 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
+            <h4 className="text-lightFg-primary dark:text-darkFg-primary">Tutorial: Criando seu Primeiro Agente</h4>
             <p>
               Agentes permitem que você personalize a personalidade e comportamento da IA. Diferente das ferramentas, eles não conectam APIs externas, mas definem como a IA deve pensar e responder.
             </p>
             <div>
-              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 1: Abrindo a Fábrica</h5>
+              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 1: Abrindo a Fábrica</h5>
               <p>
                 Clique no ícone de <Bot size={16} className="inline-block mx-1" /> na barra de chat para abrir a Fábrica de Agentes e clique em "Criar Novo Agente".
               </p>
             </div>
             <div>
-              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 2: Preenchendo os Campos</h5>
+              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 2: Preenchendo os Campos</h5>
               <ul className="list-disc list-inside space-y-2 pl-2">
                 <li><strong>Nome do Agente:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">Professor Zen</code></li>
                 <li><strong>Descrição:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">Ajuda a aprender programação com explicações claras.</code></li>
@@ -88,26 +85,26 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
               </ul>
             </div>
             <div>
-              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 3: Salvar e Ativar</h5>
+              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 3: Salvar e Ativar</h5>
               <p>
                 Clique em "Salvar Agente". Depois, abra a gaveta de agentes (<Bot size={16} className="inline-block mx-1" />) e ative o novo agente. Agora ele responderá de acordo com suas instruções personalizadas!
               </p>
             </div>
-            <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Tutorial: Criando sua Primeira Ferramenta</h4>
+            <h4 className="text-lg text-lightFg-primary dark:text-darkFg-primary">Tutorial: Criando sua Primeira Ferramenta</h4>
             <p>
               As ferramentas customizadas permitem que você conecte o Denkitsu a qualquer API na internet. Vamos criar uma ferramenta divertida que busca uma piada aleatória do site <a href="https://icanhazdadjoke.com/" target="_blank" rel="noopener noreferrer" className="text-primary-base underline">icanhazdadjoke.com</a>.
             </p>
             <div>
-              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 1: Entendendo a API</h5>
+              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 1: Entendendo a API</h5>
               <p>A API de piadas é simples. Para pegar uma piada como texto, precisamos acessar a URL `https://icanhazdadjoke.com/` e enviar um "cabeçalho" (Header) especial dizendo que queremos a resposta em texto puro.</p>
             </div>
             <div>
-              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 2: Abrindo a Fábrica</h5>
+              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 2: Abrindo a Fábrica</h5>
               <p>Clique no ícone de <Factory size={16} className="inline-block mx-1" /> na barra de chat para abrir a Fábrica de Ferramentas e clique em "Criar Nova Ferramenta".</p>
             </div>
             <div>
-              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 3: Preenchendo o Formulário</h5>
-              <p className="mb-2">Copie e cole os valores abaixo em cada campo correspondente:</p>
+              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 3: Preenchendo o Formulário</h5>
+              <p className="">Copie e cole os valores abaixo em cada campo correspondente:</p>
               <ul className="list-disc list-inside space-y-2 pl-2">
                 <li><strong>Apelido da Ferramenta:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">Buscador de Piadas</code></li>
                 <li><strong>Nome Técnico:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">buscarPiada</code></li>
@@ -118,26 +115,26 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
               </ul>
             </div>
             <div>
-              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 4: Configurações Avançadas</h5>
-              <p className="mb-2">Clique para expandir as "Configurações Avançadas" e preencha:</p>
+              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 4: Configurações Avançadas</h5>
+              <p className="">Clique para expandir as "Configurações Avançadas" e preencha:</p>
               <ul className="list-disc list-inside space-y-2 pl-2">
                 <li><strong>Definição de Parâmetros (Schema):</strong> Como não precisamos de nenhuma informação do usuário, podemos deixar o schema com as propriedades vazias:
-                  <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md mt-1 text-xs font-mono"><code>{`{ "type": "object", "properties": {} }`}</code></pre>
+                  <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{ "type": "object", "properties": {} }`}</code></pre>
                 </li>
                 <li><strong>Headers (JSON):</strong> Esta é a parte importante para esta API. Precisamos dizer a ela para nos dar texto puro.
-                  <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md mt-1 text-xs font-mono"><code>{`{ "Accept": "text/plain" }`}</code></pre>
+                  <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{ "Accept": "text/plain" }`}</code></pre>
                 </li>
                 <li><strong>Body (JSON):</strong> Deixe como está (um JSON vazio `{ }`).</li>
               </ul>
             </div>
             <div>
-              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 5: Salvar e Testar!</h5>
+              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 5: Salvar e Testar!</h5>
               <p>Clique em "Salvar Ferramenta". Depois, volte para o chat, abra a gaveta de ferramentas (<Wrench size={16} className="inline-block mx-1" />) e ative a sua nova ferramenta "Buscador de Piadas". Agora, simplesmente peça no chat:</p>
               <blockquote className="border-l-4 border-primary-base pl-2 my-2 italic">Me conte uma piada.</blockquote>
               <p>A IA vai entender seu pedido, encontrar a ferramenta `buscarPiada`, executá-la e te contar a piada que a API retornou!</p>
             </div>
             <div className="p-3 rounded-md bg-amber-base/10 border border-amber-base/30">
-              <h5 className="font-bold text-amber-base flex items-center gap-2">
+              <h5 className="text-amber-base flex items-center gap-2">
                 <AlertTriangle size={18} />
                 Atenção: Limites de Resposta da API
               </h5>
@@ -148,24 +145,24 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
                 Isso pode causar um erro e impedir que a IA formule uma resposta final. Portanto, **prefira usar APIs que retornem dados concisos** ou que permitam filtrar a quantidade de informação através de parâmetros na URL!
               </p>
             </div>
-            <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary mt-4">Tutorial: Conectando a um Provedor de IA Personalizado</h4>
+            <h4 className="text-lg text-lightFg-primary dark:text-darkFg-primary">Tutorial: Conectando a um Provedor de IA Personalizado</h4>
             <p>
               O Denkitsu permite que você se conecte a qualquer endpoint de API compatível com a API da OpenAI. Isso é útil para usar modelos auto-hospedados (com LM Studio, por exemplo) ou outros serviços de proxy.
             </p>
             <div>
-              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 1: Alternar para o Provedor Personalizado</h5>
+              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 1: Alternar para o Provedor Personalizado</h5>
               <p>
                 Na barra de chat, clique no ícone do provedor atual (<Waypoints size={16} className="inline-block mx-1" />) até que ele se torne um ícone de servidor (<Wrench size={16} className="inline-block mx-1" />) e o título mude para "Provedor: Personalizado".
               </p>
             </div>
             <div>
-              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 2: Abrir as Configurações</h5>
+              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 2: Abrir as Configurações</h5>
               <p>
                 Clique no ícone de engrenagem (<Settings size={16} className="inline-block mx-1" />) para abrir o painel de configurações.
               </p>
             </div>
             <div>
-              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Passo 3: Preencher os Dados</h5>
+              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 3: Preencher os Dados</h5>
               <ul className="list-disc list-inside space-y-2 pl-2">
                 <li><strong>URL da API (Personalizado):</strong> Insira a URL base do seu servidor. Por exemplo, se você está usando LM Studio, o padrão é `http://localhost:1234/v1`.</li>
                 <li><strong>Chave da API:</strong> Muitos servidores locais não exigem uma chave. Você pode digitar `nao-usado` ou qualquer outro texto.</li>
@@ -173,7 +170,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
               </ul>
             </div>
             <div>
-              <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary mb-1">Pronto!</h5>
+              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Pronto!</h5>
               <p>
                 Feche as configurações. O Denkitsu agora enviará todas as requisições para o seu servidor local. Lembre-se que o desempenho e a compatibilidade com ferramentas dependerão do modelo que você está utilizando.
               </p>
@@ -246,7 +243,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
                 <li className="text-lightFg-secondary dark:text-darkFg-secondary">Adicionado suporte para renderização de diagramas com Mermaid.</li>
               </ul>
             </div>
-            <div className="flex flex-col gap-2 mt-4">
+            <div className="flex flex-col gap-2">
               <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Versão 1.2.1.2 (Atual)</h4>
               <ul className="list-disc list-inside text-sm space-y-1">
                 <li className="text-lightFg-secondary dark:text-darkFg-secondary">Provedores de IA personalizados.</li>
@@ -254,26 +251,26 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
                 <li className="text-lightFg-secondary dark:text-darkFg-secondary">O botão de Recursos foi movido para um local mais acessível na barra de dicas.</li>
               </ul>
             </div>
-            <div className="flex flex-col gap-2 mt-4">
+            <div className="flex flex-col gap-2">
               <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Versão 1.2.1.1</h4>
               <ul className="list-disc list-inside text-sm space-y-1">
                 <li className="text-lightFg-secondary dark:text-darkFg-secondary">Roteador de Agentes / Ferramentas.</li>
                 <li className="text-lightFg-secondary dark:text-darkFg-secondary">Loja da Comunidade para compartilhamento de Agentes e Ferramentas.</li>
               </ul>
             </div>
-            <div className="flex flex-col gap-2 mt-4">
+            <div className="flex flex-col gap-2">
               <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Versão 1.2.1</h4>
               <ul className="list-disc list-inside text-sm space-y-1">
                 <li className="text-lightFg-secondary dark:text-darkFg-secondary">Fábrica de Agentes / Ferramentas para criação personalizada.</li>
               </ul>
             </div>
-            <div className="flex flex-col gap-2 mt-4">
+            <div className="flex flex-col gap-2">
               <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Versão 1.2</h4>
               <ul className="list-disc list-inside text-sm space-y-1">
                 <li className="text-lightFg-secondary dark:text-darkFg-secondary">Implementamos as ferramentas Groq e OpenRouter (Pesquisa Profunda, Pesquisar no Navegador, Interpretador de Código).</li>
               </ul>
             </div>
-            <div className="flex flex-col gap-2 mt-4">
+            <div className="flex flex-col gap-2">
               <h4 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary">Versão 1.1.x</h4>
               <ul className="list-disc list-inside text-sm space-y-1">
                 <li className="text-lightFg-secondary dark:text-darkFg-secondary">Novos Agentes / Ferramentas de IA.</li>
@@ -294,10 +291,10 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <Paper
-        className="relative flex w-full max-w-4xl flex-col gap-2 rounded-lg bg-lightBg-primary p-2 shadow-2xl dark:bg-darkBg-primary border border-solid border-brand-purple"
+        className="relative w-full max-w-[95%] h-full max-h-[95%] flex flex-col px-2 pt-2 pb-0 gap-2 rounded-lg bg-lightBg-primary px-2 shadow-2xl dark:bg-darkBg-primary border border-solid border-brand-purple"
         onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between border-b border-bLight dark:border-bDark">
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1">
             <h3 className="font-bold text-lightFg-primary dark:text-darkFg-primary">Apresentamos Denkitsu!</h3>
             <p className="text-lightFg-secondary dark:text-darkFg-secondary">Seu Parceiro Inteligente!</p>
           </div>
@@ -321,7 +318,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
           ))}
         </div>
 
-        <div className="min-h-[250px] max-h-[50vh] overflow-y-auto pr-2">
+        <div className="overflow-y-auto pr-1">
           {renderContent()}
         </div>
       </Paper>

@@ -12,7 +12,7 @@ import AIMedia from "./Media"
 import AITip from "./Tip"
 import AIFeatures from "./Features"
 import AISettings from "./Settings"
-import AIFactoryManager from "./FactoryManager"
+import AIFactoryManager from "../Factory/Manager"
 import Lousa from "./Lousa"
 
 const ChatInterface = ({ renderBar }) => {
