@@ -70,7 +70,7 @@ const Subscription = () => {
         </div>
         {user?.plan === "pro" ? (
           <>
-            <h2 className="text-2xl font-bold text-lightFg-primary dark:text-darkFg-primary">Você é um Membro Pro!</h2>
+            <h2 className="text-lightFg-primary dark:text-darkFg-primary">Você é um Membro!</h2>
             <div className="flex items-center gap-2 text-green-base font-semibold bg-green-base/10 px-4 py-2 rounded-full">
               <CheckCircle2 size={20} />
               <span>Assinatura Ativa</span>
@@ -79,26 +79,25 @@ const Subscription = () => {
               Obrigado por apoiar o Denkitsu. Gerencie sua assinatura, altere seu método de pagamento ou visualize seu histórico de faturas no portal do cliente.
             </p>
             <Button variant="primary" $rounded onClick={handleManageSubscription} loading={loadingStripe} disabled={loadingStripe}>
-              Gerenciar Assinatura
+              {!loadingStripe && "Gerenciar Assinatura"}
             </Button>
           </>
         ) : (
           <>
-            <h2 className="text-2xl font-bold text-lightFg-primary dark:text-darkFg-primary">Eleve sua Experiência com o Plano Pro</h2>
+            <h2 className="text-lightFg-primary dark:text-darkFg-primary">Eleve sua Experiência</h2>
             <p className="text-lightFg-secondary dark:text-darkFg-secondary">
               Desbloqueie todo o potencial do Denkitsu com acesso ilimitado e funcionalidades exclusivas.
             </p>
-            <div className="text-left w-full bg-lightBg-secondary dark:bg-darkBg-secondary p-4 rounded-lg">
-              <h3 className="font-bold mb-3 text-lightFg-primary dark:text-darkFg-primary">Benefícios do Plano Pro:</h3>
+            <div className="text-left w-full bg-lightBg-secondary dark:bg-darkBg-secondary p-2 rounded-lg">
+              <h5 className="text-lightFg-primary dark:text-darkFg-primary pb-2">Benefícios</h5>
               <ul className="space-y-2">
-                <ProFeature>Acesso a todos os modelos de IA premium (GPT-4, Claude 3, etc.).</ProFeature>
-                <ProFeature>Criação ilimitada de Agentes personalizados.</ProFeature>
-                <ProFeature>Criação ilimitada de Ferramentas customizadas.</ProFeature>
-                <ProFeature>Acesso antecipado a novas funcionalidades.</ProFeature>
+                <ProFeature>Acesso a todos os modelos de IA premium.</ProFeature>
+                <ProFeature>Fabricação ilimitada de Agentes personalizados.</ProFeature>
+                <ProFeature>Fabricação ilimitada de Ferramentas customizadas.</ProFeature>
               </ul>
             </div>
             <Button variant="primary" $rounded onClick={handleUpgrade} loading={loadingStripe} disabled={loadingStripe}>
-              Fazer Upgrade para o Plano Pro
+              {!loadingStripe && "Assinar por R$ 15,00/mês"}
             </Button>
           </>
         )}
