@@ -136,7 +136,7 @@ const AIFactoryManager = ({ factoryManagerDoor, toggleFactoryManagerDoor }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <div
-        className="relative flex h-[95%] w-full max-w-xl flex-col gap-2 rounded-lg bg-lightBg-primary p-4 shadow-2xl dark:bg-darkBg-primary border border-solid border-brand-purple"
+        className="relative flex h-[95%] w-full max-w-xl flex-col gap-2 rounded-lg bg-lightBg-primary px-4 py-2 shadow-2xl dark:bg-darkBg-primary border border-solid border-brand-purple"
         onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <Factory size={20} className="text-primary-base" />
