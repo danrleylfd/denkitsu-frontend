@@ -41,14 +41,12 @@ const Subscription = () => {
         setSearchParams({})
       }
     }
-    if (searchParams.get("payment_success")) {
-      handlePaymentSuccess()
-    }
+    if (searchParams.get("payment_success")) handlePaymentSuccess()
     if (searchParams.get("payment_canceled")) {
       notifyInfo("O processo de assinatura foi cancelado.")
       setSearchParams({})
     }
-  }, [searchParams, setSearchParams, notifySuccess, notifyInfo, updateUser, notifyError])
+  }, [searchParams, setSearchParams, updateUser])
 
   const handleUpgrade = async () => {
     setLoadingStripe(true)
