@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom"
 import { Crown, CheckCircle2, Star } from "lucide-react"
 import { useAuth } from "../contexts/AuthContext"
 import { useNotification } from "../contexts/NotificationContext"
+import { getUserAccount } from "../services/account"
 import api from "../services"
 import SideMenu from "../components/SideMenu"
 import Paper from "../components/Paper"
@@ -22,21 +23,32 @@ const ProFeature = ({ children }) => (
 )
 
 const Subscription = () => {
-  const { user } = useAuth()
+  const { user, updateUser } = useAuth()
   const { notifyError, notifySuccess, notifyInfo } = useNotification()
   const [loadingStripe, setLoadingStripe] = useState(false)
   const [searchParams, setSearchParams] = useSearchParams()
 
   useEffect(() => {
-    if (searchParams.get("payment_success")) {
+    const handlePaymentSuccess = async () => {
       notifySuccess("Assinatura confirmada! Bem-vindo ao Plano Pro.")
-      setSearchParams({})
+      try {
+        const freshUserData = await getUserAccount()
+        updateUser(freshUserData)
+      } catch (error) {
+        console.error("Falha ao atualizar dados do usuário após assinatura.", error)
+        notifyError("Sua assinatura está ativa, mas houve um erro ao atualizar a página. Por favor, recarregue.")
+      } finally {
+        setSearchParams({})
+      }
+    }
+    if (searchParams.get("payment_success")) {
+      handlePaymentSuccess()
     }
     if (searchParams.get("payment_canceled")) {
       notifyInfo("O processo de assinatura foi cancelado.")
       setSearchParams({})
     }
-  }, [searchParams, setSearchParams])
+  }, [searchParams, setSearchParams, notifySuccess, notifyInfo, updateUser, notifyError])
 
   const handleUpgrade = async () => {
     setLoadingStripe(true)
