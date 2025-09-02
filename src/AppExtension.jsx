@@ -71,7 +71,7 @@ const SidePanelChat = () => {
 
   useEffect(() => {
     const storageListener = (changes, area) => {
-      if (area === 'session' && changes.omniboxMessage?.newValue) {
+      if (area === "session" && changes.omniboxMessage?.newValue) {
         console.log("Nova mensagem da omnibox detectada enquanto o painel está aberto.")
         processOmniboxMessage()
       }

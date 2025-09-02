@@ -103,7 +103,7 @@ const useMessage = (props) => {
       if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
       else notifyError("Falha na comunicação com o servidor de IA.")
       setMessages(prev => {
-        const lastUserMessageInHistory = historyToProcess.findLast(m => m.role === 'user')
+        const lastUserMessageInHistory = historyToProcess.findLast(m => m.role === "user")
         if (lastUserMessageInHistory && prev.some(m => m.timestamp === lastUserMessageInHistory.timestamp)) {
           return prev.filter(m => m.timestamp !== lastUserMessageInHistory.timestamp)
         }

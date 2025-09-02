@@ -30,7 +30,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         return
       }
       const tabId = tabs[0].id
-      console.log(`Background: Aba ativa encontrada (${tabId}). Repassando pedido 'EXTRACT_CONTENT'.`)
+      console.log(`Background: Aba ativa encontrada (${tabId}). Repassando pedido "EXTRACT_CONTENT".`)
       chrome.tabs.sendMessage(
         tabId,
         { type: "EXTRACT_CONTENT" },

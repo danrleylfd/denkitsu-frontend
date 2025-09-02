@@ -79,7 +79,7 @@ const Tradutor = () => {
       }
       const availability = await Translator.availability({ sourceLanguage: sourceLang, targetLanguage: targetLang })
       if (availability.state === "not_supported") {
-        throw new Error(`A tradução de '${sourceLang}' para '${targetLang}' não é suportada.`)
+        throw new Error(`A tradução de "${sourceLang}" para "${targetLang}" não é suportada.`)
       }
       if (availability.state === "needs_download") {
         notifyError("O pacote de tradução precisa ser baixado. Tente novamente em alguns instantes.")

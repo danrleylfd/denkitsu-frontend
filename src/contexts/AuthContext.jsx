@@ -1,5 +1,8 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react"
+
+
 import api from "../services"
+
 import { storage } from "../utils/storage"
 
 const AuthContext = createContext({})
@@ -7,13 +10,11 @@ const AuthContext = createContext({})
 const isExtension = !!(window.chrome && chrome.runtime && chrome.runtime.id)
 
 const AuthProvider = ({ children }) => {
+
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
   const signOut = useCallback(async () => {
-    // await storage.local.removeItem("@Denkitsu:refreshToken")
-    // await storage.local.removeItem("@Denkitsu:user")
-    // await storage.session.removeItem("@Denkitsu:token")
     await storage.local.clear()
     await storage.local.clear()
     setUser(null)
@@ -51,7 +52,7 @@ const AuthProvider = ({ children }) => {
     loadStorageData()
     if (isExtension) {
       const listener = (changes, area) => {
-        if (area === 'local' || area === 'session') {
+        if (area === "local" || area === "session") {
           if (changes["@Denkitsu:user"] || changes["@Denkitsu:refreshToken"] || changes["@Denkitsu:token"]) {
             console.log("AuthContext: Detectou mudança no storage da extensão, recarregando estado.")
             loadStorageData()

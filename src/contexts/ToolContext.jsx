@@ -60,7 +60,7 @@ const ToolProvider = ({ children }) => {
   }, [tools, loadingTools])
 
   const handleToolToggle = useCallback((toolKey) => {
-    if (typeof toolKey === 'undefined') {
+    if (typeof toolKey === "undefined") {
       console.error("handleToolToggle foi chamado com uma toolKey indefinida.")
       return
     }

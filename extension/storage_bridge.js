@@ -37,7 +37,7 @@ localStorage.setItem = function (key, value) {
   originalSetItem.apply(this, arguments)
   if (ESSENTIAL_SYNC_KEYS.has(key)) {
     chrome.storage.local.set({ [key]: value }, () => {
-      console.log(`Denkitsu Bridge: Chave essencial '${key}' sincronizada para a extensão.`)
+      console.log(`Denkitsu Bridge: Chave essencial "${key}" sincronizada para a extensão.`)
     })
   }
 }
@@ -46,7 +46,7 @@ localStorage.removeItem = function (key) {
   originalRemoveItem.apply(this, arguments)
   if (ESSENTIAL_SYNC_KEYS.has(key)) {
     chrome.storage.local.remove(key, () => {
-      console.log(`Denkitsu Bridge: Chave essencial '${key}' removida da extensão.`)
+      console.log(`Denkitsu Bridge: Chave essencial "${key}" removida da extensão.`)
     })
   }
 }

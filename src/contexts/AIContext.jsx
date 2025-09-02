@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect, useContext, useMemo, useCallback } from "react"
 
+import { useAuth } from "./AuthContext"
 import { useModels } from "./ModelContext"
 import { useTools } from "./ToolContext"
 import { useAgents } from "./AgentContext"
@@ -12,6 +13,7 @@ import { storage } from "../utils/storage"
 const AIContext = createContext()
 
 const AIProvider = ({ children }) => {
+  const { signed } = useAuth()
   const { aiProvider, aiKey, model, freeModels, payModels, groqModels, customProviderUrl } = useModels()
   const { activeTools } = useTools()
   const { selectedAgent, setSelectedAgent } = useAgents()
@@ -85,7 +87,9 @@ const AIProvider = ({ children }) => {
     const systemMessage = { role: "system", content: customPrompt }
     setMessages([systemMessage])
     storage.local.setItem("@Denkitsu:messages", JSON.stringify([systemMessage]))
-  }, [customPrompt])
+  }, [signed, customPrompt])
+
+  useEffect(() => { clearHistory() }, [signed])
 
   const toggleStream = useCallback(() => setStream(prev => !prev), [])
   const toggleAutoScroll = useCallback(() => setAutoScroll(prev => !prev), [])

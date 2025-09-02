@@ -3,7 +3,6 @@ import { UserRound, Wrench, CheckCircle, Route } from "lucide-react"
 import AIReactions from "./Reactions"
 import Markdown from "../Markdown"
 import Button from "../Button"
-import PurpleLink from "../Embeds/PurpleLink"
 
 const AIMessage = ({ msg, user, toggleLousa, loadingMessage, onRegenerate, isLastMessage }) => {
   const isSystem = msg.role === "system"
@@ -42,19 +41,9 @@ const AIMessage = ({ msg, user, toggleLousa, loadingMessage, onRegenerate, isLas
 
   return (
     <div className={`flex items-end gap-2 px-2 ${isUser ? "flex-row-reverse" : "flex-row"}`}>
-      {isUser ? (
-        user ? (
-          <PurpleLink to={`/profile/${user._id}`}>
-            <img src={user.avatarUrl} alt={user.name || "Usuário"} className="w-8 h-8 rounded-full object-cover" />
-          </PurpleLink>
-        ) : (
-          <div className="w-8 h-8 rounded-full bg-lightBg-tertiary dark:bg-darkBg-tertiary flex items-center justify-center">
-            <UserRound size={20} className="text-lightFg-secondary dark:text-darkFg-secondary" />
-          </div>
-        )
-      ) : (
-        <img src="/denkitsu.png" alt="Denkitsu" className="w-8 h-8 rounded-full object-cover" />
-      )}
+        <div className="w-8 h-8 rounded-full bg-lightBg-tertiary dark:bg-darkBg-tertiary flex items-center justify-center">
+          <img src={(isUser && user) ? user?.avatarUrl : "/denkitsu.png"} alt={isUser ? user?.name || "Usuário" : "Denkitsu"} className="w-8 h-8 rounded-full object-cover" />
+        </div>
       <div className="max-w-[90%] sm:max-w-[67%] md:max-w-[75%] lg:max-w-[90%] break-words rounded-md px-4 py-2 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] text-lightFg-secondary dark:text-darkFg-secondary bg-lightBg-secondary dark:bg-darkBg-secondary opacity-75 dark:opacity-90">
         {msg.routingInfo && (
           <div className="my-2 p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md">

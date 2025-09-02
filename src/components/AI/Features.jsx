@@ -19,7 +19,7 @@ const FeatureListItem = ({ icon: Icon, title, children }) => (
 
 const tabs = [
   { id: "changelog", label: "Changelog", icon: History },
-  { id: "agents", label: "Agentes", icon: Bot },
+  { id: "agents", label: "Agentes", icon: Speech },
   { id: "tools", label: "Ferramentas", icon: Wrench },
   { id: "factory", label: "Fábrica", icon: Factory },
   { id: "media", label: "Mídia", icon: Paperclip },

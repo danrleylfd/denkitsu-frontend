@@ -26,7 +26,7 @@ const Pomodoro = () => {
       if (savedStateJSON) {
         try {
           const savedState = JSON.parse(savedStateJSON)
-          if (savedState.hasOwnProperty('minutes') && savedState.hasOwnProperty('seconds')) {
+          if (savedState.hasOwnProperty("minutes") && savedState.hasOwnProperty("seconds")) {
             setMinutes(savedState.minutes)
             setSeconds(savedState.seconds)
             setMode(savedState.mode)
