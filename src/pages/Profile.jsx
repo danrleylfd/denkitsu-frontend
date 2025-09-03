@@ -41,7 +41,7 @@ const Profile = () => {
         setUserData(updatedUser)
         setName(updatedUser.name)
         setAvatarUrl(updatedUser.avatarUrl)
-        if (user?._id === data._id) updateUser(updatedUser)
+        if (user?._id === updatedUser._id) updateUser(updatedUser)
       } catch (error) {
         console.error("Error fetching user account:", error)
         if (error.response && error.response.data.error) notifyError(error.response.data.error.message)
