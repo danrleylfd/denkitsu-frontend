@@ -82,11 +82,11 @@ const AuthProvider = ({ children }) => {
   }, [completeSignIn])
 
   const updateUser = useCallback(async (providedUser) => {
+    if (!signed) return
     if (providedUser) {
       setUser(providedUser)
       return
     }
-    if (!signed) return
     const userData = await getUserAccount(user._id)
     await storage.local.setItem("@Denkitsu:user", JSON.stringify(userData))
     setUser(userData)
