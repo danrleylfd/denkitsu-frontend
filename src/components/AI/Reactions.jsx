@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react"
-import { Code, Copy, Kanban, Newspaper, Presentation, Download, Mic, RefreshCw, Speech } from "lucide-react"
+import { RefreshCw, Mic, Presentation, Download, Copy, Code, Kanban, Newspaper } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 import { useTasks } from "../../contexts/TasksContext"
@@ -123,6 +123,26 @@ const AIReactions = ({ message, toggleLousa, onRegenerate, isLastMessage }) => {
 
   return (
     <div className="flex items-center gap-2 mt-2">
+      {isLastMessage && (
+        <Button variant="secondary" size="icon" $rounded onClick={onRegenerate} title="Regenerar resposta">
+          <RefreshCw size={16} />
+        </Button>
+      )}
+      {message?.content?.trim().length > 0 && (
+        <Button variant="secondary" size="icon" $rounded onClick={() => speakResponse(message.content)} title="Ler em voz alta" loading={loadingType === "speak" && loading}>
+        {loadingType !== "speak" && <Mic size={16} />}
+        </Button>
+      )}
+      {htmlBlockForPreview && (
+        <Button variant="outline" size="icon" $rounded onClick={() => toggleLousa(htmlBlockForPreview.code)} title="Desenhar na Lousa" loading={loadingType === "preview" && loading}>
+          {loadingType !== "preview" && <Presentation size={16} />}
+        </Button>
+      )}
+      {codeBlocks.length === 1 && (
+        <Button variant="danger" size="icon" $rounded onClick={() => handleDownload(codeBlocks[0].code, codeBlocks[0].lang)} title={`Salvar como .${getFileExtension(codeBlocks[0].lang)}`}>
+          {loadingType !== "download" && <Download size={16} />}
+        </Button>
+      )}
       {message.reasoning && (
         <Button variant="secondary" size="icon" $rounded onClick={() => handleCopy(message.reasoning, "reasoning")} loading={loadingType === "reasoning" && loading} title="Copiar Linha de Raciocínio">
           {loadingType !== "reasoning" && <Copy size={16} />}
@@ -134,26 +154,6 @@ const AIReactions = ({ message, toggleLousa, onRegenerate, isLastMessage }) => {
       {allCodeToCopy && (
         <Button variant="secondary" size="icon" $rounded onClick={() => handleCopy(allCodeToCopy, "code")} title="Copiar Código" loading={loadingType === "code" && loading}>
           {loadingType !== "code" && <Code size={16} />}
-        </Button>
-      )}
-      {codeBlocks.length === 1 && (
-        <Button variant="danger" size="icon" $rounded onClick={() => handleDownload(codeBlocks[0].code, codeBlocks[0].lang)} title={`Salvar como .${getFileExtension(codeBlocks[0].lang)}`}>
-          {loadingType !== "download" && <Download size={16} />}
-        </Button>
-      )}
-      {message?.content?.trim().length > 0 && (
-        <Button variant="secondary" size="icon" $rounded onClick={() => speakResponse(message.content)} title="Ler em voz alta" loading={loadingType === "speak" && loading}>
-        {loadingType !== "speak" && <Mic size={16} />}
-        </Button>
-      )}
-      {isLastMessage && (
-        <Button variant="secondary" size="icon" $rounded onClick={onRegenerate} title="Regenerar resposta">
-          <RefreshCw size={16} />
-        </Button>
-      )}
-      {htmlBlockForPreview && (
-        <Button variant="outline" size="icon" $rounded onClick={() => toggleLousa(htmlBlockForPreview.code)} title="Desenhar na Lousa" loading={loadingType === "preview" && loading}>
-          {loadingType !== "preview" && <Presentation size={16} />}
         </Button>
       )}
       {!isExtension && kanbanableJsonString && (
