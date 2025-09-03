@@ -1,4 +1,4 @@
-const isExtension = !!(window.chrome && chrome.runtime && chrome.runtime.id)
+export const isExtension = !!(window.chrome && chrome.runtime && chrome.runtime.id)
 
 export const storage = {
   local: {

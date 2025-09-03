@@ -6,6 +6,8 @@ import { useTasks } from "../../contexts/TasksContext"
 
 import { publishNews } from "../../services/news"
 
+import { isExtension } from "../../utils/storage"
+
 import Button from "../Button"
 
 const isValidJsonStringArray = (str) => {
@@ -122,96 +124,44 @@ const AIReactions = ({ message, toggleLousa, onRegenerate, isLastMessage }) => {
   return (
     <div className="flex items-center gap-2 mt-2">
       {message.reasoning && (
-        <Button
-          variant="secondary"
-          size="icon"
-          $rounded
-          onClick={() => handleCopy(message.reasoning, "reasoning")}
-          loading={loadingType === "reasoning" && loading}
-          title="Copiar Linha de Raciocínio">
+        <Button variant="secondary" size="icon" $rounded onClick={() => handleCopy(message.reasoning, "reasoning")} loading={loadingType === "reasoning" && loading} title="Copiar Linha de Raciocínio">
           {loadingType !== "reasoning" && <Copy size={16} />}
         </Button>
       )}
-
-      <Button
-        variant="secondary"
-        size="icon"
-        $rounded
-        onClick={() => handleCopy(message.content, "content")}
-        title="Copiar Resposta"
-        loading={loadingType === "content" && loading}>
+      <Button variant="secondary" size="icon" $rounded onClick={() => handleCopy(message.content, "content")} title="Copiar Resposta" loading={loadingType === "content" && loading}>
         {loadingType !== "content" && <Copy size={16} />}
       </Button>
-
-      <Button
-        variant="secondary"
-        size="icon"
-        $rounded
-        onClick={() => speakResponse(message.content)}
-        title="Ler em voz alta"
-        loading={loadingType === "speak" && loading}>
-        {loadingType !== "speak" && <Speech size={16} />}
-      </Button>
-
-      {isLastMessage && (
-        <Button
-          variant="secondary"
-          size="icon"
-          $rounded
-          onClick={onRegenerate}
-          title="Regenerar resposta">
-          <RefreshCw size={16} />
-        </Button>
-      )}
-
       {allCodeToCopy && (
-        <Button
-          variant="secondary"
-          size="icon"
-          $rounded
-          onClick={() => handleCopy(allCodeToCopy, "code")}
-          title="Copiar Código"
-          loading={loadingType === "code" && loading}>
+        <Button variant="secondary" size="icon" $rounded onClick={() => handleCopy(allCodeToCopy, "code")} title="Copiar Código" loading={loadingType === "code" && loading}>
           {loadingType !== "code" && <Code size={16} />}
         </Button>
       )}
-
-      {htmlBlockForPreview && (
-        <Button
-          variant="outline"
-          size="icon"
-          $rounded
-          onClick={() => toggleLousa(htmlBlockForPreview.code)}
-          title="Desenhar na Lousa"
-          loading={loadingType === "preview" && loading}>
-          {loadingType !== "preview" && <Presentation size={16} />}
-        </Button>
-      )}
-
       {codeBlocks.length === 1 && (
-        <Button
-          variant="danger"
-          size="icon"
-          $rounded
-          onClick={() => handleDownload(codeBlocks[0].code, codeBlocks[0].lang)}
-          title={`Salvar como .${getFileExtension(codeBlocks[0].lang)}`}>
+        <Button variant="danger" size="icon" $rounded onClick={() => handleDownload(codeBlocks[0].code, codeBlocks[0].lang)} title={`Salvar como .${getFileExtension(codeBlocks[0].lang)}`}>
           {loadingType !== "download" && <Download size={16} />}
         </Button>
       )}
-
-      {kanbanableJsonString && (
-        <Button
-          variant="warning"
-          size="icon"
-          $rounded
-          onClick={() => handleAddToKanban(kanbanableJsonString)}
-          title="Adicionar ao Kanban"
-          loading={loadingType === "kanban" && loading}>
+      {message?.content?.trim().length > 0 && (
+        <Button variant="secondary" size="icon" $rounded onClick={() => speakResponse(message.content)} title="Ler em voz alta" loading={loadingType === "speak" && loading}>
+        {loadingType !== "speak" && <Mic size={16} />}
+        </Button>
+      )}
+      {isLastMessage && (
+        <Button variant="secondary" size="icon" $rounded onClick={onRegenerate} title="Regenerar resposta">
+          <RefreshCw size={16} />
+        </Button>
+      )}
+      {htmlBlockForPreview && (
+        <Button variant="outline" size="icon" $rounded onClick={() => toggleLousa(htmlBlockForPreview.code)} title="Desenhar na Lousa" loading={loadingType === "preview" && loading}>
+          {loadingType !== "preview" && <Presentation size={16} />}
+        </Button>
+      )}
+      {!isExtension && kanbanableJsonString && (
+        <Button variant="warning" size="icon" $rounded onClick={() => handleAddToKanban(kanbanableJsonString)} title="Adicionar ao Kanban" loading={loadingType === "kanban" && loading}>
           {loadingType !== "kanban" && <Kanban size={16} />}
         </Button>
       )}
-
-      {!hasContextualAction && (
+      {!isExtension && !hasContextualAction && (
         <Button variant="success" size="icon" $rounded onClick={handlePublish} title="Publicar Artigo" loading={loadingType === "news" && loading}>
           {loadingType !== "news" && <Newspaper size={16} />}
         </Button>
