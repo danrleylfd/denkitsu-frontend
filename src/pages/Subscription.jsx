@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useSearchParams } from "react-router-dom"
-import { Crown, CheckCircle2, Star } from "lucide-react"
+import { Crown, CheckCircle2, Star, AlertTriangle } from "lucide-react"
 import { useAuth } from "../contexts/AuthContext"
 import { useNotification } from "../contexts/NotificationContext"
 import { getUserAccount } from "../services/account"
@@ -46,21 +46,18 @@ const Subscription = () => {
       notifyInfo("O processo de assinatura foi cancelado.")
       setSearchParams({})
     }
-  }, [searchParams, setSearchParams])
+  }, [searchParams, setSearchParams, notifySuccess, notifyError, updateUser])
 
   const handleSubscriptionAction = async () => {
     setLoadingStripe(true)
     try {
       const { data } = await api.post("/stripe/create-checkout-session")
       if (data.type === "reactivation" && data.user) {
-        // Se foi reativação, atualiza o estado local!
         updateUser(data.user)
         notifySuccess("Sua assinatura foi reativada com sucesso!")
       } else if (data.type === "checkout" && data.url) {
-        // Se for um novo checkout, redireciona.
         window.location.href = data.url
       } else if (data.url) {
-        // Fallback para o portal do cliente.
         window.location.href = data.url
       }
     } catch (error) {
@@ -70,45 +67,73 @@ const Subscription = () => {
     }
   }
 
+  const renderContent = () => {
+    if (user?.plan === "pro" && user?.stripeSubscriptionStatus === "active") {
+      if (user.subscriptionCancelAtPeriodEnd) {
+        return (
+          <>
+            <h2 className="text-lightFg-primary dark:text-darkFg-primary">Reative sua Assinatura Pro</h2>
+            <div className="flex items-center gap-2 text-amber-base font-semibold bg-amber-base/10 px-4 py-2 rounded-full">
+              <AlertTriangle size={20} />
+              <span>Cancelamento Agendado</span>
+            </div>
+            <p className="text-lightFg-secondary dark:text-darkFg-secondary">
+              Seu acesso Pro continua ativo até o final do período de faturamento. Para não perder seus benefícios, reative sua assinatura.
+            </p>
+            <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingStripe} disabled={loadingStripe}>
+              {!loadingStripe && "Reativar Assinatura"}
+            </Button>
+          </>
+        )
+      }
+      return (
+        <>
+          <h2 className="text-lightFg-primary dark:text-darkFg-primary">Você é um Membro Pro!</h2>
+          <div className="flex items-center gap-2 text-green-base font-semibold bg-green-base/10 px-4 py-2 rounded-full">
+            <CheckCircle2 size={20} />
+            <span>Assinatura Ativa</span>
+          </div>
+          <p className="text-lightFg-secondary dark:text-darkFg-secondary">
+            Obrigado por apoiar o Denkitsu. Gerencie sua assinatura, altere seu método de pagamento ou visualize seu histórico de faturas no portal do
+            cliente.
+          </p>
+          <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingStripe} disabled={loadingStripe}>
+            {!loadingStripe && "Gerenciar Assinatura"}
+          </Button>
+        </>
+      )
+    }
+
+    return (
+      <>
+        <h2 className="text-lightFg-primary dark:text-darkFg-primary">Eleve sua Experiência</h2>
+        <p className="text-lightFg-secondary dark:text-darkFg-secondary">
+          {user?.stripeSubscriptionId
+            ? "Sua assinatura não está mais ativa. Renove para continuar com os benefícios Pro."
+            : "Desbloqueie todo o potencial do Denkitsu com acesso ilimitado e funcionalidades exclusivas."}
+        </p>
+        <div className="text-left w-full bg-lightBg-secondary dark:bg-darkBg-secondary p-4 rounded-lg">
+          <h5 className="text-lightFg-primary dark:text-darkFg-primary pb-2">Benefícios</h5>
+          <ul className="space-y-2">
+            <ProFeature>Acesso a todos os modelos de IA premium.</ProFeature>
+            <ProFeature>Fabricação ilimitada de Agentes personalizados.</ProFeature>
+            <ProFeature>Fabricação ilimitada de Ferramentas customizadas.</ProFeature>
+          </ul>
+        </div>
+        <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingStripe} disabled={loadingStripe}>
+          {!loadingStripe && (user?.stripeSubscriptionId ? "Renovar Assinatura" : "Assinar por R$ 15,00/mês")}
+        </Button>
+      </>
+    )
+  }
+
   return (
     <SideMenu ContentView={ContentView} className="bg-cover bg-brand-purple">
       <Paper className="w-full max-w-md flex flex-col items-center gap-4 text-center bg-lightBg-primary dark:bg-darkBg-primary">
         <div className="w-16 h-16 rounded-full bg-amber-base/10 flex items-center justify-center border-2 border-amber-base">
           <Crown size={32} className="text-amber-base" />
         </div>
-        {user?.plan === "pro" && user?.stripeSubscriptionStatus === "active" ? (
-          <>
-            <h2 className="text-lightFg-primary dark:text-darkFg-primary">Você é um Membro!</h2>
-            <div className="flex items-center gap-2 text-green-base font-semibold bg-green-base/10 px-4 py-2 rounded-full">
-              <CheckCircle2 size={20} />
-              <span>Assinatura Ativa</span>
-            </div>
-            <p className="text-lightFg-secondary dark:text-darkFg-secondary">
-              Obrigado por apoiar o Denkitsu. Gerencie sua assinatura, altere seu método de pagamento ou visualize seu histórico de faturas no portal do cliente.
-            </p>
-            <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingStripe} disabled={loadingStripe}>
-              {!loadingStripe && "Gerenciar Assinatura"}
-            </Button>
-          </>
-        ) : (
-          <>
-            <h2 className="text-lightFg-primary dark:text-darkFg-primary">Eleve sua Experiência</h2>
-            <p className="text-lightFg-secondary dark:text-darkFg-secondary">
-              {user?.stripeSubscriptionId ? "Sua assinatura está cancelada, mas você ainda tem acesso Pro. Reative para garantir a renovação." : "Desbloqueie todo o potencial do Denkitsu com acesso ilimitado e funcionalidades exclusivas."}
-            </p>
-            <div className="text-left w-full bg-lightBg-secondary dark:bg-darkBg-secondary p-4 rounded-lg">
-              <h5 className="text-lightFg-primary dark:text-darkFg-primary pb-2">Benefícios</h5>
-              <ul className="space-y-2">
-                <ProFeature>Acesso a todos os modelos de IA premium.</ProFeature>
-                <ProFeature>Fabricação ilimitada de Agentes personalizados.</ProFeature>
-                <ProFeature>Fabricação ilimitada de Ferramentas customizadas.</ProFeature>
-              </ul>
-            </div>
-            <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingStripe} disabled={loadingStripe}>
-              {!loadingStripe && (user?.stripeSubscriptionId ? "Reativar Assinatura" : "Assinar por R$ 15,00/mês")}
-            </Button>
-          </>
-        )}
+        {renderContent()}
       </Paper>
     </SideMenu>
   )
