@@ -69,18 +69,12 @@ const ToolProvider = ({ children }) => {
       return
     }
 
-    if (signed && user?.plan === "free") {
-      if (activeTools.size >= 3) {
-        notifyWarning("Plano Free permite no máximo 3 ferramentas ativas. Desative uma ou faça upgrade para o Plano Pro.")
-        return
-      }
-    }
-
     setActiveTools(prevActiveTools => {
       const newActiveTools = new Set(prevActiveTools)
       const wasActive = newActiveTools.has(toolKey)
       if (wasActive) newActiveTools.delete(toolKey)
-      else newActiveTools.add(toolKey)
+      else if (activeTools.size < 3) newActiveTools.add(toolKey)
+      else notifyWarning("Plano Free permite no máximo 3 ferramentas ativas. Desative uma ou faça upgrade para o Plano Pro.")
       storage.local.setItem(`@Denkitsu:${toolKey}`, JSON.stringify(!wasActive))
       return newActiveTools
     })
