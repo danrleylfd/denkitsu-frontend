@@ -11,9 +11,7 @@ import { isExtension } from "../../utils/storage"
 import Button from "../Button"
 
 const isValidJsonStringArray = (str) => {
-  if (typeof str !== "string" || !str.trim().startsWith("[") || !str.trim().endsWith("]")) {
-    return false
-  }
+  if (typeof str !== "string" || !str.trim().startsWith("[") || !str.trim().endsWith("]")) return false
   try {
     const parsed = JSON.parse(str)
     return Array.isArray(parsed) && parsed.every((item) => typeof item === "string")
@@ -41,9 +39,7 @@ const AIReactions = ({ message, toggleLousa, onRegenerate, isLastMessage }) => {
   const { setTasks } = useTasks()
 
   const { allCodeToCopy, htmlBlockForPreview, kanbanableJsonString, codeBlocks } = useMemo(() => {
-    if (!message?.content) {
-      return { allCodeToCopy: null, htmlBlockForPreview: null, kanbanableJsonString: null, codeBlocks: [] }
-    }
+    if (!message?.content) return { allCodeToCopy: null, htmlBlockForPreview: null, kanbanableJsonString: null, codeBlocks: [] }
     const blocks = [...message.content.matchAll(/^```(\w*)\n([\s\S]+?)\n^```/gm)].map((match) => ({
       lang: match[1].toLowerCase() || "md",
       code: match[2].trim()
@@ -52,11 +48,8 @@ const AIReactions = ({ message, toggleLousa, onRegenerate, isLastMessage }) => {
     const htmlBlock = blocks.find((block) => block.lang === "html") || null
     const firstCodeBlockContent = blocks.length > 0 ? blocks[0].code : null
     let kanbanJson = null
-    if (firstCodeBlockContent && isValidJsonStringArray(firstCodeBlockContent)) {
-      kanbanJson = firstCodeBlockContent
-    } else if (!firstCodeBlockContent && isValidJsonStringArray(message.content)) {
-      kanbanJson = message.content
-    }
+    if (firstCodeBlockContent && isValidJsonStringArray(firstCodeBlockContent)) kanbanJson = firstCodeBlockContent
+    else if (!firstCodeBlockContent && isValidJsonStringArray(message.content)) kanbanJson = message.content
     return {
       allCodeToCopy: allCode,
       htmlBlockForPreview: htmlBlock,
@@ -106,9 +99,7 @@ const AIReactions = ({ message, toggleLousa, onRegenerate, isLastMessage }) => {
         const sourceText = contentParts[1]
         const urlRegex = /\((https?:\/\/[^\s)]+)\)/
         const match = sourceText.match(urlRegex)
-        if (match && match[1]) {
-          source = match[1]
-        }
+        if (match && match[1]) source = match[1]
       }
       await publishNews(message.content, source)
     } catch (error) {
@@ -143,14 +134,16 @@ const AIReactions = ({ message, toggleLousa, onRegenerate, isLastMessage }) => {
           {loadingType !== "download" && <Download size={16} />}
         </Button>
       )}
-      {message.reasoning && (
+      {message?.reasoning?.trim().length > 0 && (
         <Button variant="secondary" size="icon" $rounded onClick={() => handleCopy(message.reasoning, "reasoning")} loading={loadingType === "reasoning" && loading} title="Copiar Linha de Raciocínio">
           {loadingType !== "reasoning" && <Copy size={16} />}
         </Button>
       )}
-      <Button variant="secondary" size="icon" $rounded onClick={() => handleCopy(message.content, "content")} title="Copiar Resposta" loading={loadingType === "content" && loading}>
-        {loadingType !== "content" && <Copy size={16} />}
-      </Button>
+      {message.content?.trim().length > 0 && (
+        <Button variant="secondary" size="icon" $rounded onClick={() => handleCopy(message.content, "content")} title="Copiar Resposta" loading={loadingType === "content" && loading}>
+          {loadingType !== "content" && <Copy size={16} />}
+        </Button>
+      )}
       {allCodeToCopy && (
         <Button variant="secondary" size="icon" $rounded onClick={() => handleCopy(allCodeToCopy, "code")} title="Copiar Código" loading={loadingType === "code" && loading}>
           {loadingType !== "code" && <Code size={16} />}
