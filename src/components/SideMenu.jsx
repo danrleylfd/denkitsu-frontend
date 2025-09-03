@@ -201,12 +201,6 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
             {isOpen && <span className="ml-1 select-none">Início</span>}
           </Link>
           {signed && (
-            <Link to="/subscription" className={`${menuItemClass} !text-amber-base !hover:bg-amber-light !active:bg-amber-dark ${pathname === "/subscription" ? "border-l-4 border-amber-base" : ""} ${!isOpen && "justify-center"}`} title="Plano Pro">
-              <div className="w-6 h-6 flex items-center justify-center"><Crown size={16} /></div>
-              {isOpen && <span className="ml-1 select-none font-bold">{user.plan === "free" ? "Upgrade" : "Gerenciar Assinatura"}</span>}
-            </Link>
-          )}
-          {signed && (
             <SubMenu
               isOpen={isOpen}
               title="Denkitsu AI"
@@ -240,6 +234,12 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
               <div className="w-6 h-6 flex items-center justify-center">{theme === "dark" ? <Moon size={16} /> : <Sun size={16} />}</div>
               {isOpen && <span className="ml-1 select-none">Alternar Tema</span>}
             </button>
+            {signed && (
+              <Link to="/subscription" className={`${menuItemClass} !text-amber-base !hover:bg-amber-light !active:bg-amber-dark ${pathname === "/subscription" ? "border-l-4 border-amber-base" : ""} ${!isOpen && "justify-center"}`} title={user.plan === "free" ? "Upgrade" : "Gerenciar Assinatura"}>
+                <div className="w-6 h-6 flex items-center justify-center"><Crown size={16} /></div>
+                {isOpen && <span className="ml-1 select-none font-bold">{user.plan === "free" ? "Upgrade" : "Gerenciar Assinatura"}</span>}
+              </Link>
+            )}
             <SubMenu
               isOpen={isOpen}
               title="Conta"
