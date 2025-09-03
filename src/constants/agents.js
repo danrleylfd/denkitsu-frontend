@@ -11,5 +11,4 @@ export const AGENTS_DEFINITIONS = [
   { value: "Redator", Icon: Newspaper, description: "Perfeito para escrever textos concisos, anúncios e notícias." },
   { value: "Secretário", Icon: ListTree, description: "Excelente para organizar informações, criar listas e formatar dados." },
   { value: "Transcritor", Icon: Speech, description: "Especialista em transcrever áudio para texto com alta precisão." },
-  { name: "Suporte", Icon: "HeartHandshake", description: "Agente especializado em ajudar com questões da conta, como assinaturas.", disabled: true },
 ]
