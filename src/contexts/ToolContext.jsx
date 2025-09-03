@@ -13,7 +13,7 @@ const ToolProvider = ({ children }) => {
   const [tools, setTools] = useState({ internalTools: [], backendTools: [], customTools: [] })
   const [loadingTools, setLoadingTools] = useState(true)
   const [activeTools, setActiveTools] = useState(new Set())
-  const { signed } = useAuth()
+  const { signed, user } = useAuth()
   const { notifyWarning } = useNotification()
 
   const fetchTools = useCallback(async () => {
