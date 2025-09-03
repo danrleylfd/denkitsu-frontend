@@ -132,12 +132,11 @@ const Subscription = () => {
         <div className="text-left w-full bg-lightBg-secondary dark:bg-darkBg-secondary p-4 rounded-lg">
           <h5 className="text-lightFg-primary dark:text-darkFg-primary pb-2">Benefícios</h5>
           <ul className="space-y-2">
-            <ProFeature>Acesso a todos os modelos de IA premium.</ProFeature>
-            <ProFeature>Fabricação ilimitada de Agentes personalizados.</ProFeature>
-            <ProFeature>Fabricação ilimitada de Ferramentas customizadas.</ProFeature>
+            <ProFeature>Fabricação/Aquisição ilimitada de Agentes personalizados.</ProFeature>
+            <ProFeature>Fabricação/Aquisição ilimitada de Ferramentas customizadas.</ProFeature>
           </ul>
         </div>
-        <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingAction} disabled={loadingAction}>
+        <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingAction} disabled={true || loadingAction}>
           {!loadingAction && (user?.stripeSubscriptionId ? "Renovar Assinatura" : "Assinar por R$ 15,00/mês")}
         </Button>
       </>
