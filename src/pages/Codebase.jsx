@@ -66,9 +66,9 @@ const deleteHandle = async (key) => {
   })
 }
 
-const getRecentItems = () => {
+const getRecentItems = async () => {
   try {
-    const items = storage.local.getItem(RECENTS_KEY)
+    const items = await storage.local.getItem(RECENTS_KEY)
     return items ? JSON.parse(items) : []
   } catch (error) {
     console.error("Falha ao ler itens recentes do localStorage", error)
@@ -76,24 +76,24 @@ const getRecentItems = () => {
   }
 }
 
-const addRecentItem = (newItem) => {
-  let items = getRecentItems()
+const addRecentItem = async (newItem) => {
+  let items = await getRecentItems()
   items = items.filter(item => item.id !== newItem.id)
   items.unshift(newItem)
   items.splice(MAX_RECENTS)
-  storage.local.setItem(RECENTS_KEY, JSON.stringify(items))
+  await storage.local.setItem(RECENTS_KEY, JSON.stringify(items))
   return items
 }
 
-const removeRecentItem = (itemId) => {
-  let items = getRecentItems()
+const removeRecentItem = async (itemId) => {
+  let items = await getRecentItems()
   items = items.filter(item => item.id !== itemId)
-  storage.local.setItem(RECENTS_KEY, JSON.stringify(items))
+  await storage.local.setItem(RECENTS_KEY, JSON.stringify(items))
   return items
 }
 
-const clearRecentItems = () => {
-  storage.local.removeItem(RECENTS_KEY)
+const clearRecentItems = async () => {
+  await storage.local.removeItem(RECENTS_KEY)
   return []
 }
 
@@ -402,6 +402,9 @@ const FileExplorer = memo(({ fileTree, allFiles, selectedFiles, setSelectedFiles
 })
 
 const Codebase = () => {
+  const { user } = useAuth()
+  const { notifyError, notifyInfo, notifyWarning } = useNotification()
+
   const [step, setStep] = useState("input")
   const [isProcessing, setIsProcessing] = useState(false)
   const [statusText, setStatusText] = useState("")
@@ -416,21 +419,23 @@ const Codebase = () => {
   const [projectSource, setProjectSource] = useState(null)
   const [fileTree, setFileTree] = useState([])
 
-  const { notifyError, notifyInfo, notifyWarning } = useNotification()
-  const { user } = useAuth()
 
   useEffect(() => {
-    setRecentItems(getRecentItems())
+    const loadRecentItems = async () => {
+      const items = await getRecentItems()
+      setRecentItems(items)
+    }
+    loadRecentItems()
   }, [])
 
-  const handleFileProcessing = useCallback((files, name, type, handleAvailable = false) => {
+  const handleFileProcessing = useCallback(async (files, name, type, handleAvailable = false) => {
     const tree = buildFileTree(files)
     setFileTree(tree)
     setAllFiles(files)
     setSelectedFiles(new Set(files.map(f => f.path)))
     setProjectName(name)
     setProjectSource(type)
-    const updatedRecents = addRecentItem({ id: `${type}-${name}`, type, name, timestamp: Date.now(), handleAvailable })
+    const updatedRecents = await addRecentItem({ id: `${type}-${name}`, type, name, timestamp: Date.now(), handleAvailable })
     setRecentItems(updatedRecents)
     setStep("select")
   }, [])
@@ -664,10 +669,8 @@ const Codebase = () => {
 
   const handleRemoveRecent = useCallback(async (item) => {
     try {
-      if (item.type === "local" && item.handleAvailable) {
-        await deleteHandle(item.name)
-      }
-      const updatedItems = removeRecentItem(item.id)
+      if (item.type === "local" && item.handleAvailable) await deleteHandle(item.name)
+      const updatedItems = await removeRecentItem(item.id)
       setRecentItems(updatedItems)
       notifyInfo(`"${item.name}" removido do histórico.`)
     } catch (error) {
@@ -678,20 +681,18 @@ const Codebase = () => {
 
   const handleClearRecents = useCallback(async () => {
     if (window.confirm("Tem certeza que deseja limpar todo o histórico de projetos recentes?")) {
-        try {
-            const itemsToClear = getRecentItems()
-            for (const item of itemsToClear) {
-                if (item.type === "local" && item.handleAvailable) {
-                    await deleteHandle(item.name)
-                }
-            }
-            const updatedItems = clearRecentItems()
-            setRecentItems(updatedItems)
-            notifyInfo("Histórico limpo com sucesso.")
-        } catch (error) {
-            console.error("Erro ao limpar histórico:", error)
-            notifyError("Não foi possível limpar completamente o histórico do banco de dados.")
+      try {
+        const itemsToClear = await getRecentItems()
+        for (const item of itemsToClear) {
+          if (item.type === "local" && item.handleAvailable) await deleteHandle(item.name)
         }
+        const updatedItems = await clearRecentItems()
+        setRecentItems(updatedItems)
+        notifyInfo("Histórico limpo com sucesso.")
+      } catch (error) {
+        console.error("Erro ao limpar histórico:", error)
+        notifyError("Não foi possível limpar completamente o histórico do banco de dados.")
+      }
     }
   }, [])
 
