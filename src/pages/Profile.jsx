@@ -52,7 +52,7 @@ const Profile = () => {
       }
     }
     fetchUserData()
-  }, [connectedUserId, navigate, user?._id])
+  }, [])
 
   const handleGithubConnect = () => {
     const token = sessionStorage.getItem("@Denkitsu:token")
