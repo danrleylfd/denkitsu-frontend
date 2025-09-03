@@ -1,5 +1,8 @@
 import { createContext, useState, useEffect, useContext, useCallback, useMemo } from "react"
+
 import { useAuth } from "./AuthContext"
+import { useNotification } from "./NotificationContext"
+
 import { getTools, createTool, updateTool, deleteTool } from "../services/tool"
 import { listTools } from "../services/aiChat"
 import { storage } from "../utils/storage"
@@ -11,6 +14,7 @@ const ToolProvider = ({ children }) => {
   const [loadingTools, setLoadingTools] = useState(true)
   const [activeTools, setActiveTools] = useState(new Set())
   const { signed } = useAuth()
+  const { notifyWarning } = useNotification()
 
   const fetchTools = useCallback(async () => {
     try {
@@ -63,6 +67,13 @@ const ToolProvider = ({ children }) => {
     if (typeof toolKey === "undefined") {
       console.error("handleToolToggle foi chamado com uma toolKey indefinida.")
       return
+    }
+
+    if (isActivating && user?.plan === "free") {
+      if (activeTools.size >= 3) {
+        notifyWarning("Plano Free permite no máximo 3 ferramentas ativas. Desative uma ou faça upgrade para o Plano Pro.")
+        return
+      }
     }
 
     setActiveTools(prevActiveTools => {
