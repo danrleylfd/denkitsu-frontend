@@ -69,7 +69,7 @@ const ToolProvider = ({ children }) => {
       return
     }
 
-    if (isActivating && user?.plan === "free") {
+    if (user?.plan === "free") {
       if (activeTools.size >= 3) {
         notifyWarning("Plano Free permite no máximo 3 ferramentas ativas. Desative uma ou faça upgrade para o Plano Pro.")
         return
