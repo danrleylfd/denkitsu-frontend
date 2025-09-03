@@ -68,8 +68,8 @@ const Profile = () => {
     setLoading(true)
     try {
       const updatedUser = await unlinkGithubAccount()
+      await updateUser(updatedUser)
       setUserData(updatedUser)
-      updateUser(updatedUser)
       notifyInfo("Conta do GitHub desvinculada com sucesso!")
     } catch (error) {
       console.error("Error unlinking GitHub account:", error)
@@ -97,8 +97,8 @@ const Profile = () => {
     setLoading(true)
     try {
       const updatedUser = await editUserAccount({ name, avatarUrl })
+      await updateUser(updatedUser)
       setUserData(updatedUser)
-      updateUser(updatedUser)
       setIsEditing(false)
       notifyInfo("Perfil atualizado com sucesso!")
     } catch (error) {

@@ -2,6 +2,8 @@ import { createContext, useContext, useState, useEffect, useCallback } from "rea
 
 import api from "../services"
 
+import { getUserAccount } from "../services/account"
+
 import { storage } from "../utils/storage"
 
 const AuthContext = createContext({})
@@ -12,13 +14,6 @@ const AuthProvider = ({ children }) => {
 
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
-
-  const signOut = useCallback(async () => {
-    await storage.local.clear()
-    await storage.local.clear()
-    setUser(null)
-    delete api.defaults.headers.Authorization
-  }, [])
 
   const completeSignIn = useCallback(async (token, refreshToken, userData) => {
     await storage.local.setItem("@Denkitsu:user", JSON.stringify(userData))
@@ -63,29 +58,42 @@ const AuthProvider = ({ children }) => {
     }
   }, [signOut, completeSignIn])
 
-  const signIn = useCallback(async ({ email, password }) => {
-    const response = await api.post("/auth/signin", { email, password })
-    const { token, refreshToken, user: userData } = response.data
-    await completeSignIn(token, refreshToken, userData)
-  }, [completeSignIn])
-
   const signUp = useCallback(async ({ name, email, password }) => {
     const response = await api.post("/auth/signup", { name, email, password })
     const { token, refreshToken, user: userData } = response.data
     await completeSignIn(token, refreshToken, userData)
   }, [completeSignIn])
 
+  const signIn = useCallback(async ({ email, password }) => {
+    const response = await api.post("/auth/signin", { email, password })
+    const { token, refreshToken, user: userData } = response.data
+    await completeSignIn(token, refreshToken, userData)
+  }, [completeSignIn])
+
+  const signOut = useCallback(async () => {
+    await storage.local.clear()
+    await storage.local.clear()
+    setUser(null)
+    delete api.defaults.headers.Authorization
+  }, [])
+
   const completeOAuthSignIn = useCallback(async ({ token, refreshToken, user }) => {
     await completeSignIn(token, refreshToken, user)
   }, [completeSignIn])
 
-  const updateUser = useCallback(async (newUserData) => {
-    await storage.local.setItem("@Denkitsu:user", JSON.stringify(newUserData))
-    setUser(newUserData)
-  }, [])
+  const updateUser = useCallback(async (providedUser) => {
+    if (providedUser) {
+      setUser(providedUser)
+      return
+    }
+    if (!signed) return
+    const userData = await getUserAccount(user._id)
+    await storage.local.setItem("@Denkitsu:user", JSON.stringify(userData))
+    setUser(userData)
+  }, [user])
 
   return (
-    <AuthContext.Provider value={{ signed: !!user, user, loading, signIn, signUp, signOut, updateUser, completeOAuthSignIn }}>
+    <AuthContext.Provider value={{ signed: !!user, user, loading, signUp, signIn, signOut, updateUser, completeOAuthSignIn }}>
       {children}
     </AuthContext.Provider>
   )

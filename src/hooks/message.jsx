@@ -117,10 +117,7 @@ const useMessage = (props) => {
       })
     } finally {
       setLoadingMessages(false)
-      if (signed && selectedAgent === "Suporte") {
-        const userData = await getUserAccount(user._id)
-        updateUser(userData)
-      }
+      if (signed && selectedAgent === "Suporte") updateUser()
     }
   }, [
     aiKey, aiProvider, model, freeModels, payModels, groqModels, activeTools, stream, selectedAgent, customProviderUrl,
