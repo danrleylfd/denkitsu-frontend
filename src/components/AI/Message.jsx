@@ -61,7 +61,7 @@ const AIMessage = ({ msg, user, toggleLousa, loadingMessage, onRegenerate, isLas
         }
         {loadingMessage && !hasContentStarted && msg.toolCalls?.length === 0 ? <Button variant="outline" size="icon" $rounded loading={true} disabled /> : renderContent()}
         {msg.timestamp && (
-          <small className="ml-auto pl-2 text-xs text-lightFg-secondary dark:text-darkFg-secondary whitespace-nowrap">
+          <small className="ml-auto text-xs text-lightFg-secondary dark:text-darkFg-secondary whitespace-nowrap">
             {new Date(msg.timestamp).toLocaleString("pt-BR")}
           </small>
         )}
