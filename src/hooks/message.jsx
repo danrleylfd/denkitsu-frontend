@@ -1,5 +1,8 @@
 import { useState, useCallback } from "react"
+
+import { useAuth } from "../contexts/AuthContext"
 import { useNotification } from "../contexts/NotificationContext"
+
 import { sendMessageStream, sendMessage } from "../services/aiChat"
 import { transcribeAudio } from "../services/audio"
 
@@ -9,6 +12,8 @@ const useMessage = (props) => {
     freeModels, payModels, groqModels, selectedAgent, customProviderUrl,
     setUserPrompt, setImageUrls, setAudioFile, setMessages, setSelectedAgent
   } = props
+
+  const { signed, updateUser } = useAuth()
 
   const { notifyError, notifyWarning, notifyInfo, notifySuccess } = useNotification()
   const [loadingMessages, setLoadingMessages] = useState(false)
@@ -110,6 +115,7 @@ const useMessage = (props) => {
         return prev
       })
     } finally {
+      if (signed && selectedAgent === "Suporte") updateUser()
       setLoadingMessages(false)
     }
   }, [
