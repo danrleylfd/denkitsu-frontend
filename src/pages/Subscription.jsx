@@ -46,7 +46,7 @@ const Subscription = () => {
       notifyInfo("O processo de assinatura foi cancelado.")
       setSearchParams({})
     }
-  }, [searchParams, setSearchParams, notifySuccess, notifyInfo, notifyError, updateUser])
+  }, [searchParams, setSearchParams])
 
   const handleSubscriptionAction = async () => {
     setLoadingStripe(true)
