@@ -11,11 +11,7 @@ import SideMenu from "../components/SideMenu"
 import Paper from "../components/Paper"
 import Button from "../components/Button"
 
-const ContentView = ({ children }) => (
-  <main className="flex justify-center items-center p-2 gap-2 w-full min-h-dvh">
-    {children}
-  </main>
-)
+const ContentView = ({ children }) => <main className="flex justify-center items-center p-2 gap-2 w-full min-h-dvh">{children}</main>
 
 const ProFeature = ({ children }) => (
   <li className="flex items-center gap-3">
@@ -107,8 +103,7 @@ const Subscription = () => {
             <span>Assinatura Ativa</span>
           </div>
           <p className="text-lightFg-secondary dark:text-darkFg-secondary">
-            Obrigado por apoiar o Denkitsu. Gerencie sua assinatura, altere seu método de pagamento ou visualize seu histórico de faturas no portal do
-            cliente.
+            Obrigado por apoiar o Denkitsu. Gerencie sua assinatura, altere seu método de pagamento ou visualize seu histórico de faturas no portal do cliente.
           </p>
           <div className="flex items-center gap-2">
             <Button variant="secondary" $rounded onClick={handleCancelSubscription} loading={loadingCancel} disabled={loadingAction || loadingCancel}>
@@ -139,7 +134,7 @@ const Subscription = () => {
           </ul>
         </div>
         <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingAction} disabled={true || loadingAction}>
-          {!loadingAction && (user?.stripeSubscriptionId ? "Renovar Assinatura" : "Em breve" )} // "Assinar por R$ 15,00/mês"
+          {!loadingAction && (user?.stripeSubscriptionId ? "Renovar Assinatura" : "Em breve")}
         </Button>
       </>
     )
