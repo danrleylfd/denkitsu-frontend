@@ -144,7 +144,7 @@ const Profile = () => {
           <div className="flex items-center gap-4">
             <Avatar src={avatarUrl || userData.avatarUrl} alt={name || userData.name} size={20} isPro={userData.plan === "pro"} />
             {isEditing ? (
-              <form className="flex-1 flex flex-col gap-2" onSubmit={handleSaveChanges}>
+              <form className="flex-1 flex flex-col" onSubmit={handleSaveChanges}>
                 <Input id="name" placeholder="Nome" value={name} onChange={(e) => setName(e.target.value)} disabled={loading} />
                 <Input id="avatarUrl" placeholder="URL do Avatar" value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} disabled={loading} />
               </form>
