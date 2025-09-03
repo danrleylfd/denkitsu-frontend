@@ -46,27 +46,25 @@ const Subscription = () => {
       notifyInfo("O processo de assinatura foi cancelado.")
       setSearchParams({})
     }
-  }, [searchParams, setSearchParams])
+  }, [searchParams, setSearchParams, notifySuccess, notifyInfo, notifyError, updateUser])
 
-  const handleUpgrade = async () => {
+  const handleSubscriptionAction = async () => {
     setLoadingStripe(true)
     try {
       const { data } = await api.post("/stripe/create-checkout-session")
-      if (data.url) window.location.href = data.url
+      if (data.type === "reactivation" && data.user) {
+        // Se foi reativação, atualiza o estado local!
+        updateUser(data.user)
+        notifySuccess("Sua assinatura foi reativada com sucesso!")
+      } else if (data.type === "checkout" && data.url) {
+        // Se for um novo checkout, redireciona.
+        window.location.href = data.url
+      } else if (data.url) {
+        // Fallback para o portal do cliente.
+        window.location.href = data.url
+      }
     } catch (error) {
-      notifyError("Não foi possível iniciar o processo de assinatura. Tente novamente.")
-    } finally {
-      setLoadingStripe(false)
-    }
-  }
-
-  const handleManageSubscription = async () => {
-    setLoadingStripe(true)
-    try {
-      const { data } = await api.post("/stripe/create-customer-portal")
-      if (data.url) window.location.href = data.url
-    } catch (error) {
-      notifyError("Não foi possível acessar o portal do cliente. Tente novamente.")
+      notifyError("Não foi possível gerenciar sua assinatura. Tente novamente.")
     } finally {
       setLoadingStripe(false)
     }
@@ -78,7 +76,7 @@ const Subscription = () => {
         <div className="w-16 h-16 rounded-full bg-amber-base/10 flex items-center justify-center border-2 border-amber-base">
           <Crown size={32} className="text-amber-base" />
         </div>
-        {user?.plan === "pro" ? (
+        {user?.plan === "pro" && user?.stripeSubscriptionStatus === "active" ? (
           <>
             <h2 className="text-lightFg-primary dark:text-darkFg-primary">Você é um Membro!</h2>
             <div className="flex items-center gap-2 text-green-base font-semibold bg-green-base/10 px-4 py-2 rounded-full">
@@ -88,7 +86,7 @@ const Subscription = () => {
             <p className="text-lightFg-secondary dark:text-darkFg-secondary">
               Obrigado por apoiar o Denkitsu. Gerencie sua assinatura, altere seu método de pagamento ou visualize seu histórico de faturas no portal do cliente.
             </p>
-            <Button variant="primary" $rounded onClick={handleManageSubscription} loading={loadingStripe} disabled={loadingStripe}>
+            <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingStripe} disabled={loadingStripe}>
               {!loadingStripe && "Gerenciar Assinatura"}
             </Button>
           </>
@@ -96,9 +94,9 @@ const Subscription = () => {
           <>
             <h2 className="text-lightFg-primary dark:text-darkFg-primary">Eleve sua Experiência</h2>
             <p className="text-lightFg-secondary dark:text-darkFg-secondary">
-              Desbloqueie todo o potencial do Denkitsu com acesso ilimitado e funcionalidades exclusivas.
+              {user?.stripeSubscriptionId ? "Sua assinatura está cancelada, mas você ainda tem acesso Pro. Reative para garantir a renovação." : "Desbloqueie todo o potencial do Denkitsu com acesso ilimitado e funcionalidades exclusivas."}
             </p>
-            <div className="text-left w-full bg-lightBg-secondary dark:bg-darkBg-secondary p-2 rounded-lg">
+            <div className="text-left w-full bg-lightBg-secondary dark:bg-darkBg-secondary p-4 rounded-lg">
               <h5 className="text-lightFg-primary dark:text-darkFg-primary pb-2">Benefícios</h5>
               <ul className="space-y-2">
                 <ProFeature>Acesso a todos os modelos de IA premium.</ProFeature>
@@ -106,8 +104,8 @@ const Subscription = () => {
                 <ProFeature>Fabricação ilimitada de Ferramentas customizadas.</ProFeature>
               </ul>
             </div>
-            <Button variant="primary" $rounded onClick={handleUpgrade} loading={loadingStripe} disabled={loadingStripe}>
-              {!loadingStripe && "Assinar por R$ 15,00/mês"}
+            <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingStripe} disabled={loadingStripe}>
+              {!loadingStripe && (user?.stripeSubscriptionId ? "Reativar Assinatura" : "Assinar por R$ 15,00/mês")}
             </Button>
           </>
         )}
