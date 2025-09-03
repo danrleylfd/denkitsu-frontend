@@ -92,7 +92,6 @@ const ModelProvider = ({ children }) => {
     })
   }, [])
 
-
   useEffect(() => {
     if (!isInitialized) return
     storage.local.setItem("@Denkitsu:aiProvider", aiProvider)

@@ -84,7 +84,7 @@ const ToolProvider = ({ children }) => {
       storage.local.setItem(`@Denkitsu:${toolKey}`, JSON.stringify(!wasActive))
       return newActiveTools
     })
-  }, [])
+  }, [activeTools])
 
   const addTool = async (toolData) => {
     const newTool = await createTool(toolData)
