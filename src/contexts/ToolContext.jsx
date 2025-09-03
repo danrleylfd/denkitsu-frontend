@@ -68,7 +68,6 @@ const ToolProvider = ({ children }) => {
       console.error("handleToolToggle foi chamado com uma toolKey indefinida.")
       return
     }
-
     setActiveTools(prevActiveTools => {
       const newActiveTools = new Set(prevActiveTools)
       const wasActive = newActiveTools.has(toolKey)
