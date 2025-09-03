@@ -5,7 +5,7 @@ import SideMenu from "../../components/SideMenu"
 import { Loader2 } from "lucide-react"
 
 const GithubCallback = () => {
-  const { completeOAuthSignIn } = useAuth()
+  const { signWithOAuth } = useAuth()
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
 
@@ -16,12 +16,12 @@ const GithubCallback = () => {
 
     if (token && userParam) {
       const user = JSON.parse(decodeURIComponent(userParam))
-      completeOAuthSignIn({ token, refreshToken, user })
+      signWithOAuth({ token, refreshToken, user })
       navigate("/")
     } else {
       navigate("/signin?error=auth_failed")
     }
-  }, [searchParams, navigate, completeOAuthSignIn])
+  }, [searchParams, navigate, signWithOAuth])
 
   return (
     <SideMenu>
