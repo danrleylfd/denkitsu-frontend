@@ -87,12 +87,10 @@ const AIProvider = ({ children }) => {
     const systemMessage = { role: "system", content: customPrompt }
     setMessages([systemMessage])
     storage.local.setItem("@Denkitsu:messages", JSON.stringify([systemMessage]))
-  }, [signed, customPrompt])
+  }, [customPrompt])
 
-  useEffect(() => { clearHistory() }, [signed])
-
-  const toggleStream = useCallback(() => setStream(prev => !prev), [])
-  const toggleAutoScroll = useCallback(() => setAutoScroll(prev => !prev), [])
+  const toggleStream = () => setStream(prev => !prev)
+  const toggleAutoScroll = () => setAutoScroll(prev => !prev)
 
   const speakResponse = useCallback((text) => {
     if ("speechSynthesis" in window) {

@@ -25,7 +25,8 @@ const ProFeature = ({ children }) => (
 const Subscription = () => {
   const { user, updateUser } = useAuth()
   const { notifyError, notifySuccess, notifyInfo } = useNotification()
-  const [loadingStripe, setLoadingStripe] = useState(false)
+  const [loadingAction, setLoadingAction] = useState(false)
+  const [loadingCancel, setLoadingCancel] = useState(false)
   const [searchParams, setSearchParams] = useSearchParams()
 
   useEffect(() => {
@@ -49,7 +50,7 @@ const Subscription = () => {
   }, [searchParams, setSearchParams, notifySuccess, notifyError, updateUser])
 
   const handleSubscriptionAction = async () => {
-    setLoadingStripe(true)
+    setLoadingAction(true)
     try {
       const { data } = await api.post("/stripe/create-checkout-session")
       if (data.type === "reactivation" && data.user) {
@@ -60,13 +61,13 @@ const Subscription = () => {
     } catch (error) {
       notifyError("Não foi possível gerenciar sua assinatura. Tente novamente.")
     } finally {
-      setLoadingStripe(false)
+      setLoadingAction(false)
     }
   }
 
   const handleCancelSubscription = async () => {
     if (!window.confirm("Tem certeza que deseja cancelar sua assinatura? Você manterá o acesso Pro até o final do período de cobrança.")) return
-    setLoadingStripe(true)
+    setLoadingCancel(true)
     try {
       const { data } = await api.post("/stripe/cancel-subscription")
       updateUser(data.user)
@@ -74,7 +75,7 @@ const Subscription = () => {
     } catch (error) {
       notifyError(error.response?.data?.error || "Não foi possível cancelar sua assinatura. Tente novamente.")
     } finally {
-      setLoadingStripe(false)
+      setLoadingCancel(false)
     }
   }
 
@@ -91,8 +92,8 @@ const Subscription = () => {
             <p className="text-lightFg-secondary dark:text-darkFg-secondary">
               Seu acesso Pro continua ativo até o final do período de faturamento. Para não perder seus benefícios, reative sua assinatura.
             </p>
-            <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingStripe} disabled={loadingStripe}>
-              {!loadingStripe && "Reativar Assinatura"}
+            <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingAction} disabled={loadingAction || loadingCancel}>
+              {!loadingAction && "Reativar Assinatura"}
             </Button>
           </>
         )
@@ -109,11 +110,11 @@ const Subscription = () => {
             cliente.
           </p>
           <div className="flex items-center gap-2">
-            <Button variant="secondary" $rounded onClick={handleCancelSubscription} loading={loadingStripe} disabled={loadingStripe}>
-              {!loadingStripe && "Cancelar Assinatura"}
+            <Button variant="secondary" $rounded onClick={handleCancelSubscription} loading={loadingCancel} disabled={loadingAction || loadingCancel}>
+              {!loadingCancel && "Cancelar Assinatura"}
             </Button>
-            <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingStripe} disabled={loadingStripe}>
-              {!loadingStripe && "Gerenciar Assinatura"}
+            <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingAction} disabled={loadingAction || loadingCancel}>
+              {!loadingAction && "Gerenciar Assinatura"}
             </Button>
           </div>
         </>
@@ -136,8 +137,8 @@ const Subscription = () => {
             <ProFeature>Fabricação ilimitada de Ferramentas customizadas.</ProFeature>
           </ul>
         </div>
-        <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingStripe} disabled={loadingStripe}>
-          {!loadingStripe && (user?.stripeSubscriptionId ? "Renovar Assinatura" : "Assinar por R$ 15,00/mês")}
+        <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingAction} disabled={loadingAction}>
+          {!loadingAction && (user?.stripeSubscriptionId ? "Renovar Assinatura" : "Assinar por R$ 15,00/mês")}
         </Button>
       </>
     )

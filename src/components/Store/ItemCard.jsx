@@ -2,6 +2,7 @@ import { memo } from "react"
 import { Check, Plus, Trash2 } from "lucide-react"
 
 import Paper from "../Paper"
+import Avatar from "../Avatar"
 import DynamicIcon from "../DynamicIcon"
 import PurpleLink from "../Embeds/PurpleLink"
 import Button from "../Button"
@@ -11,11 +12,8 @@ const StoreItemCard = memo(({ item, user, onAcquire, onUnacquire, isAcquired, lo
 
   const handleAction = (e) => {
     e.stopPropagation()
-    if (isAcquired) {
-      onUnacquire(item._id)
-    } else {
-      onAcquire(item._id)
-    }
+    if (isAcquired) onUnacquire(item._id)
+    else onAcquire(item._id)
   }
 
   return (
@@ -30,24 +28,17 @@ const StoreItemCard = memo(({ item, user, onAcquire, onUnacquire, isAcquired, lo
         {item.description}
       </p>
       <div className="flex items-center justify-between pt-2 border-t border-bLight dark:border-bDark">
-        <PurpleLink to={`/profile/${item.author._id}`} className="flex items-center gap-2 group">
-          <img src={item.author.avatarUrl} alt={item.author.name} className="w-6 h-6 rounded-full object-cover transition-transform group-hover:scale-110" />
-          <span className="text-xs font-medium group-hover:underline">{item.author.name}</span>
+        <PurpleLink to={`/profile/${item.author._id}`} className="flex gap-2 items-center">
+          <Avatar title={item.author.name} src={item.author.avatarUrl} alt={item.author.name} size={8} isPro={item.author.plan === "pro"} />
         </PurpleLink>
 
         {isAuthor ? (
-          <Button variant="info" $rounded disabled title="Você é o criador deste item">
+          <Button variant="info" $rounded disabled title="Você é o criador">
             <Check size={16} className="mr-2" />
             Proprietário
           </Button>
         ) : isAcquired ? (
-          <Button
-            onClick={handleAction}
-            variant="danger"
-            $rounded
-            disabled={loading}
-            title="Remover da sua coleção"
-          >
+          <Button title="Remover da sua coleção" variant="danger" $rounded onClick={handleAction} disabled={loading}>
             <Trash2 size={16} className="mr-2" />
             Remover
           </Button>

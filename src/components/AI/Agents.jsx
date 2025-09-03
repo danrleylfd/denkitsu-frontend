@@ -32,22 +32,15 @@ const AIAgents = ({ agentsDoor }) => {
           onClick={() => setSelectedAgent(name)}
           disabled={disabled || isDisabled}
         >
-          <DynamicIcon name={Icon} size={16} />
+          <DynamicIcon name={Icon} size={16} className="mr-2" />
+          {selectedAgent === name && (<span>{name}</span>)}
         </Button>
       ))}
       {agents.backendAgents.length > 0 && agents.customAgents.length > 0 && <Separator />}
       {agents.customAgents.map(({ name, Icon, description }) => (
-        <Button
-          key={name}
-          $border={selectedAgent === name ? "outline" : "secondary"}
-          variant={selectedAgent === name ? "outline" : "secondary"}
-          size="icon"
-          $rounded
-          title={`${name}: ${description}`}
-          onClick={() => setSelectedAgent(name)}
-          disabled={isDisabled}
-        >
-          <DynamicIcon name={Icon} size={16} />
+        <Button key={name} title={`${name}: ${description}`} $border={selectedAgent === name ? "outline" : "secondary"} variant={selectedAgent === name ? "outline" : "secondary"} size="icon" $rounded onClick={() => setSelectedAgent(name)} disabled={isDisabled}>
+          <DynamicIcon name={Icon} size={16} className="mr-2" />
+          {selectedAgent === name && <span>{name}</span>}
         </Button>
       ))}
     </Paper>

@@ -53,7 +53,7 @@ const AIAudio = ({ audioFile, onSend, onCancel }) => {
     <Paper className="bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center justify-between gap-2 max-w-[95%] mb-1 mx-auto">
       <audio
         ref={audioRef}
-        src={audioSrc}
+        src={(audioSrc && audioSrc.length > 0) ? audioSrc : null}
         onLoadedMetadata={handleLoadedMetadata}
         onTimeUpdate={handleTimeUpdate}
         onEnded={handleAudioEnd}
@@ -64,9 +64,6 @@ const AIAudio = ({ audioFile, onSend, onCancel }) => {
           {isPlaying ? <Pause size={16} /> : <Play size={16} />}
         </Button>
         <div className="flex flex-col flex-grow min-w-0">
-          {/* <span className="text-sm font-mono truncate text-lightFg-primary dark:text-darkFg-primary">
-            {audioFile.name || "gravação.webm"}
-          </span> */}
           <div className="flex items-center gap-2">
             <input
               type="range"

@@ -7,6 +7,7 @@ import { useNotification } from "../contexts/NotificationContext"
 import { getUserAccount, editUserAccount, deleteUserAccount, unlinkGithubAccount } from "../services/account"
 
 import SideMenu from "../components/SideMenu"
+import Avatar from "../components/Avatar"
 import Input from "../components/Input"
 import Button from "../components/Button"
 
@@ -141,11 +142,7 @@ const Profile = () => {
       ) : userData && (
         <div className="flex flex-col w-full max-w-md my-40 mx-auto p-6 gap-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-lg opacity-90 dark:opacity-95">
           <div className="flex items-center gap-4">
-            <img
-              src={avatarUrl || userData.avatarUrl}
-              alt={name || userData.name}
-              className="w-24 h-24 rounded-full object-cover border-4 border-primary-base"
-            />
+            <Avatar src={avatarUrl || userData.avatarUrl} alt={name || userData.name} size={20} isPro={userData.plan === "pro"} />
             {isEditing ? (
               <form className="flex-1 flex flex-col gap-2" onSubmit={handleSaveChanges}>
                 <Input id="name" placeholder="Nome" value={name} onChange={(e) => setName(e.target.value)} disabled={loading} />
