@@ -14,7 +14,7 @@ const useMessage = (props) => {
     setUserPrompt, setImageUrls, setAudioFile, setMessages, setSelectedAgent
   } = props
 
-  const { signed, updateUser } = useAuth()
+  const { signed, user, updateUser } = useAuth()
 
   const { notifyError, notifyWarning, notifyInfo, notifySuccess } = useNotification()
   const [loadingMessages, setLoadingMessages] = useState(false)
