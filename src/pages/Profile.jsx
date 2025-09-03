@@ -21,7 +21,7 @@ const Profile = () => {
   const { userId } = useParams()
   const { user, signOut, updateUser } = useAuth()
   const { notifyWarning, notifyError, notifyInfo } = useNotification()
-  const connectedUserId = userId || user?._id
+  const userID = userId || user?._id
   const [userData, setUserData] = useState(null)
   const [isEditing, setIsEditing] = useState(false)
   const [name, setName] = useState("")
@@ -31,13 +31,13 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!connectedUserId) {
+      if (!userID) {
         navigate("/signin")
         return
       }
       try {
         setLoading(true)
-        const updatedUser = await getUserAccount(connectedUserId)
+        const updatedUser = await getUserAccount(userID)
         setUserData(updatedUser)
         setName(updatedUser.name)
         setAvatarUrl(updatedUser.avatarUrl)
@@ -156,7 +156,7 @@ const Profile = () => {
               </div>
             )}
           </div>
-          {user?._id === connectedUserId && (
+          {user?._id === userID && (
             <div className="flex w-full justify-between items-center border-t border-zinc-200 dark:border-zinc-700 pt-4 mt-2">
               <div className="flex gap-2">
                 {isEditing
