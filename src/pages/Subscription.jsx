@@ -55,13 +55,24 @@ const Subscription = () => {
       if (data.type === "reactivation" && data.user) {
         updateUser(data.user)
         notifySuccess("Sua assinatura foi reativada com sucesso!")
-      } else if (data.type === "checkout" && data.url) {
-        window.location.href = data.url
-      } else if (data.url) {
-        window.location.href = data.url
-      }
+      } else if (data.type === "checkout" && data.url) window.location.href = data.url
+      else if (data.url) window.location.href = data.url
     } catch (error) {
       notifyError("Não foi possível gerenciar sua assinatura. Tente novamente.")
+    } finally {
+      setLoadingStripe(false)
+    }
+  }
+
+  const handleCancelSubscription = async () => {
+    if (!window.confirm("Tem certeza que deseja cancelar sua assinatura? Você manterá o acesso Pro até o final do período de cobrança.")) return
+    setLoadingStripe(true)
+    try {
+      const { data } = await api.post("/stripe/cancel-subscription")
+      updateUser(data.user)
+      notifySuccess("Sua assinatura foi agendada para cancelamento com sucesso.")
+    } catch (error) {
+      notifyError(error.response?.data?.error || "Não foi possível cancelar sua assinatura. Tente novamente.")
     } finally {
       setLoadingStripe(false)
     }
@@ -97,9 +108,14 @@ const Subscription = () => {
             Obrigado por apoiar o Denkitsu. Gerencie sua assinatura, altere seu método de pagamento ou visualize seu histórico de faturas no portal do
             cliente.
           </p>
-          <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingStripe} disabled={loadingStripe}>
-            {!loadingStripe && "Gerenciar Assinatura"}
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button variant="secondary" $rounded onClick={handleCancelSubscription} loading={loadingStripe} disabled={loadingStripe}>
+              {!loadingStripe && "Cancelar Assinatura"}
+            </Button>
+            <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingStripe} disabled={loadingStripe}>
+              {!loadingStripe && "Gerenciar Assinatura"}
+            </Button>
+          </div>
         </>
       )
     }
