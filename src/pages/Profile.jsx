@@ -37,6 +37,12 @@ const Profile = () => {
       }
       try {
         setLoading(true)
+        if (userID === user._id) {
+          await updateUser()
+          setName(user.name)
+          setAvatarUrl(user.avatarUrl)
+          return
+        }
         const updatedUser = await getUserAccount(userID)
         setUserData(updatedUser)
         setName(updatedUser.name)
