@@ -15,7 +15,7 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  const completeSignIn = useCallback(async (token, refreshToken, userData) => {
+  const saveSignData = useCallback(async (token, refreshToken, userData) => {
     await storage.local.setItem("@Denkitsu:user", JSON.stringify(userData))
     if (refreshToken) await storage.local.setItem("@Denkitsu:refreshToken", refreshToken)
     await storage.session.setItem("@Denkitsu:token", token)
@@ -26,18 +26,18 @@ const AuthProvider = ({ children }) => {
   const signUp = useCallback(async ({ name, email, password }) => {
     const response = await api.post("/auth/signup", { name, email, password })
     const { token, refreshToken, user: userData } = response.data
-    await completeSignIn(token, refreshToken, userData)
-  }, [completeSignIn])
+    await saveSignData(token, refreshToken, userData)
+  }, [saveSignData])
 
   const signIn = useCallback(async ({ email, password }) => {
     const response = await api.post("/auth/signin", { email, password })
     const { token, refreshToken, user: userData } = response.data
-    await completeSignIn(token, refreshToken, userData)
-  }, [completeSignIn])
+    await saveSignData(token, refreshToken, userData)
+  }, [saveSignData])
 
   const signWithOAuth = useCallback(async ({ token, refreshToken, user }) => {
-    await completeSignIn(token, refreshToken, user)
-  }, [completeSignIn])
+    await saveSignData(token, refreshToken, user)
+  }, [saveSignData])
 
   const signOut = useCallback(async () => {
     await storage.local.clear()
@@ -69,7 +69,7 @@ const AuthProvider = ({ children }) => {
         try {
           const response = await api.post("/auth/refresh_token", { refreshToken: `Bearer ${storagedRefreshToken}` })
           const { token, refreshToken: newRefreshToken } = response.data
-          await completeSignIn(token, newRefreshToken, JSON.parse(storagedUser))
+          await saveSignData(token, newRefreshToken, JSON.parse(storagedUser))
         } catch (error) {
           console.error("Falha ao atualizar token, deslogando.", error)
           await signOut()
@@ -90,7 +90,7 @@ const AuthProvider = ({ children }) => {
       chrome.storage.onChanged.addListener(listener)
       return () => chrome.storage.onChanged.removeListener(listener)
     }
-  }, [signOut, completeSignIn])
+  }, [saveSignData, signOut])
 
   return (
     <AuthContext.Provider value={{ signed: !!user, user, loading, signUp, signIn, signWithOAuth, signOut, updateUser }}>
