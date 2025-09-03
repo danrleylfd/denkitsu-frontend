@@ -76,26 +76,18 @@ const Subscription = () => {
         <div className="w-16 h-16 rounded-full bg-amber-base/10 flex items-center justify-center border-2 border-amber-base">
           <Crown size={32} className="text-amber-base" />
         </div>
-        {user?.plan === "pro" ? (
+        {user?.plan === "pro" && user?.stripeSubscriptionStatus === "active" ? (
           <>
-            <h2 className="text-2xl font-bold text-lightFg-primary dark:text-darkFg-primary">Você é um Membro Pro!</h2>
-            {user.subscriptionCancelAtPeriodEnd ? (
-              <div className="w-full p-3 rounded-lg bg-amber-base/10 text-amber-dark dark:text-amber-light flex flex-col items-center gap-2">
-                <AlertTriangle size={20} />
-                <p className="font-semibold">Sua assinatura está agendada para cancelar em {new Date(user.proAccessUntil).toLocaleDateString()}.</p>
-                <span className="text-xs">Você pode reativá-la a qualquer momento antes dessa data.</span>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2 text-green-base font-semibold bg-green-base/10 px-4 py-2 rounded-full">
-                <CheckCircle2 size={20} />
-                <span>Assinatura Ativa</span>
-              </div>
-            )}
+            <h2 className="text-lightFg-primary dark:text-darkFg-primary">Você é um Membro!</h2>
+            <div className="flex items-center gap-2 text-green-base font-semibold bg-green-base/10 px-4 py-2 rounded-full">
+              <CheckCircle2 size={20} />
+              <span>Assinatura Ativa</span>
+            </div>
             <p className="text-lightFg-secondary dark:text-darkFg-secondary">
               Obrigado por apoiar o Denkitsu. Gerencie sua assinatura, altere seu método de pagamento ou visualize seu histórico de faturas no portal do cliente.
             </p>
-            <Button variant="primary" $rounded onClick={handleManageSubscription} loading={loadingStripe} disabled={loadingStripe}>
-              {user.subscriptionCancelAtPeriodEnd ? "Reativar ou Gerenciar Assinatura" : "Gerenciar Assinatura"}
+            <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingStripe} disabled={loadingStripe}>
+              {!loadingStripe && "Gerenciar Assinatura"}
             </Button>
           </>
         ) : (
