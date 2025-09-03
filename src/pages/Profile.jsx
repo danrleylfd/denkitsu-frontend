@@ -37,11 +37,11 @@ const Profile = () => {
       }
       try {
         setLoading(true)
-        const data = await getUserAccount(connectedUserId)
-        setUserData(data)
-        setName(data.name)
-        setAvatarUrl(data.avatarUrl)
-        if (user?._id === data._id) updateUser(data)
+        const updatedUser = await getUserAccount(connectedUserId)
+        setUserData(updatedUser)
+        setName(updatedUser.name)
+        setAvatarUrl(updatedUser.avatarUrl)
+        if (user?._id === data._id) updateUser(updatedUser)
       } catch (error) {
         console.error("Error fetching user account:", error)
         if (error.response && error.response.data.error) notifyError(error.response.data.error.message)

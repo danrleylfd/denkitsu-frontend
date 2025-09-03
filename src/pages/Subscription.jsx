@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react"
 import { useSearchParams } from "react-router-dom"
 import { Crown, CheckCircle2, Star, AlertTriangle } from "lucide-react"
+
 import { useAuth } from "../contexts/AuthContext"
 import { useNotification } from "../contexts/NotificationContext"
-import { getUserAccount } from "../services/account"
+
 import api from "../services"
+
 import SideMenu from "../components/SideMenu"
 import Paper from "../components/Paper"
 import Button from "../components/Button"
@@ -33,8 +35,7 @@ const Subscription = () => {
     const handlePaymentSuccess = async () => {
       notifySuccess("Assinatura confirmada! Bem-vindo ao Plano Pro.")
       try {
-        const freshUserData = await getUserAccount()
-        updateUser(freshUserData)
+        updateUser()
       } catch (error) {
         console.error("Falha ao atualizar dados do usuário após assinatura.", error)
         notifyError("Sua assinatura está ativa, mas houve um erro ao atualizar a página. Por favor, recarregue.")

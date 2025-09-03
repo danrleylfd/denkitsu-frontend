@@ -47,7 +47,7 @@ const AuthProvider = ({ children }) => {
   }, [])
 
   const updateUser = useCallback(async (providedUser) => {
-    if (!signed) return
+    if (!user) return
     if (providedUser) {
       setUser(providedUser)
       return
