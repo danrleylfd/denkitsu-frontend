@@ -57,7 +57,6 @@ const AgentProvider = ({ children }) => {
     selectedAgent, setSelectedAgent
   }), [agents, loadingAgents, fetchAgents, addAgent, editAgent, removeAgent, selectedAgent])
 
-
   return (
     <AgentContext.Provider value={value}>
       {children}
@@ -67,9 +66,7 @@ const AgentProvider = ({ children }) => {
 
 const useAgents = () => {
   const context = useContext(AgentContext)
-  if (!context) {
-    throw new Error("useAgents must be used within an AgentProvider")
-  }
+  if (!context) throw new Error("useAgents must be used within an AgentProvider")
   return context
 }
 

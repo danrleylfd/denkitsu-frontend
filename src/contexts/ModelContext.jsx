@@ -41,14 +41,14 @@ const ModelProvider = ({ children }) => {
         const storedOpenRouterKey = await storage.local.getItem("@Denkitsu:OpenRouter")
         const storedCustomUrl = await storage.local.getItem("@Denkitsu:CustomProviderUrl")
         const storedCustomKey = await storage.local.getItem("@Denkitsu:CustomProviderKey")
-        if (storedProvider) setAIProvider(storedProvider)
-        if (storedGroqModel) setGroqModel(storedGroqModel)
-        if (storedOpenRouterModel) setOpenRouterModel(storedOpenRouterModel)
-        if (storedCustomModel) setCustomModel(storedCustomModel)
-        if (storedGroqKey) setGroqKey(storedGroqKey)
-        if (storedOpenRouterKey) setOpenRouterKey(storedOpenRouterKey)
-        if (storedCustomUrl) setCustomProviderUrl(storedCustomUrl)
-        if (storedCustomKey) setCustomProviderKey(storedCustomKey)
+        storedProvider ? setAIProvider(storedProvider) : setAIProvider("groq")
+        storedGroqModel ? setGroqModel(storedGroqModel) : setGroqModel("openai/gpt-oss-120b")
+        storedOpenRouterModel ? setOpenRouterModel(storedOpenRouterModel) : setOpenRouterModel("deepseek/deepseek-r1-0528:free")
+        storedCustomModel ? setCustomModel(storedCustomModel) : setCustomModel("custom/model")
+        storedGroqKey ? setGroqKey(storedGroqKey) : setGroqKey("")
+        storedOpenRouterKey ? setOpenRouterKey(storedOpenRouterKey) : setOpenRouterKey("")
+        storedCustomUrl ? setCustomProviderUrl(storedCustomUrl) : setCustomProviderUrl("")
+        storedCustomKey ? setCustomProviderKey(storedCustomKey) : setCustomProviderKey("")
       } catch (error) {
         console.error("Falha ao carregar as configurações:", error)
       } finally {
@@ -56,7 +56,7 @@ const ModelProvider = ({ children }) => {
       }
     }
     loadSettings()
-  }, [])
+  }, [signed])
 
   const aiKey = useMemo(() => {
     if (aiProvider === "groq") return groqKey
