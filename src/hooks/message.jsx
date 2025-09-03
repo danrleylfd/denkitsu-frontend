@@ -3,6 +3,7 @@ import { useState, useCallback } from "react"
 import { useAuth } from "../contexts/AuthContext"
 import { useNotification } from "../contexts/NotificationContext"
 
+import { getUserAccount } from "../services/account"
 import { sendMessageStream, sendMessage } from "../services/aiChat"
 import { transcribeAudio } from "../services/audio"
 
@@ -115,8 +116,11 @@ const useMessage = (props) => {
         return prev
       })
     } finally {
-      if (signed && selectedAgent === "Suporte") updateUser()
       setLoadingMessages(false)
+      if (signed && selectedAgent === "Suporte") {
+        const userData = await getUserAccount(user._id)
+        updateUser(userData)
+      }
     }
   }, [
     aiKey, aiProvider, model, freeModels, payModels, groqModels, activeTools, stream, selectedAgent, customProviderUrl,
