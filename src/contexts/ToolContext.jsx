@@ -73,7 +73,7 @@ const ToolProvider = ({ children }) => {
       const newActiveTools = new Set(prevActiveTools)
       const wasActive = newActiveTools.has(toolKey)
       if (wasActive) newActiveTools.delete(toolKey)
-      else if (activeTools.size < 3) newActiveTools.add(toolKey)
+      else if (user.plan === "free" && activeTools.size < 3) newActiveTools.add(toolKey)
       else notifyWarning("Plano Free permite no máximo 3 ferramentas ativas. Desative uma ou faça upgrade para o Plano Pro.")
       storage.local.setItem(`@Denkitsu:${toolKey}`, JSON.stringify(!wasActive))
       return newActiveTools
@@ -111,9 +111,7 @@ const ToolProvider = ({ children }) => {
 
 const useTools = () => {
   const context = useContext(ToolContext)
-  if (!context) {
-    throw new Error("useTools must be used within a ToolProvider")
-  }
+  if (!context) throw new Error("useTools must be used within a ToolProvider")
   return context
 }
 
