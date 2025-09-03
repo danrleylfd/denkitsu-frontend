@@ -40,7 +40,7 @@ const SignIn = () => {
       const message = errorMessages[errorCode] || errorMessages.GITHUB_AUTH_FAILED
       notifyError(message)
     }
-  }, [searchParams, notifyError])
+  }, [searchParams])
 
   const handleSignIn = async () => {
     if (!email || !password) return notifyError("Por favor, preencha todos os campos.")

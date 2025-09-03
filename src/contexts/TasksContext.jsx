@@ -93,7 +93,7 @@ const TasksProvider = ({ children }) => {
     } finally {
       setLoading(false)
     }
-  }, [newTask, aiProvider, aiKey, model, freeModels, payModels, groqModels, notifyError])
+  }, [newTask, aiProvider, aiKey, model, freeModels, payModels, groqModels])
 
   const deleteTask = useCallback(
     (taskId) => {

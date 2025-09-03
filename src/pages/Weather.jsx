@@ -46,7 +46,7 @@ const Weather = () => {
     } finally {
       if (isMounted.current) setLoading(false)
     }
-  }, [cityInput, notifyError])
+  }, [cityInput])
 
   const buscarPorCoordenadas = useCallback(() => {
     if (!navigator.geolocation) {

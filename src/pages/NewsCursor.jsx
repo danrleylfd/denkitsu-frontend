@@ -56,7 +56,7 @@ const News = () => {
       setLoading(false)
       isFetching.current = false
     }
-  }, [nextCursor, hasMore, notifyError])
+  }, [nextCursor, hasMore])
 
   useEffect(() => {
     if (!initialLoadDone.current) loadNews()

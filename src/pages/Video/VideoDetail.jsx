@@ -68,7 +68,7 @@ const VideoDetail = () => {
     } finally {
       setLoading(false)
     }
-  }, [videoId, signed, navigate, notifyError])
+  }, [videoId, signed, navigate])
 
   useEffect(() => {
     if (videoId) fetchVideoData()

@@ -114,7 +114,7 @@ const useMessage = (props) => {
     }
   }, [
     aiKey, aiProvider, model, freeModels, payModels, groqModels, activeTools, stream, selectedAgent, customProviderUrl,
-    notifyError, notifyInfo, notifyWarning, setMessages, setSelectedAgent
+    setMessages, setSelectedAgent
   ])
 
   const onSendMessage = useCallback(async () => {
@@ -156,7 +156,7 @@ const useMessage = (props) => {
       setMessages(prev => prev.filter(m => m.timestamp !== userMessagePlaceholder.timestamp))
       setLoadingMessages(false)
     }
-  }, [audioFile, messages, executeSendMessage, setAudioFile, setMessages, notifyError, selectedAgent])
+  }, [audioFile, messages, executeSendMessage, setAudioFile, setMessages, selectedAgent])
 
   const handleRegenerateResponse = useCallback(async () => {
     if (loadingMessages || isImproving) return
@@ -168,7 +168,7 @@ const useMessage = (props) => {
     const historyWithoutLastResponse = messages.slice(0, -1)
     setMessages(historyWithoutLastResponse)
     await executeSendMessage(historyWithoutLastResponse, selectedAgent)
-  }, [loadingMessages, isImproving, messages, executeSendMessage, notifyWarning, setMessages, selectedAgent])
+  }, [loadingMessages, isImproving, messages, executeSendMessage, setMessages, selectedAgent])
 
   const improvePrompt = useCallback(async () => {
     if (!userPrompt.trim() || isImproving || loadingMessages) return
@@ -194,7 +194,7 @@ const useMessage = (props) => {
     } finally {
       setIsImproving(false)
     }
-  }, [userPrompt, isImproving, loadingMessages, aiKey, aiProvider, model, freeModels, payModels, groqModels, setUserPrompt, notifyInfo, notifySuccess, notifyError])
+  }, [userPrompt, isImproving, loadingMessages, aiKey, aiProvider, model, freeModels, payModels, groqModels, setUserPrompt])
 
   return { loadingMessages, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt, handleSendAudioMessage }
 }

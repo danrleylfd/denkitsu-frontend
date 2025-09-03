@@ -47,7 +47,7 @@ const Subscription = () => {
       notifyInfo("O processo de assinatura foi cancelado.")
       setSearchParams({})
     }
-  }, [searchParams, setSearchParams, notifySuccess, notifyError, updateUser])
+  }, [searchParams, setSearchParams])
 
   const handleSubscriptionAction = async () => {
     setLoadingAction(true)
@@ -132,13 +132,13 @@ const Subscription = () => {
         <div className="text-left w-full bg-lightBg-secondary dark:bg-darkBg-secondary p-4 rounded-lg">
           <h5 className="text-lightFg-primary dark:text-darkFg-primary pb-2">Benefícios</h5>
           <ul className="space-y-2">
-            <ProFeature>Provedores de IA personalizados</ProFeature>
+            <ProFeature>Provedores de IA personalizados.</ProFeature>
             <ProFeature>Fabricação/Aquisição ilimitada de Agentes.</ProFeature>
             <ProFeature>Fabricação/Aquisição ilimitada de Ferramentas.</ProFeature>
           </ul>
         </div>
         <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingAction} disabled={true || loadingAction}>
-          {!loadingAction && (user?.stripeSubscriptionId ? "Renovar Assinatura" : "Assinar por R$ 15,00/mês")}
+          {!loadingAction && (user?.stripeSubscriptionId ? "Renovar Assinatura" : "Em breve" )} // "Assinar por R$ 15,00/mês"
         </Button>
       </>
     )

@@ -93,7 +93,7 @@ const SidePanelChat = () => {
         console.error("Side Panel: Erro ao extrair conteúdo:", response?.error)
       }
     })
-  }, [notifyError, notifyInfo, setUserPrompt])
+  }, [setUserPrompt])
 
   const hasUserMessages = messages.some((msg) => msg.role === "user")
 

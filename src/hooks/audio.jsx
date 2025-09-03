@@ -30,7 +30,7 @@ const useAudio = (props) => {
     } catch (err) {
       notifyError("Não foi possível acessar o microfone.")
     }
-  }, [notifyError, notifyInfo, setAudioFile])
+  }, [setAudioFile])
 
   const handleStopRecording = useCallback(() => {
     if (mediaRecorderRef.current) {
