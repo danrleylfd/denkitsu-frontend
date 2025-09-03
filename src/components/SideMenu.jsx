@@ -131,7 +131,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
   const { pathname } = useLocation()
   const { background } = useBackground()
   const { theme, toggleTheme } = useTheme()
-  const { signed, signOut } = useAuth()
+  const { signed, user, signOut } = useAuth()
 
   const { isOpen, openSubMenu } = useMenuStore()
 
@@ -200,6 +200,12 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
             <div className="w-6 h-6 flex items-center justify-center"><Home size={16} /></div>
             {isOpen && <span className="ml-1 select-none">Início</span>}
           </Link>
+          {signed && (
+            <Link to="/subscription" className={`${menuItemClass} bg-amber-base/10 text-amber-dark hover:bg-amber-base/20 dark:text-amber-light dark:hover:bg-amber-base/20 ${pathname === "/subscription" ? "border-l-4 border-amber-base" : ""} ${!isOpen && "justify-center"}`} title="Plano Pro">
+              <div className="w-6 h-6 flex items-center justify-center"><Crown size={16} /></div>
+              {isOpen && <span className="ml-1 select-none font-bold">{user.plan === "free" ? "Upgrade" : "Gerenciar Assinatura"}</span>}
+            </Link>
+          )}
           {signed && (
             <SubMenu
               isOpen={isOpen}
