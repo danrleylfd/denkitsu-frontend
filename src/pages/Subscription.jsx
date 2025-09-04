@@ -93,7 +93,7 @@ const Subscription = () => {
               Seu acesso Plus continua ativo até o final do período de faturamento. Para não perder seus benefícios, reative sua assinatura.
             </p>
             <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingAction} disabled={loadingAction || loadingCancel}>
-              {!loadingAction && "Reativar Assinatura"}
+              {!loadingAction && "Cancelar Agendamento"}
             </Button>
           </>
         )
