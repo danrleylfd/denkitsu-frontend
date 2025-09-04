@@ -132,32 +132,28 @@ const OwnProfile = () => {
           )}
         </div>
         <div className="flex w-full justify-between items-center border-t border-zinc-200 dark:border-zinc-700 pt-4 mt-2">
-          <div className="flex gap-2">
-            {user?.githubUsername && (
-              <a href={`https://github.com/${user.githubUsername}`} target="_blank" rel="noopener noreferrer">
-                <Button variant="secondary" size="icon" $rounded title="Perfil no GitHub">
-                  <Github size={16} />
-                </Button>
-              </a>
-            )}
-            {isEditing
-              ? (<>
-                  <Button variant="secondary" size="icon" $rounded title="Cancelar" onClick={handleEditToggle} disabled={loading}><X size={16} /></Button>
-                  <Button variant="success" size="icon" $rounded title="Salvar" onClick={handleSaveChanges} loading={loading}><Check size={16} /></Button>
-                </>)
-              : <Button variant="warning" size="icon" $rounded title="Editar" onClick={handleEditToggle}><Pencil size={16} /></Button>
-            }
-          </div>
-          <div className="flex gap-2">
-            {isEditing
-              ? <Button variant="danger" size="icon" $rounded title="Deletar Conta" onClick={handleDeleteAccount} loading={loading}><Trash size={16} /></Button>
-              : (
-              user.githubId
-                ? <Button onClick={handleGithubUnlink} variant="danger" size="icon" $rounded title="Desvincular do GitHub"><Github size={16} /></Button>
-                : <Button onClick={handleGithubConnect} type="button" variant="secondary" size="icon" $rounded title="Vincular com GitHub"><Github size={16}/></Button>
-            )}
-            <Button variant="danger" size="icon" $rounded title="Sair" onClick={handleSignOut}><LogOut size={16} /></Button>
-          </div>
+          {isEditing
+            ? (<>
+              <div className="flex gap-2">
+                <Button variant="secondary" size="icon" $rounded title="Cancelar" onClick={handleEditToggle} disabled={loading}><X size={16} /></Button>
+                <Button variant="success" size="icon" $rounded title="Salvar" onClick={handleSaveChanges} loading={loading}><Check size={16} /></Button>
+              </div>
+              <div className="flex gap-2">
+                {user.githubId
+                  ? (<Button onClick={handleGithubUnlink} variant="danger" size="icon" $rounded title="Desvincular do GitHub"><Github size={16} /></Button>)
+                  : (<Button onClick={handleGithubConnect} type="button" variant="secondary" size="icon" $rounded title="Vincular com GitHub"><Github size={16} /></Button>)}
+                <Button variant="danger" size="icon" $rounded title="Deletar Conta" onClick={handleDeleteAccount} loading={loading}><Trash size={16} /></Button>
+              </div>
+            </>)
+            : (<>
+              <div className="flex gap-2">
+                <Button variant="warning" size="icon" $rounded title="Editar" onClick={handleEditToggle}><Pencil size={16} /></Button>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="danger" size="icon" $rounded title="Sair" onClick={handleSignOut}><LogOut size={16} /></Button>
+              </div>
+            </>)
+          }
         </div>
       </div>
     </SideMenu>
