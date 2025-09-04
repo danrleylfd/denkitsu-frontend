@@ -64,8 +64,8 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (!user) return
-    loadUser(user._id)
-  }, [user])
+    constloadUser(user._id)
+  }, [])
 
   useEffect(() => {
     const loadStorageData = async () => {
