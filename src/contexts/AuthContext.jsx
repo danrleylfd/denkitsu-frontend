@@ -31,9 +31,7 @@ const AuthProvider = ({ children }) => {
       return userData
     } catch (error) {
       console.error(`Falha ao buscar dados do usuário ${targetUserId}:`, error)
-      if (targetUserId === user?._id) {
-        await signOut()
-      }
+      if (targetUserId === user?._id) await signOut()
       throw error
     }
   }, [user?._id, signOut])
@@ -44,7 +42,6 @@ const AuthProvider = ({ children }) => {
     setUser(updatedUser)
     await storage.local.setItem("@Denkitsu:user", JSON.stringify(updatedUser))
   }, [user])
-
 
   const saveSignData = useCallback(async (token, refreshToken, userData) => {
     await storage.local.setItem("@Denkitsu:user", JSON.stringify(userData))
@@ -96,9 +93,7 @@ const AuthProvider = ({ children }) => {
       }
       setLoading(false)
     }
-
     loadStorageData()
-
     if (isExtension) {
       const listener = (changes, area) => {
         if (area === "local" || area === "session") {
