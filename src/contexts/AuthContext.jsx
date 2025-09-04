@@ -59,12 +59,13 @@ const AuthProvider = ({ children }) => {
     if (!user || user._id !== partialUser._id) return
     setUser((prev) => ({ ...prev, ...partialUser }))
     await storage.local.setItem("@Denkitsu:user", JSON.stringify(user))
+    return user
   }, [user])
 
   useEffect(() => {
     if (!user) return
     loadUser(user._id)
-  }, [user])
+  }, [])
 
   useEffect(() => {
     const loadStorageData = async () => {
