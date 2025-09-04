@@ -72,7 +72,7 @@ const ToolProvider = ({ children }) => {
       const newActiveTools = new Set(prevActiveTools)
       const wasActive = newActiveTools.has(toolKey)
       if (wasActive) newActiveTools.delete(toolKey)
-      else if (user.plan === "pro" || activeTools.size < 3) newActiveTools.add(toolKey)
+      else if (user.plan ===  "plus" || activeTools.size < 3) newActiveTools.add(toolKey)
       else notifyWarning("O Plano Gratuito permite no máximo 3 ferramentas ativas. Desative uma ou faça upgrade para o Plano Plus.")
       storage.local.setItem(`@Denkitsu:${toolKey}`, JSON.stringify(!wasActive))
       return newActiveTools

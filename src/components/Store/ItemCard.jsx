@@ -29,7 +29,7 @@ const StoreItemCard = memo(({ item, user, onAcquire, onUnacquire, isAcquired, lo
       </p>
       <div className="flex items-center justify-between pt-2 border-t border-bLight dark:border-bDark">
         <PurpleLink to={`/profile/${item.author._id}`} className="flex gap-2 items-center">
-          <Avatar title={item.author.name} src={item.author.avatarUrl} alt={item.author.name} size={8} isPro={item.author.plan === "pro"} />
+          <Avatar title={item.author.name} src={item.author.avatarUrl} alt={item.author.name} size={8} isPro={item.author.plan ===  "plus"} />
         </PurpleLink>
 
         {isAuthor ? (

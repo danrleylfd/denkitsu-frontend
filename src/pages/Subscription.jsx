@@ -77,7 +77,7 @@ const Subscription = () => {
   }
 
   const renderContent = () => {
-    if (user?.plan === "pro" && user?.stripeSubscriptionStatus === "active") {
+    if (user?.plan ===  "plus" && user?.stripeSubscriptionStatus === "active") {
       if (user.subscriptionCancelAtPeriodEnd) {
         return (
           <>
