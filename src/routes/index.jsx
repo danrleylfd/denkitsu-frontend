@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react"
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 
 import { useAuth } from "../contexts/AuthContext"
 
@@ -17,6 +17,7 @@ const Redirect = lazy(() => import("../pages/Redirect"))
 
 const AI = lazy(() => import("../pages/AI"))
 const Store = lazy(() => import("../pages/Store"))
+const OwnProfile = lazy(() => import("../pages/OwnProfile"))
 const Profile = lazy(() => import("../pages/Profile"))
 const Subscription = lazy(() => import("../pages/Subscription"))
 const UserVideos = lazy(() => import("../pages/Video/UserVideos"))
@@ -38,11 +39,6 @@ const PageLoader = () => (
     <Button variant="outline" $rounded loading={true} disabled />
   </div>
 )
-
-const ProfileRouteWrapper = () => {
-  const location = useLocation()
-  return <Profile key={location.pathname} />
-}
 
 const AppRoutes = () => {
   const { signed, loading } = useAuth()
@@ -68,8 +64,8 @@ const AppRoutes = () => {
               <Route path="/popular" element={<Popular />} />
               <Route path="/my-videos" element={<UserVideos />} />
               <Route path="/video/:videoId" element={<VideoDetail />} />
-              <Route path="/profile" element={<ProfileRouteWrapper />} />
-              <Route path="/profile/:userId" element={<ProfileRouteWrapper />} />
+              <Route path="/profile" element={<OwnProfile />} />
+              <Route path="/profile/:userId" element={<Profile />} />
               <Route path="/subscription" element={<Subscription />} />
               <Route path="/atalho" element={<Shortcut />} />
               <Route path="/chat" element={<AI />} />
