@@ -139,11 +139,6 @@ const OwnProfile = () => {
                 <Button variant="success" size="icon" $rounded title="Salvar" onClick={handleSaveChanges} loading={loading}><Check size={16} /></Button>
               </div>
               <div className="flex gap-2">
-                {user?.githubUsername && (
-                  <a href={`https://github.com/${user.githubUsername}`} target="_blank" rel="noopener noreferrer">
-                    <Button variant="secondary" size="icon" $rounded title="Perfil no GitHub"><Github size={16} /></Button>
-                  </a>
-                )}
                 {user?.githubId
                   ? (<Button onClick={handleGithubUnlink} variant="danger" size="icon" $rounded title="Desvincular do GitHub"><Github size={16} /></Button>)
                   : (<Button onClick={handleGithubConnect} type="button" variant="secondary" size="icon" $rounded title="Vincular com GitHub"><Github size={16} /></Button>)}
@@ -152,6 +147,11 @@ const OwnProfile = () => {
             </>)
             : (<>
               <div className="flex gap-2">
+                {user?.githubUsername && (
+                  <a href={`https://github.com/${user.githubUsername}`} target="_blank" rel="noopener noreferrer">
+                    <Button variant="secondary" size="icon" $rounded title="Perfil no GitHub"><Github size={16} /></Button>
+                  </a>
+                )}
                 <Button variant="warning" size="icon" $rounded title="Editar" onClick={handleEditToggle}><Pencil size={16} /></Button>
               </div>
               <div className="flex gap-2">
