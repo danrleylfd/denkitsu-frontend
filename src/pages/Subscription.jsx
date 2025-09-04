@@ -133,8 +133,8 @@ const Subscription = () => {
             <ProFeature>Fabricação/Aquisição ilimitada de Ferramentas.</ProFeature>
           </ul>
         </div>
-        <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingAction} disabled={true || loadingAction}>
-          {!loadingAction && (user?.stripeSubscriptionId ? "Renovar Assinatura" : "Em breve")}
+        <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingAction} disabled={loadingAction}>
+          {!loadingAction && (user?.stripeSubscriptionId ? "Renovar Assinatura" : "Simular Assinatura")}
         </Button>
       </>
     )
