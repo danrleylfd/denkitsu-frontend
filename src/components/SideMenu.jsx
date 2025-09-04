@@ -2,8 +2,8 @@ import { useEffect, useSyncExternalStore } from "react"
 import { Link, useLocation } from "react-router-dom"
 import {
   Menu, X, Sun, Moon, Home, Newspaper, Cloud, Languages, Clock, Code, Bot, Kanban, Link2,
-  User, LogIn, UserPlus, LogOut, Film, Edit2, ChevronDown, ChevronRight,
-  Upload, Video, TrendingUp, Play, Star, Lock, KeyRound, Store, Shield, Crown,
+  User, LogIn, UserPlus, LogOut, Film, Edit2, ChevronDown, ChevronRight, Upload, Video,
+  TrendingUp, Play, Star, Lock, KeyRound, Store, Shield, Crown, BrainCircuit,
 } from "lucide-react"
 
 import { useTheme } from "../contexts/ThemeContext"
@@ -204,7 +204,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
             <SubMenu
               isOpen={isOpen}
               title="Denkitsu AI"
-              icon={Bot}
+              icon={BrainCircuit}
               items={aiItems}
               isSubMenuOpen={openSubMenu === "ai"}
               toggleSubMenu={() => handleSubMenuToggle("ai")}
