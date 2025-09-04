@@ -19,24 +19,22 @@ const AuthProvider = ({ children }) => {
     delete api.defaults.headers.Authorization
   }, [])
 
-  const fetchUser = useCallback(async (userId) => {
+  const loadUser = useCallback(async (userId) => {
     const targetUserId = userId || user?._id
     if (!targetUserId) return null
-
     try {
       const userData = await getUserAccount(targetUserId)
-      // Se estamos buscando o usuário logado, atualizamos o estado
       if (targetUserId === user?._id) {
         setUser(userData)
         await storage.local.setItem("@Denkitsu:user", JSON.stringify(userData))
       }
-      return userData // Sempre retornamos os dados buscados
+      return userData
     } catch (error) {
       console.error(`Falha ao buscar dados do usuário ${targetUserId}:`, error)
       if (targetUserId === user?._id) {
-        await signOut() // Desloga se falhar ao buscar o próprio usuário
+        await signOut()
       }
-      throw error // Lança o erro para o chamador tratar
+      throw error
     }
   }, [user?._id, signOut])
 
@@ -72,27 +70,25 @@ const AuthProvider = ({ children }) => {
     await storage.session.setItem("@Denkitsu:token", token)
     if (refreshToken) await storage.local.setItem("@Denkitsu:refreshToken", refreshToken)
     api.defaults.headers.Authorization = `Bearer ${token}`
-    await fetchUser() // Busca os dados do usuário logado
-  }, [fetchUser])
-
+    await loadUser()
+  }, [loadUser])
 
   useEffect(() => {
     const loadStorageData = async () => {
       const storagedRefreshToken = await storage.local.getItem("@Denkitsu:refreshToken")
       const storagedToken = await storage.session.getItem("@Denkitsu:token")
-
       if (storagedToken) {
         api.defaults.headers.Authorization = `Bearer ${storagedToken}`
         const storagedUser = await storage.local.getItem("@Denkitsu:user")
         if (storagedUser) setUser(JSON.parse(storagedUser))
-        else await fetchUser()
+        else await loadUser()
       } else if (storagedRefreshToken) {
         try {
           const response = await api.post("/auth/refresh_token", { refreshToken: `Bearer ${storagedRefreshToken}` })
           const { token, refreshToken: newRefreshToken } = response.data
           await storage.session.setItem("@Denkitsu:token", token)
           await storage.local.setItem("@Denkitsu:refreshToken", newRefreshToken)
-          await fetchUser()
+          await loadUser()
         } catch (error) {
           console.error("Falha ao atualizar token, deslogando.", error)
           await signOut()
@@ -115,10 +111,10 @@ const AuthProvider = ({ children }) => {
       chrome.storage.onChanged.addListener(listener)
       return () => chrome.storage.onChanged.removeListener(listener)
     }
-  }, [signOut, fetchUser])
+  }, [signOut, loadUser])
 
   return (
-    <AuthContext.Provider value={{ signed: !!user, user, loading, signUp, signIn, signWithOAuth, signOut, fetchUser, updateUser }}>
+    <AuthContext.Provider value={{ signed: !!user, user, loading, signUp, signIn, signWithOAuth, signOut, loadUser, updateUser }}>
       {children}
     </AuthContext.Provider>
   )
