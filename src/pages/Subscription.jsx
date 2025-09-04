@@ -21,7 +21,7 @@ const ProFeature = ({ children }) => (
 )
 
 const Subscription = () => {
-  const { user, updateUser } = useAuth()
+  const { user, loadUser } = useAuth()
   const { notifyError, notifySuccess, notifyInfo } = useNotification()
   const [loadingAction, setLoadingAction] = useState(false)
   const [loadingCancel, setLoadingCancel] = useState(false)
@@ -31,7 +31,7 @@ const Subscription = () => {
     const handlePaymentSuccess = async () => {
       notifySuccess("Assinatura confirmada! Bem-vindo ao Plano Plus.")
       try {
-        updateUser()
+        loadUser()
       } catch (error) {
         console.error("Falha ao atualizar dados do usuário após assinatura.", error)
         notifyError("Sua assinatura está ativa, mas houve um erro ao atualizar a página. Por favor, recarregue.")
@@ -51,7 +51,7 @@ const Subscription = () => {
     try {
       await api.post("/stripe/create-checkout-session")
       if (data.type === "reactivation" && data.user) {
-        updateUser()
+        loadUser()
         notifySuccess("Sua assinatura foi reativada com sucesso!")
       } else if (data.type === "checkout" && data.url) window.location.href = data.url
       else if (data.url) window.location.href = data.url
@@ -67,7 +67,7 @@ const Subscription = () => {
     setLoadingCancel(true)
     try {
       await api.post("/stripe/cancel-subscription")
-      updateUser()
+      loadUser()
       notifySuccess("Sua assinatura foi agendada para cancelamento com sucesso.")
     } catch (error) {
       notifyError(error.response?.data?.error || "Não foi possível cancelar sua assinatura. Tente novamente.")

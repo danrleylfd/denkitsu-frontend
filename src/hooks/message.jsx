@@ -14,7 +14,7 @@ const useMessage = (props) => {
     setUserPrompt, setImageUrls, setAudioFile, setMessages, setSelectedAgent
   } = props
 
-  const { signed, user, updateUser } = useAuth()
+  const { signed, user, loadUser } = useAuth()
 
   const { notifyError, notifyWarning, notifyInfo, notifySuccess } = useNotification()
   const [loadingMessages, setLoadingMessages] = useState(false)
@@ -117,7 +117,7 @@ const useMessage = (props) => {
       })
     } finally {
       setLoadingMessages(false)
-      if (signed && selectedAgent === "Suporte") updateUser()
+      if (signed && selectedAgent === "Suporte") loadUser()
     }
   }, [
     aiKey, aiProvider, model, freeModels, payModels, groqModels, activeTools, stream, selectedAgent, customProviderUrl,

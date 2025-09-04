@@ -19,7 +19,7 @@ const ContentView = ({ children }) => (
 
 const Profile = () => {
   const { userId } = useParams()
-  const { user, signOut, updateUser } = useAuth()
+  const { user, signOut, loadUser, updateUser } = useAuth()
   const { notifyWarning, notifyError, notifyInfo } = useNotification()
   const userID = userId || user?._id
   const [userData, setUserData] = useState(null)
@@ -37,7 +37,7 @@ const Profile = () => {
       }
       try {
         setLoading(true)
-        const updatedUser = await updateUser(userID)
+        const updatedUser = await loadUser(userID)
         setUserData(updatedUser)
         setName(updatedUser.name)
         setAvatarUrl(updatedUser.avatarUrl)
@@ -66,8 +66,8 @@ const Profile = () => {
     if (!window.confirm("Tem certeza que deseja desvincular sua conta do GitHub? Você precisará usar seu e-mail e senha para fazer login.")) return
     setLoading(true)
     try {
-      await unlinkGithubAccount()
-      const updatedUser = await updateUser()
+      const partialUser = await unlinkGithubAccount()
+      const updatedUser = await updateUser(partialUser)
       setUserData(updatedUser)
       notifyInfo("Conta do GitHub desvinculada com sucesso!")
     } catch (error) {
@@ -95,8 +95,8 @@ const Profile = () => {
     }
     setLoading(true)
     try {
-      const updatedUser = await editUserAccount({ name, avatarUrl })
-      await updateUser(updatedUser._id)
+      const partialUser = await editUserAccount({ name, avatarUrl })
+      const updatedUser = await updateUser(partialUser)
       setUserData((prev) => ({ ...prev, ...updatedUser }))
       setIsEditing(false)
       notifyInfo("Perfil atualizado com sucesso!")
