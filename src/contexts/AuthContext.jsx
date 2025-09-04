@@ -48,13 +48,13 @@ const AuthProvider = ({ children }) => {
 
   const updateUser = useCallback(async (providedUser) => {
     if (!user) return
-    if (providedUser) {
+    if (providedUser && providedUser._id === user._id) {
       setUser((prev) => ({ ...prev, ...providedUser }))
       return
     }
     const userData = await getUserAccount(user._id)
     await storage.local.setItem("@Denkitsu:user", JSON.stringify(userData))
-    setUser(userData)
+    setUser((prev) => ({ ...prev, ...userData }))
   }, [user])
 
   useEffect(() => {
