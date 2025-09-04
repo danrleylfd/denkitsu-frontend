@@ -151,19 +151,12 @@ const Profile = () => {
             ) : (
               <div className="flex-1 flex flex-col gap-1">
                 <h2 className="text-xl font-bold text-lightFg-primary dark:text-darkFg-primary truncate">{userData.name}</h2>
-                {user?._id !== userData?._id && userData?.githubUsername && (
-                  <a href={`https://github.com/${userData.githubUsername}`} target="_blank" rel="noopener noreferrer">
-                    <Button variant="secondary" size="icon" $rounded title={`Ver perfil de ${userData.name} no GitHub`}>
-                      <Github size={16} />
-                    </Button>
-                  </a>
-                )}
                 <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary truncate">{userData.email || "E-mail não fornecido"}</p>
                 <small className="text-xs text-lightFg-tertiary dark:text-darkFg-tertiary">Membro desde {new Date(userData.createdAt).toLocaleDateString()}</small>
               </div>
             )}
           </div>
-          {user?._id === userID && (
+          {user?._id === userID ? (
             <div className="flex w-full justify-between items-center border-t border-zinc-200 dark:border-zinc-700 pt-4 mt-2">
               <div className="flex gap-2">
                 {isEditing
@@ -185,6 +178,12 @@ const Profile = () => {
                 <Button variant="danger" size="icon" $rounded title="Sair" onClick={handleSignOut}><LogOut size={16} /></Button>
               </div>
             </div>
+          ) : userData?.githubUsername && (
+            <a href={`https://github.com/${userData.githubUsername}`} target="_blank" rel="noopener noreferrer">
+              <Button variant="secondary" size="icon" $rounded title={`Ver perfil de ${userData.name} no GitHub`}>
+                <Github size={16} />
+              </Button>
+            </a>
           )}
         </div>
       )}
