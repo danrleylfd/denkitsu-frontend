@@ -65,7 +65,7 @@ const AppRoutes = () => {
               <Route path="/my-videos" element={<UserVideos />} />
               <Route path="/video/:videoId" element={<VideoDetail />} />
               <Route path="/profile" element={<OwnProfile />} />
-              <Route path="/profile/:userId" element={<Profile />} />
+              <Route path="/profile/:userID" element={<Profile />} />
               <Route path="/subscription" element={<Subscription />} />
               <Route path="/atalho" element={<Shortcut />} />
               <Route path="/chat" element={<AI />} />
