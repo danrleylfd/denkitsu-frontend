@@ -90,7 +90,7 @@ const ModelProvider = ({ children }) => {
       if (prev === "openrouter") return (user.plan === "free") ? "groq" : "custom"
       return "groq"
     })
-  }, [user])
+  }, [signed])
 
   useEffect(() => {
     if (!isInitialized) return
