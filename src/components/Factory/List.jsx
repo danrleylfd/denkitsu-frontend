@@ -1,12 +1,12 @@
 import { memo } from "react"
-import { Plus, Bot, PocketKnife, Trash2 } from "lucide-react"
+import { Plus, Speech, PocketKnife, Trash2 } from "lucide-react"
 
 import Button from "../Button"
 import DynamicIcon from "../DynamicIcon"
 
 const FactoryList = memo(({ items, itemType, onCreate, onEdit, onDelete }) => {
   const config = {
-    agent: { singular: "agente", Icon: Bot },
+    agent: { singular: "agente", Icon: Speech },
     tool: { singular: "ferramenta", Icon: PocketKnife }
   }
   const currentConfig = config[itemType]
