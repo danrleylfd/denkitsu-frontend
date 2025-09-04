@@ -18,7 +18,7 @@ const ContentView = ({ children }) => (
 )
 
 const OwnProfile = () => {
-  const { user, signOut, updateUser } = useAuth()
+  const { user, signOut, loadUser, updateUser } = useAuth()
   const { notifyWarning, notifyError, notifyInfo } = useNotification()
   const [isEditing, setIsEditing] = useState(false)
   const [name, setName] = useState(user?.name || "")

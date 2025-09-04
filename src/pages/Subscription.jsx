@@ -21,7 +21,7 @@ const ProFeature = ({ children }) => (
 )
 
 const Subscription = () => {
-  const { user, loadUser } = useAuth()
+  const { user, loadUser, updateUser } = useAuth()
   const { notifyError, notifySuccess, notifyInfo } = useNotification()
   const [loadingAction, setLoadingAction] = useState(false)
   const [loadingCancel, setLoadingCancel] = useState(false)
@@ -31,7 +31,7 @@ const Subscription = () => {
     const handlePaymentSuccess = async () => {
       notifySuccess("Assinatura confirmada! Bem-vindo ao Plano Plus.")
       try {
-        loadUser()
+        await loadUser()
       } catch (error) {
         console.error("Falha ao atualizar dados do usuário após assinatura.", error)
         notifyError("Sua assinatura está ativa, mas houve um erro ao atualizar a página. Por favor, recarregue.")
@@ -44,14 +44,14 @@ const Subscription = () => {
       notifyInfo("O processo de assinatura foi cancelado.")
       setSearchParams({})
     }
-  }, [searchParams, setSearchParams])
+  }, [searchParams, setSearchParams, loadUser])
 
   const handleSubscriptionAction = async () => {
     setLoadingAction(true)
     try {
-      await api.post("/stripe/create-checkout-session")
+      const { data } = await api.post("/stripe/create-checkout-session")
       if (data.type === "reactivation" && data.user) {
-        loadUser()
+        await updateUser(data.user)
         notifySuccess("Sua assinatura foi reativada com sucesso!")
       } else if (data.type === "checkout" && data.url) window.location.href = data.url
       else if (data.url) window.location.href = data.url
@@ -66,8 +66,8 @@ const Subscription = () => {
     if (!window.confirm("Tem certeza que deseja cancelar sua assinatura? Você manterá o acesso Plus até o final do período de cobrança.")) return
     setLoadingCancel(true)
     try {
-      await api.post("/stripe/cancel-subscription")
-      loadUser()
+      const { data } = await api.post("/stripe/cancel-subscription")
+      await updateUser(data.user)
       notifySuccess("Sua assinatura foi agendada para cancelamento com sucesso.")
     } catch (error) {
       notifyError(error.response?.data?.error || "Não foi possível cancelar sua assinatura. Tente novamente.")

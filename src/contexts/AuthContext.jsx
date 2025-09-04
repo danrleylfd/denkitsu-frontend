@@ -20,21 +20,22 @@ const AuthProvider = ({ children }) => {
   }, [])
 
   const loadUser = useCallback(async (userId) => {
-    const targetUserId = userId || user?._id
-    if (!targetUserId) return null
     try {
-      const userData = await getUserAccount(targetUserId)
-      if (targetUserId === user?._id) {
-        setUser(userData)
-        await storage.local.setItem("@Denkitsu:user", JSON.stringify(userData))
+      if (userId) {
+        const userData = await getUserAccount(userId)
+        return userData
       }
-      return userData
+      const token = await storage.session.getItem("@Denkitsu:token")
+      if (!token) return
+      api.defaults.headers.Authorization = `Bearer ${token}`
+      const currentUserData = await getUserAccount()
+      setUser(currentUserData)
+      await storage.local.setItem("@Denkitsu:user", JSON.stringify(currentUserData))
     } catch (error) {
-      console.error(`Falha ao buscar dados do usuário ${targetUserId}:`, error)
-      if (targetUserId === user?._id) await signOut()
-      throw error
+      console.error("Falha ao carregar dados do usuário, deslogando.", error)
+      await signOut()
     }
-  }, [user?._id, signOut])
+  }, [signOut])
 
   const updateUser = useCallback(async (partialUserData) => {
     if (!user) return
@@ -63,17 +64,15 @@ const AuthProvider = ({ children }) => {
     await saveSignData(token, refreshToken, userData)
   }, [saveSignData])
 
-  const signWithOAuth = useCallback(async ({ token, refreshToken }) => {
-    await storage.session.setItem("@Denkitsu:token", token)
-    if (refreshToken) await storage.local.setItem("@Denkitsu:refreshToken", refreshToken)
-    api.defaults.headers.Authorization = `Bearer ${token}`
+  const signWithOAuth = useCallback(async ({ token, refreshToken, user: initialUserData }) => {
+    await saveSignData(token, refreshToken, initialUserData)
     await loadUser()
-  }, [loadUser])
+  }, [saveSignData, loadUser])
 
   useEffect(() => {
     const loadStorageData = async () => {
       const storagedRefreshToken = await storage.local.getItem("@Denkitsu:refreshToken")
-      const storagedToken = await storage.session.getItem("@Denkitsu:token")
+      let storagedToken = await storage.session.getItem("@Denkitsu:token")
       if (storagedToken) {
         api.defaults.headers.Authorization = `Bearer ${storagedToken}`
         const storagedUser = await storage.local.getItem("@Denkitsu:user")
