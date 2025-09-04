@@ -1,9 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react"
 
 import api from "../services"
-
 import { getUserAccount } from "../services/account"
-
 import { storage } from "../utils/storage"
 
 const AuthContext = createContext({})
@@ -11,9 +9,44 @@ const AuthContext = createContext({})
 const isExtension = !!(window.chrome && chrome.runtime && chrome.runtime.id)
 
 const AuthProvider = ({ children }) => {
-
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+
+  const signOut = useCallback(async () => {
+    await storage.local.clear()
+    await storage.session.clear()
+    setUser(null)
+    delete api.defaults.headers.Authorization
+  }, [])
+
+  const fetchUser = useCallback(async (userId) => {
+    const targetUserId = userId || user?._id
+    if (!targetUserId) return null
+
+    try {
+      const userData = await getUserAccount(targetUserId)
+      // Se estamos buscando o usuário logado, atualizamos o estado
+      if (targetUserId === user?._id) {
+        setUser(userData)
+        await storage.local.setItem("@Denkitsu:user", JSON.stringify(userData))
+      }
+      return userData // Sempre retornamos os dados buscados
+    } catch (error) {
+      console.error(`Falha ao buscar dados do usuário ${targetUserId}:`, error)
+      if (targetUserId === user?._id) {
+        await signOut() // Desloga se falhar ao buscar o próprio usuário
+      }
+      throw error // Lança o erro para o chamador tratar
+    }
+  }, [user?._id, signOut])
+
+  const updateUser = useCallback(async (partialUserData) => {
+    if (!user) return
+    const updatedUser = { ...user, ...partialUserData }
+    setUser(updatedUser)
+    await storage.local.setItem("@Denkitsu:user", JSON.stringify(updatedUser))
+  }, [user])
+
 
   const saveSignData = useCallback(async (token, refreshToken, userData) => {
     await storage.local.setItem("@Denkitsu:user", JSON.stringify(userData))
@@ -35,51 +68,31 @@ const AuthProvider = ({ children }) => {
     await saveSignData(token, refreshToken, userData)
   }, [saveSignData])
 
-  const signWithOAuth = useCallback(async ({ token, refreshToken, user }) => {
-    await saveSignData(token, refreshToken, user)
-  }, [saveSignData])
+  const signWithOAuth = useCallback(async ({ token, refreshToken }) => {
+    await storage.session.setItem("@Denkitsu:token", token)
+    if (refreshToken) await storage.local.setItem("@Denkitsu:refreshToken", refreshToken)
+    api.defaults.headers.Authorization = `Bearer ${token}`
+    await fetchUser() // Busca os dados do usuário logado
+  }, [fetchUser])
 
-  const signOut = useCallback(async () => {
-    await storage.local.clear()
-    await storage.local.clear()
-    setUser(null)
-    delete api.defaults.headers.Authorization
-  }, [])
-
-  const loadUser = useCallback(async (userID) => {
-    if (!user) return
-    const updatedUser = await getUserAccount(userID || user._id)
-    if (updatedUser._id !== user._id) return updatedUser
-    await storage.local.setItem("@Denkitsu:user", JSON.stringify(updatedUser))
-    setUser((prev) => ({ ...prev, ...updatedUser }))
-    return user
-  }, [user])
-
-  const updateUser = useCallback(async (partialUser) => {
-    if (!user || user._id !== partialUser._id) return
-    setUser((prev) => ({ ...prev, ...partialUser }))
-    await storage.local.setItem("@Denkitsu:user", JSON.stringify(user))
-    return user
-  }, [user])
-
-  useEffect(() => {
-    if (!user) return
-    constloadUser(user._id)
-  }, [])
 
   useEffect(() => {
     const loadStorageData = async () => {
-      const storagedUser = await storage.local.getItem("@Denkitsu:user")
       const storagedRefreshToken = await storage.local.getItem("@Denkitsu:refreshToken")
       const storagedToken = await storage.session.getItem("@Denkitsu:token")
-      if (storagedToken && storagedUser) {
+
+      if (storagedToken) {
         api.defaults.headers.Authorization = `Bearer ${storagedToken}`
-        setUser(JSON.parse(storagedUser))
-      } else if (storagedRefreshToken && storagedUser) {
+        const storagedUser = await storage.local.getItem("@Denkitsu:user")
+        if (storagedUser) setUser(JSON.parse(storagedUser))
+        else await fetchUser()
+      } else if (storagedRefreshToken) {
         try {
           const response = await api.post("/auth/refresh_token", { refreshToken: `Bearer ${storagedRefreshToken}` })
           const { token, refreshToken: newRefreshToken } = response.data
-          await saveSignData(token, newRefreshToken, JSON.parse(storagedUser))
+          await storage.session.setItem("@Denkitsu:token", token)
+          await storage.local.setItem("@Denkitsu:refreshToken", newRefreshToken)
+          await fetchUser()
         } catch (error) {
           console.error("Falha ao atualizar token, deslogando.", error)
           await signOut()
@@ -87,7 +100,9 @@ const AuthProvider = ({ children }) => {
       }
       setLoading(false)
     }
+
     loadStorageData()
+
     if (isExtension) {
       const listener = (changes, area) => {
         if (area === "local" || area === "session") {
@@ -100,10 +115,10 @@ const AuthProvider = ({ children }) => {
       chrome.storage.onChanged.addListener(listener)
       return () => chrome.storage.onChanged.removeListener(listener)
     }
-  }, [saveSignData, signOut])
+  }, [signOut, fetchUser])
 
   return (
-    <AuthContext.Provider value={{ signed: !!user, user, loading, signUp, signIn, signWithOAuth, signOut, loadUser, updateUser }}>
+    <AuthContext.Provider value={{ signed: !!user, user, loading, signUp, signIn, signWithOAuth, signOut, fetchUser, updateUser }}>
       {children}
     </AuthContext.Provider>
   )
