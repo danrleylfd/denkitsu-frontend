@@ -46,16 +46,12 @@ const AuthProvider = ({ children }) => {
     delete api.defaults.headers.Authorization
   }, [])
 
-  const updateUser = useCallback(async (providedUser) => {
+  const updateUser = useCallback(async (userID) => {
     if (!user) return
-    if (providedUser && providedUser._id === user._id) {
-      setUser((prev) => ({ ...prev, ...providedUser }))
-      return
-    }
-    const userData = await getUserAccount(user._id)
-    await storage.local.setItem("@Denkitsu:user", JSON.stringify(userData))
-    setUser((prev) => ({ ...prev, ...userData }))
-  }, [user])
+    const updatedUser = await getUserAccount(userID || user._id)
+    await storage.local.setItem("@Denkitsu:user", JSON.stringify(updatedUser))
+    setUser(updatedUser)
+  }, [signed])
 
   useEffect(() => {
     const loadStorageData = async () => {
