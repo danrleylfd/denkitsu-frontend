@@ -138,7 +138,7 @@ const Subscription = () => {
           </ul>
         </div>
         <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingAction} disabled={loadingAction}>
-          {!loadingAction && (user?.plan === "free" && user?.stripeSubscriptionStatus === "past_due" ? "Renovar Assinatura" : "Simular Assinatura")}
+          {!loadingAction && (user?.plan === "free" && (user?.stripeSubscriptionStatus === "past_due" || user?.stripeSubscriptionStatus === "canceled") ? "Renovar Assinatura" : "Simular Assinatura")}
         </Button>
       </>
     )
