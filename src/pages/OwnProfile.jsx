@@ -152,9 +152,9 @@ const OwnProfile = () => {
                     <Button variant="secondary" size="icon" $rounded title="Perfil no GitHub"><Github size={16} /></Button>
                   </a>
                 )}
-                <Button variant="warning" size="icon" $rounded title="Editar" onClick={handleEditToggle}><Pencil size={16} /></Button>
               </div>
               <div className="flex gap-2">
+                <Button variant="warning" size="icon" $rounded title="Editar" onClick={handleEditToggle}><Pencil size={16} /></Button>
                 <Button variant="danger" size="icon" $rounded title="Sair" onClick={handleSignOut}><LogOut size={16} /></Button>
               </div>
             </>)
