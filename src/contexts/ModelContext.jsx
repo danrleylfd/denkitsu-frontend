@@ -84,12 +84,13 @@ const ModelProvider = ({ children }) => {
   }, [aiProvider])
 
   const aiProviderToggle = useCallback(() => {
+    if (!signed) return
     setAIProvider(prev => {
       if (prev === "groq") return "openrouter"
       if (prev === "openrouter") return (user.plan === "free") ? "groq" : "custom"
       return "groq"
     })
-  }, [])
+  }, [user])
 
   useEffect(() => {
     if (!isInitialized) return
