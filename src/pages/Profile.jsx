@@ -180,7 +180,7 @@ const Profile = () => {
             </div>
           ) : userData?.githubUsername && (
             <a href={`https://github.com/${userData.githubUsername}`} target="_blank" rel="noopener noreferrer">
-              <Button variant="secondary" size="icon" $rounded title={`Ver perfil de ${userData.name} no GitHub`}>
+              <Button variant="secondary" size="icon" $rounded title="Perfil no GitHub">
                 <Github size={16} />
               </Button>
             </a>
