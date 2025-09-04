@@ -22,7 +22,6 @@ const ModelProvider = ({ children }) => {
   const [customProviderUrl, setCustomProviderUrl] = useState("")
   const [customProviderKey, setCustomProviderKey] = useState("")
 
-
   const [freeModels, setFreeModels] = useState([])
   const [payModels, setPayModels] = useState([])
   const [groqModels, setGroqModels] = useState([])
