@@ -4,7 +4,7 @@ import { LogOut, Pencil, Trash, X, Check, Github } from "lucide-react"
 
 import { useAuth } from "../contexts/AuthContext"
 import { useNotification } from "../contexts/NotificationContext"
-import { getUserAccount, editUserAccount, deleteUserAccount, unlinkGithubAccount } from "../services/account"
+import { editUserAccount, deleteUserAccount, unlinkGithubAccount } from "../services/account"
 
 import SideMenu from "../components/SideMenu"
 import Avatar from "../components/Avatar"
@@ -37,11 +37,10 @@ const Profile = () => {
       }
       try {
         setLoading(true)
-        const updatedUser = await getUserAccount(userID)
+        const updatedUser = await updateUser(userID)
         setUserData(updatedUser)
         setName(updatedUser.name)
         setAvatarUrl(updatedUser.avatarUrl)
-        if (user?._id === updatedUser._id) updateUser(updatedUser)
       } catch (error) {
         console.error("Error fetching user account:", error)
         if (error.response && error.response.data.error) notifyError(error.response.data.error.message)
@@ -67,8 +66,8 @@ const Profile = () => {
     if (!window.confirm("Tem certeza que deseja desvincular sua conta do GitHub? Você precisará usar seu e-mail e senha para fazer login.")) return
     setLoading(true)
     try {
-      const updatedUser = await unlinkGithubAccount()
-      await updateUser(updatedUser)
+      await unlinkGithubAccount()
+      const updatedUser = await updateUser()
       setUserData(updatedUser)
       notifyInfo("Conta do GitHub desvinculada com sucesso!")
     } catch (error) {
@@ -97,7 +96,7 @@ const Profile = () => {
     setLoading(true)
     try {
       const updatedUser = await editUserAccount({ name, avatarUrl })
-      await updateUser(updatedUser)
+      await updateUser(updatedUser._id)
       setUserData((prev) => ({ ...prev, ...updatedUser }))
       setIsEditing(false)
       notifyInfo("Perfil atualizado com sucesso!")

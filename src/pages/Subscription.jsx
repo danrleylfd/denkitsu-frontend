@@ -49,9 +49,9 @@ const Subscription = () => {
   const handleSubscriptionAction = async () => {
     setLoadingAction(true)
     try {
-      const { data } = await api.post("/stripe/create-checkout-session")
+      await api.post("/stripe/create-checkout-session")
       if (data.type === "reactivation" && data.user) {
-        updateUser(data.user)
+        updateUser()
         notifySuccess("Sua assinatura foi reativada com sucesso!")
       } else if (data.type === "checkout" && data.url) window.location.href = data.url
       else if (data.url) window.location.href = data.url
