@@ -27,6 +27,11 @@ const Subscription = () => {
   const [loadingCancel, setLoadingCancel] = useState(false)
   const [searchParams, setSearchParams] = useSearchParams()
 
+  const plusActive = user?.plan ===  "plus"
+    && user?.stripeSubscriptionStatus === "active"
+    && user?.subscriptionCancelAtPeriodEnd === false
+    && new Date(user?.subscriptionEndDate) > new Date()
+
   useEffect(() => {
     const handlePaymentSuccess = async () => {
       notifySuccess("Assinatura confirmada! Bem-vindo ao Plano Plus.")
@@ -121,7 +126,7 @@ const Subscription = () => {
       <>
         <h2 className="text-lightFg-primary dark:text-darkFg-primary">Eleve sua Experiência</h2>
         <p className="text-lightFg-secondary dark:text-darkFg-secondary">
-          {user?.stripeSubscriptionId
+          {plusActive
             ? "Sua assinatura não está mais ativa. Renove para continuar com os benefícios do Plano Plus."
             : "Desbloqueie todo o potencial do Denkitsu com acesso ilimitado e funcionalidades exclusivas."}
         </p>
@@ -133,7 +138,7 @@ const Subscription = () => {
           </ul>
         </div>
         <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingAction} disabled={loadingAction}>
-          {!loadingAction && (user?.stripeSubscriptionId ? "Renovar Assinatura" : "Simular Assinatura")}
+          {!loadingAction && (plusActive ? "Renovar Assinatura" : "Simular Assinatura")}
         </Button>
       </>
     )
