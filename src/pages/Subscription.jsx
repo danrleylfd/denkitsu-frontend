@@ -66,8 +66,8 @@ const Subscription = () => {
     if (!window.confirm("Tem certeza que deseja cancelar sua assinatura? Você manterá o acesso Plus até o final do período de cobrança.")) return
     setLoadingCancel(true)
     try {
-      const { data } = await api.post("/stripe/cancel-subscription")
-      updateUser(data.user)
+      await api.post("/stripe/cancel-subscription")
+      updateUser()
       notifySuccess("Sua assinatura foi agendada para cancelamento com sucesso.")
     } catch (error) {
       notifyError(error.response?.data?.error || "Não foi possível cancelar sua assinatura. Tente novamente.")

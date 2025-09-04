@@ -17,7 +17,7 @@ const GithubCallback = () => {
       if (token && userParam) {
         const user = JSON.parse(decodeURIComponent(userParam))
         await signWithOAuth({ token, refreshToken, user })
-        await updateUser(user)
+        await updateUser(user._id)
         navigate("/")
       } else navigate("/signin?error=auth_failed")
     }
