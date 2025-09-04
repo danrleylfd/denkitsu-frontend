@@ -133,6 +133,13 @@ const OwnProfile = () => {
         </div>
         <div className="flex w-full justify-between items-center border-t border-zinc-200 dark:border-zinc-700 pt-4 mt-2">
           <div className="flex gap-2">
+            {user?.githubUsername && (
+              <a href={`https://github.com/${user.githubUsername}`} target="_blank" rel="noopener noreferrer">
+                <Button variant="secondary" size="icon" $rounded title="Perfil no GitHub">
+                  <Github size={16} />
+                </Button>
+              </a>
+            )}
             {isEditing
               ? (<>
                   <Button variant="secondary" size="icon" $rounded title="Cancelar" onClick={handleEditToggle} disabled={loading}><X size={16} /></Button>
