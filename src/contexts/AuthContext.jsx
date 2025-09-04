@@ -49,7 +49,7 @@ const AuthProvider = ({ children }) => {
   const updateUser = useCallback(async (providedUser) => {
     if (!user) return
     if (providedUser) {
-      setUser(providedUser)
+      setUser((prev) => ({ ...prev, ...providedUser }))
       return
     }
     const userData = await getUserAccount(user._id)

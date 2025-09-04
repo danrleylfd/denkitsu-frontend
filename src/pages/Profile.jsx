@@ -98,7 +98,7 @@ const Profile = () => {
     try {
       const updatedUser = await editUserAccount({ name, avatarUrl })
       await updateUser(updatedUser)
-      setUserData(updatedUser)
+      setUserData((prev) => ({ ...prev, ...updatedUser }))
       setIsEditing(false)
       notifyInfo("Perfil atualizado com sucesso!")
     } catch (error) {
