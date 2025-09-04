@@ -62,6 +62,11 @@ const AuthProvider = ({ children }) => {
   }, [user])
 
   useEffect(() => {
+    if (!user) return
+    loadUser(user._id)
+  }, [])
+
+  useEffect(() => {
     const loadStorageData = async () => {
       const storagedUser = await storage.local.getItem("@Denkitsu:user")
       const storagedRefreshToken = await storage.local.getItem("@Denkitsu:refreshToken")
