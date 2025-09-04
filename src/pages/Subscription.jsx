@@ -29,7 +29,7 @@ const Subscription = () => {
 
   useEffect(() => {
     const handlePaymentSuccess = async () => {
-      notifySuccess("Assinatura confirmada! Bem-vindo ao Plano Pro.")
+      notifySuccess("Assinatura confirmada! Bem-vindo ao Plano Plus.")
       try {
         updateUser()
       } catch (error) {
@@ -63,7 +63,7 @@ const Subscription = () => {
   }
 
   const handleCancelSubscription = async () => {
-    if (!window.confirm("Tem certeza que deseja cancelar sua assinatura? Você manterá o acesso Pro até o final do período de cobrança.")) return
+    if (!window.confirm("Tem certeza que deseja cancelar sua assinatura? Você manterá o acesso Plus até o final do período de cobrança.")) return
     setLoadingCancel(true)
     try {
       const { data } = await api.post("/stripe/cancel-subscription")
@@ -81,13 +81,13 @@ const Subscription = () => {
       if (user.subscriptionCancelAtPeriodEnd) {
         return (
           <>
-            <h2 className="text-lightFg-primary dark:text-darkFg-primary">Reative sua Assinatura Pro</h2>
+            <h2 className="text-lightFg-primary dark:text-darkFg-primary">Reative sua Assinatura</h2>
             <div className="flex items-center gap-2 text-amber-base font-semibold bg-amber-base/10 px-4 py-2 rounded-full">
               <AlertTriangle size={20} />
               <span>Cancelamento Agendado</span>
             </div>
             <p className="text-lightFg-secondary dark:text-darkFg-secondary">
-              Seu acesso Pro continua ativo até o final do período de faturamento. Para não perder seus benefícios, reative sua assinatura.
+              Seu acesso Plus continua ativo até o final do período de faturamento. Para não perder seus benefícios, reative sua assinatura.
             </p>
             <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingAction} disabled={loadingAction || loadingCancel}>
               {!loadingAction && "Reativar Assinatura"}
@@ -97,7 +97,7 @@ const Subscription = () => {
       }
       return (
         <>
-          <h2 className="text-lightFg-primary dark:text-darkFg-primary">Você é um Membro Pro!</h2>
+          <h2 className="text-lightFg-primary dark:text-darkFg-primary">Acesso Desbloqueado!</h2>
           <div className="flex items-center gap-2 text-green-base font-semibold bg-green-base/10 px-4 py-2 rounded-full">
             <CheckCircle2 size={20} />
             <span>Assinatura Ativa</span>
@@ -122,7 +122,7 @@ const Subscription = () => {
         <h2 className="text-lightFg-primary dark:text-darkFg-primary">Eleve sua Experiência</h2>
         <p className="text-lightFg-secondary dark:text-darkFg-secondary">
           {user?.stripeSubscriptionId
-            ? "Sua assinatura não está mais ativa. Renove para continuar com os benefícios Pro."
+            ? "Sua assinatura não está mais ativa. Renove para continuar com os benefícios do Plano Plus."
             : "Desbloqueie todo o potencial do Denkitsu com acesso ilimitado e funcionalidades exclusivas."}
         </p>
         <div className="text-left w-full bg-lightBg-secondary dark:bg-darkBg-secondary p-4 rounded-lg">
