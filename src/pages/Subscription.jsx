@@ -1,3 +1,4 @@
+// Frontend (ESM)
 import { useState, useEffect } from "react"
 import { useSearchParams } from "react-router-dom"
 import { Crown, CheckCircle2, Star, AlertTriangle } from "lucide-react"
@@ -27,11 +28,6 @@ const Subscription = () => {
   const [loadingCancel, setLoadingCancel] = useState(false)
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const plusActive = user?.plan ===  "plus"
-    && user?.stripeSubscriptionStatus === "active"
-    && user?.subscriptionCancelAtPeriodEnd === false
-    && new Date(user?.subscriptionEndDate) > new Date()
-
   useEffect(() => {
     const handlePaymentSuccess = async () => {
       notifySuccess("Assinatura confirmada! Bem-vindo ao Plano Plus.")
@@ -49,7 +45,7 @@ const Subscription = () => {
       notifyInfo("O processo de assinatura foi cancelado.")
       setSearchParams({})
     }
-  }, [searchParams, setSearchParams, loadUser])
+  }, [searchParams, setSearchParams, loadUser, notifySuccess, notifyError, notifyInfo])
 
   const handleSubscriptionAction = async () => {
     setLoadingAction(true)
@@ -75,14 +71,16 @@ const Subscription = () => {
       await updateUser(data.user)
       notifySuccess("Sua assinatura foi agendada para cancelamento com sucesso.")
     } catch (error) {
-      notifyError(error.response?.data?.error || "Não foi possível cancelar sua assinatura. Tente novamente.")
+      notifyError(error.response?.data?.error?.message || "Não foi possível cancelar sua assinatura. Tente novamente.")
     } finally {
       setLoadingCancel(false)
     }
   }
 
   const renderContent = () => {
-    if (user?.plan ===  "plus" && user?.stripeSubscriptionStatus === "active") {
+    // Cenário 1: Usuário é 'plus' e a assinatura está ativa
+    if (user?.plan === "plus" && user?.stripeSubscriptionStatus === "active") {
+      // Cenário 1.1: A assinatura está agendada para cancelar no fim do período
       if (user.subscriptionCancelAtPeriodEnd) {
         return (
           <>
@@ -100,6 +98,7 @@ const Subscription = () => {
           </>
         )
       }
+      // Cenário 1.2: Assinatura totalmente ativa
       return (
         <>
           <h2 className="text-lightFg-primary dark:text-darkFg-primary">Acesso Desbloqueado!</h2>
@@ -122,11 +121,12 @@ const Subscription = () => {
       )
     }
 
+    // Cenário 2: Usuário não é 'plus' (plano 'free' ou outro status)
     return (
       <>
         <h2 className="text-lightFg-primary dark:text-darkFg-primary">Eleve sua Experiência</h2>
         <p className="text-lightFg-secondary dark:text-darkFg-secondary">
-          {plusActive
+          {user?.stripeSubscriptionId
             ? "Sua assinatura não está mais ativa. Renove para continuar com os benefícios do Plano Plus."
             : "Desbloqueie todo o potencial do Denkitsu com acesso ilimitado e funcionalidades exclusivas."}
         </p>
@@ -138,7 +138,7 @@ const Subscription = () => {
           </ul>
         </div>
         <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingAction} disabled={loadingAction}>
-          {!loadingAction && (plusActive ? "Renovar Assinatura" : "Simular Assinatura")}
+          {!loadingAction && (user?.plan === "free" && user?.stripeSubscriptionStatus === "past_due" ? "Renovar Assinatura" : "Simular Assinatura")}
         </Button>
       </>
     )
