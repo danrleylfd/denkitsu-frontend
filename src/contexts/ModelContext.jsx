@@ -10,7 +10,7 @@ import { storage } from "../utils/storage"
 const ModelContext = createContext({})
 
 const ModelProvider = ({ children }) => {
-  const { signed } = useAuth()
+  const { signed, user } = useAuth()
   const { notifyError } = useNotification()
 
   const [aiProvider, setAIProvider] = useState("groq")
@@ -87,7 +87,7 @@ const ModelProvider = ({ children }) => {
   const aiProviderToggle = useCallback(() => {
     setAIProvider(prev => {
       if (prev === "groq") return "openrouter"
-      if (prev === "openrouter") return "custom"
+      if (prev === "openrouter") return (user.plan === "free") ? "groq" : "custom"
       return "groq"
     })
   }, [])

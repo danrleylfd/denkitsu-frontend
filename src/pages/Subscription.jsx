@@ -129,8 +129,7 @@ const Subscription = () => {
           <h5 className="text-lightFg-primary dark:text-darkFg-primary pb-2">Benefícios</h5>
           <ul className="space-y-2">
             <ProFeature>Provedores de IA personalizados.</ProFeature>
-            <ProFeature>Fabricação/Aquisição ilimitada de Agentes.</ProFeature>
-            <ProFeature>Fabricação/Aquisição ilimitada de Ferramentas.</ProFeature>
+            <ProFeature>Fabricação/Aquisição ilimitada de Agentes e Ferramentas.</ProFeature>
           </ul>
         </div>
         <Button variant="primary" $rounded onClick={handleSubscriptionAction} loading={loadingAction} disabled={loadingAction}>
