@@ -126,7 +126,7 @@ const ModelProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    if (!signed || aiProvider === "custom" && customProviderUrl.trim().length < 4) { // "d.io" = 4
+    if (!signed || aiProvider === "custom" && (customProviderUrl.trim().length < 4 || aiProvider === "custom" && customProviderKey.trim().length < 1)) { // "d.io" = 4
       setLoadingModels(false)
       return
     }
