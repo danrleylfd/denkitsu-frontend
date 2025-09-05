@@ -112,7 +112,7 @@ const Tradutor = () => {
 
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
-      <Paper className="w-full max-w-2xl flex flex-col gap-2 bg-lightBg-primary dark:bg-darkBg-primary">
+      <Paper className="!max-w-2xl flex flex-col gap-2 p-4">
         <div className="flex items-center gap-2 text-lightFg-primary dark:text-darkFg-primary">
           <Languages size={24} />
           <h2 className="text-xl font-bold">Tradutor</h2>

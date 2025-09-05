@@ -50,7 +50,7 @@ const AIAudio = ({ audioFile, onSend, onCancel }) => {
   }
 
   return (
-    <Paper className="bg-lightBg-primary dark:bg-darkBg-primary py-2 rounded-lg flex items-center justify-between gap-2 max-w-[95%] mb-1 mx-auto">
+    <Paper className="flex items-center justify-between gap-2 px-4 py-2 mb-1 mx-auto">
       <audio
         ref={audioRef}
         src={(audioSrc && audioSrc.length > 0) ? audioSrc : null}

@@ -4,7 +4,7 @@ import { useAuth } from "../../contexts/AuthContext"
 import { useAI } from "../../contexts/AIContext"
 import { useModels } from "../../contexts/ModelContext"
 
-import AIInput from "./Input"
+import TextArea from "../TextArea"
 import Paper from "../Paper"
 import Button from "../Button"
 
@@ -102,7 +102,7 @@ const ExtensionAIBar = ({
           </div>
           <div className="flex items-center gap-2 w-full">
             <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loading || isImproving}><MessageCirclePlus size={16} /></Button>
-            <AIInput id="prompt-input-mobile" value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} onKeyDown={handleKeyDown} className="resize-y" disabled={loading || isImproving} />
+            <TextArea suggestions={suggestions} id="prompt-input-mobile" value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} onKeyDown={handleKeyDown} textAreaClassName="flex-1 resize-none h-8 w-full p-2 rounded-md font-mono text-sm" rows={1} disabled={loading || isImproving} placeholder={!loading || !isImproving ? "Escreva seu prompt" : "Pensando..."}/>
             <Button size="icon" $rounded title="Enviar" onClick={handleSendMessage} loading={loading} disabled={loading || isImproving || (!userPrompt.trim() && imageCount === 0 && !audioFile)}>{!loading && <Send size={16} />}</Button>
           </div>
         </div>
@@ -122,7 +122,7 @@ const ExtensionAIBar = ({
           <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor}><Wrench size={16} /></Button>
           <Button variant="secondary" size="icon" $rounded title="Fábrica" onClick={toggleFactoryManagerDoor} disabled={loading || isImproving}><Factory size={16} /></Button>
           <Button variant="secondary" size="icon" $rounded title="Abrir Loja" onClick={() => chrome.tabs.create({ url: "https://denkitsu.vercel.app/store" })}><Store size={16} /></Button>
-          <AIInput id="prompt-input-desktop" value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} onKeyDown={handleKeyDown} className="resize-y" disabled={loading || isImproving} />
+          <TextArea suggestions={suggestions} id="prompt-input-desktop" value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} onKeyDown={handleKeyDown} textAreaClassName="flex-1 resize-none h-8 w-full p-2 rounded-md font-mono text-sm" rows={1} disabled={loading || isImproving} placeholder={!loading || !isImproving ? "Escreva seu prompt" : "Pensando..."} />
           <div className="flex items-center gap-2">
             <Button variant="secondary" size="icon" $rounded title="Analisar Página" onClick={onAnalyzePage} disabled={loading || isImproving}><ScanText size={16} /></Button>
             <Button variant="outline" size="icon" $rounded title="Aperfeiçoar Prompt" onClick={improvePrompt} loading={isImproving} disabled={loading || isImproving || !userPrompt.trim()}>{!isImproving && <Sparkle size={16} />}</Button>

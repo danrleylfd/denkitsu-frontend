@@ -146,7 +146,7 @@ const Subscription = () => {
 
   return (
     <SideMenu ContentView={ContentView} className="bg-cover bg-brand-purple">
-      <Paper className="w-full max-w-md flex flex-col items-center gap-4 text-center bg-lightBg-primary dark:bg-darkBg-primary">
+      <Paper className="!max-w-md flex flex-col items-center text-center gap-4 p-4">
         <div className="w-16 h-16 rounded-full bg-amber-base/10 flex items-center justify-center border-2 border-amber-base">
           <Crown size={32} className="text-amber-base" />
         </div>

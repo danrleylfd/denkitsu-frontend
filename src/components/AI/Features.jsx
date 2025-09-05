@@ -290,9 +290,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-      <Paper
-        className="relative w-full max-w-[95%] h-full max-h-[95%] flex flex-col px-2 py-2 gap-2 rounded-lg bg-lightBg-primary px-2 shadow-2xl dark:bg-darkBg-primary border border-solid border-brand-purple"
-        onClick={(e) => e.stopPropagation()}>
+      <Paper className="relative h-full max-h-[95%] flex flex-col gap-2 px-2 py-2 border border-solid border-brand-purple" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between border-b border-bLight dark:border-bDark">
           <h3 className="text-lightFg-primary dark:text-darkFg-primary">Apresentamos Denkitsu!</h3>
           <Button variant="danger" size="icon" $rounded onClick={toggleFeaturesDoor}>

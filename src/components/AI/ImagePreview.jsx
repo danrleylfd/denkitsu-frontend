@@ -11,7 +11,7 @@ const AIImagePreview = () => {
   if (imageUrls.length === 0) return null
   const onRemoveImage = (index) => setImageUrls(prev => prev.filter((_, i) => i !== index))
   return (
-    <Paper className="bg-lightBg-primary dark:bg-darkBg-primary rounded-lg flex gap-2 overflow-x-auto py-2 max-w-[95%] mb-1 mx-auto">
+    <Paper className="flex gap-2 py-2 mb-1 mx-auto overflow-x-auto">
       {imageUrls.map((url, index) => (
         <div key={index} className="flex flex-col gap-2">
           <img src={url} alt={`Preview ${index + 1}`} className="h-16 w-auto rounded-md object-cover" />

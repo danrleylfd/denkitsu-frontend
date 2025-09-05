@@ -93,7 +93,7 @@ const News = () => {
 
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
-      <Paper>
+      <Paper className="p-4">
         <Input
           placeholder="Pesquisar um tópico para gerar uma notícia com IA..."
           value={searchTerm}
@@ -141,8 +141,8 @@ const News = () => {
           </>
         )
 
-        if (news.length === index + 1) return (<Paper ref={lastNewsElementRef} key={article._id || index}>{cardContent}</Paper>)
-        else return (<Paper key={article._id || index}>{cardContent}</Paper>)
+        if (news.length === index + 1) return (<Paper variant="secondary" className="p-4" ref={lastNewsElementRef} key={article._id || index}>{cardContent}</Paper>)
+        else return (<Paper variant="secondary" className="p-4" key={article._id || index}>{cardContent}</Paper>)
       })}
       {loading && <Button variant="outline" $rounded loading={true} disabled />}
       {!hasMore && news.length > 0 && <p className="text-center text-white mt-4">Fim das notícias.</p>}

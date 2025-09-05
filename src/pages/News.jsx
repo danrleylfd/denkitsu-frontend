@@ -87,7 +87,7 @@ const News = () => {
 
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
-      <Paper>
+      <Paper className="p-4">
         <Input
           placeholder="Pesquisar um tópico para gerar uma notícia com IA..."
           value={searchTerm}
@@ -107,7 +107,7 @@ const News = () => {
       {news.map((article, index) => {
         if (news.length === index + 1) {
           return (
-            <Paper ref={lastNewsElementRef} key={article._id}>
+            <Paper variant="secondary" className="p-4" ref={lastNewsElementRef} key={article._id}>
               <Markdown content={article.content} />
               <small className="text-xs text-lightFg-secondary dark:text-darkFg-secondary">
                 Publicado em {new Date(article.createdAt).toLocaleString()}
@@ -116,7 +116,7 @@ const News = () => {
           )
         } else {
           return (
-            <Paper key={article._id}>
+            <Paper variant="secondary" className="p-4" key={article._id}>
               <Markdown content={article.content} />
               <small className="text-xs text-lightFg-secondary dark:text-darkFg-secondary">
                 Publicado em {new Date(article.createdAt).toLocaleString()}

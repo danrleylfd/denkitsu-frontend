@@ -11,7 +11,7 @@ const TaskCreator = () => {
   const { aiProvider, aiProviderToggle } = useModels()
   const { newTask, setNewTask, addTask, generateTasksWithAI, loading } = useTasks()
   return (
-    <Paper className="bg-lightBg-primary dark:bg-darkBg-primary">
+    <Paper className="p-4">
       <h1 className="text-center text-lightFg-primary dark:text-darkFg-primary">Kanban</h1>
       <p className="text-center text-lightFg-secondary dark:text-darkFg-secondary">Descreva um objetivo e deixe a IA gerar o passo a passo para você.</p>
       <Input

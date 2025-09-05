@@ -699,7 +699,7 @@ const Codebase = () => {
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
       <FileViewer file={viewingFile} onClose={() => setViewingFile(null)} />
-      <Paper className="w-full h-full max-w-6xl max-h-[90vh] flex flex-col items-center justify-center bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary">
+      <Paper className="!max-w-6xl h-full !max-h-[90vh] flex flex-col items-center justify-center">
         {isProcessing ? (
           <div className="flex flex-col items-center justify-center gap-4">
             <Loader2 className="h-12 w-12 animate-spin text-primary-base" />

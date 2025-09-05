@@ -16,11 +16,7 @@ const AIAgents = ({ agentsDoor }) => {
   const Separator = () => <div className="h-6 w-px bg-bLight dark:bg-bDark mx-1" />
 
   return (
-    <Paper className={`bg-lightBg-primary dark:bg-darkBg-primary text-lightFg-primary dark:text-darkFg-primary
-      opacity-80 dark:opacity-90
-      mb-1 py-2 gap-2 rounded-lg shadow-lg max-w-[95%]
-      flex flex-wrap items-center justify-center mx-auto`}
-    >
+    <Paper className="flex flex-wrap items-center justify-center gap-2 px-4 py-2 mb-1 mx-auto">
       {agents.backendAgents.map(({ name, Icon, description, disabled = false }) => (
         <Button
           key={name}

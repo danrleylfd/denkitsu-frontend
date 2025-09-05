@@ -58,7 +58,7 @@ Denkitsu pode atualizar esta Política de Privacidade periodicamente. Quaisquer 
 
   return (
     <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
-      <Paper>
+      <Paper variant="secondary" className="p-4">
         <Markdown content={privacyPolicyContent} />
       </Paper>
     </SideMenu>

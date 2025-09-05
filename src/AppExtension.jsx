@@ -16,7 +16,7 @@ const AuthScreen = () => {
   }
   return (
     <div className="flex flex-col justify-center items-center h-full p-4">
-      <Paper className="flex flex-col items-center gap-2 text-center">
+      <Paper className="flex flex-col items-center text-center gap-2 p-4">
         <img src="/denkitsu-rounded.png" alt="Denkitsu Logo" className="w-20 h-20" />
         <h2 className="text-xl font-bold text-lightFg-primary dark:text-darkFg-primary">Bem-vindo, Eu sou o Denkitsu</h2>
         <p className="text-lightFg-secondary dark:text-darkFg-secondary">
