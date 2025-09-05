@@ -1,8 +1,8 @@
+// Código completo do arquivo
 import { Link } from "react-router-dom"
-import { Plus, Globe, Lightbulb, GraduationCap, FileArchive, Eye, Mic, Send, Bot, User } from "lucide-react"
-
-import { useAI } from "../contexts/AIContext"
-import { useAuth } from "../contexts/AuthContext"
+import { Plus, Globe, Lightbulb, GraduationCap, Paperclip, Eye, Mic, Send, Bot, User } from "lucide-react"
+import { useAI } from "../../contexts/AIContext"
+import { useAuth } from "../../contexts/AuthContext"
 
 const ActionButton = ({ icon: Icon, text }) => (
   <div className="text_icon flex items-center gap-2 border border-solid border-bLight dark:border-bDark py-1 px-3 rounded-full cursor-not-allowed opacity-50">
@@ -26,7 +26,7 @@ const WelcomeScreen = () => (
     <div className="icon_div grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 w-full max-w-3xl">
       <SuggestionCard icon={GraduationCap} text="Obter conselho" />
       <SuggestionCard icon={Lightbulb} text="Brainstorm" />
-      <SuggestionCard icon={FileArchive} text="Resumir texto" />
+      <SuggestionCard icon={Paperclip} text="Resumir texto" />
       <SuggestionCard icon={Eye} text="Analisar Imagens" />
       <div className="text_icon flex items-center justify-center text-center border border-solid border-bLight dark:border-bDark p-3 rounded-lg cursor-not-allowed opacity-50 h-full">
         <span className="text-sm">mais</span>
@@ -37,17 +37,34 @@ const WelcomeScreen = () => (
 
 const CloneMessage = ({ message }) => {
   const isAssistant = message.role === "assistant"
+
+  const renderContent = () => {
+    if (typeof message.content === "string") {
+      return <p className="whitespace-pre-wrap">{message.content}</p>
+    }
+
+    if (Array.isArray(message.content)) {
+      return message.content.map((part, index) => {
+        if (part.type === "text") {
+          return <p key={index} className="whitespace-pre-wrap">{part.content}</p>
+        }
+        // Futuramente, adicionar renderização de outros tipos, como imagens.
+        return null
+      })
+    }
+    return null
+  }
+
   return (
     <div className={`flex items-start gap-4 py-4 px-2 rounded-md ${isAssistant ? "bg-lightBg-secondary dark:bg-darkBg-secondary" : ""}`}>
       <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-lightBg-tertiary dark:bg-darkBg-tertiary">
         {isAssistant ? <Bot size={20} /> : <User size={20} />}
       </div>
-      <div className="flex-grow pt-1">
-        <p className="whitespace-pre-wrap">{message.content}</p>
-      </div>
+      <div className="flex-grow pt-1">{renderContent()}</div>
     </div>
   )
 }
+
 
 const ClonePage = () => {
   const { signed } = useAuth()
