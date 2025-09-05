@@ -46,7 +46,9 @@ const AIModelSelect = ({ loading, className }) => {
           <Select.Value placeholder="Selecionar Modelo" />
         </div>
         <Select.Icon asChild>
-          <ChevronsUpDown size={16} />
+          <Button variant="secondary" size="icon">
+            <ChevronsUpDown size={16} />
+          </Button>
         </Select.Icon>
       </Select.Trigger>
       <Select.Portal>
