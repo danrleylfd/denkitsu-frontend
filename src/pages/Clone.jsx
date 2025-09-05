@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom"
 import { Plus, Globe, Lightbulb, GraduationCap, FileLines, Eye, Mic, Send, Bot, User } from "lucide-react"
 
-import { useAI } from "../../contexts/AIContext"
-import { useAuth } from "../../contexts/AuthContext"
+import { useAI } from "../contexts/AIContext"
+import { useAuth } from "../contexts/AuthContext"
 
 const ActionButton = ({ icon: Icon, text }) => (
   <div className="text_icon flex items-center gap-2 border border-solid border-bLight dark:border-bDark py-1 px-3 rounded-full cursor-not-allowed opacity-50">
