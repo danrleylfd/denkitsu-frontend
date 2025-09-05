@@ -237,7 +237,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
             {signed && (
               <Link to="/subscription" className={`${menuItemClass} !text-amber-base !hover:bg-amber-light !active:bg-amber-dark ${pathname === "/subscription" ? "border-l-4 border-amber-base" : ""} ${!isOpen && "justify-center"}`} title={user.plan === "free" ? "Upgrade" : "Gerenciar Assinatura"}>
                 <div className="w-6 h-6 flex items-center justify-center"><Crown size={16} /></div>
-                {isOpen && <span className="ml-1 select-none font-bold">{user.plan === "free" ? "Upgrade" : "Gerenciar Assinatura"}</span>}
+                {isOpen && <span className="ml-1 select-none font-bold">{user.plan === "free" ? "Assinar" : "Assinatura"}</span>}
               </Link>
             )}
             <SubMenu
