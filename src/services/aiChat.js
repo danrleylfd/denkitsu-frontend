@@ -112,7 +112,7 @@ const getModels = async (aiProvider, customApiUrl, customApiKey) => {
       .filter((item) => item.id && item.id.includes(":free"))
       .sort((a, b) => a.id.localeCompare(b.id))
     const payModels = data.models
-      .filter((item) => item.id && !item.id.includes(":free") && item.aiProvider === "openrouter")
+      .filter((item) => item.id && !item.id.includes(":free") && item.aiProvider !== "groq" && item.aiProvider !== "custom")
       .sort((a, b) => a.id.localeCompare(b.id))
     const groqModels = data.models
       .filter((item) => item.aiProvider === "groq")
