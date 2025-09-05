@@ -126,7 +126,7 @@ const ModelProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    if (!signed) {
+    if (!signed || aiProvider === "custom" && customProviderUrl.trim().length < 4) {
       setLoadingModels(false)
       return
     }
