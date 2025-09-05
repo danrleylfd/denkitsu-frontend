@@ -145,13 +145,13 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
     { icon: Store, label: "Loja", to: "/store" },
     { icon: Edit2, label: "Editor", to: "/editor" },
     { icon: Kanban, label: "Kanban", to: "/kanban" },
-    { icon: Shield, label: "Privacidade", to: "/privacidade" },
+    { icon: Shield, label: "Privacidade", to: "/privacy" },
   ]
 
   const toolItems = [
     { icon: Newspaper, label: "Notícias", to: "/news" },
     { icon: Clock, label: "Pomodoro", to: "/pomodoro" },
-    { icon: Cloud, label: "Clima", to: "/clima" },
+    { icon: Cloud, label: "Clima", to: "/weather" },
     { icon: Languages, label: "Tradutor", to: "/translator" },
   ]
 

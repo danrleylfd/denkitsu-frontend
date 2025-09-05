@@ -57,7 +57,7 @@ const AppRoutes = () => {
               <Route path="/news" element={<News />} />
               <Route path="/kanban" element={<Kanban />} />
               <Route path="/pomodoro" element={<Pomodoro />} />
-              <Route path="/clima" element={<Weather />} />
+              <Route path="/weather" element={<Weather />} />
               <Route path="/translator" element={<Translator />} />
               <Route path="/codebase" element={<Codebase />} />
               <Route path="/upload" element={<Upload />} />
@@ -71,7 +71,7 @@ const AppRoutes = () => {
               <Route path="/atalho" element={<Shortcut />} />
               <Route path="/chat" element={<AI />} />
               <Route path="/clone" element={<Clone />} />
-              <Route path="/privacidade" element={<Privacidade />} />
+              <Route path="/privacy" element={<Privacidade />} />
               <Route path="/access/:label" element={<Redirect />} />
               <Route path="/auth/:label" element={<Redirect />} />
               <Route path="/*" element={<Redirect />} />
@@ -84,7 +84,7 @@ const AppRoutes = () => {
               <Route path="/cinema" element={<Cinema />} />
               <Route path="/todo" element={<Kanban />} />
               <Route path="/pomodoro" element={<Pomodoro />} />
-              <Route path="/clima" element={<Weather />} />
+              <Route path="/weather" element={<Weather />} />
               <Route path="/translator" element={<Translator />} />
               <Route path="/codebase" element={<Codebase />} />
               <Route path="/chat" element={<AI />} />
@@ -94,7 +94,7 @@ const AppRoutes = () => {
               <Route path="/reset_password" element={<ResetPassword />} />
               <Route path="/auth/github/callback" element={<GithubCallback />} />
               <Route path="/access/:label" element={<Redirect />} />
-              <Route path="/privacidade" element={<Privacidade />} />
+              <Route path="/privacy" element={<Privacidade />} />
               <Route path="/*" element={<Redirect />} />
             </>
           )}
