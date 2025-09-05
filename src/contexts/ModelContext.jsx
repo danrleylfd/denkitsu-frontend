@@ -126,12 +126,12 @@ const ModelProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    if (!signed || aiProvider === "custom" && customProviderUrl.trim().length < 4) {
+    if (!signed || aiProvider === "custom" && customProviderUrl.trim().length < 4) { // "d.io" = 4
       setLoadingModels(false)
       return
     }
     fetchModels()
-  }, [signed, aiProvider, customProviderUrl])
+  }, [signed, aiProvider])
 
   const value = useMemo(() => ({
     aiProvider, aiProviderToggle,
