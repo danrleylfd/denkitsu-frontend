@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { Plus, Globe, Lightbulb, GraduationCap, FileLines, Eye, Mic, Send, Bot, User } from "lucide-react"
+import { Plus, Globe, Lightbulb, GraduationCap, FileArchive, Eye, Mic, Send, Bot, User } from "lucide-react"
 
 import { useAI } from "../contexts/AIContext"
 import { useAuth } from "../contexts/AuthContext"
@@ -26,7 +26,7 @@ const WelcomeScreen = () => (
     <div className="icon_div grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 w-full max-w-3xl">
       <SuggestionCard icon={GraduationCap} text="Obter conselho" />
       <SuggestionCard icon={Lightbulb} text="Brainstorm" />
-      <SuggestionCard icon={FileLines} text="Resumir texto" />
+      <SuggestionCard icon={FileArchive} text="Resumir texto" />
       <SuggestionCard icon={Eye} text="Analisar Imagens" />
       <div className="text_icon flex items-center justify-center text-center border border-solid border-bLight dark:border-bDark p-3 rounded-lg cursor-not-allowed opacity-50 h-full">
         <span className="text-sm">mais</span>
