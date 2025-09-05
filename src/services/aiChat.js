@@ -109,7 +109,7 @@ const getModels = async (aiProvider, customApiUrl, customApiKey) => {
     if (!data) throw new Error("Falha ao obter modelos.")
     if (data.error) throw new Error(data.error?.message || "Erro ao consultar modelos.")
     const freeModels = data.models
-      .filter((item) => item.id && item.id.includes(":free") && item.aiProvider === "openrouter")
+      .filter((item) => item.id && item.id.includes(":free"))
       .sort((a, b) => a.id.localeCompare(b.id))
     const payModels = data.models
       .filter((item) => item.id && !item.id.includes(":free") && item.aiProvider === "openrouter")
