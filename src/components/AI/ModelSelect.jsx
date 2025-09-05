@@ -4,7 +4,7 @@ import { useModels } from "../../contexts/ModelContext"
 import Button from "../Button"
 
 const AIModelSelect = ({ loading, className }) => {
-  const { aiProvider, model, freeModels, payModels, groqModels, setModel } = useModels()
+  const { aiProvider, model, freeModels, payModels, groqModels, customModels, setModel } = useModels()
   const triggerClasses = [
     "flex gap-1 w-full items-center rounded-full pr-1 transition-all h-10",
     "bg-lightBg-tertiary text-lightFg-secondary",
@@ -46,9 +46,7 @@ const AIModelSelect = ({ loading, className }) => {
           <Select.Value placeholder="Selecionar Modelo" />
         </div>
         <Select.Icon asChild>
-          <Button variant="outline" size="icon" $rounded disabled={loading} className="cursor-pointer">
-            <ChevronsUpDown size={16} />
-          </Button>
+          <ChevronsUpDown size={16} />
         </Select.Icon>
       </Select.Trigger>
       <Select.Portal>
@@ -57,6 +55,7 @@ const AIModelSelect = ({ loading, className }) => {
             {aiProvider === "openrouter" && renderOptions(freeModels, "OpenRouter Gratuito:")}
             {aiProvider === "openrouter" && renderOptions(payModels, "OpenRouter Premium:")}
             {aiProvider === "groq" && renderOptions(groqModels, "Groq Gratuito:")}
+            {aiProvider === "custom" && renderOptions(customModels, "Modelos Personalizados:")}
           </Select.Viewport>
         </Select.Content>
       </Select.Portal>

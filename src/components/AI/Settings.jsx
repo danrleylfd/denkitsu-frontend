@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { X, Waypoints, Eye, EyeClosed, Server } from "lucide-react"
+import { X, Waypoints, Eye, EyeClosed, Server, RefreshCcw } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 import { useModels } from "../../contexts/ModelContext"
@@ -22,7 +22,8 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
     customProviderUrl,
     setCustomProviderUrl,
     model,
-    setModel
+    setModel,
+    fetchModels
   } = useModels()
 
   if (!settingsDoor) return null
@@ -57,17 +58,11 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
               title={getProviderTitle()}>
               {aiProvider === "custom" ? <Server size={16} /> : <Waypoints size={16} />}
             </Button>
-            {aiProvider === "custom" ? (
-              <Input
-                className="max-w-64"
-                id="custom-model"
-                type="text"
-                placeholder="ID do Modelo Personalizado"
-                value={model}
-                onChange={(e) => setModel(e.target.value)}
-              />
-            ) : (
-              <AIModelSelect className="max-w-64" loadingModels={loadingModels} />
+            <AIModelSelect className="max-w-64" loadingModels={loadingModels} />
+            {aiProvider === "custom" && (
+              <Button variant="secondary" size="icon" $rounded onClick={fetchModels}>
+                <RefreshCcw size={16} />
+              </Button>
             )}
             <Input
               id="api-key"

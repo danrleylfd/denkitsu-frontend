@@ -25,6 +25,7 @@ const ModelProvider = ({ children }) => {
   const [freeModels, setFreeModels] = useState([])
   const [payModels, setPayModels] = useState([])
   const [groqModels, setGroqModels] = useState([])
+  const [customModels, setCustomModels] = useState([])
   const [loadingModels, setLoadingModels] = useState(true)
 
   const [isInitialized, setIsInitialized] = useState(false)
@@ -43,7 +44,7 @@ const ModelProvider = ({ children }) => {
         storedProvider ? setAIProvider(storedProvider) : setAIProvider("groq")
         storedGroqModel ? setGroqModel(storedGroqModel) : setGroqModel("openai/gpt-oss-120b")
         storedOpenRouterModel ? setOpenRouterModel(storedOpenRouterModel) : setOpenRouterModel("deepseek/deepseek-r1-0528:free")
-        storedCustomModel ? setCustomModel(storedCustomModel) : setCustomModel("custom/model")
+        storedCustomModel ? setCustomModel(storedCustomModel) : setCustomModel("auto")
         storedGroqKey ? setGroqKey(storedGroqKey) : setGroqKey("")
         storedOpenRouterKey ? setOpenRouterKey(storedOpenRouterKey) : setOpenRouterKey("")
         storedCustomUrl ? setCustomProviderUrl(storedCustomUrl) : setCustomProviderUrl("")
@@ -104,28 +105,30 @@ const ModelProvider = ({ children }) => {
     if (customProviderKey) storage.local.setItem("@Denkitsu:CustomProviderKey", customProviderKey); else storage.local.removeItem("@Denkitsu:CustomProviderKey")
   }, [aiProvider, groqModel, openRouterModel, customModel, groqKey, openRouterKey, customProviderUrl, customProviderKey, isInitialized])
 
+  const fetchModels = async () => {
+    setLoadingModels(true)
+    try {
+      const { freeModels: loadedFree, payModels: loadedPay, groqModels: loadedGroq, customModels: loadedCustom } = await getModels(aiProvider, customProviderUrl, customProviderKey)
+      setFreeModels(loadedFree?.filter(m => !m.id.includes("whisper")) || [])
+      if (aiKey) setPayModels(loadedPay?.filter(m => !m.id.includes("whisper")) || [])
+      else setPayModels([])
+      setGroqModels(loadedGroq?.filter(m => !m.id.includes("whisper")) || [])
+      setCustomModels(loadedCustom || [])
+    } catch (error) {
+      notifyError(error.message || "Falha ao carregar modelos de IA.")
+      setFreeModels([])
+      setPayModels([])
+      setGroqModels([])
+      setCustomModels([])
+    } finally {
+      setLoadingModels(false)
+    }
+  }
+
   useEffect(() => {
     if (!signed) {
       setLoadingModels(false)
       return
-    }
-
-    const fetchModels = async () => {
-      setLoadingModels(true)
-      try {
-        const { freeModels: loadedFree, payModels: loadedPay, groqModels: loadedGroq } = await getModels()
-        setFreeModels(loadedFree?.filter(m => !m.id.includes("whisper")) || [])
-        if (aiKey) setPayModels(loadedPay?.filter(m => !m.id.includes("whisper")) || [])
-        else setPayModels([])
-        setGroqModels(loadedGroq?.filter(m => !m.id.includes("whisper")) || [])
-      } catch (error) {
-        notifyError(error.message || "Falha ao carregar modelos de IA.")
-        setFreeModels([])
-        setPayModels([])
-        setGroqModels([])
-      } finally {
-        setLoadingModels(false)
-      }
     }
     fetchModels()
   }, [signed, aiKey])
@@ -135,12 +138,11 @@ const ModelProvider = ({ children }) => {
     model, setModel,
     aiKey, setAIKey,
     customProviderUrl, setCustomProviderUrl,
-    freeModels, payModels, groqModels,
-    loadingModels
+    freeModels, payModels, groqModels, customModels, loadingModels, fetchModels
   }), [
     aiProvider, aiProviderToggle, model, setModel, aiKey, setAIKey,
     customProviderUrl, setCustomProviderUrl,
-    freeModels, payModels, groqModels, loadingModels
+    freeModels, payModels, groqModels, customModels, loadingModels, fetchModels
   ])
 
   return (
