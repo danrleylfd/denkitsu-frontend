@@ -40,7 +40,7 @@ const AIModelSelect = ({ loading, className }) => {
   }
 
   return (
-    <Select.Root value={model} onValueChange={setModel} disabled={loading}>
+    <Select.Root value={aiProvider === "custom" ? model : undefined} onValueChange={setModel} disabled={loading}>
       <Select.Trigger className={triggerClasses}>
         <div className="flex-1 text-left px-2 text-base">
           <Select.Value placeholder="Selecionar Modelo" />
