@@ -131,7 +131,7 @@ const ModelProvider = ({ children }) => {
       return
     }
     fetchModels()
-  }, [signed, aiProvider])
+  }, [aiProvider])
 
   const value = useMemo(() => ({
     aiProvider, aiProviderToggle,
