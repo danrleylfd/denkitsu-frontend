@@ -33,6 +33,7 @@ const Translator = lazy(() => import("../pages/Translator"))
 const Codebase = lazy(() => import("../pages/Codebase"))
 const Editor = lazy(() => import("../pages/Editor"))
 const Cinema = lazy(() => import("../pages/Cinema"))
+const Clone = lazy(() => import("../pages/Clone"))
 
 const PageLoader = () => (
   <div className="flex justify-center items-center h-dvh w-full">
@@ -69,6 +70,7 @@ const AppRoutes = () => {
               <Route path="/subscription" element={<Subscription />} />
               <Route path="/atalho" element={<Shortcut />} />
               <Route path="/chat" element={<AI />} />
+              <Route path="/clone" element={<Clone />} />
               <Route path="/privacidade" element={<Privacidade />} />
               <Route path="/access/:label" element={<Redirect />} />
               <Route path="/auth/:label" element={<Redirect />} />
