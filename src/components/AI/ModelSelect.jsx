@@ -52,8 +52,8 @@ const AIModelSelect = ({ loading, className }) => {
       <Select.Portal>
         <Select.Content position="popper" sideOffset={5} className="w-[--radix-select-trigger-width] bg-lightBg-primary dark:bg-darkBg-primary rounded-lg shadow-lg border border-bLight dark:border-bDark z-50">
           <Select.Viewport className="p-2 max-h-[256px] overflow-y-auto">
-            {aiProvider === "openrouter" && renderOptions(freeModels, "OpenRouter Gratuito:")}
-            {aiProvider === "openrouter" && renderOptions(payModels, "OpenRouter Premium:")}
+            {aiProvider === "openrouter" && renderOptions(freeModels.map((m) => ({...m, id: m.id.split("/").pop()})), "OpenRouter Gratuito:")}
+            {aiProvider === "openrouter" && renderOptions(payModels.map((m) => ({...m, id: m.id.split("/").pop()})), "OpenRouter Premium:")}
             {aiProvider === "groq" && renderOptions(groqModels, "Groq Gratuito:")}
             {aiProvider === "custom" && renderOptions(customModels, "Modelos Personalizados:")}
           </Select.Viewport>
