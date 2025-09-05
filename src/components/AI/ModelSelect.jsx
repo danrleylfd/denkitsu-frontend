@@ -46,7 +46,7 @@ const AIModelSelect = ({ loading, className }) => {
           <Select.Value placeholder="Selecionar Modelo" />
         </div>
         <Select.Icon asChild>
-          <Button variant="secondary" size="icon">
+          <Button variant="secondary" size="icon" $rounded>
             <ChevronsUpDown size={16} />
           </Button>
         </Select.Icon>
