@@ -108,7 +108,7 @@ const getModels = async (aiProvider, customApiUrl, customApiKey) => {
     const { data } = await api.get(`/ai/models?${params.toString()}`)
     if (!data) throw new Error("Falha ao obter modelos.")
     if (data.error) throw new Error(data.error?.message || "Erro ao consultar modelos.")
-    return data
+    return data.models
   } catch (error) {
     console.error("Error on getModels:", error.response?.data?.error?.message || error.message)
     throw error
