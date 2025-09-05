@@ -26,7 +26,7 @@ const AIModelSelect = ({ loading, className }) => {
             value={m.id}
             className="relative flex items-center px-6 py-2 rounded-md text-sm text-lightFg-primary dark:text-darkFg-primary cursor-pointer select-none hover:bg-primary-base/10 outline-none data-[highlighted]:bg-primary-base/20">
             <Select.ItemText>
-              {m.id.split("/").pop()}
+              {m.id}
               {m.supports_tools && " 🛠️"}
               {m.supports_images && " 🖼️"}
             </Select.ItemText>
