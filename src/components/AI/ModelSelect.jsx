@@ -26,7 +26,7 @@ const AIModelSelect = ({ loading, className }) => {
             value={m.id}
             className="relative flex items-center px-6 py-2 rounded-md text-sm text-lightFg-primary dark:text-darkFg-primary cursor-pointer select-none hover:bg-primary-base/10 outline-none data-[highlighted]:bg-primary-base/20">
             <Select.ItemText>
-              {m.id}
+              {m.aiProvider === "openrouter" ? m.id.split("/").pop() : m.id}
               {m.supports_tools && " 🛠️"}
               {m.supports_images && " 🖼️"}
             </Select.ItemText>
@@ -52,8 +52,8 @@ const AIModelSelect = ({ loading, className }) => {
       <Select.Portal>
         <Select.Content position="popper" sideOffset={5} className="w-[--radix-select-trigger-width] bg-lightBg-primary dark:bg-darkBg-primary rounded-lg shadow-lg border border-bLight dark:border-bDark z-50">
           <Select.Viewport className="p-2 max-h-[256px] overflow-y-auto">
-            {aiProvider === "openrouter" && renderOptions(freeModels.map((m) => ({...m, id: m.id.split("/").pop()})), "OpenRouter Gratuito:")}
-            {aiProvider === "openrouter" && renderOptions(payModels.map((m) => ({...m, id: m.id.split("/").pop()})), "OpenRouter Premium:")}
+            {aiProvider === "openrouter" && renderOptions(freeModels, "OpenRouter Gratuito:")}
+            {aiProvider === "openrouter" && renderOptions(payModels, "OpenRouter Premium:")}
             {aiProvider === "groq" && renderOptions(groqModels, "Groq Gratuito:")}
             {aiProvider === "custom" && renderOptions(customModels, "Modelos Personalizados:")}
           </Select.Viewport>
