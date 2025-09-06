@@ -20,7 +20,7 @@ const ProviderSelector = (props) => {
         return {
           variant: "success",
           title: "Provedor: Personalizado",
-          Icon: Server
+          Icon: Waypoints
         }
       case "groq":
       default:
