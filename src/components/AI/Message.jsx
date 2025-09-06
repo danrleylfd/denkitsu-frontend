@@ -1,5 +1,4 @@
-// Frontend/src/components/AI/Message.jsx
-import { memo, useMemo } from "react"
+import { memo } from "react"
 import { UserRound, Wrench, CheckCircle, Route } from "lucide-react"
 
 import AudioPlayer from "./AudioPlayer"
@@ -14,27 +13,9 @@ const AIMessage = ({ msg, user, toggleLousa, loadingMessage, onRegenerate, isLas
   const isAssistant = msg.role === "assistant"
   const isUser = msg.role === "user"
 
-  const audioContent = useMemo(() => {
-    if (typeof msg.content !== "string" || !msg.content.trim().startsWith("{")) {
-      return null
-    }
-    try {
-      const parsed = JSON.parse(msg.content)
-      if (parsed && parsed.audio && typeof parsed.audio === "string") {
-        return {
-          audio: parsed.audio,
-          format: parsed.format || "wav"
-        }
-      }
-    } catch (e) {
-      return null
-    }
-    return null
-  }, [msg.content])
-
   const renderContent = () => {
-    if (audioContent) {
-      return <AudioPlayer audioData={audioContent.audio} format={audioContent.format} />
+    if (msg.audio && msg.audio.data) {
+      return <AudioPlayer audioData={msg.audio.data} format={msg.audio.format} />
     }
     if (typeof msg.content === "string") return <Markdown key={msg.content} content={msg.content} />
     if (Array.isArray(msg.content)) return msg.content.map((part, index) => {
