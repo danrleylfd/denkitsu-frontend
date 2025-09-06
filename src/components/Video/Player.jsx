@@ -250,7 +250,7 @@ const VideoPlayer = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poste
             <button onClick={toggleMute} className="transition-transform hover:scale-110">
               {muted || volume === 0 ? <VolumeX size={20} /> : <Volume2 size={20} />}
             </button>
-            <div className="absolute left-full top-1/2 ml-2 -translate-y-1/2 overflow-hidden">
+            <div className="absolute left-full top-2 ml-2 -translate-y-1/2 overflow-hidden">
               <input
                 type="range"
                 min={0}
