@@ -86,7 +86,7 @@ const Markdown = ({ loading, content, think }) => {
             ),
             blockquote: ({ node, children, ...props }) => (
               <blockquote
-                className="bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-secondary dark:text-darkFg-secondary border border-solid border-brand-purple rounded border-l-4 border-r-0 border-y-0 p-2 my-1 italic"
+                className="truncate bg-lightBg-tertiary dark:bg-darkBg-tertiary text-lightFg-secondary dark:text-darkFg-secondary border border-solid border-brand-purple rounded border-l-4 border-r-0 border-y-0 p-2 my-1 italic"
                 {...props}>
                 {children}
               </blockquote>
