@@ -47,8 +47,8 @@ const AIBar = ({ imageCount, onSendMessage, improvePrompt, toggleSettingsDoor, t
         </div>
       </div>
       <div className="w-full hidden md:flex items-center gap-2">
-        <Button variant="secondary" size="icon" $rounded title="Recursos & Novidades" onClick={toggleFeaturesDoor}><Info size={16} /></Button>
         <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loadingMessages || isImproving}><Settings size={16} /></Button>
+        <Button variant="secondary" size="icon" $rounded title="Recursos & Novidades" onClick={toggleFeaturesDoor}><Info size={16} /></Button>
         <ProviderSelector disabled={loadingMessages || isImproving} />
         <Button variant={mediaDoor ? "outline" : "secondary"} size="icon" $rounded title="Mídia" onClick={toggleMediaDoor}><Paperclip size={16} /></Button>
         <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgentsDoor}><Speech size={16} /></Button>
