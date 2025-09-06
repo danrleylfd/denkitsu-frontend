@@ -236,6 +236,9 @@ const VideoPlayer = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poste
           <button onClick={togglePlay} className="transition-transform hover:scale-110">
             {playing ? <Pause size={20} /> : <Play size={20} />}
           </button>
+          <span className="text-xs font-mono select-none">
+            {`${formatTime(currentTime)} / ${formatTime(duration)}`}
+          </span>
           <button onClick={toggleRepeat} className={`transition-transform hover:scale-110 ${repeat ? "text-primary-base" : "text-darkFg-primary"}`}>
             <RefreshCw size={20} />
           </button>
@@ -261,9 +264,6 @@ const VideoPlayer = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poste
               />
             </div>
           </div>
-          <span className="text-xs font-mono select-none">
-            {`${formatTime(currentTime)} / ${formatTime(duration)}`}
-          </span>
           <div className="flex-1" />
           <button onClick={handleScreenshot} className="transition-transform hover:scale-110">
             <Camera size={20} />
