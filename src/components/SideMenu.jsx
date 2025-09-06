@@ -140,10 +140,10 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
   }, [])
 
   const aiItems = [
-    { icon: Newspaper, label: "Notícias", to: "/news" },
     { icon: Bot, label: "Chat", to: "/chat" },
-    { icon: Code, label: "Codebase", to: "/codebase" },
     { icon: Store, label: "Loja", to: "/store" },
+    { icon: Code, label: "Codebase", to: "/codebase" },
+    { icon: Newspaper, label: "Notícias", to: "/news" },
     { icon: Edit2, label: "Editor", to: "/editor" },
     { icon: Kanban, label: "Kanban", to: "/kanban" },
     { icon: Shield, label: "Privacidade", to: "/privacy" },
