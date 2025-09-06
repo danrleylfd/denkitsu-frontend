@@ -14,16 +14,19 @@ const AIMessage = ({ msg, user, toggleLousa, loadingMessage, onRegenerate, isLas
   const isUser = msg.role === "user"
 
   const renderContent = () => {
-    if (msg.audio && msg.audio.data) {
-      return <AudioPlayer audioData={msg.audio.data} format={msg.audio.format} />
-    }
-    if (typeof msg.content === "string") return <Markdown key={msg.content} content={msg.content} />
-    if (Array.isArray(msg.content)) return msg.content.map((part, index) => {
-      if (part.type === "text") return <Markdown key={index} content={part.content} />
-      if (part.type === "image_url") return <img key={index} src={part.image_url.url} alt="Imagem enviada pelo usuário" className="max-w-xs lg:max-w-md rounded-lg my-2" />
+    const contentPart = (() => {
+      if (typeof msg.content === "string") return <Markdown key={msg.content} content={msg.content} />
+      if (Array.isArray(msg.content)) return msg.content.map((part, index) => {
+        if (part.type === "text") return <Markdown key={index} content={part.content} />
+        if (part.type === "image_url") return <img key={index} src={part.image_url.url} alt="Imagem enviada pelo usuário" className="max-w-xs lg:max-w-md rounded-lg my-2" />
+        return null
+      })
       return null
-    })
-    return null
+    })()
+
+    const audioPart = msg.audio && msg.audio.data ? <AudioPlayer audioData={msg.audio.data} format={msg.audio.format} className="mt-2"/> : null
+
+    return <>{contentPart}{audioPart}</>
   }
 
   const hasContentStarted = msg.content && msg.content.length > 0
