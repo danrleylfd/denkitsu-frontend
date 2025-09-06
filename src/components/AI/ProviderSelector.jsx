@@ -18,7 +18,7 @@ const ProviderSelector = (props) => {
         }
       case "gemini":
         return {
-          variant: "success",
+          variant: "pink",
           title: "Provedor: Gemini",
           Icon: Sparkle
         }
