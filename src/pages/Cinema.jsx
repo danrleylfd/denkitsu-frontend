@@ -175,7 +175,7 @@ const Cinema = () => {
            <FolderSearch className="w-24 h-24 text-lightFg-tertiary dark:text-darkFg-tertiary mb-6" />
             <h1 className="text-3xl font-bold mb-2 text-lightFg-primary dark:text-darkFg-primary">Seu Cinema Particular</h1>
             <p className="mb-8 text-lightFg-secondary dark:text-darkFg-secondary max-w-md">Selecione uma pasta em seu computador para carregar e assistir aos seus vídeos locais.</p>
-            <Button onClick={handleSelectFolder} variant="primary" $rounded loading={isLoading}>
+            <Button variant="primary" $rounded onClick={handleSelectFolder} loading={isLoading}>
               {isLoading ? "Escaneando..." : "Selecionar Pasta de Vídeos"}
             </Button>
           </div>
