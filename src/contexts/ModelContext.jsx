@@ -109,10 +109,10 @@ const ModelProvider = ({ children }) => {
     setLoadingModels(true)
     try {
       const { freeModels: loadedFree, payModels: loadedPay, groqModels: loadedGroq, customModels: loadedCustom } = await getModels(aiProvider, customProviderUrl, customProviderKey)
-      setFreeModels(loadedFree?.filter(m => !m.id.includes("whisper")) || [])
-      if (aiKey) setPayModels(loadedPay?.filter(m => !m.id.includes("whisper")) || [])
+      setFreeModels(loadedFree?.filter(m => !m.id.includes("whisper")).filter(m => !m.id.includes("playai-tts")) || [])
+      if (aiKey) setPayModels(loadedPay?.filter(m => !m.id.includes("whisper")).filter(m => !m.id.includes("playai-tts")) || [])
       else setPayModels([])
-      setGroqModels(loadedGroq?.filter(m => !m.id.includes("whisper")) || [])
+      setGroqModels(loadedGroq?.filter(m => !m.id.includes("whisper")).filter(m => !m.id.includes("playai-tts")) || [])
       setCustomModels(loadedCustom || [])
     } catch (error) {
       notifyError(error.message || "Falha ao carregar modelos de IA.")
