@@ -6,10 +6,11 @@ import { useNotification } from "../../contexts/NotificationContext"
 
 import Button from "../Button"
 import Paper from "../Paper"
+import DynamicIcon from "../DynamicIcon"
 
-const FeatureListItem = ({ icon: Icon, title, children }) => (
+const FeatureListItem = ({ icon, title, children }) => (
   <div className="flex items-start gap-2">
-    <Icon size={18} className="text-primary-base flex-shrink-0" />
+    <DynamicIcon name={icon} size={18} className="text-primary-base flex-shrink-0" />
     <div>
       <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary">{title}</h5>
       <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary">{children}</p>
@@ -77,7 +78,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
         return (
           <div className="flex flex-col gap-2">
             <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary">Conecte a IA a fontes de dados externas para obter respostas mais ricas e atualizadas. Requer chave de API e um modelo compatível.</p>
-            <FeatureListItem title="Fábrica de Ferramentas" icon={Factory}>
+            <FeatureListItem title="Fábrica de Ferramentas" icon="Factory">
               Crie suas próprias ferramentas para se conectar a qualquer API. Automatize tarefas e ensine novas habilidades ao Denkitsu através de uma interface simples. Acesse pelo ícone de <Factory size={16} className="inline-block mx-1" /> na barra de chat.
             </FeatureListItem>
             {definitions.tools.map(({ name, title, description, Icon }) => (
@@ -224,16 +225,16 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
       case "media":
         return (
           <>
-            <FeatureListItem title="Análise de Imagens" icon={ImagePlus}>
+            <FeatureListItem title="Análise de Imagens" icon="ImagePlus">
               Envie até 3 imagens (via URL) para que a IA possa vê-las e responder a perguntas sobre seu conteúdo. Requer um modelo compatível com visão.
             </FeatureListItem>
-            <FeatureListItem title="Leitura em Voz Alta" icon={Speech}>
+            <FeatureListItem title="Leitura em Voz Alta" icon="Speech">
               Qualquer resposta da IA pode ser convertida em áudio. Clique no ícone de som para ouvir a mensagem em voz alta.
             </FeatureListItem>
-            <FeatureListItem title="Ditado por Voz" icon={Mic}>
+            <FeatureListItem title="Ditado por Voz" icon="Mic">
               Ative o modo "Ouvir" para transcrever continuamente sua fala para a caixa de texto, ideal para ditar longos prompts sem digitar.
             </FeatureListItem>
-            <FeatureListItem title="Transcrição de Áudio" icon={AudioLines}>
+            <FeatureListItem title="Transcrição de Áudio" icon="AudioLines">
               Grave uma mensagem de voz ou faça o upload de um arquivo de áudio para que a IA transcreva e, se desejar, resuma ou analise o conteúdo.
             </FeatureListItem>
           </>
@@ -242,16 +243,16 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
         return (
           <>
             <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary">Combine os recursos do Denkitsu para automatizar tarefas complexas em outras áreas da aplicação.</p>
-            <FeatureListItem title="Gerar Notícias com Fontes" icon={Newspaper}>
+            <FeatureListItem title="Gerar Notícias com Fontes" icon="Newspaper">
               Na página de Notícias ou no Chat, combine o Agente <strong>Redator</strong> com a Ferramenta <strong>Buscar Notícias</strong>. Descreva um tópico e a IA irá pesquisar e escrever um artigo completo.
             </FeatureListItem>
-            <FeatureListItem title="Criar Conteúdo para Vídeos" icon={Upload}>
+            <FeatureListItem title="Criar Conteúdo para Vídeos" icon="Upload">
               Na página de Upload, use o Agente <strong>Blogueiro</strong> para gerar automaticamente o título e a descrição do seu vídeo a partir de um tema ou rascunho.
             </FeatureListItem>
-            <FeatureListItem title="Planejar Projetos no Kanban" icon={Kanban}>
+            <FeatureListItem title="Planejar Projetos no Kanban" icon="Kanban">
               Na página Kanban, descreva um objetivo (ex: "lançar meu site") e use o Agente <strong>Secretário</strong> para que a IA gere automaticamente uma lista de tarefas passo a passo.
             </FeatureListItem>
-            <FeatureListItem title="Loja da Comunidade" icon={Store}>
+            <FeatureListItem title="Loja da Comunidade" icon="Store">
               Acesse a Loja para descobrir e adquirir Agentes e Ferramentas criados por outros usuários, expandindo as capacidades do seu assistente.
             </FeatureListItem>
           </>
@@ -259,10 +260,10 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
       case "customization":
         return (
           <>
-            <FeatureListItem title="Aperfeiçoador de Prompt" icon={Sparkle}>
+            <FeatureListItem title="Aperfeiçoador de Prompt" icon="Sparkle">
               Tem uma ideia mas não sabe como formular a pergunta? Escreva o que vier à mente e use o aperfeiçoador para que a IA transforme seu rascunho em um prompt claro e eficaz.
             </FeatureListItem>
-            <FeatureListItem title="Comportamento Personalizado" icon={Languages}>
+            <FeatureListItem title="Comportamento Personalizado" icon="Languages">
               Acesse as configurações e defina um "prompt de sistema". Diga à IA como ela deve se comportar, qual sua personalidade, e que regras deve seguir em todas as suas respostas.
             </FeatureListItem>
           </>
@@ -270,10 +271,10 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
       case "settings":
         return (
           <>
-            <FeatureListItem title="Provedores de IA" icon={Waypoints}>
+            <FeatureListItem title="Provedores de IA" icon="Waypoints">
               Alterne facilmente entre diferentes fornecedores de modelos, como Groq para velocidade ou OpenRouter para variedade, usando sua própria chave de API.
             </FeatureListItem>
-            <FeatureListItem title="Seleção de Modelos" icon={Bot}>
+            <FeatureListItem title="Seleção de Modelos" icon="Bot">
               Escolha o modelo de IA específico que deseja usar para a conversa, aproveitando uma vasta lista de opções gratuitas e premium disponíveis em cada provedor.
             </FeatureListItem>
           </>
@@ -347,7 +348,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
               key={id}
               onClick={() => setActiveTab(id)}
               className={`flex items-center gap-2 px-2 py-2 text-sm font-bold transition-colors ${activeTab === id
-                  ? "border-primary-base text-primary-base"
+                  ? "border-b-2 border-primary-base text-primary-base"
                   : "border-transparent text-lightFg-secondary dark:text-darkFg-secondary hover:text-lightFg-primary dark:hover:text-darkFg-primary"
                 }`}>
               <Icon size={16} />
