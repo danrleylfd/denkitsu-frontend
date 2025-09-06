@@ -18,7 +18,6 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
     aiProvider,
     aiKey,
     setAIKey,
-    aiProviderToggle,
     loadingModels,
     customProviderUrl,
     setCustomProviderUrl,
@@ -61,7 +60,8 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
             </Input>
           </div>
           <small className="text-xs text-lightFg-tertiary dark:text-darkFg-tertiary">
-            Sua chave é salva apenas localmente no seu navegador. </small>
+            Sua chave é salva apenas localmente no seu navegador.
+          </small>
           {aiProvider === "custom" && (
             <>
               <label htmlFor="custom-api-url" className="text-lightFg-secondary dark:text-darkFg-secondary">
@@ -79,7 +79,8 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
           )}
           <div className="flex flex-col gap-2 flex-1 min-h-14">
             <label htmlFor="custom-prompt" className="text-lightFg-secondary dark:text-darkFg-secondary">
-              Como Denkitsu deve se comportar? </label>
+              Como Denkitsu deve se comportar?
+            </label>
             <TextArea
               id="custom-prompt"
               value={customPrompt}
