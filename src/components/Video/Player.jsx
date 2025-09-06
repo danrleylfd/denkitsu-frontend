@@ -65,7 +65,7 @@ const VideoPlayer = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poste
     if (playing) {
       controlsTimeoutRef.current = setTimeout(() => {
         setControlsVisible(false)
-      }, 2500)
+      }, 333)
     }
   }, [playing])
 
@@ -88,7 +88,7 @@ const VideoPlayer = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poste
     if (videoRef.current.paused) {
       videoRef.current.play()
       setPlaying(true)
-      controlsTimeoutRef.current = setTimeout(() => setControlsVisible(false), 2500)
+      controlsTimeoutRef.current = setTimeout(() => setControlsVisible(false), 333)
     } else {
       videoRef.current.pause()
       setPlaying(false)
@@ -156,7 +156,7 @@ const VideoPlayer = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poste
       if (isNowVisible && playing) {
         controlsTimeoutRef.current = setTimeout(() => {
           setControlsVisible(false)
-        }, 2500)
+        }, 333)
       }
       return isNowVisible
     })
