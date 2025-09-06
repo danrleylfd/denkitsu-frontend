@@ -63,7 +63,8 @@ const ChatInterface = ({ renderBar }) => {
         toggleToolsDoor: () => handleDoorToggle("tools"),
         toggleMediaDoor: () => handleDoorToggle("media"),
         toggleSettingsDoor: () => setSettingsDoor((prev) => !prev),
-        toggleFactoryManagerDoor: () => setFactoryManagerDoor((prev) => !prev)
+        toggleFactoryManagerDoor: () => setFactoryManagerDoor((prev) => !prev),
+        toggleFeaturesDoor: () => setFeaturesDoor((prev) => !prev)
       })}
       <AIFeatures featuresDoor={featuresDoor} toggleFeaturesDoor={() => setFeaturesDoor((prev) => !prev)} />
       <AISettings settingsDoor={settingsDoor} toggleSettingsDoor={() => setSettingsDoor((prev) => !prev)} />
