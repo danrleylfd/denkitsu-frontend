@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react"
-import { SearchSlash, Waypoints, Copy, Mic } from "lucide-react"
+import { SearchSlash, Copy, Mic } from "lucide-react"
 
 import { useAI } from "../contexts/AIContext"
 import { useModels } from "../contexts/ModelContext"
@@ -13,6 +13,7 @@ import Markdown from "../components/Markdown"
 import Paper from "../components/Paper"
 import Input from "../components/Input"
 import Button from "../components/Button"
+import ProviderSelector from "../components/AI/ProviderSelector"
 
 const ContentView = ({ children }) => (
   <main
@@ -103,11 +104,7 @@ const News = () => {
             loading={loading} disabled={!searchTerm.trim()} title="Pesquisar e Gerar">
             {!loading && <SearchSlash size={16} />}
           </Button>
-          <Button
-            variant={aiProvider === "groq" ? "warning" : "info"}
-            size="icon" $rounded onClick={aiProviderToggle} title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"}>
-            <Waypoints size={16} />
-          </Button>
+          <ProviderSelector />
         </Input>
       </Paper>
 
