@@ -341,7 +341,7 @@ const FileExplorer = memo(({ fileTree, allFiles, selectedFiles, setSelectedFiles
     const breadcrumbs = ["Projeto", ...currentPath.split("/")].filter(Boolean)
 
     return (
-        <div className="flex flex-col h-full w-full gap-4">
+        <div className="flex flex-col h-full w-full gap-2 p-4">
             <div className="flex items-center text-sm text-lightFg-secondary dark:text-darkFg-secondary">
                 {breadcrumbs.map((crumb, index) => {
                     const path = breadcrumbs.slice(1, index + 1).join("/")
@@ -730,7 +730,7 @@ const Codebase = () => {
             />
           ),
           "result": (
-            <div className="flex flex-col h-full w-full gap-2 p-2">
+            <div className="flex flex-col h-full w-full gap-2 p-4">
               <div className="flex justify-between items-center flex-wrap gap-2">
                 <h3 className="font-semibold text-xl">Codebase extraída de: {projectName}</h3>
                 <div className="flex items-center gap-2 flex-wrap">
