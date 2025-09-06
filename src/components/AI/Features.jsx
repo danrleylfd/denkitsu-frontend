@@ -1,8 +1,8 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { X, Bot, Wrench, Sparkle, Paperclip, Factory, AlertTriangle, Settings, ImagePlus, AudioLines, Mic, Languages, Waypoints, Star, Newspaper, Kanban, Upload, Speech, History, Store } from "lucide-react"
 
-import { AGENTS_DEFINITIONS } from "../../constants/agents"
-import { TOOL_DEFINITIONS } from "../../constants/tools"
+import { listAgents, listTools } from "../../services/aiChat"
+import { useNotification } from "../../contexts/NotificationContext"
 
 import Button from "../Button"
 import Paper from "../Paper"
@@ -30,8 +30,35 @@ const tabs = [
 
 const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
   const [activeTab, setActiveTab] = useState("changelog")
+  const [definitions, setDefinitions] = useState({ agents: [], tools: [] })
+  const [loading, setLoading] = useState(true)
+  const { notifyError } = useNotification()
+
+  useEffect(() => {
+    const fetchDefinitions = async () => {
+      if (featuresDoor) {
+        try {
+          setLoading(true)
+          const [agentsRes, toolsRes] = await Promise.all([listAgents(), listTools()])
+          setDefinitions({
+            agents: agentsRes.data.backendAgents || [],
+            tools: [...(toolsRes.data.internalTools || []), ...(toolsRes.data.backendTools || [])]
+          })
+        } catch (error) {
+          notifyError("Não foi possível carregar as definições de recursos.")
+        } finally {
+          setLoading(false)
+        }
+      }
+    }
+    fetchDefinitions()
+  }, [featuresDoor, notifyError])
+
   if (!featuresDoor) return null
+
   const renderContent = () => {
+    if (loading) return <div className="flex items-center justify-center h-full"><Button variant="outline" loading disabled /></div>
+
     switch (activeTab) {
       case "agents":
         return (
@@ -39,8 +66,8 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
             <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary">
               Dê à IA um papel específico. Cada agente é otimizado para um tipo de tarefa, alterando o estilo e o formato da resposta.
             </p>
-            {AGENTS_DEFINITIONS.map(({ value, description, Icon }) => (
-              <FeatureListItem key={value} title={value} icon={Icon}>
+            {definitions.agents.map(({ name, Icon, description }) => (
+              <FeatureListItem key={name} title={name} icon={Icon}>
                 {description}
               </FeatureListItem>
             ))}
@@ -53,8 +80,8 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
             <FeatureListItem title="Fábrica de Ferramentas" icon={Factory}>
               Crie suas próprias ferramentas para se conectar a qualquer API. Automatize tarefas e ensine novas habilidades ao Denkitsu através de uma interface simples. Acesse pelo ícone de <Factory size={16} className="inline-block mx-1" /> na barra de chat.
             </FeatureListItem>
-            {TOOL_DEFINITIONS.map(({ key, title, description, Icon }) => (
-              <FeatureListItem key={key} title={title} icon={Icon}>
+            {definitions.tools.map(({ name, title, description, Icon }) => (
+              <FeatureListItem key={name} title={title} icon={Icon}>
                 {description}
               </FeatureListItem>
             ))}
@@ -65,7 +92,8 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
           <div className="flex flex-col gap-1 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
             <h4 className="text-lightFg-primary dark:text-darkFg-primary">Tutorial: Criando seu Primeiro Agente</h4>
             <p>
-              Agentes permitem que você personalize a personalidade e comportamento da IA. Diferente das ferramentas, eles não conectam APIs externas, mas definem como a IA deve pensar e responder.
+              Agentes permitem que você personalize a personalidade e comportamento da IA.
+              Diferente das ferramentas, eles não conectam APIs externas, mas definem como a IA deve pensar e responder.
             </p>
             <div>
               <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 1: Abrindo a Fábrica</h5>
@@ -87,16 +115,20 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
             <div>
               <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 3: Salvar e Ativar</h5>
               <p>
-                Clique em "Salvar Agente". Depois, abra a gaveta de agentes (<Bot size={16} className="inline-block mx-1" />) e ative o novo agente. Agora ele responderá de acordo com suas instruções personalizadas!
+                Clique em "Salvar Agente".
+                Depois, abra a gaveta de agentes (<Bot size={16} className="inline-block mx-1" />) e ative o novo agente.
+                Agora ele responderá de acordo com suas instruções personalizadas!
               </p>
             </div>
             <h4 className="text-lg text-lightFg-primary dark:text-darkFg-primary">Tutorial: Criando sua Primeira Ferramenta</h4>
             <p>
-              As ferramentas customizadas permitem que você conecte o Denkitsu a qualquer API na internet. Vamos criar uma ferramenta divertida que busca uma piada aleatória do site <a href="https://icanhazdadjoke.com/" target="_blank" rel="noopener noreferrer" className="text-primary-base underline">icanhazdadjoke.com</a>.
+              As ferramentas customizadas permitem que você conecte o Denkitsu a qualquer API na internet.
+              Vamos criar uma ferramenta divertida que busca uma piada aleatória do site <a href="https://icanhazdadjoke.com/" target="_blank" rel="noopener noreferrer" className="text-primary-base underline">icanhazdadjoke.com</a>.
             </p>
             <div>
               <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 1: Entendendo a API</h5>
-              <p>A API de piadas é simples. Para pegar uma piada como texto, precisamos acessar a URL `https://icanhazdadjoke.com/` e enviar um "cabeçalho" (Header) especial dizendo que queremos a resposta em texto puro.</p>
+              <p>A API de piadas é simples.
+                Para pegar uma piada como texto, precisamos acessar a URL `https://icanhazdadjoke.com/` e enviar um "cabeçalho" (Header) especial dizendo que queremos a resposta em texto puro.</p>
             </div>
             <div>
               <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 2: Abrindo a Fábrica</h5>
@@ -108,7 +140,8 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
               <ul className="list-disc list-inside space-y-2 pl-2">
                 <li><strong>Apelido da Ferramenta:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">Buscador de Piadas</code></li>
                 <li><strong>Nome Técnico:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">buscarPiada</code></li>
-                <li><strong>Descrição para a IA:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">Use esta ferramenta para buscar uma piada aleatória em inglês. A ferramenta não precisa de nenhum parâmetro.</code></li>
+                <li><strong>Descrição para a IA:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">Use esta ferramenta para buscar uma piada aleatória em inglês.
+                  A ferramenta não precisa de nenhum parâmetro.</code></li>
                 <li><strong>Método HTTP:</strong> Selecione `GET`</li>
                 <li><strong>URL Base da API:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">https://icanhazdadjoke.com/</code></li>
                 <li><strong>Parâmetros de Query:</strong> Deixe como está (um JSON vazio `{ }`).</li>
@@ -121,7 +154,8 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
                 <li><strong>Definição de Parâmetros (Schema):</strong> Como não precisamos de nenhuma informação do usuário, podemos deixar o schema com as propriedades vazias:
                   <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{ "type": "object", "properties": {} }`}</code></pre>
                 </li>
-                <li><strong>Headers (JSON):</strong> Esta é a parte importante para esta API. Precisamos dizer a ela para nos dar texto puro.
+                <li><strong>Headers (JSON):</strong> Esta é a parte importante para esta API.
+                  Precisamos dizer a ela para nos dar texto puro.
                   <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{ "Accept": "text/plain" }`}</code></pre>
                 </li>
                 <li><strong>Body (JSON):</strong> Deixe como está (um JSON vazio `{ }`).</li>
@@ -129,7 +163,9 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
             </div>
             <div>
               <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 5: Salvar e Testar!</h5>
-              <p>Clique em "Salvar Ferramenta". Depois, volte para o chat, abra a gaveta de ferramentas (<Wrench size={16} className="inline-block mx-1" />) e ative a sua nova ferramenta "Buscador de Piadas". Agora, simplesmente peça no chat:</p>
+              <p>Clique em "Salvar Ferramenta".
+                Depois, volte para o chat, abra a gaveta de ferramentas (<Wrench size={16} className="inline-block mx-1" />) e ative a sua nova ferramenta "Buscador de Piadas".
+                Agora, simplesmente peça no chat:</p>
               <blockquote className="border-l-4 border-primary-base pl-2 my-2 italic">Me conte uma piada.</blockquote>
               <p>A IA vai entender seu pedido, encontrar a ferramenta `buscarPiada`, executá-la e te contar a piada que a API retornou!</p>
             </div>
@@ -142,12 +178,14 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
                 A IA precisa "ler" a resposta completa da API que sua ferramenta busca. Se a API externa retornar uma resposta muito grande (milhares de linhas de dados), ela pode ultrapassar o "limite de leitura" (contexto de tokens) do modelo de IA.
               </p>
               <p className="mt-2 text-amber-dark dark:text-amber-light">
-                Isso pode causar um erro e impedir que a IA formule uma resposta final. Portanto, **prefira usar APIs que retornem dados concisos** ou que permitam filtrar a quantidade de informação através de parâmetros na URL!
+                Isso pode causar um erro e impedir que a IA formule uma resposta final.
+                Portanto, **prefira usar APIs que retornem dados concisos** ou que permitam filtrar a quantidade de informação através de parâmetros na URL!
               </p>
             </div>
             <h4 className="text-lg text-lightFg-primary dark:text-darkFg-primary">Tutorial: Conectando a um Provedor de IA Personalizado</h4>
             <p>
-              O Denkitsu permite que você se conecte a qualquer endpoint de API compatível com a API da OpenAI. Isso é útil para usar modelos auto-hospedados (com LM Studio, por exemplo) ou outros serviços de proxy.
+              O Denkitsu permite que você se conecte a qualquer endpoint de API compatível com a API da OpenAI.
+              Isso é útil para usar modelos auto-hospedados (com LM Studio, por exemplo) ou outros serviços de proxy.
             </p>
             <div>
               <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 1: Alternar para o Provedor Personalizado</h5>
@@ -164,15 +202,21 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
             <div>
               <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 3: Preencher os Dados</h5>
               <ul className="list-disc list-inside space-y-2 pl-2">
-                <li><strong>URL da API (Personalizado):</strong> Insira a URL base do seu servidor. Por exemplo, se você está usando LM Studio, o padrão é `http://localhost:1234/v1`.</li>
-                <li><strong>Chave da API:</strong> Muitos servidores locais não exigem uma chave. Você pode digitar `nao-usado` ou qualquer outro texto.</li>
-                <li><strong>Modelo:</strong> Insira o identificador exato do modelo que você carregou no seu servidor. No LM Studio, você pode encontrar isso na página principal. Ex: `lmstudio-community/Meta-Llama-3-8B-Instruct-GGUF`.</li>
+                <li><strong>URL da API (Personalizado):</strong> Insira a URL base do seu servidor.
+                  Por exemplo, se você está usando LM Studio, o padrão é `http://localhost:1234/v1`.</li>
+                <li><strong>Chave da API:</strong> Muitos servidores locais não exigem uma chave.
+                  Você pode digitar `nao-usado` ou qualquer outro texto.</li>
+                <li><strong>Modelo:</strong> Insira o identificador exato do modelo que você carregou no seu servidor.
+                  No LM Studio, você pode encontrar isso na página principal.
+                  Ex: `lmstudio-community/Meta-Llama-3-8B-Instruct-GGUF`.</li>
               </ul>
             </div>
             <div>
               <h5 className="text-lightFg-primary dark:text-darkFg-primary">Pronto!</h5>
               <p>
-                Feche as configurações. O Denkitsu agora enviará todas as requisições para o seu servidor local. Lembre-se que o desempenho e a compatibilidade com ferramentas dependerão do modelo que você está utilizando.
+                Feche as configurações.
+                O Denkitsu agora enviará todas as requisições para o seu servidor local.
+                Lembre-se que o desempenho e a compatibilidade com ferramentas dependerão do modelo que você está utilizando.
               </p>
             </div>
           </div>
@@ -219,7 +263,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
               Tem uma ideia mas não sabe como formular a pergunta? Escreva o que vier à mente e use o aperfeiçoador para que a IA transforme seu rascunho em um prompt claro e eficaz.
             </FeatureListItem>
             <FeatureListItem title="Comportamento Personalizado" icon={Languages}>
-              Acesse as configurações e defina um "prompt de sistema". Diga à IA como ela deve se comportar, qual sua personalidade, и que regras deve seguir em todas as suas respostas.
+              Acesse as configurações e defina um "prompt de sistema". Diga à IA como ela deve se comportar, qual sua personalidade, e que regras deve seguir em todas as suas respostas.
             </FeatureListItem>
           </>
         )
