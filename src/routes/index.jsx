@@ -28,7 +28,6 @@ const Upload = lazy(() => import("../pages/Video/Upload"))
 const News = lazy(() => import("../pages/NewsCursor"))
 const Kanban = lazy(() => import("../pages/Kanban"))
 const Pomodoro = lazy(() => import("../pages/Pomodoro"))
-const Weather = lazy(() => import("../pages/Weather"))
 const Translator = lazy(() => import("../pages/Translator"))
 const Codebase = lazy(() => import("../pages/Codebase"))
 const Editor = lazy(() => import("../pages/Editor"))
@@ -57,7 +56,6 @@ const AppRoutes = () => {
               <Route path="/news" element={<News />} />
               <Route path="/kanban" element={<Kanban />} />
               <Route path="/pomodoro" element={<Pomodoro />} />
-              <Route path="/weather" element={<Weather />} />
               <Route path="/translator" element={<Translator />} />
               <Route path="/codebase" element={<Codebase />} />
               <Route path="/upload" element={<Upload />} />
@@ -84,7 +82,6 @@ const AppRoutes = () => {
               <Route path="/cinema" element={<Cinema />} />
               <Route path="/todo" element={<Kanban />} />
               <Route path="/pomodoro" element={<Pomodoro />} />
-              <Route path="/weather" element={<Weather />} />
               <Route path="/translator" element={<Translator />} />
               <Route path="/codebase" element={<Codebase />} />
               <Route path="/chat" element={<AI />} />

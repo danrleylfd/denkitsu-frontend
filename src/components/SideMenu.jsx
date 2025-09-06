@@ -140,6 +140,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
   }, [])
 
   const aiItems = [
+    { icon: Newspaper, label: "Notícias", to: "/news" },
     { icon: Bot, label: "Chat", to: "/chat" },
     { icon: Code, label: "Codebase", to: "/codebase" },
     { icon: Store, label: "Loja", to: "/store" },
@@ -149,9 +150,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
   ]
 
   const toolItems = [
-    { icon: Newspaper, label: "Notícias", to: "/news" },
     { icon: Clock, label: "Pomodoro", to: "/pomodoro" },
-    { icon: Cloud, label: "Clima", to: "/weather" },
     { icon: Languages, label: "Tradutor", to: "/translator" },
   ]
 
