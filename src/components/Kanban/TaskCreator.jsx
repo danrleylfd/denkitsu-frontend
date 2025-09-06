@@ -1,14 +1,13 @@
-import { Plus, Sparkle, Brain, Waypoints, } from "lucide-react"
+import { Plus, Sparkle, } from "lucide-react"
 
-import { useModels } from "../../contexts/ModelContext"
 import { useTasks } from "../../contexts/TasksContext"
 
-import Paper from "../Paper"
-import Input from "../Input"
-import Button from "../Button"
+import Paper from "../../components/Paper"
+import Input from "../../components/Input"
+import Button from "../../components/Button"
+import ProviderSelector from "../../components/AI/ProviderSelector"
 
 const TaskCreator = () => {
-  const { aiProvider, aiProviderToggle } = useModels()
   const { newTask, setNewTask, addTask, generateTasksWithAI, loading } = useTasks()
   return (
     <Paper className="p-4">
@@ -26,15 +25,7 @@ const TaskCreator = () => {
         <Button variant="outline" size="icon" $rounded onClick={generateTasksWithAI} title="Gerar Passos" loading={loading} disabled={!newTask}>
           {!loading && <Sparkle size={16} />}
         </Button>
-        <Button
-          variant={aiProvider === "groq" ? "warning" : "info"}
-          size="icon"
-          $rounded
-          onClick={aiProviderToggle}
-          title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"}
-        >
-          <Waypoints size={16} />
-        </Button>
+        <ProviderSelector />
       </Input>
     </Paper>
   )

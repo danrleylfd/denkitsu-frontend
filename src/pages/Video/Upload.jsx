@@ -1,6 +1,6 @@
 import { useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
-import { ImagePlus, UploadIcon, Sparkle, Brain, Waypoints, } from "lucide-react"
+import { ImagePlus, UploadIcon, Sparkle, } from "lucide-react"
 
 import { useModels } from "../../contexts/ModelContext"
 import { useNotification } from "../../contexts/NotificationContext"
@@ -14,6 +14,7 @@ import SideMenu from "../../components/SideMenu"
 import Form from "../../components/Form"
 import Input from "../../components/Input"
 import Button from "../../components/Button"
+import ProviderSelector from "../../components/AI/ProviderSelector"
 
 const ContentView = ({ children }) => (
   <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-dvh">
@@ -22,7 +23,7 @@ const ContentView = ({ children }) => (
 )
 
 const Upload = () => {
-  const { aiProvider, aiKey, model, freeModels, payModels, groqModels, aiProviderToggle } = useModels()
+  const { aiProvider, aiKey, model, freeModels, payModels, groqModels } = useModels()
   const { notifyInfo, notifyWarning, notifyError } = useNotification()
   const [content, setContent] = useState("")
   const [thumbnail, setThumbnail] = useState("")
@@ -100,15 +101,7 @@ const Upload = () => {
             disabled={!content}>
             {!loading && <Sparkle size={16} />}
           </Button>
-          <Button
-            variant={aiProvider === "groq" ? "warning" : "info"}
-            size="icon"
-            $rounded
-            onClick={aiProviderToggle}
-            title={aiProvider === "groq" ? "Provedor: Groq" : "Provedor: OpenRouter"}
-          >
-            <Waypoints size={16} />
-          </Button>
+          <ProviderSelector />
         </Input>
         <div className="flex gap-2">
           <Input

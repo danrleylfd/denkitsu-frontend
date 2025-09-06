@@ -1,55 +1,37 @@
-import { Waypoints, Settings, Speech, Sparkle, MessageCirclePlus, Send, Paperclip, Wrench, Factory, Server } from "lucide-react"
+import { Settings, Speech, Sparkle, MessageCirclePlus, Send, Paperclip, Wrench, Factory } from "lucide-react"
+
 import { useAuth } from "../../contexts/AuthContext"
 import { useAI } from "../../contexts/AIContext"
-import { useModels } from "../../contexts/ModelContext"
+
 import AIBarSignOut from "./BarSignOut"
+import ProviderSelector from "./ProviderSelector"
+
 import Paper from "../Paper"
 import TextArea from "../TextArea"
 import Button from "../Button"
 
 const AIBar = ({ imageCount, onSendMessage, improvePrompt, toggleSettingsDoor, toggleFactoryManagerDoor, agentsDoor, toggleAgentsDoor, toolsDoor, toggleToolsDoor, mediaDoor, toggleMediaDoor }) => {
   const { signed } = useAuth()
-  const { aiProvider, aiProviderToggle } = useModels()
   const { userPrompt, setUserPrompt, clearHistory, loadingMessages, isImproving } = useAI()
-
   if (!signed) return <AIBarSignOut />
-
   const handleSendMessage = () => {
     if (loadingMessages || isImproving) return
     if (!userPrompt.trim() && imageCount === 0) return
     onSendMessage()
   }
-
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && e.ctrlKey) {
       e.preventDefault()
       handleSendMessage()
     }
   }
-
   const suggestions = ["#browser ", "#duckduckgo ", "#http ", "#cripto ", "#nasa ", "#arquivosnasa ", "#asteroides ", "#terra ", "#marte ", "#climaespaço ", "#climamarte ", "#notícias ", "#clima ", "wikipedia ", "#cinema ", "#jogos ", "#albion ", "#genshin ", "#pokédex "]
-
-  const providerTitle =
-    aiProvider === "groq"
-      ? "Provedor: Groq"
-      : aiProvider === "openrouter"
-        ? "Provedor: OpenRouter"
-        : "Provedor: Personalizado"
-
   return (
     <Paper className="relative flex items-center gap-2 p-2 mb-2 mx-auto">
       <div className="w-full flex flex-col gap-2 md:hidden">
         <div className="flex items-center justify-between flex-wrap gap-2">
           <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loadingMessages || isImproving}><Settings size={16} /></Button>
-          <Button
-            variant={aiProvider === "groq" ? "orange" : aiProvider === "openrouter" ? "info" : "success"}
-            size="icon"
-            $rounded
-            onClick={aiProviderToggle}
-            title={providerTitle}
-            disabled={loadingMessages || isImproving}>
-            {aiProvider === "custom" ? <Server size={16} /> : <Waypoints size={16} />}
-          </Button>
+          <ProviderSelector disabled={loadingMessages || isImproving} />
           <Button variant={mediaDoor ? "outline" : "secondary"} size="icon" $rounded title="Mídia" onClick={toggleMediaDoor}><Paperclip size={16} /></Button>
           <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgentsDoor}><Speech size={16} /></Button>
           <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor}><Wrench size={16} /></Button>
@@ -64,20 +46,12 @@ const AIBar = ({ imageCount, onSendMessage, improvePrompt, toggleSettingsDoor, t
       </div>
       <div className="w-full hidden md:flex items-center gap-2">
         <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loadingMessages || isImproving}><Settings size={16} /></Button>
-        <Button
-          variant={aiProvider === "groq" ? "orange" : aiProvider === "openrouter" ? "info" : "success"}
-          size="icon"
-          $rounded
-          onClick={aiProviderToggle}
-          title={providerTitle}
-          disabled={loadingMessages || isImproving}>
-          {aiProvider === "custom" ? <Server size={16} /> : <Waypoints size={16} />}
-        </Button>
+        <ProviderSelector disabled={loadingMessages || isImproving} />
         <Button variant={mediaDoor ? "outline" : "secondary"} size="icon" $rounded title="Mídia" onClick={toggleMediaDoor}><Paperclip size={16} /></Button>
         <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgentsDoor}><Speech size={16} /></Button>
         <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor}><Wrench size={16} /></Button>
         <Button variant="secondary" size="icon" $rounded title="Fábrica de Agentes e Ferramentas" onClick={toggleFactoryManagerDoor} disabled={loadingMessages || isImproving}><Factory size={16} /></Button>
-        <TextArea suggestions={suggestions} id="prompt-input-desktop" value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} onKeyDown={handleKeyDown} textAreaClassName="flex-1 resize-none h-8 w-full p-2 rounded-md font-mono text-sm" rows={1} disabled={loadingMessages || isImproving} placeholder={!loadingMessages || !isImproving ? "Escreva seu prompt" : "Pensando..."}/>
+        <TextArea suggestions={suggestions} id="prompt-input-desktop" value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} onKeyDown={handleKeyDown} textAreaClassName="flex-1 resize-none h-8 w-full p-2 rounded-md font-mono text-sm" rows={1} disabled={loadingMessages || isImproving} placeholder={!loadingMessages || !isImproving ? "Escreva seu prompt" : "Pensando..."} />
         <div className="flex items-center gap-2">
           <Button variant="outline" size="icon" $rounded title="Aperfeiçoar Prompt" onClick={improvePrompt} loading={isImproving} disabled={loadingMessages || isImproving || !userPrompt.trim()}>{!isImproving && <Sparkle size={16} />}</Button>
           <Button variant="secondary" size="icon" $rounded title="Nova Conversa" onClick={clearHistory} disabled={loadingMessages || isImproving}><MessageCirclePlus size={16} /></Button>

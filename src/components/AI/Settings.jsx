@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { X, Waypoints, Eye, EyeClosed, Server, RefreshCcw } from "lucide-react"
+import { X, Eye, EyeClosed, RefreshCcw } from "lucide-react"
 
 import { useAI } from "../../contexts/AIContext"
 import { useModels } from "../../contexts/ModelContext"
@@ -9,6 +9,7 @@ import Paper from "../Paper"
 import Input from "../Input"
 import TextArea from "../TextArea"
 import Button from "../Button"
+import ProviderSelector from "./ProviderSelector"
 
 const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
   const [showAIKey, setShowAIKey] = useState(false)
@@ -21,19 +22,9 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
     loadingModels,
     customProviderUrl,
     setCustomProviderUrl,
-    model,
-    setModel,
     fetchModels
   } = useModels()
-
   if (!settingsDoor) return null
-
-  const getProviderTitle = () => {
-    if (aiProvider === "groq") return "Provedor: Groq"
-    if (aiProvider === "openrouter") return "Provedor: OpenRouter"
-    return "Provedor: Personalizado"
-  }
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <Paper
@@ -50,14 +41,7 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
             Chave da API & Modelo ({aiProvider})
           </label>
           <div className="flex items-end gap-2">
-            <Button
-              variant={aiProvider === "groq" ? "orange" : aiProvider === "openrouter" ? "info" : "success"}
-              size="icon"
-              $rounded
-              onClick={aiProviderToggle}
-              title={getProviderTitle()}>
-              {aiProvider === "custom" ? <Server size={16} /> : <Waypoints size={16} />}
-            </Button>
+            <ProviderSelector />
             <AIModelSelect className="max-w-64" loadingModels={loadingModels} />
             {aiProvider === "custom" && (
               <Button variant="secondary" size="icon" $rounded onClick={fetchModels}>
@@ -77,8 +61,7 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
             </Input>
           </div>
           <small className="text-xs text-lightFg-tertiary dark:text-darkFg-tertiary">
-            Sua chave é salva apenas localmente no seu navegador.
-          </small>
+            Sua chave é salva apenas localmente no seu navegador. </small>
           {aiProvider === "custom" && (
             <>
               <label htmlFor="custom-api-url" className="text-lightFg-secondary dark:text-darkFg-secondary">
@@ -96,8 +79,7 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
           )}
           <div className="flex flex-col gap-2 flex-1 min-h-14">
             <label htmlFor="custom-prompt" className="text-lightFg-secondary dark:text-darkFg-secondary">
-              Como Denkitsu deve se comportar?
-            </label>
+              Como Denkitsu deve se comportar? </label>
             <TextArea
               id="custom-prompt"
               value={customPrompt}
