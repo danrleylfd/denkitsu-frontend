@@ -1,5 +1,5 @@
 import { memo } from "react"
-import { UserRound, Wrench, CheckCircle, Route } from "lucide-react"
+import { UserRound, Wrench, CheckCircle, Route, Bot, BrainCircuit } from "lucide-react"
 
 import AudioPlayer from "./AudioPlayer"
 import Avatar from "../Avatar"
@@ -14,34 +14,56 @@ const AIMessage = ({ msg, user, toggleLousa, loadingMessage, onRegenerate, isLas
   const isUser = msg.role === "user"
 
   const renderContent = () => {
-    if (msg.audio && msg.audio.data) {
-      return <AudioPlayer audioData={msg.audio.data} format={msg.audio.format} />
-    }
-    if (typeof msg.content === "string") return <Markdown key={msg.content} content={msg.content} />
-    if (Array.isArray(msg.content)) return msg.content.map((part, index) => {
-      if (part.type === "text") return <Markdown key={index} content={part.content} />
-      if (part.type === "image_url") return <img key={index} src={part.image_url.url} alt="Imagem enviada pelo usuário" className="max-w-xs lg:max-w-md rounded-lg my-2" />
+    const contentPart = (() => {
+      if (typeof msg.content === "string") return <Markdown key={msg.content} content={msg.content} />
+      if (Array.isArray(msg.content)) return msg.content.map((part, index) => {
+        if (part.type === "text") return <Markdown key={index} content={part.content} />
+        if (part.type === "image_url") return <img key={index} src={part.image_url.url} alt="Imagem enviada pelo usuário" className="max-w-xs lg:max-w-md rounded-lg my-2" />
+        return null
+      })
       return null
-    })
-    return null
+    })()
+
+    const audioPart = msg.audio && msg.audio.data ? <AudioPlayer audioData={msg.audio.data} format={msg.audio.format} className="mt-2"/> : null
+
+    return <>{contentPart}{audioPart}</>
   }
 
   const hasContentStarted = msg.content && msg.content.length > 0
 
-  const ReasoningBlock = isAssistant && msg.reasoning && (
-    <Markdown loading={loadingMessage} content={msg.reasoning} think />
+  const UsedAgentsBlock = isAssistant && msg.usedAgents?.length > 0 && (
+    <div className="my-2 p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md">
+      <div className="flex flex-col gap-1">
+        {msg.usedAgents.map((agentName) => (
+          <div key={agentName} className="flex items-center gap-2 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
+            <Bot size={14} className="text-primary-base" />
+            <span>Agente usado: <strong>{agentName}</strong></span>
+          </div>
+        ))}
+      </div>
+    </div>
   )
 
-  const ToolCallBlock = isAssistant && msg.toolCalls?.length > 0 && (
+  const UsedToolsBlock = isAssistant && msg.toolCalls?.length > 0 && (
     <div className={`my-2 p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md ${!hasContentStarted ? "animate-pulse" : ""}`}>
       <div className="flex flex-col gap-1">
         {msg.toolCalls.map((call) => (
           <div key={call.index || call.name} className="flex items-center gap-2 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
             {hasContentStarted ? <CheckCircle size={14} className="text-green-base" /> : <Wrench size={14} className="animate-spin-fast" />}
-            <span>{hasContentStarted ? "Denkitsu usou a ferramenta" : "Denkitsu está usando a ferramenta"} <strong>{call.name}</strong></span>
+            <span>{hasContentStarted ? "Ferramenta usada:" : "Usando ferramenta:"} <strong>{call.name}</strong></span>
           </div>
         ))}
       </div>
+    </div>
+  )
+
+  const ThoughtBlock = isAssistant && msg.reasoning && (
+    <div className="my-2 flex flex-col gap-2">
+       <div className="flex items-center gap-2 text-sm text-lightFg-secondary dark:text-darkFg-secondary font-bold">
+         <BrainCircuit size={14} className="text-primary-base" />
+         <span>Pensamento</span>
+       </div>
+       <Markdown loading={loadingMessage} content={msg.reasoning} think />
     </div>
   )
 
@@ -57,13 +79,15 @@ const AIMessage = ({ msg, user, toggleLousa, loadingMessage, onRegenerate, isLas
               <Route size={14} className="text-primary-base" />
               <span>Denkitsu escolheu o agente <strong>{msg.routingInfo.routedTo}</strong></span>
             </div>
-          </div>
+           </div>
         )}
-        {hasContentStarted
-          ? (<>{ReasoningBlock}{ToolCallBlock}</>)
-          : (<>{ToolCallBlock}{ReasoningBlock}</>)
-        }
+
+        {UsedAgentsBlock}
+        {UsedToolsBlock}
+        {ThoughtBlock}
+
         {loadingMessage && !hasContentStarted && msg.toolCalls?.length === 0 ? <Button variant="outline" size="icon" $rounded loading={true} disabled /> : renderContent()}
+
         {msg.timestamp && (
           <small className="ml-auto text-xs text-lightFg-secondary dark:text-darkFg-secondary whitespace-nowrap">
             {new Date(msg.timestamp).toLocaleString("pt-BR")}
@@ -72,7 +96,7 @@ const AIMessage = ({ msg, user, toggleLousa, loadingMessage, onRegenerate, isLas
         {!loadingMessage && isAssistant && (
           <AIReactions message={msg} toggleLousa={toggleLousa} onRegenerate={onRegenerate} isLastMessage={isLastMessage} />
         )}
-      </div>
+       </div>
     </div>
   )
 }
