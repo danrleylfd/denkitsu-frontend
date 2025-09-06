@@ -5,7 +5,7 @@ import { useAI } from "../contexts/AIContext"
 import { useModels } from "../contexts/ModelContext"
 import { useNotification } from "../contexts/NotificationContext"
 
-import { getNewsByPage } from "../services/news"
+import { getNewsByCursor } from "../services/news"
 import { generateNews } from "../services/aiChat"
 
 import SideMenu from "../components/SideMenu"
@@ -24,54 +24,60 @@ const ContentView = ({ children }) => (
 
 const News = () => {
   const { speakResponse } = useAI()
-  const { aiProvider } = useModels()
+  const { aiProvider, aiProviderToggle } = useModels()
   const { notifyError, notifyInfo } = useNotification()
   const [searchTerm, setSearchTerm] = useState("")
   const [news, setNews] = useState([])
-  const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
+  const [nextCursor, setNextCursor] = useState(null)
   const observer = useRef()
 
-  const loadNews = useCallback(async (currentPage) => {
+  const isFetching = useRef(false)
+  const initialLoadDone = useRef(false)
+
+  const loadNews = useCallback(async () => {
+    if (isFetching.current || !hasMore) return
+    isFetching.current = true
     setLoading(true)
+    const cursorToFetch = initialLoadDone.current ? nextCursor : null
     try {
-      const data = await getNewsByPage(currentPage)
+      const data = await getNewsByCursor(cursorToFetch)
       if (data && data.news) {
-        setNews((prevNews) => [...prevNews, ...data.news])
-        setHasMore(data.pagination.hasNextPage)
-        if (data.pagination.hasNextPage) setPage(data.pagination.currentPage + 1)
+        if (!initialLoadDone.current) setNews(data.news)
+        else setNews(prev => [...prev, ...data.news])
+        setNextCursor(data.nextCursor)
+        setHasMore(data.nextCursor !== null)
+        initialLoadDone.current = true
       } else setHasMore(false)
     } catch (err) {
       if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
       else notifyError("Não foi possível carregar as notícias.")
     } finally {
       setLoading(false)
+      isFetching.current = false
     }
-  }, [])
+  }, [nextCursor, hasMore])
 
   useEffect(() => {
-    setNews([])
-    setPage(1)
-    setHasMore(true)
-    loadNews(1)
+    if (!initialLoadDone.current) loadNews()
   }, [loadNews])
 
   const lastNewsElementRef = useCallback(node => {
     if (loading) return
     if (observer.current) observer.current.disconnect()
     observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMore) loadNews(page)
+      if (entries[0].isIntersecting && hasMore) loadNews()
     })
     if (node) observer.current.observe(node)
-  }, [loading, hasMore, page, loadNews])
+  }, [loading, hasMore, loadNews])
 
   const handleGenerate = async () => {
     if (!searchTerm) return
     setLoading(true)
     try {
       const article = await generateNews(searchTerm, aiProvider)
-      setNews([{ ...article, id: Date.now() }, ...news])
+      setNews([{ ...article, _id: Date.now() }, ...news])
       setSearchTerm("")
     } catch (err) {
       if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
@@ -101,49 +107,42 @@ const News = () => {
           <ProviderSelector />
         </Input>
       </Paper>
+
       {news.map((article, index) => {
-        if (news.length === index + 1) {
-          return (
-            <Paper variant="secondary" className="p-4" ref={lastNewsElementRef} key={article._id}>
-              <Markdown content={article.content} />
-              <small className="text-xs text-lightFg-secondary dark:text-darkFg-secondary">
-                Publicado em {new Date(article.createdAt).toLocaleString()}
-              </small>
-            </Paper>
-          )
-        } else {
-          return (
-            <Paper variant="secondary" className="p-4" key={article._id}>
-              <Markdown content={article.content} />
-              <small className="text-xs text-lightFg-secondary dark:text-darkFg-secondary">
-                Publicado em {new Date(article.createdAt).toLocaleString()}
-              </small>
-              <div className="flex gap-2 mt-2">
-                <Button
-                  variant="secondary"
-                  size="icon"
-                  $rounded
-                  title="Copiar Markdown"
-                  onClick={() => handleCopyMarkdown(article.content)}
-                >
-                  <Copy size={14} />
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="icon"
-                  $rounded
-                  title="Ler em voz alta"
-                  onClick={() => speakResponse(article.content)}
-                >
-                  <Mic size={14} />
-                </Button>
-              </div>
-            </Paper>
-          )
-        }
+        const cardContent = (
+          <>
+            <Markdown content={article.content} />
+            <small className="text-xs text-lightFg-secondary dark:text-darkFg-secondary">
+              Publicado em {new Date(article.createdAt).toLocaleString()}
+            </small>
+            <div className="flex gap-2 mt-2">
+              <Button
+                variant="secondary"
+                size="icon"
+                $rounded
+                title="Copiar Markdown"
+                onClick={() => handleCopyMarkdown(article.content)}
+              >
+                <Copy size={14} />
+              </Button>
+              <Button
+                variant="secondary"
+                size="icon"
+                $rounded
+                title="Ler em voz alta"
+                onClick={() => speakResponse(article.content)}
+              >
+                <Mic size={14} />
+              </Button>
+            </div>
+          </>
+        )
+
+        if (news.length === index + 1) return (<Paper variant="secondary" className="p-4" ref={lastNewsElementRef} key={article._id || index}>{cardContent}</Paper>)
+        else return (<Paper variant="secondary" className="p-4" key={article._id || index}>{cardContent}</Paper>)
       })}
       {loading && <Button variant="outline" $rounded loading={true} disabled />}
-      {!hasMore && news.length > 0 && <p className="text-center text-white">Fim das notícias.</p>}
+      {!hasMore && news.length > 0 && <p className="text-center text-white mt-4">Fim das notícias.</p>}
     </SideMenu>
   )
 }
