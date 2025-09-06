@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Minimize2, Maximize2 } from "lucide-react"
+import { Minimize2, Maximize2, Brain } from "lucide-react"
 import ReactMarkdown from "react-markdown"
 import rehypeHighlight from "rehype-highlight"
 import rehypeRaw from "rehype-raw"
@@ -39,6 +39,7 @@ const Markdown = ({ loading, content, think }) => {
           <Button variant="secondary" size="icon" $rounded onClick={toggleCollapse}>
             {collapsed ? <Maximize2 size={16} /> : <Minimize2 size={16} />}
           </Button>
+          <Brain size={16} />
           <span>Pensamentos de Denkitsu...</span>
         </div>
       )}
