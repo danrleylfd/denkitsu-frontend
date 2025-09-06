@@ -30,10 +30,10 @@ const AITools = ({ toolsDoor }) => {
           else isDisabled = isDisabled || aiKey.length === 0 || !selectedModel?.supports_tools
           break
         case "browser_search":
-          isDisabled = isDisabled || !isGptOssModel
+          isDisabled = isDisabled || aiKey.length === 0 || !isGptOssModel
           break
         case "code_interpreter":
-          isDisabled = isDisabled || (!isCompoundModel && !isGptOssModel)
+          isDisabled = isDisabled || aiKey.length === 0 || (!isCompoundModel && !isGptOssModel)
           break
         default:
           isDisabled = isDisabled || aiKey.length === 0 || !selectedModel?.supports_tools
