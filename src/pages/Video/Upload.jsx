@@ -129,7 +129,7 @@ const Upload = () => {
               {!loading && <ImagePlus size={16} />}
             </Button>
           </Input>
-          <Input ref={thumbnailRef} type="file" accept="image/*" onChange={handleThumbnailChange} disabled={loading} containerClassName="hidden" />
+          <Input ref={thumbnailRef} type="file" accept="image/*" onChange={handleThumbnailChange} disabled={loading} className="hidden" />
         </div>
         <Input
           name="fileUrl"
