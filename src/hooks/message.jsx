@@ -1,3 +1,4 @@
+// Frontend/src/hooks/message.jsx
 import { useState, useCallback } from "react"
 
 import { useAuth } from "../contexts/AuthContext"
@@ -29,9 +30,7 @@ const useMessage = (props) => {
     return {
       id: Date.now(), role: "assistant", content: res.content || "",
       reasoning: res.reasoning || "", toolCalls: allToolCalls, timestamp: new Date().toISOString(),
-      routingInfo,
-      usedAgents: data.usedAgents || [],
-      audio: res.audio || null
+      routingInfo
     }
   }
 
@@ -55,7 +54,7 @@ const useMessage = (props) => {
 
       if (shouldUseStream) {
         const placeholderId = Date.now()
-        const placeholder = { id: placeholderId, role: "assistant", content: "", reasoning: "", toolCalls: [], timestamp: new Date().toISOString(), routingInfo, audio: null, usedAgents: [] }
+        const placeholder = { id: placeholderId, role: "assistant", content: "", reasoning: "", toolCalls: [], timestamp: new Date().toISOString(), routingInfo, audio: null }
         setMessages(prev => [...prev, placeholder])
 
         const streamGenerator = sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, activeTools, agentForCall, customProviderUrl)
@@ -70,7 +69,6 @@ const useMessage = (props) => {
                   if (delta.reasoning) updatedMsg.reasoning += delta.reasoning
                   if (delta.content) updatedMsg.content += delta.content
                   if (delta.audio) updatedMsg.audio = delta.audio
-                  if (delta.usedAgents) updatedMsg.usedAgents = [...new Set([...updatedMsg.usedAgents, ...delta.usedAgents])]
                   if (delta.tool_calls) {
                     delta.tool_calls.forEach(toolCallChunk => {
                       const index = toolCallChunk.index
