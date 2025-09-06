@@ -1,7 +1,6 @@
 import { Check, ChevronsUpDown } from "lucide-react"
 import * as Select from "@radix-ui/react-select"
 import { useModels } from "../../contexts/ModelContext"
-import Button from "../Button"
 
 const AIModelSelect = ({ loading, className }) => {
   const { aiProvider, model, freeModels, payModels, groqModels, customModels, setModel } = useModels()
@@ -46,9 +45,7 @@ const AIModelSelect = ({ loading, className }) => {
           <Select.Value placeholder="Selecionar Modelo" />
         </div>
         <Select.Icon asChild>
-          <Button variant="secondary" size="icon" $rounded>
-            <ChevronsUpDown size={16} />
-          </Button>
+          <ChevronsUpDown size={16} />
         </Select.Icon>
       </Select.Trigger>
       <Select.Portal>
