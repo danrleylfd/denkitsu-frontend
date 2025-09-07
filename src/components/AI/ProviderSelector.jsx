@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { Waypoints, Sparkle } from "lucide-react"
+import { Waypoints } from "lucide-react"
 
 import { useModels } from "../../contexts/ModelContext"
 
@@ -15,12 +15,6 @@ const ProviderSelector = (props) => {
           variant: "info",
           title: "Provedor: OpenRouter",
           Icon: Waypoints
-        }
-      case "gemini":
-        return {
-          variant: "pink",
-          title: "Provedor: Gemini",
-          Icon: Sparkle
         }
       case "custom":
         return {

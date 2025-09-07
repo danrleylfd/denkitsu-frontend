@@ -3,7 +3,7 @@ import * as Select from "@radix-ui/react-select"
 import { useModels } from "../../contexts/ModelContext"
 
 const AIModelSelect = ({ loading, className }) => {
-  const { aiProvider, model, freeModels, payModels, groqModels, geminiModels, customModels, setModel } = useModels()
+  const { aiProvider, model, freeModels, payModels, groqModels, customModels, setModel } = useModels()
   const triggerClasses = [
     "flex gap-1 w-full items-center rounded-full pr-1 transition-all h-10",
     "bg-lightBg-tertiary text-lightFg-secondary",
@@ -54,7 +54,6 @@ const AIModelSelect = ({ loading, className }) => {
             {aiProvider === "openrouter" && renderOptions(freeModels, "OpenRouter Gratuito:")}
             {aiProvider === "openrouter" && renderOptions(payModels, "OpenRouter Premium:")}
             {aiProvider === "groq" && renderOptions(groqModels, "Groq Gratuito:")}
-            {aiProvider === "gemini" && renderOptions(geminiModels, "Google Gemini:")}
             {aiProvider === "custom" && renderOptions(customModels, "Modelos Personalizados:")}
           </Select.Viewport>
         </Select.Content>
