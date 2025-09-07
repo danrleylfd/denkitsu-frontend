@@ -1,4 +1,3 @@
-// Frontend/src/hooks/message.jsx
 import { useState, useCallback } from "react"
 
 import { useAuth } from "../contexts/AuthContext"
@@ -49,16 +48,11 @@ const useMessage = (props) => {
     )
 
     try {
-      const isRouterPass = agentForCall === "Roteador"
-      const shouldUseStream = stream && !isRouterPass
-
-      if (shouldUseStream) {
+      if (stream) {
         const placeholderId = Date.now()
         const placeholder = { id: placeholderId, role: "assistant", content: "", reasoning: "", toolCalls: [], timestamp: new Date().toISOString(), routingInfo, audio: null }
         setMessages(prev => [...prev, placeholder])
-
         const streamGenerator = sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, activeTools, agentForCall, customProviderUrl)
-
         for await (const event of streamGenerator) {
           if (event.type === "DELTA") {
             const { delta } = event
@@ -94,9 +88,9 @@ const useMessage = (props) => {
         }
       } else {
         const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, agentForCall, activeTools, customProviderUrl)
-
-        if (isRouterPass && data.next_action?.type === "SWITCH_AGENT") {
+        if (data.next_action?.type === "SWITCH_AGENT") {
           const newAgent = data.next_action.agent
+          notifyInfo(`Roteador selecionou o agente: ${newAgent}`)
           setSelectedAgent(newAgent)
           await executeSendMessage(historyToProcess, newAgent, attempt + 1, { routedTo: newAgent })
         } else {
@@ -122,8 +116,8 @@ const useMessage = (props) => {
       if (signed && selectedAgent === "Suporte") loadUser()
     }
   }, [
-    aiKey, aiProvider, model, freeModels, payModels, groqModels, activeTools, stream, selectedAgent, customProviderUrl,
-    setMessages, setSelectedAgent
+    aiKey, aiProvider, model, freeModels, payModels, groqModels, activeTools, stream,
+    setMessages, setSelectedAgent, notifyError, notifyInfo, signed, loadUser, selectedAgent, customProviderUrl
   ])
 
   const onSendMessage = useCallback(async () => {
@@ -165,7 +159,7 @@ const useMessage = (props) => {
       setMessages(prev => prev.filter(m => m.timestamp !== userMessagePlaceholder.timestamp))
       setLoadingMessages(false)
     }
-  }, [audioFile, messages, executeSendMessage, setAudioFile, setMessages, selectedAgent])
+  }, [audioFile, messages, executeSendMessage, setAudioFile, setMessages, selectedAgent, notifyError])
 
   const handleRegenerateResponse = useCallback(async () => {
     if (loadingMessages || isImproving) return
@@ -177,7 +171,7 @@ const useMessage = (props) => {
     const historyWithoutLastResponse = messages.slice(0, -1)
     setMessages(historyWithoutLastResponse)
     await executeSendMessage(historyWithoutLastResponse, selectedAgent)
-  }, [loadingMessages, isImproving, messages, executeSendMessage, setMessages, selectedAgent])
+  }, [loadingMessages, isImproving, messages, executeSendMessage, setMessages, selectedAgent, notifyWarning])
 
   const improvePrompt = useCallback(async () => {
     if (!userPrompt.trim() || isImproving || loadingMessages) return
@@ -203,7 +197,7 @@ const useMessage = (props) => {
     } finally {
       setIsImproving(false)
     }
-  }, [userPrompt, isImproving, loadingMessages, aiKey, aiProvider, model, freeModels, payModels, groqModels, setUserPrompt])
+  }, [userPrompt, isImproving, loadingMessages, aiKey, aiProvider, model, freeModels, payModels, groqModels, setUserPrompt, notifyInfo, notifySuccess, notifyError])
 
   return { loadingMessages, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt, handleSendAudioMessage }
 }
