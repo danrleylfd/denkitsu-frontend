@@ -52,9 +52,12 @@ const useMessage = (props) => {
       const shouldUseStream = stream && !isRouterPass
 
       if (shouldUseStream) {
-        const placeholderId = Date.now()
-        const placeholder = { id: placeholderId, role: "assistant", content: "", reasoning: "", toolCalls: [], timestamp: new Date().toISOString(), routingInfo, audio: null }
-        setMessages(prev => [...prev, placeholder])
+        const placeholderId = routingInfo?.originalMessageId || Date.now()
+
+        if (!routingInfo?.originalMessageId) {
+          const placeholder = { id: placeholderId, role: "assistant", content: "", reasoning: "", toolCalls: [], timestamp: new Date().toISOString(), routingInfo, audio: null }
+          setMessages(prev => [...prev, placeholder])
+        }
 
         const streamGenerator = sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, activeTools, agentForCall, customProviderUrl)
 
