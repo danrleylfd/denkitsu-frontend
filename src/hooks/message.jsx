@@ -97,11 +97,44 @@ const useMessage = (props) => {
         if (isRouterPass && data.next_action?.type === "SWITCH_AGENT") {
           const newAgent = data.next_action.agent
           setSelectedAgent(newAgent)
-          await executeSendMessage(historyToProcess, newAgent, attempt + 1, { routedTo: newAgent })
+
+          const { original_message } = data
+          const routerReasoningMessage = {
+            id: Date.now(),
+            role: "assistant",
+            content: "",
+            reasoning: original_message.reasoning || "",
+            toolCalls: [],
+            timestamp: new Date().toISOString(),
+            routingInfo: { routedTo: newAgent }
+          }
+          setMessages(prev => [...prev, routerReasoningMessage])
+
+          await executeSendMessage(historyToProcess, newAgent, attempt + 1, {
+            routedTo: newAgent,
+            originalMessageId: routerReasoningMessage.id
+          })
         } else {
           const assistantMessage = createAssistantMessage(data, routingInfo)
           if (assistantMessage) {
-            setMessages(prev => [...prev, assistantMessage])
+            if (routingInfo?.originalMessageId) {
+              setMessages(prevMessages =>
+                prevMessages.map(msg => {
+                  if (msg.id === routingInfo.originalMessageId) {
+                    return {
+                      ...assistantMessage,
+                      id: msg.id,
+                      timestamp: msg.timestamp,
+                      reasoning: `${msg.reasoning}\n\n${assistantMessage.reasoning}`.trim(),
+                      routingInfo: msg.routingInfo
+                    }
+                  }
+                  return msg
+                })
+              )
+            } else {
+              setMessages(prev => [...prev, assistantMessage])
+            }
           }
           setLoadingMessages(false)
         }
