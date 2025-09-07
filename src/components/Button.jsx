@@ -1,6 +1,6 @@
 import { forwardRef } from "react"
 
-const Spinner = ({isIcon}) => (<div className={`h-4 w-4 animate-spin-fast rounded-full border-2 border-solid border-transparent border-t-current ${isIcon ? "mr-2" : "mr-0"}`} />)
+const Spinner = ({isIcon}) => (<div className={`h-4 w-4 animate-spin-fast rounded-full border-2 border-solid border-transparent border-t-current ${!isIcon ? "mr-2" : "mr-0"}`} />)
 
 const Button = forwardRef(({
   type = "button",
