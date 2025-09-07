@@ -1,4 +1,3 @@
-// Frontend/src/hooks/message.jsx
 import { useState, useCallback } from "react"
 
 import { useAuth } from "../contexts/AuthContext"
@@ -98,6 +97,7 @@ const useMessage = (props) => {
         if (isRouterPass && data.next_action?.type === "SWITCH_AGENT") {
           const newAgent = data.next_action.agent
           setSelectedAgent(newAgent)
+          await executeSendMessage(historyToProcess, newAgent, attempt + 1, { routedTo: newAgent })
         } else {
           const assistantMessage = createAssistantMessage(data, routingInfo)
           if (assistantMessage) {
