@@ -29,7 +29,7 @@ const useMessage = (props) => {
     return {
       id: Date.now(), role: "assistant", content: res.content || "",
       reasoning: res.reasoning || "", toolCalls: allToolCalls, timestamp: new Date().toISOString(),
-      routingInfo
+      routingInfo, audio: res.audio || null
     }
   }
 
