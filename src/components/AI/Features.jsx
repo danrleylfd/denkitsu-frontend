@@ -135,57 +135,52 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
 
             {/* --- NEW MAPPING TUTORIAL --- */}
             <h4 className="text-lg font-bold text-lightFg-primary dark:text-darkFg-primary">Tutorial Avançado: Mapeamento de Resposta da API</h4>
-            <p>O mapeamento é o superpoder da Fábrica. Ele permite que você filtre, limpe e transforme o JSON de uma API antes que a IA o veja. Isso economiza tokens e dá à IA apenas os dados que importam.</p>
+            <p>O mapeamento é o superpoder da Fábrica. Ele permite que você filtre, limpe e transforme o JSON de uma API antes que a IA o veja. Para todos os exemplos abaixo, vamos imaginar que nossa ferramenta de piadas foi configurada com o Header `"Accept": "application/json"` e o teste retornou o seguinte resultado cru:</p>
+            <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "id": "R7UFAa6g4Ad",\n  "joke": "My dog used to chase people on a bike a lot. It got so bad I had to take his bike away.",\n  "status": 200\n}`}</code></pre>
 
-            <div>
+            <div className="mt-2">
               <h5 className="text-lightFg-primary dark:text-darkFg-primary">Nível 1: Seleção Simples (o básico)</h5>
-              <p>Imagine que sua API de teste retorna um objeto complexo, mas você só quer o apelido do usuário.</p>
-              <p><strong>Resposta Crua da API:</strong></p>
-              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "status": 200,\n  "data": {\n    "user": {\n      "id": 123,\n      "name": "Danrley",\n      "nickname": "Denki"\n    }\n  }\n}`}</code></pre>
-              <p className="mt-2"><strong>Mapeamento:</strong></p>
-              <p>No campo "Response Mapping", você simplesmente coloca o caminho para o dado que quer:</p>
-              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>data.user.nickname</code></pre>
+              <p>Queremos apenas o texto da piada. O resto (ID, status) é ruído para a IA.</p>
+              <p className="mt-2"><strong>Mapeamento:</strong> No campo "Response Mapping", coloque o caminho para o dado:</p>
+              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>joke</code></pre>
               <p className="mt-2"><strong>Preview (O que a IA recebe):</strong></p>
-              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>"Denki"</code></pre>
+              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>"My dog used to chase people on a bike a lot. It got so bad I had to take his bike away."</code></pre>
             </div>
 
             <div>
               <h5 className="text-lightFg-primary dark:text-darkFg-primary">Nível 2: Seleção Múltipla (criando um novo objeto)</h5>
-              <p>Agora, vamos pegar o nome e o ID, e entregar um objeto limpo para a IA. Para isso, o mapeamento precisa ser um JSON.</p>
+              <p>Vamos pegar a piada e seu ID, e entregar um objeto limpo com chaves em português para a IA. Para isso, o mapeamento precisa ser um JSON.</p>
               <p className="mt-2"><strong>Mapeamento:</strong></p>
-              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "nome": "data.user.name",\n  "identificador": "data.user.id"\n}`}</code></pre>
+              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "piada": "joke",\n  "identificador": "id"\n}`}</code></pre>
               <p className="mt-2"><strong>Preview (O que a IA recebe):</strong></p>
-              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "nome": "Danrley",\n  "identificador": 123\n}`}</code></pre>
+              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "piada": "My dog used to chase people on a bike a lot. It got so bad I had to take his bike away.",\n  "identificador": "R7UFAa6g4Ad"\n}`}</code></pre>
             </div>
 
             <div>
               <h5 className="text-lightFg-primary dark:text-darkFg-primary">Nível 3: Transformando Arrays</h5>
-              <p>E se a API retorna uma lista, e você quer extrair apenas alguns campos de cada item? Usamos as chaves especiais `_source` e `_transform`.</p>
-              <p><strong>Resposta Crua da API (amostra):</strong></p>
-              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "users": [\n    { "name": "Dan", "id": "1", "role": "admin" },\n    { "name": "Van", "id": "2", "role": "user" }\n  ]\n}`}</code></pre>
+              <p>Imagine uma API que retorna uma lista de piadas. Queremos extrair apenas alguns campos de cada uma. Usamos as chaves especiais `_source` e `_transform`.</p>
+              <p><strong>Resposta Crua da API (Hipotética):</strong></p>
+              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "results": [\n    { "id": "abc", "joke": "Why did the scarecrow win an award? Because he was outstanding in his field.", "category": "puns" },\n    { "id": "def", "joke": "I'm reading a book on anti-gravity. It's impossible to put down!", "category": "puns" }\n  ]\n}`}</code></pre>
               <p className="mt-2"><strong>Mapeamento:</strong></p>
-              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "listaDeUsuarios": {\n    "_source": "users",\n    "_transform": {\n      "nome": "name",\n      "cargo": "role"\n    }\n  }\n}`}</code></pre>
+              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "piadas": {\n    "_source": "results",\n    "_transform": {\n      "piada": "joke",\n      "id": "id"\n    }\n  }\n}`}</code></pre>
               <p className="mt-2"><strong>Preview (O que a IA recebe):</strong></p>
-              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "listaDeUsuarios": [\n    { "nome": "Dan", "cargo": "admin" },\n    { "nome": "Van", "cargo": "user" }\n  ]\n}`}</code></pre>
+              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "piadas": [\n    { "piada": "Why did the scarecrow win an award? Because he was outstanding in his field.", "id": "abc" },\n    { "piada": "I'm reading a book on anti-gravity. It's impossible to put down!", "id": "def" }\n  ]\n}`}</code></pre>
             </div>
 
             <div>
               <h5 className="text-lightFg-primary dark:text-darkFg-primary">Nível Hacker: Lookups (Juntando Dados)</h5>
-              <p>Este é o recurso mais poderoso. Permite que você use um valor de um item para buscar uma "tradução" em outra parte da API, como fizemos com a API de Genshin.</p>
-              <p><strong>Resposta Crua da API (amostra do Genshin):</strong></p>
-              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "types": { "WEAPON_SWORD_ONE_HAND": "Espada" },\n  "items": {\n    "10000002": { "name": "Ayaka", "weaponType": "WEAPON_SWORD_ONE_HAND" }\n  }\n}`}</code></pre>
-              <p className="mt-2"><strong>Mapeamento com `lookup`:</strong></p>
-              <p>A sintaxe `lookup:caminho_da_tabela: `chave_no_item` diz ao sistema para navegar até `caminho_da_tabela` e usar o valor da `chave_no_item` para encontrar a tradução.</p>
-              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "personagens": {\n    "_source": "data.items",\n    "_transform": {\n      "nome": "name",\n      "arma": "lookup:data.types:{weaponType}"\n    }\n  }\n}`}</code></pre>
+              <p>Este é o recurso mais poderoso, para quando a "tradução" de um campo está em outra parte da API.</p>
+              <p><strong>Resposta Crua da API (Hipotética):</strong></p>
+              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "category_names": {\n    "puns": "Trocadilhos"\n  },\n  "results": [\n    { "id": "def", "joke": "I'm reading a book on anti-gravity. It's impossible to put down!", "category": "puns" }\n  ]\n}`}</code></pre>
+              <p className="mt-2"><strong>Mapeamento com `lookup`:</strong> A sintaxe `lookup:caminho_da_tabela:{chave_no_item}` resolve a tradução.</p>
+              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "piadas_com_categoria": {\n    "_source": "results",\n    "_transform": {\n      "piada": "joke",\n      "categoria": "lookup:category_names:{category}"\n    }\n  }\n}`}</code></pre>
               <p className="mt-2"><strong>Preview (O que a IA recebe):</strong></p>
-              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "personagens": [\n    { "nome": "Ayaka", "arma": "Espada" }\n  ]\n}`}</code></pre>
+              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "piadas_com_categoria": [\n    { "piada": "I'm reading a book on anti-gravity. It's impossible to put down!", "categoria": "Trocadilhos" }\n  ]\n}`}</code></pre>
             </div>
-
 
             <div className="p-3 rounded-md bg-amber-base/10 border border-amber-base/30">
               <h5 className="text-amber-base flex items-center gap-2"><AlertTriangle size={18} />Atenção: Limites de Resposta da API</h5>
-              <p className="mt-1 text-amber-dark dark:text-amber-light">A IA precisa "ler" a resposta completa da API que sua ferramenta busca. Se a API externa retornar uma resposta muito grande (milhares de linhas de dados), ela pode ultrapassar o "limite de leitura" (contexto de tokens) do modelo de IA. </p>
-              <p className="mt-2 text-amber-dark dark:text-amber-light">Isso pode causar um erro e impedir que a IA formule uma resposta final. Portanto, **prefira usar APIs que retornem dados concisos** ou que permitam filtrar a quantidade de informação através de parâmetros na URL!</p>
+              <p className="mt-1 text-amber-dark dark:text-amber-light">Se a API externa retornar uma resposta muito grande (milhares de linhas de dados), ela pode ultrapassar o limite de contexto do modelo de IA, causando um erro.</p>
               <p className="mt-2 font-bold text-amber-dark dark:text-amber-light">É exatamente para isso que o Mapeamento de Resposta foi criado! Use-o para extrair apenas os campos essenciais do payload da API. Ao "enxugar" a resposta, você garante que apenas os dados úteis sejam enviados para a IA, evitando estouro de tokens e tornando a ferramenta mais eficiente.</p>
             </div>
           </div>
