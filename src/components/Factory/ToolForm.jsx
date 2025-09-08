@@ -208,7 +208,7 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
           />
           <div className="flex items-center gap-2 my-2">
             <Button type="button" variant="outline" $rounded onClick={handleTestRequest} loading={isTesting} disabled={loading || isTesting}>
-              {!isTesting && <Play size={16} className="mr-2" />} Testar
+              {!isTesting && <Play size={16} />} Testar
             </Button>
           </div>
           {testResult && (
