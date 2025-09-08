@@ -9,22 +9,66 @@ import Input from "../Input"
 import IconPickerInput from "../IconPickerInput"
 import TextArea from "../TextArea"
 
-const resolveObjectPath = (obj, path) => {
-  if (!path) return obj
-  try {
-    return path.split(".").reduce((prev, curr) => {
-      const arrMatch = curr.match(/(\w+)\[(\d+)\]/)
-      if (arrMatch) {
-        const key = arrMatch[1]
-        const index = parseInt(arrMatch[2], 10)
-        return prev && prev[key] ? prev[key][index] : undefined
-      }
-      return prev ? prev[curr] : undefined
-    }, obj)
-  } catch (error) {
-    return undefined
-  }
+// Helper functions idênticas ao backend para garantir consistência
+const getValueFromPath = (obj, path) => {
+  if (!path || path === "data") return obj
+  return path.split(".").reduce((prev, curr) => {
+    const arrMatch = curr.match(/(\w+)\[(\d+)\]/)
+    if (arrMatch) {
+      const key = arrMatch[1]
+      const index = parseInt(arrMatch[2], 10)
+      return prev && prev[key] ? prev[key][index] : undefined
+    }
+    return prev ? prev[curr] : undefined
+  }, obj)
 }
+
+const applyMapping = (rootObject, mappingConfig) => {
+  let mapping
+  try {
+    mapping = JSON.parse(mappingConfig)
+  } catch (e) {
+    return getValueFromPath(rootObject, mappingConfig)
+  }
+
+  if (typeof mapping !== "object" || mapping === null) {
+    return getValueFromPath(rootObject, mappingConfig)
+  }
+
+  const result = {}
+  for (const key in mapping) {
+    const rule = mapping[key]
+    if (typeof rule === "object" && rule !== null && rule._source && rule._transform) {
+      const sourceData = getValueFromPath(rootObject, rule._source)
+      const sourceArray = Array.isArray(sourceData) ? sourceData : (typeof sourceData === "object" && sourceData !== null ? Object.values(sourceData) : null)
+
+      if (Array.isArray(sourceArray)) {
+        result[key] = sourceArray.map(item => {
+          const newItem = {}
+          const transformRules = rule._transform
+          for (const newProp in transformRules) {
+            const oldPropPath = transformRules[newProp]
+            if (typeof oldPropPath === "string" && oldPropPath.startsWith("lookup:")) {
+              const [_, lookupPath, lookupKeySource] = oldPropPath.split(":")
+              const keyFromItem = item[lookupKeySource.replace(/[{}]/g, "")]
+              const lookupTable = getValueFromPath(rootObject, lookupPath)
+              newItem[newProp] = lookupTable && lookupTable[keyFromItem] ? lookupTable[keyFromItem] : keyFromItem
+            } else {
+              newItem[newProp] = getValueFromPath(item, oldPropPath)
+            }
+          }
+          return newItem
+        })
+      } else {
+        result[key] = []
+      }
+    } else if (typeof rule === "string") {
+      result[key] = getValueFromPath(rootObject, rule)
+    }
+  }
+  return result
+}
+
 
 const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
   const [formData, setFormData] = useState({
@@ -68,9 +112,11 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
   }, [tool])
 
   useEffect(() => {
-    if (testResult) {
-      const mapped = resolveObjectPath(testResult, formData.responseMapping)
+    if (testResult && !testResult.error) {
+      const mapped = applyMapping(testResult, formData.responseMapping)
       setMappingPreview(mapped)
+    } else {
+      setMappingPreview(testResult?.error ? { error: "Não é possível gerar preview a partir de uma resposta com erro." } : null)
     }
   }, [testResult, formData.responseMapping])
 
@@ -208,19 +254,19 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
           />
           <div className="flex items-center gap-2 my-2">
             <Button type="button" variant="outline" $rounded onClick={handleTestRequest} loading={isTesting} disabled={loading || isTesting}>
-              {!isTesting && <Play size={16} />} Testar
+              {!isTesting && <Play size={16} className="mr-2" />} Testar
             </Button>
           </div>
           {testResult && (
             <>
               <TextArea
                 label="Response Mapping (Mapeamento da Resposta)"
-                placeholder="Ex: data.results[0].joke"
+                placeholder={"Ex: data.results[0].joke ou um JSON de transformação"}
                 value={formData.responseMapping}
                 onChange={(e) => handleChange("responseMapping", e.target.value)}
                 disabled={loading}
                 showCounter={false}
-                rows={1}
+                rows={4}
               />
               <label className="text-xs font-bold text-lightFg-secondary dark:text-darkFg-secondary">Raw Result (Resultado Cru)</label>
               <pre className="text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md max-h-40 overflow-auto">
@@ -229,7 +275,7 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
               <label className="text-xs font-bold text-lightFg-secondary dark:text-darkFg-secondary">Mapping Preview (Preview do Mapeamento)</label>
               <pre className="text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md max-h-40 overflow-auto">
                 <code>
-                  {mappingPreview !== undefined
+                  {mappingPreview !== undefined && mappingPreview !== null
                     ? JSON.stringify(mappingPreview, null, 2)
                     : "Erro: Caminho de mapeamento inválido ou não encontrado na resposta."}
                 </code>
