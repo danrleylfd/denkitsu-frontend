@@ -172,7 +172,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
               <p>Este é o recurso mais poderoso, para quando a "tradução" de um campo está em outra parte da API.</p>
               <p><strong>Resposta Crua da API (Hipotética):</strong></p>
               <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "category_names": {\n    "puns": "Trocadilhos"\n  },\n  "results": [\n    { "id": "def", "joke": "I'm reading a book on anti-gravity. It's impossible to put down!", "category": "puns" }\n  ]\n}`}</code></pre>
-              <p className="mt-2"><strong>Mapeamento com `lookup`:</strong> A sintaxe `lookup:caminho_da_tabela:{chave_no_item}` resolve a tradução.</p>
+              <p className="mt-2"><strong>Mapeamento com `lookup`:</strong> A sintaxe `lookup:caminho_da_tabela:chave_no_item` resolve a tradução.</p>
               <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "piadas_com_categoria": {\n    "_source": "results",\n    "_transform": {\n      "piada": "joke",\n      "categoria": "lookup:category_names:{category}"\n    }\n  }\n}`}</code></pre>
               <p className="mt-2"><strong>Preview (O que a IA recebe):</strong></p>
               <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "piadas_com_categoria": [\n    { "piada": "I'm reading a book on anti-gravity. It's impossible to put down!", "categoria": "Trocadilhos" }\n  ]\n}`}</code></pre>
