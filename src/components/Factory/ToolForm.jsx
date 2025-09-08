@@ -298,7 +298,7 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
           />
         </label>
         <Button type="submit" variant="primary" $rounded loading={loading} disabled={loading || !formData.name || !formData.httpConfig.url}>
-          {!loading && <Save size={16} className="mr-2" />} Salvar
+          {!loading && <Save size={16} />} Salvar
         </Button>
       </div>
     </form>

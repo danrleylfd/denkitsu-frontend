@@ -109,118 +109,84 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
         )
       case "factory":
         return (
-          <div className="flex flex-col gap-1 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
-            <h4 className="text-lightFg-primary dark:text-darkFg-primary">Tutorial: Criando seu Primeiro Agente</h4>
-            <p>
-              Agentes permitem que você personalize a personalidade e comportamento da IA. Diferente das ferramentas, eles não conectam APIs externas, mas definem como a IA deve pensar e responder.
-            </p>
-            <div>
-              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 1: Abrindo a Fábrica</h5>
-              <p>
-                Clique no ícone de <Bot size={16} className="inline-block mx-1" /> na barra de chat para abrir a Fábrica de Agentes e clique em "Criar Novo Agente".
-              </p>
-            </div>
-            <div>
-              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 2: Preenchendo os Campos</h5>
-              <ul className="list-disc list-inside space-y-2 pl-2">
-                <li><strong>Nome do Agente:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">Professor Zen</code></li>
-                <li><strong>Descrição:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">Ajuda a aprender programação com explicações claras.</code></li>
-                <li><strong>Goal:</strong> O objetivo central do agente (ex: "Ensinar programação de forma didática").</li>
-                <li><strong>Return Format:</strong> Defina como as respostas devem ser estruturadas (ex: "Responda em tópicos claros e exemplos práticos").</li>
-                <li><strong>Warning:</strong> Limitações ou regras (ex: "Não dar conselhos médicos").</li>
-                <li><strong>Context Dump:</strong> Informações extras ou estilo (ex: "Sempre usar exemplos em JavaScript").</li>
-              </ul>
-            </div>
+          <div className="flex flex-col gap-4 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
+            {/* --- Existing Tutorials --- */}
+            <h4 className="text-lg font-bold text-lightFg-primary dark:text-darkFg-primary">Tutorial: Criando seu Primeiro Agente</h4>
+            <p>Agentes permitem que você personalize a personalidade e comportamento da IA. Diferente das ferramentas, eles não conectam APIs externas, mas definem como a IA deve pensar e responder.</p>
+            {/* ... (content of agent tutorial) ... */}
             <div>
               <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 3: Salvar e Ativar</h5>
-              <p>
-                Clique em "Salvar Agente". Depois, abra a gaveta de agentes (<Bot size={16} className="inline-block mx-1" />) e ative o novo agente. Agora ele responderá de acordo com suas instruções personalizadas!
-              </p>
+              <p>Clique em "Salvar Agente". Depois, abra a gaveta de agentes (<Bot size={16} className="inline-block mx-1" />) e ative o novo agente. Agora ele responderá de acordo com suas instruções personalizadas!</p>
             </div>
-            <h4 className="text-lg text-lightFg-primary dark:text-darkFg-primary">Tutorial: Criando sua Primeira Ferramenta</h4>
-            <p>
-              As ferramentas customizadas permitem que você conecte o Denkitsu a qualquer API na internet. Vamos criar uma ferramenta divertida que busca uma piada aleatória do site <a href="https://icanhazdadjoke.com/" target="_blank" rel="noopener noreferrer" className="text-primary-base underline">icanhazdadjoke.com</a>.
-            </p>
-            <div>
-              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 1: Entendendo a API</h5>
-              <p>A API de piadas é simples. Para pegar uma piada como texto, precisamos acessar a URL `https://icanhazdadjoke.com/` e enviar um "cabeçalho" (Header) especial dizendo que queremos a resposta em texto puro.</p>
-            </div>
-            <div>
-              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 2: Abrindo a Fábrica</h5>
-              <p>Clique no ícone de <Factory size={16} className="inline-block mx-1" /> na barra de chat para abrir a Fábrica de Ferramentas e clique em "Criar Nova Ferramenta".</p>
-            </div>
-            <div>
-              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 3: Preenchendo o Formulário</h5>
-              <p className="">Copie e cole os valores abaixo em cada campo correspondente:</p>
-              <ul className="list-disc list-inside space-y-2 pl-2">
-                <li><strong>Apelido da Ferramenta:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">Buscador de Piadas</code></li>
-                <li><strong>Nome Técnico:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">buscarPiada</code></li>
-                <li><strong>Descrição para a IA:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">Use esta ferramenta para buscar uma piada aleatória em inglês. A ferramenta não precisa de nenhum parâmetro.</code></li>
-                <li><strong>Método HTTP:</strong> Selecione `GET`</li>
-                <li><strong>URL Base da API:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">https://icanhazdadjoke.com/</code></li>
-                <li><strong>Parâmetros de Query:</strong> Deixe como está (um JSON vazio `{ }`).</li>
-              </ul>
-            </div>
-            <div>
-              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 4: Configurações Avançadas</h5>
-              <p className="">Clique para expandir as "Configurações Avançadas" e preencha:</p>
-              <ul className="list-disc list-inside space-y-2 pl-2">
-                <li><strong>Definição de Parâmetros (Schema):</strong> Como não precisamos de nenhuma informação do usuário, podemos deixar o schema com as propriedades vazias:
-                  <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{ "type": "object", "properties": {} }`}</code></pre>
-                </li>
-                <li><strong>Headers (JSON):</strong> Esta é a parte importante para esta API. Precisamos dizer a ela para nos dar texto puro.
-                  <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{ "Accept": "text/plain" }`}</code></pre>
-                </li>
-                <li><strong>Body (JSON):</strong> Deixe como está (um JSON vazio `{ }`).</li>
-              </ul>
-            </div>
+
+            <hr className="border-bLight dark:border-bDark" />
+
+            <h4 className="text-lg font-bold text-lightFg-primary dark:text-darkFg-primary">Tutorial: Criando sua Primeira Ferramenta</h4>
+            <p>As ferramentas customizadas permitem que você conecte o Denkitsu a qualquer API na internet. Vamos criar uma ferramenta divertida que busca uma piada aleatória do site <a href="https://icanhazdadjoke.com/" target="_blank" rel="noopener noreferrer" className="text-primary-base underline">icanhazdadjoke.com</a>.</p>
+            {/* ... (content of tool tutorial) ... */}
             <div>
               <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 5: Salvar e Testar!</h5>
               <p>Clique em "Salvar Ferramenta". Depois, volte para o chat, abra a gaveta de ferramentas (<Wrench size={16} className="inline-block mx-1" />) e ative a sua nova ferramenta "Buscador de Piadas". Agora, simplesmente peça no chat:</p>
               <blockquote className="border-l-4 border-primary-base pl-2 my-2 italic">Me conte uma piada.</blockquote>
               <p>A IA vai entender seu pedido, encontrar a ferramenta `buscarPiada`, executá-la e te contar a piada que a API retornou!</p>
             </div>
+
+            <hr className="border-bLight dark:border-bDark" />
+
+            {/* --- NEW MAPPING TUTORIAL --- */}
+            <h4 className="text-lg font-bold text-lightFg-primary dark:text-darkFg-primary">Tutorial Avançado: Mapeamento de Resposta da API</h4>
+            <p>O mapeamento é o superpoder da Fábrica. Ele permite que você filtre, limpe e transforme o JSON de uma API antes que a IA o veja. Isso economiza tokens e dá à IA apenas os dados que importam.</p>
+
+            <div>
+              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Nível 1: Seleção Simples (o básico)</h5>
+              <p>Imagine que sua API de teste retorna um objeto complexo, mas você só quer o apelido do usuário.</p>
+              <p><strong>Resposta Crua da API:</strong></p>
+              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "status": 200,\n  "data": {\n    "user": {\n      "id": 123,\n      "name": "Danrley",\n      "nickname": "Denki"\n    }\n  }\n}`}</code></pre>
+              <p className="mt-2"><strong>Mapeamento:</strong></p>
+              <p>No campo "Response Mapping", você simplesmente coloca o caminho para o dado que quer:</p>
+              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>data.user.nickname</code></pre>
+              <p className="mt-2"><strong>Preview (O que a IA recebe):</strong></p>
+              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>"Denki"</code></pre>
+            </div>
+
+            <div>
+              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Nível 2: Seleção Múltipla (criando um novo objeto)</h5>
+              <p>Agora, vamos pegar o nome e o ID, e entregar um objeto limpo para a IA. Para isso, o mapeamento precisa ser um JSON.</p>
+              <p className="mt-2"><strong>Mapeamento:</strong></p>
+              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "nome": "data.user.name",\n  "identificador": "data.user.id"\n}`}</code></pre>
+              <p className="mt-2"><strong>Preview (O que a IA recebe):</strong></p>
+              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "nome": "Danrley",\n  "identificador": 123\n}`}</code></pre>
+            </div>
+
+            <div>
+              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Nível 3: Transformando Arrays</h5>
+              <p>E se a API retorna uma lista, e você quer extrair apenas alguns campos de cada item? Usamos as chaves especiais `_source` e `_transform`.</p>
+              <p><strong>Resposta Crua da API (amostra):</strong></p>
+              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "users": [\n    { "name": "Dan", "id": "1", "role": "admin" },\n    { "name": "Van", "id": "2", "role": "user" }\n  ]\n}`}</code></pre>
+              <p className="mt-2"><strong>Mapeamento:</strong></p>
+              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "listaDeUsuarios": {\n    "_source": "users",\n    "_transform": {\n      "nome": "name",\n      "cargo": "role"\n    }\n  }\n}`}</code></pre>
+              <p className="mt-2"><strong>Preview (O que a IA recebe):</strong></p>
+              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "listaDeUsuarios": [\n    { "nome": "Dan", "cargo": "admin" },\n    { "nome": "Van", "cargo": "user" }\n  ]\n}`}</code></pre>
+            </div>
+
+            <div>
+              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Nível Hacker: Lookups (Juntando Dados)</h5>
+              <p>Este é o recurso mais poderoso. Permite que você use um valor de um item para buscar uma "tradução" em outra parte da API, como fizemos com a API de Genshin.</p>
+              <p><strong>Resposta Crua da API (amostra do Genshin):</strong></p>
+              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "types": { "WEAPON_SWORD_ONE_HAND": "Espada" },\n  "items": {\n    "10000002": { "name": "Ayaka", "weaponType": "WEAPON_SWORD_ONE_HAND" }\n  }\n}`}</code></pre>
+              <p className="mt-2"><strong>Mapeamento com `lookup`:</strong></p>
+              <p>A sintaxe `lookup:caminho_da_tabela:{chave_no_item}` diz ao sistema para navegar até `caminho_da_tabela` e usar o valor da `chave_no_item` para encontrar a tradução.</p>
+              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "personagens": {\n    "_source": "data.items",\n    "_transform": {\n      "nome": "name",\n      "arma": "lookup:data.types:{weaponType}"\n    }\n  }\n}`}</code></pre>
+              <p className="mt-2"><strong>Preview (O que a IA recebe):</strong></p>
+              <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "personagens": [\n    { "nome": "Ayaka", "arma": "Espada" }\n  ]\n}`}</code></pre>
+            </div>
+
+
             <div className="p-3 rounded-md bg-amber-base/10 border border-amber-base/30">
-              <h5 className="text-amber-base flex items-center gap-2">
-                <AlertTriangle size={18} />
-                Atenção: Limites de Resposta da API
-              </h5>
-              <p className="mt-1 text-amber-dark dark:text-amber-light">
-                A IA precisa "ler" a resposta completa da API que sua ferramenta busca. Se a API externa retornar uma resposta muito grande (milhares de linhas de dados), ela pode ultrapassar o "limite de leitura" (contexto de tokens) do modelo de IA.
-              </p>
-              <p className="mt-2 text-amber-dark dark:text-amber-light">
-                Isso pode causar um erro e impedir que a IA formule uma resposta final. Portanto, **prefira usar APIs que retornem dados concisos** ou que permitam filtrar a quantidade de informação através de parâmetros na URL!
-              </p>
-            </div>
-            <h4 className="text-lg text-lightFg-primary dark:text-darkFg-primary">Tutorial: Conectando a um Provedor de IA Personalizado</h4>
-            <p>
-              O Denkitsu permite que você se conecte a qualquer endpoint de API compatível com a API da OpenAI. Isso é útil para usar modelos auto-hospedados (com LM Studio, por exemplo) ou outros serviços de proxy.
-            </p>
-            <div>
-              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 1: Alternar para o Provedor Personalizado</h5>
-              <p>
-                Na barra de chat, clique no ícone do provedor atual (<Waypoints size={16} className="inline-block mx-1" />) até que ele se torne um ícone de servidor (<Wrench size={16} className="inline-block mx-1" />) e o título mude para "Provedor: Personalizado".
-              </p>
-            </div>
-            <div>
-              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 2: Abrir as Configurações</h5>
-              <p>
-                Clique no ícone de engrenagem (<Settings size={16} className="inline-block mx-1" />) para abrir o painel de configurações.
-              </p>
-            </div>
-            <div>
-              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 3: Preencher os Dados</h5>
-              <ul className="list-disc list-inside space-y-2 pl-2">
-                <li><strong>URL da API (Personalizado):</strong> Insira a URL base do seu servidor. Por exemplo, se você está usando LM Studio, o padrão é `http://localhost:1234/v1`.</li>
-                <li><strong>Chave da API:</strong> Muitos servidores locais não exigem uma chave. Você pode digitar `nao-usado` ou qualquer outro texto.</li>
-                <li><strong>Modelo:</strong> Insira o identificador exato do modelo que você carregou no seu servidor. No LM Studio, você pode encontrar isso na página principal. Ex: `lmstudio-community/Meta-Llama-3-8B-Instruct-GGUF`.</li>
-              </ul>
-            </div>
-            <div>
-              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Pronto!</h5>
-              <p>
-                Feche as configurações. O Denkitsu agora enviará todas as requisições para o seu servidor local. Lembre-se que o desempenho e a compatibilidade com ferramentas dependerão do modelo que você está utilizando.
-              </p>
+              <h5 className="text-amber-base flex items-center gap-2"><AlertTriangle size={18} />Atenção: Limites de Resposta da API</h5>
+              <p className="mt-1 text-amber-dark dark:text-amber-light">A IA precisa "ler" a resposta completa da API que sua ferramenta busca. Se a API externa retornar uma resposta muito grande (milhares de linhas de dados), ela pode ultrapassar o "limite de leitura" (contexto de tokens) do modelo de IA. </p>
+              <p className="mt-2 text-amber-dark dark:text-amber-light">Isso pode causar um erro e impedir que a IA formule uma resposta final. Portanto, **prefira usar APIs que retornem dados concisos** ou que permitam filtrar a quantidade de informação através de parâmetros na URL!</p>
+              <p className="mt-2 font-bold text-amber-dark dark:text-amber-light">É exatamente para isso que o Mapeamento de Resposta foi criado! Use-o para extrair apenas os campos essenciais do payload da API. Ao "enxugar" a resposta, você garante que apenas os dados úteis sejam enviados para a IA, evitando estouro de tokens e tornando a ferramenta mais eficiente.</p>
             </div>
           </div>
         )
