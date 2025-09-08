@@ -175,7 +175,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
               <p><strong>Resposta Crua da API (amostra do Genshin):</strong></p>
               <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "types": { "WEAPON_SWORD_ONE_HAND": "Espada" },\n  "items": {\n    "10000002": { "name": "Ayaka", "weaponType": "WEAPON_SWORD_ONE_HAND" }\n  }\n}`}</code></pre>
               <p className="mt-2"><strong>Mapeamento com `lookup`:</strong></p>
-              <p>A sintaxe `lookup:caminho_da_tabela:{chave_no_item}` diz ao sistema para navegar até `caminho_da_tabela` e usar o valor da `chave_no_item` para encontrar a tradução.</p>
+              <p>A sintaxe `lookup:caminho_da_tabela: `chave_no_item` diz ao sistema para navegar até `caminho_da_tabela` e usar o valor da `chave_no_item` para encontrar a tradução.</p>
               <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "personagens": {\n    "_source": "data.items",\n    "_transform": {\n      "nome": "name",\n      "arma": "lookup:data.types:{weaponType}"\n    }\n  }\n}`}</code></pre>
               <p className="mt-2"><strong>Preview (O que a IA recebe):</strong></p>
               <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "personagens": [\n    { "nome": "Ayaka", "arma": "Espada" }\n  ]\n}`}</code></pre>
