@@ -1,5 +1,6 @@
 import { useState, memo, useEffect } from "react"
-import { Save, ArrowLeft, Share2 } from "lucide-react"
+import { Save, ArrowLeft, Share2, Play } from "lucide-react"
+import axios from "axios"
 
 import { useNotification } from "../../contexts/NotificationContext"
 
@@ -7,6 +8,23 @@ import Button from "../Button"
 import Input from "../Input"
 import IconPickerInput from "../IconPickerInput"
 import TextArea from "../TextArea"
+
+const resolveObjectPath = (obj, path) => {
+  if (!path) return obj
+  try {
+    return path.split(".").reduce((prev, curr) => {
+      const arrMatch = curr.match(/(\w+)\[(\d+)\]/)
+      if (arrMatch) {
+        const key = arrMatch[1]
+        const index = parseInt(arrMatch[2], 10)
+        return prev && prev[key] ? prev[key][index] : undefined
+      }
+      return prev ? prev[curr] : undefined
+    }, obj)
+  } catch (error) {
+    return undefined
+  }
+}
 
 const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
   const [formData, setFormData] = useState({
@@ -19,8 +37,13 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
     parameters: "{}",
     queryParams: "{}",
     headers: "{}",
-    body: "{}"
+    body: "{}",
+    responseMapping: "data"
   })
+  const [isTesting, setIsTesting] = useState(false)
+  const [testResult, setTestResult] = useState(null)
+  const [mappingPreview, setMappingPreview] = useState(null)
+
   const { notifyError } = useNotification()
 
   useEffect(() => {
@@ -38,13 +61,44 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
         parameters: JSON.stringify(tool.parameters || { type: "object", properties: {}, required: [] }, null, 2),
         queryParams: JSON.stringify(tool.httpConfig?.queryParams || {}, null, 2),
         headers: JSON.stringify(tool.httpConfig?.headers || {}, null, 2),
-        body: JSON.stringify(tool.httpConfig?.body || {}, null, 2)
+        body: JSON.stringify(tool.httpConfig?.body || {}, null, 2),
+        responseMapping: tool.responseMapping || "data"
       })
     }
   }, [tool])
 
+  useEffect(() => {
+    if (testResult) {
+      const mapped = resolveObjectPath(testResult, formData.responseMapping)
+      setMappingPreview(mapped)
+    }
+  }, [testResult, formData.responseMapping])
+
+
   const handleChange = (field, value) => setFormData((prev) => ({ ...prev, [field]: value }))
   const handleHttpChange = (field, value) => setFormData((prev) => ({ ...prev, httpConfig: { ...prev.httpConfig, [field]: value } }))
+
+  const handleTestRequest = async () => {
+    setIsTesting(true)
+    setTestResult(null)
+    setMappingPreview(null)
+    try {
+      const { url, method } = formData.httpConfig
+      const headers = JSON.parse(formData.headers)
+      const params = JSON.parse(formData.queryParams)
+      const data = method !== "GET" ? JSON.parse(formData.body) : undefined
+
+      const response = await axios({ url, method, headers, params, data })
+      setTestResult(response.data)
+    } catch (error) {
+      const errorMessage = error.response ? JSON.stringify(error.response.data, null, 2) : error.message
+      setTestResult({ error: "Falha na requisição de teste", details: errorMessage })
+      notifyError("A requisição de teste falhou.")
+    } finally {
+      setIsTesting(false)
+    }
+  }
+
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -152,6 +206,36 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
             showCounter={false}
             rows={4}
           />
+          <div className="flex items-center gap-2 my-2">
+            <Button type="button" variant="outline" $rounded onClick={handleTestRequest} loading={isTesting} disabled={loading || isTesting}>
+              {!isTesting && <Play size={16} className="mr-2" />} Testar
+            </Button>
+          </div>
+          {testResult && (
+            <>
+              <TextArea
+                label="Response Mapping (Mapeamento da Resposta)"
+                placeholder="Ex: data.results[0].joke"
+                value={formData.responseMapping}
+                onChange={(e) => handleChange("responseMapping", e.target.value)}
+                disabled={loading}
+                showCounter={false}
+                rows={1}
+              />
+              <label className="text-xs font-bold text-lightFg-secondary dark:text-darkFg-secondary">Raw Result (Resultado Cru)</label>
+              <pre className="text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md max-h-40 overflow-auto">
+                <code>{JSON.stringify(testResult, null, 2)}</code>
+              </pre>
+              <label className="text-xs font-bold text-lightFg-secondary dark:text-darkFg-secondary">Mapping Preview (Preview do Mapeamento)</label>
+              <pre className="text-xs bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md max-h-40 overflow-auto">
+                <code>
+                  {mappingPreview !== undefined
+                    ? JSON.stringify(mappingPreview, null, 2)
+                    : "Erro: Caminho de mapeamento inválido ou não encontrado na resposta."}
+                </code>
+              </pre>
+            </>
+          )}
         </div>
       </div>
       <div className="flex justify-between items-center pt-2 mt-2 border-t border-bLight dark:border-bDark flex-shrink-0">
