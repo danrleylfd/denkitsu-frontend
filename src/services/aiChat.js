@@ -1,7 +1,9 @@
-import api from "./"
+// Arquivo: Frontend/src/services/aiChat.js
 
+import api from "./"
 import { storage } from "../utils/storage"
 
+// MODIFICADO: Lógica de stream completamente refeita para consumir SSE
 async function* sendMessageStream(aiKey, aiProvider, model, models, messages, activeTools, mode, customProviderUrl) {
   const payload = {
     aiProvider,
@@ -14,6 +16,7 @@ async function* sendMessageStream(aiKey, aiProvider, model, models, messages, ac
     customApiUrl: aiProvider === "custom" ? customProviderUrl : undefined
   }
   const token = await storage.session.getItem("@Denkitsu:token")
+
   try {
     const response = await fetch(`${api.defaults.baseURL}/ai/chat/completions`, {
       method: "POST",
@@ -23,38 +26,33 @@ async function* sendMessageStream(aiKey, aiProvider, model, models, messages, ac
       },
       body: JSON.stringify(payload)
     })
-    if (!response.ok) {
+
+    if (!response.ok || !response.body) {
       const errorData = await response.json()
       throw { response: { data: errorData } }
     }
+
     const reader = response.body.getReader()
     const decoder = new TextDecoder("utf-8")
     let buffer = ""
+
     while (true) {
       const { done, value } = await reader.read()
       if (done) break
-      buffer += decoder.decode(value)
+
+      buffer += decoder.decode(value, { stream: true })
       let boundary = buffer.indexOf("\n\n")
+
       while (boundary !== -1) {
-        const chunk = buffer.substring(0, boundary)
+        const chunkString = buffer.substring(0, boundary).replace(/^data: /, "")
         buffer = buffer.substring(boundary + 2)
-        if (chunk.startsWith("event: SWITCH_AGENT")) {
-          const dataLine = chunk.split("\n").find(line => line.startsWith("data: "))
-          if (dataLine) {
-            const data = JSON.parse(dataLine.substring(6))
-            yield { type: "SWITCH_AGENT", agent: data.agent } // Entrega o evento de troca
-          }
-        } else if (chunk.startsWith("data: ")) {
-          const data = chunk.substring(6)
-          if (data !== "[DONE]") {
-            try {
-              const json = JSON.parse(data)
-              const delta = json.choices?.[0]?.delta
-              if (delta) yield { type: "DELTA", delta }
-            } catch (error) {
-              console.error("Error parsing stream data chunk:", error)
-            }
-          }
+
+        try {
+          const data = JSON.parse(chunkString)
+          yield data // Emite o evento completo (seja DELTA, ERROR, etc.)
+        } catch (error) {
+          // Ignora chunks malformados, pode acontecer no final do stream
+          // console.warn("Could not parse stream chunk:", chunkString)
         }
         boundary = buffer.indexOf("\n\n")
       }
@@ -65,19 +63,15 @@ async function* sendMessageStream(aiKey, aiProvider, model, models, messages, ac
   }
 }
 
+// MANTIDO: Sem grandes alterações, mas agora se beneficia do backend unificado
 const sendMessage = async (aiKey, aiProvider, model, models, messages, mode = "Padrão", activeTools = new Set(), customProviderUrl) => {
-  const finalPlugins = []
-  if (activeTools.has("web")) finalPlugins.push({ id: "web" })
-  const regularTools = Array.from(activeTools).filter(tool => tool !== "web")
-  const fullModel = models.find((item) => item.id === model)
-  const use_tools = (fullModel?.supports_tools && regularTools.length > 0) ? regularTools : undefined
   const payload = {
     aiProvider,
     aiKey: aiKey.length > 0 ? aiKey : undefined,
     model,
     messages: [...messages],
-    plugins: finalPlugins.length > 0 ? finalPlugins : undefined,
-    use_tools,
+    use_tools: Array.from(activeTools),
+    stream: false,
     mode,
     customApiUrl: aiProvider === "custom" ? customProviderUrl : undefined
   }
@@ -89,12 +83,22 @@ const sendMessage = async (aiKey, aiProvider, model, models, messages, mode = "P
   }
 }
 
-const getPrompt = async () => {
+
+// ... resto do arquivo (getModels, listAgents, etc.) sem alterações ...
+const listAgents = async () => {
   try {
-    const { data } = await api.get("/ai/prompt")
-    return data
+    return await api.get("/ai/agents")
   } catch (error) {
-    console.error("Error on getPrompt:", error.response?.data?.error?.message || error.message)
+    console.error("Error on getAgentDefinitions:", error.response?.data?.error?.message || error.message)
+    throw error
+  }
+}
+
+const listTools = async () => {
+  try {
+    return await api.get("/ai/tools")
+  } catch (error) {
+    console.error("Error on getToolDefinitions:", error.response?.data?.error?.message || error.message)
     throw error
   }
 }
@@ -115,24 +119,6 @@ const getModels = async (aiProvider, customApiUrl, customApiKey) => {
   }
 }
 
-const listAgents = async () => {
-  try {
-    return await api.get("/ai/agents")
-  } catch (error) {
-    console.error("Error on getAgentDefinitions:", error.response?.data?.error?.message || error.message)
-    throw error
-  }
-}
-
-const listTools = async () => {
-  try {
-    return await api.get("/ai/tools")
-  } catch (error) {
-    console.error("Error on getToolDefinitions:", error.response?.data?.error?.message || error.message)
-    throw error
-  }
-}
-
 const generateNews = async (searchTerm, aiProvider) => {
   try {
     const { data } = await api.post("/news/generate", { searchTerm, aiProvider })
@@ -143,4 +129,4 @@ const generateNews = async (searchTerm, aiProvider) => {
   }
 }
 
-export { sendMessageStream, sendMessage, getPrompt, getModels, listAgents, listTools, generateNews }
+export { sendMessageStream, sendMessage, getModels, listAgents, listTools, generateNews }

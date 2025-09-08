@@ -1,9 +1,10 @@
+// Arquivo: Frontend/src/hooks/message.jsx
+
 import { useState, useCallback } from "react"
 
 import { useAuth } from "../contexts/AuthContext"
 import { useNotification } from "../contexts/NotificationContext"
 
-import { getUserAccount } from "../services/account"
 import { sendMessageStream, sendMessage } from "../services/aiChat"
 import { transcribeAudio } from "../services/audio"
 
@@ -15,32 +16,14 @@ const useMessage = (props) => {
   } = props
 
   const { signed, user, loadUser } = useAuth()
-
   const { notifyError, notifyWarning, notifyInfo, notifySuccess } = useNotification()
   const [loadingMessages, setLoadingMessages] = useState(false)
   const [isImproving, setIsImproving] = useState(false)
 
-  const createAssistantMessage = (data, routingInfo = null) => {
-    const res = data?.choices?.[0]?.message
-    if (!res) return null
-    const allToolCalls = (data.tool_calls || []).map((call, idx) => ({
-      index: idx, name: call.function.name, arguments: call.function.arguments
-    }))
-    return {
-      id: Date.now(), role: "assistant", content: res.content || "",
-      reasoning: res.reasoning || "", toolCalls: allToolCalls, timestamp: new Date().toISOString(),
-      routingInfo, audio: res.audio || null
-    }
-  }
-
-  const executeSendMessage = useCallback(async (historyToProcess, agentForCall, attempt = 1, routingInfo = null) => {
-    if (attempt > 2) {
-      notifyError("Erro de roteamento: Loop de agentes detectado.")
-      setLoadingMessages(false)
-      return
-    }
-
+  // MODIFICADO: Simplificado para a nova arquitetura
+  const executeSendMessage = useCallback(async (historyToProcess, agentForCall) => {
     setLoadingMessages(true)
+
     const apiMessages = historyToProcess.map(({ role, content }) =>
       Array.isArray(content)
         ? { role, content: content.map(item => (item.type === "text" ? { type: "text", text: item.content } : item)) }
@@ -48,119 +31,76 @@ const useMessage = (props) => {
     )
 
     try {
-      const isRouterPass = agentForCall === "Roteador"
-      const shouldUseStream = stream && !isRouterPass
-
-      if (shouldUseStream) {
-        const placeholderId = routingInfo?.originalMessageId || Date.now()
-
-        if (!routingInfo?.originalMessageId) {
-          const placeholder = { id: placeholderId, role: "assistant", content: "", reasoning: "", toolCalls: [], timestamp: new Date().toISOString(), routingInfo, audio: null }
-          setMessages(prev => [...prev, placeholder])
-        }
+      if (stream) {
+        const placeholderId = Date.now()
+        const placeholder = { id: placeholderId, role: "assistant", content: "", reasoning: "", toolCalls: [], timestamp: new Date().toISOString(), audio: null }
+        setMessages(prev => [...prev, placeholder])
 
         const streamGenerator = sendMessageStream(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, activeTools, agentForCall, customProviderUrl)
 
         for await (const event of streamGenerator) {
-          if (event.type === "DELTA") {
-            const { delta } = event
-            setMessages(prevMessages =>
-              prevMessages.map(msg => {
-                if (msg.id === placeholderId) {
-                  const updatedMsg = { ...msg }
-                  if (delta.reasoning) updatedMsg.reasoning += delta.reasoning
-                  if (delta.content) updatedMsg.content += delta.content
-                  if (delta.audio) updatedMsg.audio = delta.audio
-                  if (delta.tool_calls) {
-                    delta.tool_calls.forEach(toolCallChunk => {
-                      const index = toolCallChunk.index
-                      if (!updatedMsg.toolCalls[index]) {
-                        updatedMsg.toolCalls[index] = { name: "", arguments: "" }
-                      }
-                      if (toolCallChunk.function.name) {
-                        updatedMsg.toolCalls[index].name = toolCallChunk.function.name
-                      }
-                      if (toolCallChunk.function.arguments) {
-                        updatedMsg.toolCalls[index].arguments += toolCallChunk.function.arguments
-                      }
-                    })
-                  }
-                  return updatedMsg
+          setMessages(prevMessages =>
+            prevMessages.map(msg => {
+              if (msg.id !== placeholderId) return msg
+
+              const updatedMsg = { ...msg }
+
+              // Processa diferentes tipos de eventos do backend
+              if (event.type === "AGENT_SWITCH") {
+                updatedMsg.routingInfo = { routedTo: event.agent }
+                setSelectedAgent(event.agent) // Atualiza o agente no frontend
+              } else if (event.type === "TOOL_EXECUTION_START") {
+                updatedMsg.toolCalls = (event.tool_calls || []).map(call => ({ name: call.function.name, arguments: "pending" }))
+              } else if (event.choices) { // Evento de delta padrão
+                const delta = event.choices[0]?.delta
+                if (delta?.reasoning) updatedMsg.reasoning += delta.reasoning
+                if (delta?.content) updatedMsg.content += delta.content
+                if (delta?.audio) updatedMsg.audio = delta.audio
+                if (delta?.tool_calls) {
+                  delta.tool_calls.forEach(toolCallChunk => {
+                    const index = toolCallChunk.index
+                    if (!updatedMsg.toolCalls[index]) updatedMsg.toolCalls[index] = { name: "", arguments: "" }
+                    if (toolCallChunk.function.name) updatedMsg.toolCalls[index].name = toolCallChunk.function.name
+                    if (toolCallChunk.function.arguments) updatedMsg.toolCalls[index].arguments += toolCallChunk.function.arguments
+                  })
                 }
-                return msg
-              })
-            )
-          } else if (event.type === "ERROR") {
-            throw event.error
-          }
+              } else if (event.type === "ERROR") {
+                throw new Error(event.error.message)
+              }
+              return updatedMsg
+            })
+          )
         }
-      } else {
+      } else { // Lógica para não-streaming
         const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, agentForCall, activeTools, customProviderUrl)
-
-        if (isRouterPass && data.next_action?.type === "SWITCH_AGENT") {
-          const newAgent = data.next_action.agent
-          setSelectedAgent(newAgent)
-
-          const { original_message } = data
-          const routerReasoningMessage = {
-            id: Date.now(),
-            role: "assistant",
-            content: "",
-            reasoning: original_message.reasoning || "",
-            toolCalls: [],
-            timestamp: new Date().toISOString(),
-            routingInfo: { routedTo: newAgent }
-          }
-          setMessages(prev => [...prev, routerReasoningMessage])
-
-          await executeSendMessage(historyToProcess, newAgent, attempt + 1, {
-            routedTo: newAgent,
-            originalMessageId: routerReasoningMessage.id
-          })
-        } else {
-          const assistantMessage = createAssistantMessage(data, routingInfo)
-          if (assistantMessage) {
-            if (routingInfo?.originalMessageId) {
-              setMessages(prevMessages =>
-                prevMessages.map(msg => {
-                  if (msg.id === routingInfo.originalMessageId) {
-                    return {
-                      ...assistantMessage,
-                      id: msg.id,
-                      timestamp: msg.timestamp,
-                      reasoning: `${msg.reasoning}\n\n${assistantMessage.reasoning}`.trim(),
-                      routingInfo: msg.routingInfo
-                    }
-                  }
-                  return msg
-                })
-              )
-            } else {
-              setMessages(prev => [...prev, assistantMessage])
-            }
-          }
-          setLoadingMessages(false)
+        const res = data?.choices?.[0]?.message
+        const assistantMessage = {
+          id: Date.now(),
+          role: "assistant",
+          content: res.content || "",
+          reasoning: res.reasoning || "",
+          toolCalls: (data.tool_calls || []).map(call => ({ name: call.function.name, arguments: call.function.arguments })),
+          timestamp: new Date().toISOString(),
+          routingInfo: data.routingInfo || null,
+          audio: res.audio || null
         }
+        setMessages(prev => [...prev, assistantMessage])
+        if (data.routingInfo) setSelectedAgent(data.routingInfo.routedTo)
       }
     } catch (err) {
-      if (err.response && err.response.data.error) notifyError(err.response.data.error.message)
-      else notifyError("Falha na comunicação com o servidor de IA.")
-      setMessages(prev => {
-        const lastUserMessageInHistory = historyToProcess.findLast(m => m.role === "user")
-        if (lastUserMessageInHistory && prev.some(m => m.timestamp === lastUserMessageInHistory.timestamp)) {
-          return prev.filter(m => m.timestamp !== lastUserMessageInHistory.timestamp)
-        }
-        return prev
-      })
+      notifyError(err.response?.data?.error?.message || err.message || "Falha na comunicação com o servidor de IA.")
+      setMessages(prev => prev.slice(0, -1)) // Remove o placeholder ou a mensagem de usuário que falhou
     } finally {
       setLoadingMessages(false)
-      if (signed && selectedAgent === "Suporte") loadUser()
+      if (signed && agentForCall === "Suporte") loadUser()
     }
   }, [
-    aiKey, aiProvider, model, freeModels, payModels, groqModels, activeTools, stream, selectedAgent, customProviderUrl,
-    setMessages, setSelectedAgent
+    aiKey, aiProvider, model, freeModels, payModels, groqModels, activeTools, stream, customProviderUrl,
+    setMessages, setSelectedAgent, notifyError, signed, loadUser
   ])
 
+
+  // ... resto do hook (onSendMessage, handleSendAudioMessage, etc.) sem alterações significativas ...
   const onSendMessage = useCallback(async () => {
     if (loadingMessages || isImproving) return
     const promptText = userPrompt.trim()
@@ -200,7 +140,7 @@ const useMessage = (props) => {
       setMessages(prev => prev.filter(m => m.timestamp !== userMessagePlaceholder.timestamp))
       setLoadingMessages(false)
     }
-  }, [audioFile, messages, executeSendMessage, setAudioFile, setMessages, selectedAgent])
+  }, [audioFile, messages, executeSendMessage, setAudioFile, setMessages, selectedAgent, notifyError])
 
   const handleRegenerateResponse = useCallback(async () => {
     if (loadingMessages || isImproving) return
@@ -212,7 +152,7 @@ const useMessage = (props) => {
     const historyWithoutLastResponse = messages.slice(0, -1)
     setMessages(historyWithoutLastResponse)
     await executeSendMessage(historyWithoutLastResponse, selectedAgent)
-  }, [loadingMessages, isImproving, messages, executeSendMessage, setMessages, selectedAgent])
+  }, [loadingMessages, isImproving, messages, executeSendMessage, setMessages, selectedAgent, notifyWarning])
 
   const improvePrompt = useCallback(async () => {
     if (!userPrompt.trim() || isImproving || loadingMessages) return
@@ -238,7 +178,8 @@ const useMessage = (props) => {
     } finally {
       setIsImproving(false)
     }
-  }, [userPrompt, isImproving, loadingMessages, aiKey, aiProvider, model, freeModels, payModels, groqModels, setUserPrompt])
+  }, [userPrompt, isImproving, loadingMessages, aiKey, aiProvider, model, freeModels, payModels, groqModels, setUserPrompt, notifyInfo, notifySuccess, notifyError])
+
 
   return { loadingMessages, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt, handleSendAudioMessage }
 }
