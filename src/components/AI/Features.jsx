@@ -110,10 +110,25 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
       case "factory":
         return (
           <div className="flex flex-col gap-4 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
-            {/* --- Existing Tutorials --- */}
             <h4 className="text-lg font-bold text-lightFg-primary dark:text-darkFg-primary">Tutorial: Criando seu Primeiro Agente</h4>
             <p>Agentes permitem que você personalize a personalidade e comportamento da IA. Diferente das ferramentas, eles não conectam APIs externas, mas definem como a IA deve pensar e responder.</p>
-            {/* ... (content of agent tutorial) ... */}
+            <div>
+              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 1: Abrindo a Fábrica</h5>
+              <p>
+                Clique no ícone de <Bot size={16} className="inline-block mx-1" /> na barra de chat para abrir a Fábrica de Agentes e clique em "Criar Novo Agente".
+              </p>
+            </div>
+            <div>
+              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 2: Preenchendo os Campos</h5>
+              <ul className="list-disc list-inside space-y-2 pl-2">
+                <li><strong>Nome do Agente:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">Professor Zen</code></li>
+                <li><strong>Descrição:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">Ajuda a aprender programação com explicações claras.</code></li>
+                <li><strong>Goal:</strong> O objetivo central do agente (ex: "Ensinar programação de forma didática").</li>
+                <li><strong>Return Format:</strong> Defina como as respostas devem ser estruturadas (ex: "Responda em tópicos claros e exemplos práticos").</li>
+                <li><strong>Warning:</strong> Limitações ou regras (ex: "Não dar conselhos médicos").</li>
+                <li><strong>Context Dump:</strong> Informações extras ou estilo (ex: "Sempre usar exemplos em JavaScript").</li>
+              </ul>
+            </div>
             <div>
               <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 3: Salvar e Ativar</h5>
               <p>Clique em "Salvar Agente". Depois, abra a gaveta de agentes (<Bot size={16} className="inline-block mx-1" />) e ative o novo agente. Agora ele responderá de acordo com suas instruções personalizadas!</p>
@@ -123,7 +138,39 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
 
             <h4 className="text-lg font-bold text-lightFg-primary dark:text-darkFg-primary">Tutorial: Criando sua Primeira Ferramenta</h4>
             <p>As ferramentas customizadas permitem que você conecte o Denkitsu a qualquer API na internet. Vamos criar uma ferramenta divertida que busca uma piada aleatória do site <a href="https://icanhazdadjoke.com/" target="_blank" rel="noopener noreferrer" className="text-primary-base underline">icanhazdadjoke.com</a>.</p>
-            {/* ... (content of tool tutorial) ... */}
+            <div>
+              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 1: Entendendo a API</h5>
+              <p>A API de piadas é simples. Para pegar uma piada como texto, precisamos acessar a URL `https://icanhazdadjoke.com/` e enviar um "cabeçalho" (Header) especial dizendo que queremos a resposta em texto puro.</p>
+            </div>
+            <div>
+              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 2: Abrindo a Fábrica</h5>
+              <p>Clique no ícone de <Factory size={16} className="inline-block mx-1" /> na barra de chat para abrir a Fábrica de Ferramentas e clique em "Criar Nova Ferramenta".</p>
+            </div>
+            <div>
+              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 3: Preenchendo o Formulário</h5>
+              <p className="">Copie e cole os valores abaixo em cada campo correspondente:</p>
+              <ul className="list-disc list-inside space-y-2 pl-2">
+                <li><strong>Apelido da Ferramenta:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">Buscador de Piadas</code></li>
+                <li><strong>Nome Técnico:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">buscarPiada</code></li>
+                <li><strong>Descrição para a IA:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">Use esta ferramenta para buscar uma piada aleatória em inglês. A ferramenta não precisa de nenhum parâmetro.</code></li>
+                <li><strong>Método HTTP:</strong> Selecione `GET`</li>
+                <li><strong>URL Base da API:</strong> <code className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-1 rounded">https://icanhazdadjoke.com/</code></li>
+                <li><strong>Parâmetros de Query:</strong> Deixe como está (um JSON vazio `{ }`).</li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 4: Configurações Avançadas</h5>
+              <p className="">Clique para expandir as "Configurações Avançadas" e preencha:</p>
+              <ul className="list-disc list-inside space-y-2 pl-2">
+                <li><strong>Definição de Parâmetros (Schema):</strong> Como não precisamos de nenhuma informação do usuário, podemos deixar o schema com as propriedades vazias:
+                  <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{ "type": "object", "properties": {} }`}</code></pre>
+                </li>
+                <li><strong>Headers (JSON):</strong> Esta é a parte importante para esta API. Precisamos dizer a ela para nos dar texto puro.
+                  <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{ "Accept": "text/plain" }`}</code></pre>
+                </li>
+                <li><strong>Body (JSON):</strong> Deixe como está (um JSON vazio `{ }`).</li>
+              </ul>
+            </div>
             <div>
               <h5 className="text-lightFg-primary dark:text-darkFg-primary">Passo 5: Salvar e Testar!</h5>
               <p>Clique em "Salvar Ferramenta". Depois, volte para o chat, abra a gaveta de ferramentas (<Wrench size={16} className="inline-block mx-1" />) e ative a sua nova ferramenta "Buscador de Piadas". Agora, simplesmente peça no chat:</p>
@@ -133,7 +180,6 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
 
             <hr className="border-bLight dark:border-bDark" />
 
-            {/* --- NEW MAPPING TUTORIAL --- */}
             <h4 className="text-lg font-bold text-lightFg-primary dark:text-darkFg-primary">Tutorial Avançado: Mapeamento de Resposta da API</h4>
             <p>O mapeamento é o superpoder da Fábrica. Ele permite que você filtre, limpe e transforme o JSON de uma API antes que a IA o veja. Para todos os exemplos abaixo, vamos imaginar que nossa ferramenta de piadas foi configurada com o Header `{`{"Accept": "application/json"}`}` e o teste retornou o seguinte resultado cru:</p>
             <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-md text-xs font-mono"><code>{`{\n  "id": "R7UFAa6g4Ad",\n  "joke": "My dog used to chase people on a bike a lot. It got so bad I had to take his bike away.",\n  "status": 200\n}`}</code></pre>
