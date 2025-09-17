@@ -135,34 +135,3 @@ small, caption, sup, sub {
   font-weight: 400;
   line-height: 1.43;
 }
-
-@keyframes gradient-flow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-@layer utilities {
-  .bg-gradient-rainbow {
-    background-image: linear-gradient(
-      45deg,
-      theme('colors.success.light'),
-      theme('colors.success.base'),
-      theme('colors.warning.light'),
-      theme('colors.warning.base'),
-      theme('colors.danger.light'),
-      theme('colors.danger.base'),
-      theme('colors.primary.light'),
-      theme('colors.primary.base')
-    );
-    background-size: 800% 800%;
-    animation: gradient-flow 10s ease infinite;
-  }
-}
-
