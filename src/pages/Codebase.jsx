@@ -701,7 +701,7 @@ const Codebase = () => {
       <FileViewer file={viewingFile} onClose={() => setViewingFile(null)} />
       <Paper className="!max-w-6xl h-full !max-h-[90vh] flex flex-col items-center justify-center">
         {isProcessing ? (
-          <div className="flex flex-col items-center justify-center gap-4">
+          <div className="flex flex-col items-center justify-center gap-4 p-4">
             <Loader2 className="h-12 w-12 animate-spin text-primary-base" />
             <p className="text-lg font-medium text-lightFg-primary dark:text-darkFg-primary">{statusText}</p>
           </div>

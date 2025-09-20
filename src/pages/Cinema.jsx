@@ -61,7 +61,7 @@ const DvdCover = memo(({ video, onSelect }) => (
       <img src={video.thumbnail} alt={video.name} className="absolute inset-0 w-full h-full object-cover" />
     )}
     {video.thumbnail === "error" && (
-       <div className="absolute inset-0 flex items-center justify-center">
+      <div className="absolute inset-0 flex items-center justify-center">
         <AlertTriangle className="w-8 h-8 text-red-base" />
       </div>
     )}
@@ -76,14 +76,8 @@ const DvdCover = memo(({ video, onSelect }) => (
 const VideoPlayerModal = memo(({ video, onClose }) => {
   if (!video) return null
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <div
-        className="flex flex-col gap-2 bg-lightBg-primary dark:bg-darkBg-primary rounded-lg shadow-2xl w-full max-w-4xl"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+      <div className="flex flex-col gap-2 bg-lightBg-primary dark:bg-darkBg-primary rounded-lg shadow-2xl w-full max-w-4xl">
         <div className="flex items-center justify-between border-b border-bLight dark:border-bDark pt-1 px-2">
           <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary truncate" title={video.name}>
             {video.name}
@@ -172,7 +166,7 @@ const Cinema = () => {
       <div className="w-full h-full flex flex-col gap-2">
         {videos.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center text-center">
-           <FolderSearch className="w-24 h-24 text-lightFg-tertiary dark:text-darkFg-tertiary mb-6" />
+            <FolderSearch className="w-24 h-24 text-lightFg-tertiary dark:text-darkFg-tertiary mb-6" />
             <h1 className="text-3xl font-bold mb-2 text-lightFg-primary dark:text-darkFg-primary">Seu Cinema Particular</h1>
             <p className="mb-8 text-lightFg-secondary dark:text-darkFg-secondary max-w-md">Selecione uma pasta em seu computador para carregar e assistir aos seus vídeos locais.</p>
             <Button variant="primary" $rounded onClick={handleSelectFolder} loading={isLoading}>
