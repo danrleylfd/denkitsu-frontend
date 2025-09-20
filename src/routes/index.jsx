@@ -1,12 +1,10 @@
-// Salve em: Frontend/src/routes/index.jsx
-
 import { lazy, Suspense } from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 
 import { useAuth } from "../contexts/AuthContext"
 
 import Button from "../components/Button"
-import TopMenu from "../components/TopMenu" // Importe o novo componente
+import TopMenu from "../components/TopMenu"
 import Privacidade from "../pages/Privacidade"
 
 const SignUp = lazy(() => import("../pages/Auth/SignUp"))

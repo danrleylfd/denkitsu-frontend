@@ -1,4 +1,3 @@
-// Código final para: Frontend/src/pages/AI.jsx
 import { useAI } from "../contexts/AIContext"
 
 import AIBar from "../components/AI/Bar"
