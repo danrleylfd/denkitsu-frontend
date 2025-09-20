@@ -93,7 +93,7 @@ const News = () => {
   }
 
   return (
-    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
+    <>
       <Paper className="p-4">
         <Input
           placeholder="Pesquisar um tópico para gerar uma notícia com IA..."
@@ -143,7 +143,7 @@ const News = () => {
       })}
       {loading && <Button variant="outline" $rounded loading={true} disabled />}
       {!hasMore && news.length > 0 && <p className="text-center text-white mt-4">Fim das notícias.</p>}
-    </SideMenu>
+    </>
   )
 }
 

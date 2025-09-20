@@ -1,3 +1,5 @@
+// Frontend/src/pages/Editor.jsx
+
 import { useState, useRef } from "react"
 import {
   BookText, Eye, Sparkles, Save, CaseSensitive, Languages,
@@ -5,16 +7,11 @@ import {
 } from "lucide-react"
 
 import { useModels } from "../contexts/ModelContext"
-
 import { sendMessage } from "../services/aiChat"
 
-import SideMenu from "../components/SideMenu"
+import Paper from "../components/Paper"
 import Markdown from "../components/Markdown"
 import Button from "../components/Button"
-
-const EditorContentView = ({ children }) => (
-  <main className="flex flex-1 flex-col h-dvh">{children}</main>
-)
 
 const Editor = () => {
   const [text, setText] = useState(
@@ -132,7 +129,7 @@ const Editor = () => {
       alert("Não há conteúdo para salvar.")
       return
     }
-    const blob = new Blob([text], { type: "text/plain;charset=utf-8" })
+    const blob = new Blob([text], { type: "text/plaincharset=utf-8" })
     if ("showSaveFilePicker" in window) {
       try {
         const options = {
@@ -176,53 +173,51 @@ const Editor = () => {
   }
 
   return (
-    <SideMenu ContentView={EditorContentView} className="bg-cover bg-center">
-      <div className="flex flex-col h-full">
-        <div className="flex items-center gap-1 p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary border-b border-bLight dark:border-bDark flex-wrap">
-          <Button variant={activeTab === "editor" ? "primary" : "secondary"} size="sm" $squared onClick={() => setActiveTab("editor")}>
-            <BookText size={16} className="mr-2" /> Editor
-          </Button>
-          <Button variant={activeTab === "preview" ? "primary" : "secondary"} size="sm" $squared onClick={() => setActiveTab("preview")}>
-            <Eye size={16} className="mr-2" /> Preview
-          </Button>
+    <Paper className="!min-w-[99%] h-full max-h-[97%] flex flex-1 flex-col overflow-hidden">
+      <div className="flex items-center gap-1 p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary border-b border-bLight dark:border-bDark flex-wrap">
+        <Button variant={activeTab === "editor" ? "primary" : "secondary"} size="sm" $squared onClick={() => setActiveTab("editor")}>
+          <BookText size={16} className="mr-2" /> Editor
+        </Button>
+        <Button variant={activeTab === "preview" ? "primary" : "secondary"} size="sm" $squared onClick={() => setActiveTab("preview")}>
+          <Eye size={16} className="mr-2" /> Preview
+        </Button>
 
-          <div className="h-6 w-px bg-bLight dark:bg-bDark mx-2"></div>
+        <div className="h-6 w-px bg-bLight dark:bg-bDark mx-2"></div>
 
-          <Button variant="secondary" size="icon" $squared title="Negrito" onClick={() => applyMarkdown({ start: "**", end: "**" })}><Bold size={16} /></Button>
-          <Button variant="secondary" size="icon" $squared title="Itálico" onClick={() => applyMarkdown({ start: "*", end: "*" })}><Italic size={16} /></Button>
-          <Button variant="secondary" size="icon" $squared title="Sublinhado" onClick={() => applyMarkdown({ start: "<u>", end: "</u>" })}><Underline size={16} /></Button>
-          <Button variant="secondary" size="icon" $squared title="Riscado" onClick={() => applyMarkdown({ start: "~~", end: "~~" })}><Strikethrough size={16} /></Button>
-          <Button variant="secondary" size="icon" $squared title="Alternar Cabeçalho (H1-H6)" onClick={handleHeadingToggle}><Heading size={16} /></Button>
-          <Button variant="secondary" size="icon" $squared title="Lista" onClick={() => applyMarkdown({ start: "\n- ", end: "" })}><List size={16} /></Button>
-          <Button variant="secondary" size="icon" $squared title="Link" onClick={handleLink}><LinkIcon size={16} /></Button>
-          <Button variant="secondary" size="icon" $squared title="Imagem" onClick={handleImage}><ImageIcon size={16} /></Button>
+        <Button variant="secondary" size="icon" $squared title="Negrito" onClick={() => applyMarkdown({ start: "**", end: "**" })}><Bold size={16} /></Button>
+        <Button variant="secondary" size="icon" $squared title="Itálico" onClick={() => applyMarkdown({ start: "*", end: "*" })}><Italic size={16} /></Button>
+        <Button variant="secondary" size="icon" $squared title="Sublinhado" onClick={() => applyMarkdown({ start: "<u>", end: "</u>" })}><Underline size={16} /></Button>
+        <Button variant="secondary" size="icon" $squared title="Riscado" onClick={() => applyMarkdown({ start: "~~", end: "~~" })}><Strikethrough size={16} /></Button>
+        <Button variant="secondary" size="icon" $squared title="Alternar Cabeçalho (H1-H6)" onClick={handleHeadingToggle}><Heading size={16} /></Button>
+        <Button variant="secondary" size="icon" $squared title="Lista" onClick={() => applyMarkdown({ start: "\n- ", end: "" })}><List size={16} /></Button>
+        <Button variant="secondary" size="icon" $squared title="Link" onClick={handleLink}><LinkIcon size={16} /></Button>
+        <Button variant="secondary" size="icon" $squared title="Imagem" onClick={handleImage}><ImageIcon size={16} /></Button>
 
-          <div className="flex-grow" />
+        <div className="flex-grow" />
 
-          <Button variant="outline" size="sm" $rounded onClick={() => handleAiAction("correct")} loading={loadingAi}><CaseSensitive size={16} className="mr-2" /> Corrigir</Button>
-          <Button variant="outline" size="sm" $rounded onClick={() => handleAiAction("improve")} loading={loadingAi}><Sparkles size={16} className="mr-2" /> Melhorar</Button>
-          <Button variant="outline" size="sm" $rounded onClick={() => handleAiAction("translate")} loading={loadingAi}><Languages size={16} className="mr-2" /> Traduzir</Button>
-          <Button variant="success" size="sm" $rounded onClick={handleSave}><Save size={16} className="mr-2" /> Salvar</Button>
-        </div>
-
-        <div className="flex-1 p-4 h-full overflow-hidden bg-lightBg-primary dark:bg-darkBg-primary">
-          {activeTab === "editor" ? (
-            <textarea
-              ref={textAreaRef}
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              className="w-full h-full p-4 resize-none bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary rounded-md focus:outline-none font-mono"
-              spellCheck="false"
-              placeholder="Comece a escrever aqui..."
-            />
-          ) : (
-            <div className="w-full h-full p-4 bg-lightBg-secondary dark:bg-darkBg-secondary rounded-md overflow-y-auto">
-              <Markdown content={text} />
-            </div>
-          )}
-        </div>
+        <Button variant="outline" size="sm" $rounded onClick={() => handleAiAction("correct")} loading={loadingAi}><CaseSensitive size={16} className="mr-2" /> Corrigir</Button>
+        <Button variant="outline" size="sm" $rounded onClick={() => handleAiAction("improve")} loading={loadingAi}><Sparkles size={16} className="mr-2" /> Melhorar</Button>
+        <Button variant="outline" size="sm" $rounded onClick={() => handleAiAction("translate")} loading={loadingAi}><Languages size={16} className="mr-2" /> Traduzir</Button>
+        <Button variant="success" size="sm" $rounded onClick={handleSave}><Save size={16} className="mr-2" /> Salvar</Button>
       </div>
-    </SideMenu>
+
+      <div className="flex-1 p-4 h-full overflow-hidden bg-lightBg-primary dark:bg-darkBg-primary">
+        {activeTab === "editor" ? (
+          <textarea
+            ref={textAreaRef}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            className="w-full h-full p-4 resize-none bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary rounded-md focus:outline-none font-mono"
+            spellCheck="false"
+            placeholder="Comece a escrever aqui..."
+          />
+        ) : (
+          <div className="w-full h-full p-4 bg-lightBg-secondary dark:bg-darkBg-secondary rounded-md overflow-y-auto">
+            <Markdown content={text} />
+          </div>
+        )}
+      </div>
+    </Paper>
   )
 }
 

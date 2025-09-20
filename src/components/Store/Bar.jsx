@@ -6,8 +6,8 @@ import Paper from "../Paper"
 const StoreBar = ({ activeTab, setActiveTab }) => {
   const Title = () => (
     <h3 className="text-lightFg-primary dark:text-darkFg-primary flex items-center gap-2">
-      <StoreIcon size={24} />
-      <span className="text-lg font-bold hidden md:inline">Loja da Comunidade</span>
+      <StoreIcon size={20} />
+      {/* <span className="text-lg font-bold hidden md:inline">Loja da Comunidade</span> */}
     </h3>
   )
 

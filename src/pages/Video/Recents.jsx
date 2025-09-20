@@ -45,10 +45,10 @@ const Recents = () => {
   }, [])
 
   return (
-    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple min-h-screen">
-      {loading && <Button $rounded loading={loading} disabled />}
+    <>
+      {loading && <Button size="icon" $rounded loading={loading} disabled />}
       {!loading && videos.length > 0 && <VideoFeed videos={videos} />}
-    </SideMenu>
+    </>
   )
 }
 

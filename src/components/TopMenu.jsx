@@ -1,25 +1,25 @@
-// Frontend/src/components/TopMenu.jsx
+// Salve em: Frontend/src/components/TopMenu.jsx
 
-import { Link, useLocation, useNavigate } from "react-router-dom"
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import {
   Sun, Moon, Home, User, LogOut, Crown, ChevronDown, BrainCircuit, Star, Play,
   Bot, Store, Code, Newspaper, Edit2, Kanban, Shield,
   Clock, Languages,
-  Film, Video, Upload, TrendingUp, LogIn
-} from "lucide-react"
+  Film, Video, Upload, TrendingUp, LogIn, UserPlus, KeyRound, Link2
+} from "lucide-react";
 
-import { useTheme } from "../contexts/ThemeContext"
-import { useAuth } from "../contexts/AuthContext"
-import { useBackground } from "../contexts/BackgroundContext"
+import { useTheme } from "../contexts/ThemeContext";
+import { useAuth } from "../contexts/AuthContext";
+import { useBackground } from "../contexts/BackgroundContext";
 
-import Button from "./Button"
-import Avatar from "./Avatar"
-import Paper from "./Paper"
+import Button from "./Button";
+import Avatar from "./Avatar";
+import Paper from "./Paper";
 
 const Dropdown = ({ title, icon: Icon, items }) => {
-  const { pathname } = useLocation()
-  const activeLinkClass = "!bg-primary-base/20 !text-primary-base"
+  const { pathname } = useLocation();
+  const activeLinkClass = "!bg-primary-base/20 !text-primary-base";
 
   return (
     <DropdownMenu.Root>
@@ -51,7 +51,7 @@ const Dropdown = ({ title, icon: Icon, items }) => {
                 </Link>
               ) : (
                 <Button
-                  variant="secondary"
+                  variant={label === "Sair" ? "danger" : "secondary"}
                   onClick={action}
                   className="w-full !justify-start"
                   $rounded
@@ -65,21 +65,21 @@ const Dropdown = ({ title, icon: Icon, items }) => {
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>
-  )
-}
+  );
+};
 
-const TopMenu = ({ children }) => {
-  const { background } = useBackground()
-  const { theme, toggleTheme } = useTheme()
-  const { signed, user, signOut } = useAuth()
-  const navigate = useNavigate()
-  const { pathname } = useLocation()
-  const activeLinkClass = "!bg-primary-base/20 !text-primary-base"
+const TopMenu = ({ children, mainClassName }) => {
+  const { background } = useBackground();
+  const { theme, toggleTheme } = useTheme();
+  const { signed, user, signOut } = useAuth();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const activeLinkClass = "!bg-primary-base/20 !text-primary-base";
 
   const handleSignOut = () => {
-    signOut()
-    navigate("/signin")
-  }
+    signOut();
+    navigate("/signin");
+  };
 
   const aiItems = [
     { icon: Bot, label: "Chat", to: "/chat" },
@@ -88,26 +88,34 @@ const TopMenu = ({ children }) => {
     { icon: Newspaper, label: "Notícias", to: "/news" },
     { icon: Edit2, label: "Editor", to: "/editor" },
     { icon: Kanban, label: "Kanban", to: "/kanban" },
-    { icon: Shield, label: "Privacidade", to: "/privacy" }
-  ]
+    { icon: Shield, label: "Privacidade", to: "/privacy" },
+  ];
 
   const toolItems = [
     { icon: Clock, label: "Pomodoro", to: "/pomodoro" },
-    { icon: Languages, label: "Tradutor", to: "/translator" }
-  ]
+    { icon: Languages, label: "Tradutor", to: "/translator" },
+  ];
 
   const videoItems = [
     { icon: Film, label: "Cinema", to: "/cinema" },
     { icon: Video, label: "Meus Vídeos", to: "/my-videos" },
     { icon: Upload, label: "Upload", to: "/upload" },
     { icon: TrendingUp, label: "Populares", to: "/popular" },
-    { icon: Play, label: "Recentes", to: "/recents" }
-  ]
+    { icon: Play, label: "Recentes", to: "/recents" },
+  ];
+
+  const authItems = [
+    { icon: LogIn, label: "Entrar", to: "/signin" },
+    { icon: UserPlus, label: "Cadastrar", to: "/signup" },
+    { icon: KeyRound, label: "Esqueci a senha", to: "/forgot_password" },
+    { icon: KeyRound, label: "Redefinir senha", to: "/reset_password" }
+  ];
 
   const accountItems = [
     { icon: User, label: "Perfil", to: "/profile" },
+    { icon: Link2, label: "Atalho", to: "/atalho" },
     { icon: LogOut, label: "Sair", action: handleSignOut }
-  ]
+  ];
 
   return (
     <div className="flex flex-col min-h-dvh bg-cover bg-center bg-fixed" style={{ backgroundImage: `url("${background}")` }}>
@@ -161,9 +169,9 @@ const TopMenu = ({ children }) => {
                             </Link>
                           ) : (
                             <Button
-                              variant="secondary"
+                              variant={label === "Sair" ? "danger" : "secondary"}
                               onClick={action}
-                              className="w-full !justify-start"
+                              className="w-full !justify-start !rounded-full"
                               $rounded
                             >
                               <ItemIcon size={16} className="mr-2" />
@@ -177,17 +185,12 @@ const TopMenu = ({ children }) => {
                 </DropdownMenu.Root>
               </>
             ) : (
-              <Link to="/signin">
-                <Button variant="primary" $rounded>
-                  <LogIn size={16} className="md:mr-2" />
-                  <span className="hidden md:inline">Entrar</span>
-                </Button>
-              </Link>
+                <Dropdown title="Acessar" icon={User} items={authItems} />
             )}
           </div>
         </Paper>
       </header>
-      <main className="flex-1 container mx-auto flex flex-col items-center">
+      <main className={mainClassName || "flex-1 container mx-auto flex flex-col items-center"}>
         {children}
       </main>
     </div>

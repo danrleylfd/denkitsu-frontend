@@ -57,7 +57,7 @@ const SignIn = () => {
   }
 
   return (
-    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
+    <>
       <Form title="Entrar" onSubmit={handleSignIn}>
         <Input
           name="email"
@@ -91,7 +91,7 @@ const SignIn = () => {
           </a>
         </div>
       </Form>
-    </SideMenu>
+    </>
   )
 }
 

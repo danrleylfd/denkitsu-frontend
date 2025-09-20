@@ -85,7 +85,7 @@ const Pomodoro = () => {
   }
 
   return (
-    <SideMenu ContentView={ContentView} className="bg-cover bg-brand-purple">
+    <>
       <div className="bg-white dark:bg-zinc-900 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] p-4 rounded-lg w-full max-w-sm transition-colors opacity-75 dark:opacity-90">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center">
@@ -122,7 +122,7 @@ const Pomodoro = () => {
           </div>
         </div>
       </div>
-    </SideMenu>
+    </>
   )
 }
 

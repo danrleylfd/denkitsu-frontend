@@ -697,7 +697,7 @@ const Codebase = () => {
   }, [])
 
   return (
-    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
+    <>
       <FileViewer file={viewingFile} onClose={() => setViewingFile(null)} />
       <Paper className="!max-w-6xl h-full !max-h-[90vh] flex flex-col items-center justify-center">
         {isProcessing ? (
@@ -761,7 +761,7 @@ const Codebase = () => {
           )
         }[step]}
       </Paper>
-    </SideMenu>
+    </>
   )
 }
 

@@ -47,7 +47,7 @@ const SignUp = () => {
   }
 
   return (
-    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
+    <>
       <Form title="Cadastrar" onSubmit={handleSignUp}>
         <Input
           name="name"
@@ -92,7 +92,7 @@ const SignUp = () => {
           {!loading && "Cadastrar"}
         </Button>
       </Form>
-    </SideMenu>
+    </>
   )
 }
 

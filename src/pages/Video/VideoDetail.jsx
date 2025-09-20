@@ -162,8 +162,8 @@ const VideoDetail = () => {
   }
 
   return (
-    <SideMenu fixed ContentView={ContentView} className="bg-lightBg-primary dark:bg-darkBg-primary min-h-screen">
-      {loading && <Button variant="outline" style={{ marginTop: ".5rem" }} $rounded loading={loading} disabled />}
+    <>
+      {loading && <Button size="icon" $rounded loading={loading} disabled />}
       {video && (
         <div className="flex flex-col py-2 gap-2 w-full sm:max-w-lg md:max-w-2xl">
           <VideoPlayer src={video.fileUrl} poster={video.thumbnail} />
@@ -227,7 +227,7 @@ const VideoDetail = () => {
           </div>
         </div>
       )}
-    </SideMenu>
+    </>
   )
 }
 

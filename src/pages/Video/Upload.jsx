@@ -81,7 +81,7 @@ const Upload = () => {
   }
 
   return (
-    <SideMenu ContentView={ContentView} className="bg-cover bg-brand-purple">
+    <>
       <Form title="Upload" onSubmit={handleSubmit}>
         <Input
           name="content"
@@ -137,7 +137,7 @@ const Upload = () => {
           {!loading && "Publicar"}
         </Button>
       </Form>
-    </SideMenu>
+    </>
   )
 }
 

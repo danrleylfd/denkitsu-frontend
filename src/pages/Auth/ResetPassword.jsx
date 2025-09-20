@@ -56,7 +56,7 @@ const ResetPassword = () => {
   }
 
   return (
-    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
+    <>
       <Form title="Redefinir Senha" onSubmit={handleResetPassword}>
         <Input
           name="token"
@@ -101,7 +101,7 @@ const ResetPassword = () => {
           {!loading && "Redefinir Senha"}
         </Button>
       </Form>
-    </SideMenu>
+    </>
   )
 }
 

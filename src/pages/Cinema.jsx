@@ -168,7 +168,7 @@ const Cinema = () => {
   }, [notifyError])
 
   return (
-    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
+    <>
       <div className="w-full h-full flex flex-col gap-2">
         {videos.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center text-center">
@@ -199,7 +199,7 @@ const Cinema = () => {
         )}
       </div>
       <VideoPlayerModal video={selectedVideo} onClose={() => setSelectedVideo(null)} />
-    </SideMenu>
+    </>
   )
 }
 

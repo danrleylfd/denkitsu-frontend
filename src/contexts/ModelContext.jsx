@@ -14,8 +14,8 @@ const ModelProvider = ({ children }) => {
   const { notifyError } = useNotification()
 
   const [aiProvider, setAIProvider] = useState("groq")
-  const [groqModel, setGroqModel] = useState("gemma-7b-it")
-  const [openRouterModel, setOpenRouterModel] = useState("deepseek/deepseek-chat-v2-beta:free")
+  const [groqModel, setGroqModel] = useState("openai/gpt-oss-120b")
+  const [openRouterModel, setOpenRouterModel] = useState("deepseek/deepseek-chat-v3.1:free")
   const [customModel, setCustomModel] = useState("custom/model")
   const [groqKey, setGroqKey] = useState("")
   const [openRouterKey, setOpenRouterKey] = useState("")
@@ -43,8 +43,8 @@ const ModelProvider = ({ children }) => {
         const storedCustomKey = await storage.local.getItem("@Denkitsu:CustomProviderKey")
 
         storedProvider ? setAIProvider(storedProvider) : setAIProvider("groq")
-        storedGroqModel ? setGroqModel(storedGroqModel) : setGroqModel("gemma-7b-it")
-        storedOpenRouterModel ? setOpenRouterModel(storedOpenRouterModel) : setOpenRouterModel("deepseek/deepseek-chat-v2-beta:free")
+        storedGroqModel ? setGroqModel(storedGroqModel) : setGroqModel("openai/gpt-oss-120b")
+        storedOpenRouterModel ? setOpenRouterModel(storedOpenRouterModel) : setOpenRouterModel("deepseek/deepseek-chat-v3.1:free")
         storedCustomModel ? setCustomModel(storedCustomModel) : setCustomModel("auto")
         storedGroqKey ? setGroqKey(storedGroqKey) : setGroqKey("")
         storedOpenRouterKey ? setOpenRouterKey(storedOpenRouterKey) : setOpenRouterKey("")
