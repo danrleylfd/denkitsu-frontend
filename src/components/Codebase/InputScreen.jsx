@@ -1,6 +1,9 @@
 import { memo, useState } from "react"
 import { Folder, Github } from "lucide-react"
+
+import Paper from "../Paper"
 import Button from "../Button"
+
 import LocalInputView from "./LocalInputView"
 import GithubInputView from "./GithubInputView"
 import RecentItemsList from "./RecentItemsList"
@@ -9,7 +12,7 @@ const InputScreen = memo((props) => {
   const [inputMethod, setInputMethod] = useState("local")
 
   return (
-    <div className="w-full h-full flex flex-col gap-4 p-4">
+    <Paper className="!h-full !flex !flex-1 !flex-col !gap-4 !p-4">
       <div className="flex justify-center gap-2">
         <Button variant={inputMethod === "local" ? "primary" : "secondary"} $squared onClick={() => setInputMethod("local")}><Folder size={16} className="mr-2" /> Local</Button>
         <Button variant={inputMethod === "github" ? "primary" : "secondary"} $squared onClick={() => setInputMethod("github")}><Github size={16} className="mr-2" /> GitHub</Button>
@@ -21,7 +24,7 @@ const InputScreen = memo((props) => {
         }
       </div>
       <RecentItemsList items={props.recentItems} onClick={props.onRecentClick} onRemove={props.onRemoveRecent} onClearAll={props.onClearRecents} />
-    </div>
+    </Paper>
   )
 })
 

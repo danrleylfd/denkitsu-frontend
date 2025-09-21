@@ -7,9 +7,11 @@ const VideoPlayerModal = memo(({ video, onClose }) => {
   if (!video) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
+      onClick={onClose}>
       <div
-        className="flex flex-col gap-2 bg-lightBg-primary dark:bg-darkBg-primary rounded-lg shadow-2xl w-full max-w-4xl"
+        className="flex flex-col gap-2 bg-lightBg-primary dark:bg-darkBg-primary rounded-lg shadow-lg w-full max-w-3xl"
         onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between border-b border-bLight dark:border-bDark pt-1 px-2">
           <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary truncate" title={video.name}>

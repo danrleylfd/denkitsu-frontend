@@ -76,7 +76,7 @@ const FileExplorer = memo(({ fileTree, allFiles, selectedFiles, setSelectedFiles
   const breadcrumbs = ["Projeto", ...currentPath.split("/")].filter(Boolean)
 
   return (
-    <div className="flex flex-col h-full w-full gap-2 p-4">
+    <div className="flex flex-col w-full h-full max-h-[85dvh] gap-2 p-4">
       <div className="flex items-center text-sm text-lightFg-secondary dark:text-darkFg-secondary">
         {breadcrumbs.map((crumb, index) => {
           const path = breadcrumbs.slice(1, index + 1).join("/")

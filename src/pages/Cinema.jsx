@@ -73,12 +73,18 @@ const Cinema = () => {
     }
   }, [notifyError])
 
-  const handleItemClick = (item) => {
+  const handleItemClick = async (item) => {
     if (item.type === "folder") {
       setCurrentPath(prev => prev ? `${prev}/${item.name}` : item.name)
     } else {
-      const url = URL.createObjectURL(item.handle)
-      setSelectedVideo({ ...item, url })
+      try {
+        const file = await item.handle.getFile()
+        const url = URL.createObjectURL(file)
+        setSelectedVideo({ ...item, url })
+      } catch (error) {
+        console.error("Erro ao obter arquivo do handle:", error)
+        notifyError("Não foi possível carregar o arquivo de vídeo.")
+      }
     }
   }
 
@@ -88,34 +94,32 @@ const Cinema = () => {
 
   return (
     <>
-      <div className="w-full h-full flex flex-col gap-4">
-        {!rootHandle ? (
-          <InitialScreen onSelectFolder={handleSelectFolder} isLoading={isLoading} />
-        ) : (
-          <>
-            <div className="flex justify-between items-center flex-shrink-0">
-              <Breadcrumbs path={currentPath} onNavigate={handleBreadcrumbNavigate} rootName={rootHandle.name} />
-              <Button onClick={handleSelectFolder} variant="secondary" $rounded>
-                <FolderSearch className="mr-2" size={16} />
-                Trocar Pasta
-              </Button>
+      {!rootHandle ? (
+        <InitialScreen onSelectFolder={handleSelectFolder} isLoading={isLoading} />
+      ) : (
+        <>
+          <div className="flex justify-between items-center flex-shrink-0">
+            <Breadcrumbs path={currentPath} onNavigate={handleBreadcrumbNavigate} rootName={rootHandle.name} />
+            <Button onClick={handleSelectFolder} variant="secondary" $rounded>
+              <FolderSearch className="mr-2" size={16} />
+              Trocar Pasta
+            </Button>
+          </div>
+          {isLoading ? (
+             <div className="flex-1 flex items-center justify-center">
+               <Button variant="outline" $rounded loading disabled />
+             </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-4">
+              {items.map((item) =>
+                item.type === "folder"
+                  ? <FolderItem key={item.name} folder={item} onSelect={handleItemClick} />
+                  : <VideoItem key={item.name} video={item} onSelect={handleItemClick} />
+              )}
             </div>
-            {isLoading ? (
-               <div className="flex-1 flex items-center justify-center">
-                 <Button variant="outline" $rounded loading disabled />
-               </div>
-            ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-4">
-                {items.map((item) =>
-                  item.type === "folder"
-                    ? <FolderItem key={item.name} folder={item} onSelect={handleItemClick} />
-                    : <VideoItem key={item.name} video={item} onSelect={handleItemClick} />
-                )}
-              </div>
-            )}
-          </>
-        )}
-      </div>
+          )}
+        </>
+      )}
       <VideoPlayerModal video={selectedVideo} onClose={() => setSelectedVideo(null)} />
     </>
   )
