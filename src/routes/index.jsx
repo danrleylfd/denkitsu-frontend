@@ -49,7 +49,7 @@ const AppRoutes = () => {
   const mainClassMap = {
     "/": "flex flex-col flex-1",
     "/chat": "flex flex-col flex-1",
-    "/cinema": "flex flex-1 mx-2 mb-2 p-4 rounded-lg shadow-lg overflow-y-auto bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90",
+    "/cinema": "flex-1 mx-2 mb-2 p-4 rounded-lg shadow-lg overflow-y-auto bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90",
     "/codebase": "flex flex-1 gap-2 p-2 justify-center",
     "/editor": "flex-1 grid place-items-center",
     "/kanban": "flex flex-1 flex-col px-2 mx-auto w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[75%] lg:max-w-[85%]",
