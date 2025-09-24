@@ -192,7 +192,7 @@ const ToolForm = memo(({ tool, onSave, onBack, loading }) => {
             value={formData.description}
             onChange={(e) => handleChange("description", e.target.value)}
             disabled={loading}
-            maxLength={256}
+            maxLength={512}
             rows={3}
           />
 

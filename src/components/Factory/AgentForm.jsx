@@ -63,7 +63,7 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
               value={formData.description}
               onChange={(e) => handleChange("description", e.target.value)}
               disabled={loading}
-              maxLength={256}
+              maxLength={512}
               rows={3}
             />
           </div>
@@ -74,7 +74,7 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
               value={formData.prompt.goal}
               onChange={(e) => handlePromptChange("goal", e.target.value)}
               disabled={loading}
-              maxLength={512}
+              maxLength={1024}
               rows={4}
             />
           </div>
@@ -85,7 +85,7 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
               value={formData.prompt.returnFormat}
               onChange={(e) => handlePromptChange("returnFormat", e.target.value)}
               disabled={loading}
-              maxLength={512}
+              maxLength={1024}
               rows={4}
             />
           </div>
@@ -96,7 +96,7 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
               value={formData.prompt.warning}
               onChange={(e) => handlePromptChange("warning", e.target.value)}
               disabled={loading}
-              maxLength={512}
+              maxLength={1024}
               rows={4}
             />
           </div>
@@ -107,7 +107,7 @@ const AgentForm = memo(({ agent, onSave, onBack, loading }) => {
               value={formData.prompt.contextDump}
               onChange={(e) => handlePromptChange("contextDump", e.target.value)}
               disabled={loading}
-              maxLength={512}
+              maxLength={1024}
               rows={4}
             />
           </div>
