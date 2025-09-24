@@ -34,7 +34,7 @@ const Dropdown = ({ title, icon: Icon, items }) => {
       <DropdownMenu.Portal>
         <DropdownMenu.Content
           sideOffset={5}
-          className="z-50 bg-lightBg-primary dark:bg-darkBg-primary p-2 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] rounded-md opacity-95 dark:opacity-95 border border-bLight dark:border-bDark animate-fade-in mt-2"
+          className="z-50 bg-lightBg-primary dark:bg-darkBg-primary p-2 shadow-lg rounded-md opacity-95 dark:opacity-95 border border-bLight dark:border-bDark animate-fade-in mt-2"
         >
           {items.map(({ icon: ItemIcon, label, to, action }) => (
             <DropdownMenu.Item key={label} asChild className="focus:outline-none rounded-md">
@@ -87,13 +87,13 @@ const TopMenu = ({ children, mainClassName }) => {
     { icon: Code, label: "Codebase", to: "/codebase" },
     { icon: Newspaper, label: "Notícias", to: "/news" },
     { icon: Edit2, label: "Editor", to: "/editor" },
+    { icon: Languages, label: "Tradutor", to: "/translator" },
     { icon: Kanban, label: "Kanban", to: "/kanban" },
     { icon: Shield, label: "Privacidade", to: "/privacy" },
   ];
 
   const toolItems = [
     { icon: Clock, label: "Pomodoro", to: "/pomodoro" },
-    { icon: Languages, label: "Tradutor", to: "/translator" },
   ];
 
   const videoItems = [
@@ -131,7 +131,7 @@ const TopMenu = ({ children, mainClassName }) => {
           <nav className="flex items-center gap-2">
             <Link to="/"><Button variant="secondary" $rounded><Home size={16} className="md:mr-2" /><span className="hidden md:inline">Início</span></Button></Link>
             {signed && <Dropdown title="Inteligência" icon={BrainCircuit} items={aiItems} />}
-            <Dropdown title="Ferramentas" icon={Star} items={toolItems} />
+            {/* <Dropdown title="Ferramentas" icon={Star} items={toolItems} /> */}
             {signed && <Dropdown title="Vídeos" icon={Play} items={videoItems} />}
           </nav>
 
@@ -153,7 +153,7 @@ const TopMenu = ({ children, mainClassName }) => {
                     </Button>
                   </DropdownMenu.Trigger>
                   <DropdownMenu.Portal>
-                    <DropdownMenu.Content sideOffset={5} className="z-50 bg-lightBg-primary dark:bg-darkBg-primary p-2 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] rounded-md opacity-95 dark:opacity-95 border border-bLight dark:border-bDark animate-fade-in mt-2 mr-2">
+                    <DropdownMenu.Content sideOffset={5} className="z-50 bg-lightBg-primary dark:bg-darkBg-primary p-2 shadow-lg rounded-md opacity-95 dark:opacity-95 border border-bLight dark:border-bDark animate-fade-in mt-2 mr-2">
                       {accountItems.map(({ icon: ItemIcon, label, to, action }) => (
                         <DropdownMenu.Item key={label} asChild className="focus:outline-none rounded-md">
                           {to ? (

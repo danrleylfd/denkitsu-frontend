@@ -50,7 +50,7 @@ const TasksProvider = ({ children }) => {
   const addTask = useCallback(() => {
     if (!newTask.trim()) return
     const id = `task-${Date.now()}`
-    const task = { id, content: newTask.trim() }
+    const task = { id, content: newTask.trim(), pomodoros: 0, pomodoroProgress: null }
     setTasks((prev) => ({ ...prev, todo: [...prev.todo, task] }))
     setNewTask("")
   }, [newTask])
@@ -83,7 +83,9 @@ const TasksProvider = ({ children }) => {
       if (!Array.isArray(newTasksData)) return notifyError("A IA não retornou uma lista de tarefas válida. Tente novamente.")
       const newTasks = newTasksData.map((taskContent, index) => ({
         id: `task-${Date.now()}-${index}`,
-        content: taskContent
+        content: taskContent,
+        pomodoros: 0,
+        pomodoroProgress: null
       }))
       setTasks((prev) => ({ ...prev, todo: [...prev.todo, ...newTasks] }))
       setNewTask("")
@@ -122,6 +124,36 @@ const TasksProvider = ({ children }) => {
     [findTaskContainer]
   )
 
+  const updateTaskPomodoros = useCallback(
+    (taskId) => {
+      const container = findTaskContainer(taskId)
+      if (container) {
+        setTasks((prev) => ({
+          ...prev,
+          [container]: prev[container].map((task) =>
+            task.id === taskId ? { ...task, pomodoros: (task.pomodoros || 0) + 1, pomodoroProgress: null } : task
+          )
+        }))
+      }
+    },
+    [findTaskContainer]
+  )
+
+  const updateTaskPomodoroProgress = useCallback(
+    (taskId, remainingTime) => {
+      const container = findTaskContainer(taskId)
+      if (container) {
+        setTasks(prev => ({
+          ...prev,
+          [container]: prev[container].map(task =>
+            task.id === taskId ? { ...task, pomodoroProgress: remainingTime } : task
+          )
+        }))
+      }
+    },
+    [findTaskContainer]
+  )
+
   const resetTasks = useCallback(async () => {
     await storage.local.removeItem(STORAGE_KEY)
     setTasks(INITIAL_TASKS)
@@ -140,6 +172,8 @@ const TasksProvider = ({ children }) => {
     generateTasksWithAI,
     deleteTask,
     updateTask,
+    updateTaskPomodoros,
+    updateTaskPomodoroProgress,
     resetTasks
   }
 

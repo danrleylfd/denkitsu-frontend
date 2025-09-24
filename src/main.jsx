@@ -15,6 +15,7 @@ import AgentProvider from "./contexts/AgentContext.jsx"
 import ToolProvider from "./contexts/ToolContext"
 import TasksProvider from "./contexts/TasksContext"
 import DndProvider from "./contexts/DndContext"
+import PomodoroProvider from "./contexts/PomodoroContext"
 
 import "./styles/global.css"
 
@@ -33,7 +34,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                     <AIProvider>
                       <TasksProvider>
                         <DndProvider>
-                          <App />
+                          <PomodoroProvider>
+                            <App />
+                          </PomodoroProvider>
                         </DndProvider>
                       </TasksProvider>
                     </AIProvider>

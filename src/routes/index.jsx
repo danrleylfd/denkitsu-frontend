@@ -28,10 +28,9 @@ const VideoDetail = lazy(() => import("../pages/Video/VideoDetail"))
 const Upload = lazy(() => import("../pages/Video/Upload"))
 const News = lazy(() => import("../pages/News"))
 const Kanban = lazy(() => import("../pages/Kanban"))
-const Pomodoro = lazy(() => import("../pages/Pomodoro"))
-const Translator = lazy(() => import("../pages/Translator"))
 const Codebase = lazy(() => import("../pages/Codebase"))
 const Editor = lazy(() => import("../pages/Editor"))
+const Translator = lazy(() => import("../pages/Translator"))
 const Cinema = lazy(() => import("../pages/Cinema"))
 const Clone = lazy(() => import("../pages/Clone"))
 
@@ -56,7 +55,6 @@ const AppRoutes = () => {
     "/news": "flex flex-col gap-2 p-2 items-center mx-auto min-h-dvh w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[75%] lg:max-w-[67%]",
     "/auth": "flex flex-1 flex-col gap-2 p-2 justify-center items-center",
     "/profile": "flex flex-1 gap-2 p-2 justify-center items-center",
-    "/pomodoro": "flex flex-1 gap-2 p-2 justify-center items-center",
     "/subscription": "flex flex-1 gap-2 p-2 justify-center items-center",
     "/redirect": "flex flex-col justify-center gap-2 p-2 items-center mx-auto h-dvh w-full",
     "/shortcut": "flex flex-1 flex-col gap-2 p-2 justify-center items-center",
@@ -83,7 +81,6 @@ const AppRoutes = () => {
               <Route path="/cinema" element={getRouteElement(Cinema, "/cinema")} />
               <Route path="/news" element={getRouteElement(News, "/news")} />
               <Route path="/kanban" element={getRouteElement(Kanban, "/kanban")} />
-              <Route path="/pomodoro" element={getRouteElement(Pomodoro, "/pomodoro")} />
               <Route path="/translator" element={getRouteElement(Translator, "/translator")} />
               <Route path="/codebase" element={getRouteElement(Codebase, "/codebase")} />
               <Route path="/upload" element={getRouteElement(Upload, "/auth")} />
@@ -109,7 +106,6 @@ const AppRoutes = () => {
               <Route path="/editor" element={getRouteElement(Editor, "/editor")} />
               <Route path="/cinema" element={getRouteElement(Cinema, "/cinema")} />
               <Route path="/kanban" element={getRouteElement(Kanban, "/kanban")} />
-              <Route path="/pomodoro" element={getRouteElement(Pomodoro, "/pomodoro")} />
               <Route path="/translator" element={getRouteElement(Translator, "/translator")} />
               <Route path="/codebase" element={getRouteElement(Codebase, "/codebase")} />
               <Route path="/chat" element={getRouteElement(AI, "/chat")} />

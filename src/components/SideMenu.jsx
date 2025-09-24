@@ -186,7 +186,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
   return (
     <div className={`flex ${className || ""}`} style={{ backgroundImage: `url("${background}")` }}>
       <aside
-        className={`transition-all duration-300 ease-in-out z-40 shadow-[6px_6px_16px_rgba(0,0,0,0.5)] border-r ${isOpen ? "w-60" : "w-14"
+        className={`transition-all duration-300 ease-in-out z-40 shadow-lg border-r ${isOpen ? "w-60" : "w-14"
           } bg-lightBg-secondary dark:bg-darkBg-secondary border-bLight dark:border-bDark h-dvh ${fixed && "fixed"}`}
       >
         <nav className="flex flex-col gap-1 h-full px-1">

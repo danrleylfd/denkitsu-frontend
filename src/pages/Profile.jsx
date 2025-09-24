@@ -51,7 +51,7 @@ const Profile = () => {
           <Button variant="secondary" $rounded loading={true} disabled />
         </div>
       ) : user && (
-        <div className="flex flex-col w-full max-w-md my-40 mx-auto p-6 gap-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-lg opacity-90 dark:opacity-95">
+        <div className="flex flex-col w-full max-w-md my-40 mx-auto p-6 gap-4 bg-lightBg-primary dark:bg-darkBg-primary border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-lg opacity-90 dark:opacity-95">
           <div className="flex items-center gap-4">
             <Avatar src={user.avatarUrl} alt={user.name} size={20} isPro={user.plan === "plus"} />
             <div className="flex-1 flex flex-col gap-1">

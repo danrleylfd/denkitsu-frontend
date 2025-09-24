@@ -203,7 +203,7 @@ const VideoPlayer = ({ src = "https://www.w3schools.com/html/mov_bbb.mp4", poste
       ref={playerContainerRef}
       tabIndex="0"
       onKeyDown={handleKeyDown}
-      className="relative w-full overflow-hidden rounded-lg shadow-[6px_6px_16px_rgba(0,0,0,0.5)] bg-black focus:outline-none aspect-video"
+      className="relative w-full overflow-hidden rounded-lg shadow-lg bg-black focus:outline-none aspect-video"
     >
       <video
         ref={videoRef}
