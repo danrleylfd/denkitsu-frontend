@@ -10,7 +10,7 @@ import ProviderSelector from "../../components/AI/ProviderSelector"
 const TaskCreator = () => {
   const { newTask, setNewTask, addTask, generateTasksWithAI, loading } = useTasks()
   return (
-    <Paper className="p-4">
+    <Paper className="w-full !max-w-full p-4">
       <h1 className="text-center text-lightFg-primary dark:text-darkFg-primary">Kanban</h1>
       <p className="text-center text-lightFg-secondary dark:text-darkFg-secondary">Descreva um objetivo e deixe a IA gerar o passo a passo para você.</p>
       <Input

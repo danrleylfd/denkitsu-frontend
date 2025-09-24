@@ -353,10 +353,10 @@ const Codebase = () => {
 
   return (
     <>
-      <FileViewer file={viewingFile} onClose={() => setViewingFile(null)} />
-      <Paper className="h-full !max-h-[90vh] flex flex-col justify-center">
+      <Paper className="!max-w-full !h-[88vh] gap-2 p-4 flex flex-col justify-center items-center">
         {isProcessing ? <ProcessingScreen statusText={statusText} /> : renderCurrentStep()}
       </Paper>
+      <FileViewer file={viewingFile} onClose={() => setViewingFile(null)} />
     </>
   )
 }
