@@ -17,7 +17,7 @@ const StoreItemCard = memo(({ item, user, onAcquire, onUnacquire, isAcquired, lo
   }
 
   return (
-    <Paper variant="secondary" className="flex flex-1 flex-col gap-2 px-2 py-4 h-full transition-transform hover:-translate-y-1">
+    <Paper variant="secondary" className="flex flex-col gap-2 p-4 h-full transition-transform hover:-translate-y-1">
       <div className="flex items-center gap-2">
         <div className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-lg">
           <DynamicIcon name={item.Icon} size={24} className="text-primary-base" />
