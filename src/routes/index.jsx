@@ -32,7 +32,6 @@ const Codebase = lazy(() => import("../pages/Codebase"))
 const Editor = lazy(() => import("../pages/Editor"))
 const Translator = lazy(() => import("../pages/Translator"))
 const Cinema = lazy(() => import("../pages/Cinema"))
-const Clone = lazy(() => import("../pages/Clone"))
 
 const PageLoader = () => (
   <div className="flex justify-center items-center h-dvh w-full">
@@ -93,7 +92,6 @@ const AppRoutes = () => {
               <Route path="/subscription" element={getRouteElement(Subscription, "/subscription")} />
               <Route path="/atalho" element={getRouteElement(Shortcut, "/shortcut")} />
               <Route path="/chat" element={getRouteElement(AI, "/chat")} />
-              <Route path="/clone" element={getRouteElement(Clone, "/clone")} />
               <Route path="/privacy" element={getRouteElement(Privacidade, "/news")} />
               <Route path="/access/:label" element={getRouteElement(Redirect, "/redirect")} />
               <Route path="/auth/:label" element={getRouteElement(Redirect, "/redirect")} />
