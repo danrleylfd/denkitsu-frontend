@@ -11,7 +11,7 @@ const Lousa = ({ content, toggleLousa }) => {
       <Paper className="relative flex flex-1 flex-col gap-2 p-2 rounded-lg shadow-lg w-full h-full max-w-[95%] max-h-[95%] border border-solid border-brand-purple">
         <div className="flex justify-between items-center">
           <h3 className="text-lightFg-primary dark:text-darkFg-primary">Lousa</h3>
-          <Button variant="danger" size="icon" $rounded onClick={toggleLousa}>
+          <Button variant="danger" size="icon" $rounded onClick={() => toggleLousa(null)}>
             <X size={16} />
           </Button>
         </div>
