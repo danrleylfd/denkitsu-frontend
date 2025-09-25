@@ -140,7 +140,7 @@ const FactoryManager = ({ factoryManagerDoor, toggleFactoryManagerDoor }) => {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/67 backdrop-blur-sm">
       <Paper className="relative h-full max-h-[95%] flex flex-col gap-2 p-2 border border-solid border-brand-purple" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <h3 className="text-lightFg-primary dark:text-darkFg-primary">Fábrica</h3>

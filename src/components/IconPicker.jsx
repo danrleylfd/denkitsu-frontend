@@ -23,7 +23,7 @@ const IconPicker = ({ isOpen, onClose, onSelect, currentIcon }) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex justify-center items-center bg-black/67 backdrop-blur-sm"
       onClick={onClose}
     >
       <div

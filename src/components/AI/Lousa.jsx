@@ -6,7 +6,7 @@ import Button from "../Button"
 const Lousa = ({ content, toggleLousa }) => {
   if (!content) return null
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/67 backdrop-blur-sm">
       <div className="relative flex w-[90%] h-[95%] flex-col rounded-lg bg-white shadow-2xl dark:bg-darkBg-primary">
         <div className="flex items-center justify-between rounded-t-lg bg-lightBg-secondary p-2 dark:bg-darkBg-secondary">
           <h3 className="font-bold text-lightFg-primary dark:text-darkFg-primary">Lousa</h3>

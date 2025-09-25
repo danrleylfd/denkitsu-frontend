@@ -8,7 +8,7 @@ const VideoPlayerModal = memo(({ video, onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
+      className="fixed inset-0 z-50 flex justify-center items-center bg-black/75 backdrop-blur-sm"
       onClick={onClose}>
       <div
         className="flex flex-col gap-2 bg-lightBg-primary dark:bg-darkBg-primary rounded-lg shadow-lg w-full max-w-3xl"

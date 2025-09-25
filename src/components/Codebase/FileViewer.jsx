@@ -17,7 +17,7 @@ const FileViewer = memo(({ file, onClose }) => {
   const markdownContent = "```" + `${getLanguage(file.path)}\n${file.content}` + "\n```"
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/67 backdrop-blur-sm" onClick={onClose}>
       <Paper className="flex flex-col h-full max-h-[95%]" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between p-2 pl-4 border-b border-bLight dark:border-bDark flex-shrink-0">
           <h3 className="font-mono font-bold text-lightFg-primary dark:text-darkFg-primary">{file.path}</h3>
