@@ -93,7 +93,7 @@ const News = () => {
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-2 m-2">
+    <div className="flex flex-1 flex-col gap-2 p-2 overflow-y-auto">
       <Paper className="m2 p-4">
         <Input
           placeholder="Pesquisar um tópico para gerar uma notícia com IA..."

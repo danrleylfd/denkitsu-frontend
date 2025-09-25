@@ -115,7 +115,7 @@ const Shortcut = () => {
   }
 
   return (
-    <>
+    <div className="flex flex-1 flex-col gap-2 p-2 overflow-y-auto">
       <div
         className="bg-lightBg-secondary dark:bg-darkBg-secondary p-4 rounded-md w-full shadow-lg opacity-75 dark:opacity-90">
         <form onSubmit={handleCreateLink} className="flex flex-row items-center gap-2">
@@ -182,7 +182,7 @@ const Shortcut = () => {
           ))}
         </div>
       )}
-    </>
+    </div>
   )
 }
 
