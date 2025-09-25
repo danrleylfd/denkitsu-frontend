@@ -3,6 +3,7 @@ import { Timer, Settings, Play, Pause, RefreshCw, Volume2, X } from "lucide-reac
 
 import { usePomodoro } from "../../contexts/PomodoroContext"
 
+import Paper from "../Paper"
 import Button from "../Button"
 
 const Pomodoro = ({ onClose }) => {
