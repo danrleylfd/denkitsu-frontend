@@ -24,15 +24,9 @@ const StoreBar = ({ activeTab, setActiveTab }) => {
   )
 
   return (
-    <Paper className="mx-auto mb-2 p-2 w-full max-w-[98%] xs:max-w-[97%] sm:max-w-[98%] md:max-w-[98.5%] lg:max-w-[99%] xl:max-w-[99.5]">
-      <div className="flex items-center justify-between gap-2 md:hidden">
-        <StoreIcon size={16} className="ml-3" />
-        <Tabs />
-      </div>
-      <div className="hidden md:flex items-center justify-between gap-2">
-        <StoreIcon size={16} className="ml-3" />
-        <Tabs />
-      </div>
+    <Paper className="flex mx-auto gap-2 mb-2 p-2 justify-between items-center">
+      <StoreIcon size={16} className="ml-3" />
+      <Tabs />
     </Paper>
   )
 }
