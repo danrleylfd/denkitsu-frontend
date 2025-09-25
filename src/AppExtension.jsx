@@ -5,8 +5,7 @@ import { useAuth } from "./contexts/AuthContext"
 import { useAI } from "./contexts/AIContext"
 import { useNotification } from "./contexts/NotificationContext"
 
-import AIBar from "./components/AI/ExtensionBar"
-import ChatInterface from "./components/AI/ChatInterface"
+import ExtensionChatInterface from "./components/AI/ExtensionChatInterface"
 import Button from "./components/Button"
 import Paper from "./components/Paper"
 
@@ -49,7 +48,7 @@ const WelcomeScreen = () => {
 }
 
 const SidePanelChat = () => {
-  const { setUserPrompt, onSendMessage, improvePrompt, messages } = useAI()
+  const { setUserPrompt, messages } = useAI()
   const { notifyInfo, notifyError } = useNotification()
 
   const processOmniboxMessage = useCallback(async () => {
@@ -63,7 +62,7 @@ const SidePanelChat = () => {
     } catch (e) {
       console.error("Erro ao processar mensagem da omnibox:", e)
     }
-  }, [])
+  }, [setUserPrompt])
 
   useEffect(() => {
     processOmniboxMessage()
@@ -93,50 +92,25 @@ const SidePanelChat = () => {
         console.error("Side Panel: Erro ao extrair conteúdo:", response?.error)
       }
     })
-  }, [setUserPrompt])
+  }, [setUserPrompt, notifyInfo, notifyError])
 
   const hasUserMessages = messages.some((msg) => msg.role === "user")
 
   return (
     <>
-      {hasUserMessages ? (
-        <ChatInterface
-          renderBar={(props) => (
-            <AIBar
-              {...props}
-              onSendMessage={onSendMessage}
-              improvePrompt={improvePrompt}
-              onAnalyzePage={handleAnalyzePage}
-            />
-          )}
-        />
-      ) : (
-        <>
-          <WelcomeScreen />
-          <ChatInterface
-            renderBar={(props) => (
-              <AIBar
-                {...props}
-                onSendMessage={onSendMessage}
-                improvePrompt={improvePrompt}
-                onAnalyzePage={handleAnalyzePage}
-              />
-            )}
-          />
-        </>
-      )}
+      {!hasUserMessages && <WelcomeScreen />}
+      <ExtensionChatInterface onAnalyzePage={handleAnalyzePage} />
     </>
   )
 }
-
 
 const App = () => {
   const { signed, loading } = useAuth()
 
   return (
-    <div className="flex flex-col h-dvh bg-[#7159C1]">
+    <div className="flex flex-col gap-2 h-dvh bg-brand-purple">
       {loading ? (
-        <div className="flex items-center justify-center h-full">
+        <div className="flex justify-center items-center h-full">
           <Button variant="secondary" loading={true} disabled $rounded />
         </div>
       ) : signed ? (
