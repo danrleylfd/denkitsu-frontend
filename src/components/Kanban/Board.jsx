@@ -19,7 +19,7 @@ const KanbanBoard = () => {
   }
 
   return (
-    <div className="w-full flex flex-col py-2 gap-2">
+    <>
       <TaskCreator />
       <DndContext
         sensors={sensors}
@@ -35,7 +35,7 @@ const KanbanBoard = () => {
         <DragOverlay>{activeTask ? <TaskCard task={activeTask} showControls={false} /> : null}</DragOverlay>
         <TrashDropZone />
       </DndContext>
-    </div>
+    </>
   )
 }
 

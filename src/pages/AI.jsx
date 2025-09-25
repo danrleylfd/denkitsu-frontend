@@ -8,15 +8,7 @@ const AI = () => {
   return (
     <>
       <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="audio/*" style={{ display: "none" }} />
-      <ChatInterface
-        renderBar={(props) => (
-          <AIBar
-            {...props}
-            onSendMessage={onSendMessage}
-            improvePrompt={improvePrompt}
-          />
-        )}
-      />
+      <ChatInterface />
     </>
   )
 }

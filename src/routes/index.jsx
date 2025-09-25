@@ -5,6 +5,7 @@ import { useAuth } from "../contexts/AuthContext"
 
 import Button from "../components/Button"
 import TopMenu from "../components/TopMenu"
+import SideMenu from "../components/SideMenu"
 import Privacidade from "../pages/Privacidade"
 
 const SignUp = lazy(() => import("../pages/Auth/SignUp"))
@@ -62,10 +63,16 @@ const AppRoutes = () => {
     "/video": "flex flex-1 flex-col gap-2 px-2 pb-2 items-center mx-auto w-full md:max-w-[75%] lg:max-w-[100%]"
   }
 
+  const ContentView = ({ children }) => (
+    <main className="flex flex-1 flex-col gap-2 mx-auto h-screen max-h-screen ml-[3.5rem] md:ml-auto">
+      {children}
+    </main>
+  )
+
   const getRouteElement = (Component, layoutKey) => (
-    <TopMenu mainClassName={mainClassMap[layoutKey] || "flex-1 container mx-auto flex flex-col items-center"}>
+    <SideMenu ContentView={ContentView}>
       <Component />
-    </TopMenu>
+    </SideMenu>
   )
 
   return (

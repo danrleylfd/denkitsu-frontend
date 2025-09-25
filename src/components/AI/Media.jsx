@@ -26,7 +26,7 @@ const AIMedia = ({ mediaDoor, onAddImage }) => {
   const isImageSupported = selectedModel?.supports_images ?? false
 
   return (
-    <Paper className="grid grid-cols-[repeat(auto-fit,minmax(2rem,1fr))] justify-center justify-items-center gap-2 px-4 py-2 mb-1 mx-auto">
+    <Paper className="max-w-[99%] grid grid-cols-[repeat(auto-fit,minmax(2rem,1fr))] justify-center justify-items-center gap-2 px-4 py-2 mx-auto">
       <Button $border={stream ? "outline" : "secondary"} variant={stream ? "outline" : "secondary"} size="icon" $rounded title="Streaming" onClick={toggleStream} disabled={loadingMessages || isImproving}>
         <AudioWaveform size={16} />
       </Button>

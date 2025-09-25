@@ -76,7 +76,7 @@ const SubMenu = ({ isOpen, title, icon: Icon, items, isSubMenuOpen, toggleSubMen
 
   const menuItemClass = `
     flex items-center px-4 py-1 rounded-xl w-full
-    bg-transparent hover:bg-lightBg-primary dark:hover:bg-darkBg-primary
+    bg-transparent hover:bg-lightBg-secondary dark:hover:bg-darkBg-secondary
     text-lightFg-primary dark:text-darkFg-primary hover:text-primary-light dark:hover:text-primary-light
     active:text-primary-dark dark:active:text-primary-dark cursor-pointer
   `
@@ -147,10 +147,6 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
     { icon: Edit2, label: "Editor", to: "/editor" },
     { icon: Kanban, label: "Kanban", to: "/kanban" },
     { icon: Shield, label: "Privacidade", to: "/privacy" },
-  ]
-
-  const toolItems = [
-    { icon: Clock, label: "Pomodoro", to: "/pomodoro" },
     { icon: Languages, label: "Tradutor", to: "/translator" },
   ]
 
@@ -175,7 +171,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
 
   const menuItemClass = `
     flex items-center px-4 py-1 rounded-xl w-full
-    bg-transparent hover:bg-lightBg-primary dark:hover:bg-darkBg-primary
+    bg-transparent hover:bg-lightBg-secondary dark:hover:bg-darkBg-secondary
     text-lightFg-primary dark:text-darkFg-primary hover:text-primary-light dark:hover:text-primary-light
     active:text-primary-dark dark:active:text-primary-dark
     cursor-pointer transition-colors duration-200
@@ -186,8 +182,8 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
   return (
     <div className={`flex ${className || ""}`} style={{ backgroundImage: `url("${background}")` }}>
       <aside
-        className={`transition-all duration-300 ease-in-out z-40 shadow-lg border-r ${isOpen ? "w-60" : "w-14"
-          } bg-lightBg-secondary dark:bg-darkBg-secondary border-bLight dark:border-bDark h-dvh ${fixed && "fixed"}`}
+        className={`max-h-[98dvh] ml-2 my-auto rounded-lg shadow-lg opacity-80 dark:opacity-90 transition-all duration-300 ease-in-out z-40 border-r ${isOpen ? "w-60" : "w-14"
+          } bg-lightBg-primary dark:bg-darkBg-primary border-bLight dark:border-bDark h-dvh ${fixed && "fixed"}`}
       >
         <nav className="flex flex-col gap-1 h-full px-1">
           <div className="w-0 h-0 p-0 m-0" />
@@ -209,14 +205,6 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
               toggleSubMenu={() => handleSubMenuToggle("ai")}
             />
           )}
-          <SubMenu
-            isOpen={isOpen}
-            title="Ferramentas"
-            icon={Star}
-            items={toolItems}
-            isSubMenuOpen={openSubMenu === "tools"}
-            toggleSubMenu={() => handleSubMenuToggle("tools")}
-          />
           {signed && (
             <SubMenu
               isOpen={isOpen}

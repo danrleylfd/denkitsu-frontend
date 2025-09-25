@@ -14,7 +14,7 @@ const AIHistory = ({ toggleLousa, onRegenerate }) => {
     if (autoScroll && messagesEndRef.current && messages.length > 0) messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
   }, [autoScroll, messages, loadingMessages])
   return (
-    <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-2">
+    <div className="flex flex-1 flex-col gap-2 p-2 overflow-y-auto">
       {messages.map((msg, pos) => (
         <AIMessage
           key={pos}

@@ -31,7 +31,7 @@ const StoreBar = ({ activeTab, setActiveTab }) => {
   )
 
   return (
-    <Paper className="px-4 py-2 mb-2 mx-auto">
+    <Paper className="max-w-[98%] px-4 py-2 mb-2 mx-auto">
       <div className="flex items-center justify-between gap-2 md:hidden">
         <Title />
         <Tabs />

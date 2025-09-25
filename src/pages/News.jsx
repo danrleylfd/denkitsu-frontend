@@ -93,8 +93,8 @@ const News = () => {
   }
 
   return (
-    <>
-      <Paper className="p-4">
+    <div className="flex flex-1 flex-col gap-2 m-2">
+      <Paper className="m2 p-4">
         <Input
           placeholder="Pesquisar um tópico para gerar uma notícia com IA..."
           value={searchTerm}
@@ -143,7 +143,7 @@ const News = () => {
       })}
       {loading && <Button variant="outline" $rounded loading={true} disabled />}
       {!hasMore && news.length > 0 && <p className="text-center text-white mt-4">Fim das notícias.</p>}
-    </>
+    </div>
   )
 }
 
