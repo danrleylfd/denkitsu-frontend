@@ -21,7 +21,7 @@ const Pomodoro = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/67 backdrop-blur-sm">
-      <Paper className="relative flex flex-1 flex-col gap-2 p-2 rounded-lg shadow-lg w-full h-full max-w-[95%] max-h-[95%] border border-solid border-brand-purple">
+      <Paper className="relative flex flex-1 flex-col gap-2 p-2 rounded-lg shadow-lg max-w-[95%] max-h-[95%] border border-solid border-brand-purple">
         <div className="flex items-start justify-between mb-8">
           <div className="flex items-center">
             <Timer size={24} className="mr-2 text-lightFg-primary dark:text-darkFg-primary"/>
