@@ -111,68 +111,66 @@ const Tradutor = () => {
   }
 
   return (
-    <>
-      <Paper className="!max-w-2xl flex flex-col gap-2 p-4">
-        <div className="flex items-center gap-2 text-lightFg-primary dark:text-darkFg-primary">
-          <Languages size={24} />
-          <h2 className="text-xl font-bold">Tradutor</h2>
-        </div>
-        {isApiAvailable ? (
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between gap-2">
-              <select
-                value={sourceLang}
-                onChange={(e) => setSourceLang(e.target.value)}
-                className="p-2 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary">
-                {supportedLanguages.map((lang) => (
-                  <option key={lang.code} value={lang.code}>
-                    {lang.name}
-                  </option>
-                ))}
-              </select>
-              <Button variant="secondary" size="icon" $rounded onClick={swapLanguages} disabled={loading}>
-                <ArrowRightLeft size={16} />
-              </Button>
-              <Button size="icon" onClick={handleTranslate} disabled={loading || !inputText.trim()} $rounded>
-                {loading ? <Loader className="animate-spin" size={16} /> : <Languages size={16} />}
-              </Button>
-              <Button variant="secondary" size="icon" $rounded onClick={swapText} disabled={loading}>
-                <ArrowUpDown size={16} />
-              </Button>
-              <select
-                value={targetLang}
-                onChange={(e) => setTargetLang(e.target.value)}
-                className="p-2 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary">
-                {supportedLanguages.map((lang) => (
-                  <option key={lang.code} value={lang.code}>
-                    {lang.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <textarea
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              placeholder="Digite o texto para traduzir..."
-              className="w-full h-32 p-2 rounded-md resize-none bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary"
-              disabled={loading}
-            />
-            <div className="relative">
-              <textarea
-                value={outputText}
-                readOnly
-                className="w-full h-32 p-2 rounded-md resize-none bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary"
-              />
-              {outputText && (
-                <Button variant="secondary" size="icon" $rounded onClick={handleCopy} title="Copiar">
-                  <Copy size={16} />
-                </Button>
-              )}
-            </div>
+    <Paper className="flex flex-1 flex-col gap-2 my-2 p-4">
+      <div className="flex gap-2 items-center text-lightFg-primary dark:text-darkFg-primary">
+        <Languages size={24} />
+        <h2 className="text-xl font-bold">Tradutor</h2>
+      </div>
+      {isApiAvailable ? (
+        <div className="flex flex-1 flex-col gap-2">
+          <div className="flex gap-2 items-center justify-between">
+            <select
+              value={sourceLang}
+              onChange={(e) => setSourceLang(e.target.value)}
+              className="p-2 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary">
+              {supportedLanguages.map((lang) => (
+                <option key={lang.code} value={lang.code}>
+                  {lang.name}
+                </option>
+              ))}
+            </select>
+            <Button variant="secondary" size="icon" $rounded onClick={swapLanguages} disabled={loading}>
+              <ArrowRightLeft size={16} />
+            </Button>
+            <Button size="icon" onClick={handleTranslate} disabled={loading || !inputText.trim()} $rounded>
+              {loading ? <Loader className="animate-spin" size={16} /> : <Languages size={16} />}
+            </Button>
+            <Button variant="secondary" size="icon" $rounded onClick={swapText} disabled={loading}>
+              <ArrowUpDown size={16} />
+            </Button>
+            <select
+              value={targetLang}
+              onChange={(e) => setTargetLang(e.target.value)}
+              className="p-2 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary">
+              {supportedLanguages.map((lang) => (
+                <option key={lang.code} value={lang.code}>
+                  {lang.name}
+                </option>
+              ))}
+            </select>
           </div>
-        ) : null}
-      </Paper>
-    </>
+          <textarea
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            placeholder="Digite o texto para traduzir..."
+            className="w-full h-[50%] p-2 rounded-md resize-none bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary"
+            disabled={loading}
+          />
+          <div className="h-[50%] relative">
+            <textarea
+              value={outputText}
+              readOnly
+              className="w-full h-[85%] p-2 rounded-md resize-none bg-lightBg-secondary dark:bg-darkBg-secondary text-lightFg-primary dark:text-darkFg-primary"
+            />
+            {outputText && (
+              <Button variant="secondary" size="icon" $rounded onClick={handleCopy} title="Copiar">
+                <Copy size={16} />
+              </Button>
+            )}
+          </div>
+        </div>
+      ) : null}
+    </Paper>
   )
 }
 

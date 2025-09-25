@@ -8,7 +8,7 @@ import { useAI } from "../../contexts/AIContext"
 const AIBarSignOut = () => {
   const { clearHistory } = useAI()
   return (
-    <Paper className="relative flex items-center gap-2 px-4 py-2 mb-2 mx-auto">
+    <Paper className="relative flex items-center gap-2 px-4 py-2 mb-2 mx-auto w-full max-w-[98%] xs:max-w-[97%] sm:max-w-[98%] md:max-w-[98.5%] lg:max-w-[99%] xl:max-w-[99.5]">
       <Button variant="secondary" size="icon" $rounded disabled>
         <Lock size={16} />
       </Button>

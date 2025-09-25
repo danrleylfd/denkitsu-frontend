@@ -39,7 +39,7 @@ const ForgotPassword = () => {
   }
 
   return (
-    <>
+    <div className="flex flex-1 justify-center items-center">
       <Form title="Recuperar Conta" onSubmit={handleForgotPassword}>
         <p className="text-sm text-gray-200 -mt-2 mb-4">
           Digite seu email para receber o link de recuperação.
@@ -57,7 +57,7 @@ const ForgotPassword = () => {
           {!loading && "Enviar Email"}
         </Button>
       </Form>
-    </>
+    </div>
   )
 }
 

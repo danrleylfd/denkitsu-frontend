@@ -64,7 +64,7 @@ const AppRoutes = () => {
   }
 
   const ContentView = ({ children }) => (
-    <main className="flex flex-1 flex-col gap-2 mx-auto h-screen max-h-screen ml-[3.5rem] md:ml-auto">
+    <main className="flex flex-1 flex-col gap-2 mr-2 w-full h-screen">
       {children}
     </main>
   )

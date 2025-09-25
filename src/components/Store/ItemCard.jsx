@@ -20,14 +20,14 @@ const StoreItemCard = memo(({ item, user, onAcquire, onUnacquire, isAcquired, lo
     <Paper variant="secondary" className="flex flex-col gap-2 p-4 h-full transition-transform hover:-translate-y-1">
       <div className="flex items-center gap-2">
         <div className="bg-lightBg-tertiary dark:bg-darkBg-tertiary p-2 rounded-lg">
-          <DynamicIcon name={item.Icon} size={24} className="text-primary-base" />
+          <DynamicIcon name={item.Icon} size={16} className="text-primary-base" />
         </div>
-        <h3 className="font-bold text-lg text-lightFg-primary dark:text-darkFg-primary truncate">{item.title || item.name}</h3>
+        <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary truncate">{item.title || item.name}</h5>
       </div>
-      <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary flex-grow min-h-[40px]">
+      <p className="text-lightFg-secondary dark:text-darkFg-secondary flex-grow min-h-[40px]">
         {item.description}
       </p>
-      <div className="flex items-center justify-between pt-2 border-t border-bLight dark:border-bDark">
+      <div className="flex items-center justify-between border-t border-bLight dark:border-bDark">
         <PurpleLink to={`/profile/${item.author._id}`} className="flex gap-2 items-center">
           <Avatar title={item.author.name} src={item.author.avatarUrl} alt={item.author.name} size={8} isPro={item.author.plan ===  "plus"} />
         </PurpleLink>

@@ -4,15 +4,8 @@ import Button from "../Button"
 import Paper from "../Paper"
 
 const StoreBar = ({ activeTab, setActiveTab }) => {
-  const Title = () => (
-    <h3 className="text-lightFg-primary dark:text-darkFg-primary flex items-center gap-2">
-      <StoreIcon size={20} />
-      {/* <span className="text-lg font-bold hidden md:inline">Loja da Comunidade</span> */}
-    </h3>
-  )
-
   const Tabs = () => (
-    <div className="flex items-center gap-2 p-1 bg-lightBg-secondary dark:bg-darkBg-secondary rounded-full">
+    <div className="flex items-center gap-2 bg-lightBg-secondary dark:bg-darkBg-secondary rounded-full">
       <Button
         variant={activeTab === "agents" ? "primary" : "secondary"}
         $rounded
@@ -31,13 +24,13 @@ const StoreBar = ({ activeTab, setActiveTab }) => {
   )
 
   return (
-    <Paper className="max-w-[98%] px-4 py-2 mb-2 mx-auto">
+    <Paper className="mx-auto mb-2 p-2 w-full max-w-[98%] xs:max-w-[97%] sm:max-w-[98%] md:max-w-[98.5%] lg:max-w-[99%] xl:max-w-[99.5]">
       <div className="flex items-center justify-between gap-2 md:hidden">
-        <Title />
+        <StoreIcon size={16} className="ml-3" />
         <Tabs />
       </div>
       <div className="hidden md:flex items-center justify-between gap-2">
-        <Title />
+        <StoreIcon size={16} className="ml-3" />
         <Tabs />
       </div>
     </Paper>

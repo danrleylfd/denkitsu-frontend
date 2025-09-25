@@ -173,7 +173,7 @@ const Editor = () => {
   }
 
   return (
-    <Paper className="!min-w-[99%] h-full max-h-[97%] flex flex-1 flex-col overflow-hidden">
+    <Paper className="flex flex-1 flex-col my-2 overflow-hidden">
       <div className="flex items-center gap-1 p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary border-b border-bLight dark:border-bDark flex-wrap">
         <Button variant={activeTab === "editor" ? "primary" : "secondary"} size="sm" $squared onClick={() => setActiveTab("editor")}>
           <BookText size={16} className="mr-2" /> Editor

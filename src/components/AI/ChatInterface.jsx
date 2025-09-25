@@ -16,7 +16,7 @@ import AIFactoryManager from "../Factory/Manager"
 import Lousa from "./Lousa"
 import AIBar from "./Bar"
 
-const ChatInterface = ({ renderBar }) => {
+const ChatInterface = () => {
   const { imageUrls, setImageUrls, handleRegenerateResponse, audioFile, setAudioFile, handleSendAudioMessage, onSendMessage, improvePrompt } = useAI()
   const { notifyWarning, notifyError } = useNotification()
 

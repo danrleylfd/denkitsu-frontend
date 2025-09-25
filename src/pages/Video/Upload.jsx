@@ -81,7 +81,7 @@ const Upload = () => {
   }
 
   return (
-    <>
+    <div className="flex flex-1 justify-center items-center">
       <Form title="Upload" onSubmit={handleSubmit}>
         <Input
           name="content"
@@ -137,7 +137,7 @@ const Upload = () => {
           {!loading && "Publicar"}
         </Button>
       </Form>
-    </>
+    </div>
   )
 }
 

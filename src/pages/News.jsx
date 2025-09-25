@@ -93,8 +93,8 @@ const News = () => {
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-2 pt-2 overflow-y-auto">
-      <Paper className="m2 p-4 mx-auto w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[75%] lg:max-w-[67%]">
+    <div className="flex flex-1 flex-col gap-2 mt-2 overflow-y-auto">
+      <Paper variant="secondary" className="mx-auto p-4 w-full max-w-[95%] xs:max-w-[97%] sm:max-w-[98%] md:max-w-[75%] lg:max-w-[67%]">
         <Input
           placeholder="Pesquisar um tópico para gerar uma notícia com IA..."
           value={searchTerm}
@@ -139,7 +139,7 @@ const News = () => {
         )
 
         if (news.length === index + 1) return (<Paper variant="secondary" className="p-4" ref={lastNewsElementRef} key={article._id || index}>{cardContent}</Paper>)
-        else return (<Paper variant="secondary" className="p-4 mx-auto w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[75%] lg:max-w-[67%]" key={article._id || index}>{cardContent}</Paper>)
+        else return (<Paper variant="secondary" className="mx-auto p-4 w-full max-w-[95%] xs:max-w-[97%] sm:max-w-[98%] md:max-w-[75%] lg:max-w-[67%]" key={article._id || index}>{cardContent}</Paper>)
       })}
       {loading && <Button variant="outline" $rounded loading={true} disabled />}
       {!hasMore && news.length > 0 && <p className="text-center text-white mt-4">Fim das notícias.</p>}

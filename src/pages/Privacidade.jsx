@@ -57,11 +57,11 @@ Denkitsu pode atualizar esta Política de Privacidade periodicamente. Quaisquer 
 `
 
   return (
-    <>
-      <Paper variant="secondary" className="p-4">
+    <div className="flex flex-1 flex-col gap-2 mt-2 overflow-y-auto">
+      <Paper variant="secondary" className="mx-auto mb-2 p-4 w-full max-w-[95%] xs:max-w-[97%] sm:max-w-[98%] md:max-w-[75%] lg:max-w-[67%]">
         <Markdown content={privacyPolicyContent} />
       </Paper>
-    </>
+    </div>
   )
 }
 

@@ -162,10 +162,10 @@ const VideoDetail = () => {
   }
 
   return (
-    <>
+    <div className="flex flex-1 flex-col gap-2 mt-2 justify-center items-center overflow-y-auto">
       {loading && <Button size="icon" $rounded loading={loading} disabled />}
       {video && (
-        <div className="flex flex-col py-2 gap-2 w-full sm:max-w-lg md:max-w-2xl">
+        <div className="flex flex-col gap-2 w-full sm:max-w-lg md:max-w-2xl">
           <VideoPlayer src={video.fileUrl} poster={video.thumbnail} />
           <h5 className="text-lightFg-primary dark:text-darkFg-primary">
             {video.content}
@@ -181,7 +181,7 @@ const VideoDetail = () => {
               </small>
             </div>
           )}
-          <div className="flex flex-row items-center gap-2 ">
+          <div className="flex flex-row items-center gap-2">
             <Button
               type="button"
               variant={isLiked ? "danger" : "primary"}
@@ -227,7 +227,7 @@ const VideoDetail = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   )
 }
 

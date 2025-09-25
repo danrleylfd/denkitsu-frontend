@@ -122,7 +122,7 @@ const Store = () => {
     }
 
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 p-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-2 gap-2 px-2">
         {items.map(item => (
           <StoreItemCard
             key={item._id}
@@ -140,7 +140,7 @@ const Store = () => {
 
   return (
     <>
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex flex-1 flex-col gap-2 overflow-y-auto">
         {renderContent()}
       </div>
       <StoreBar activeTab={activeTab} setActiveTab={setActiveTab} />

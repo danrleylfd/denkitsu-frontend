@@ -47,7 +47,7 @@ const SignUp = () => {
   }
 
   return (
-    <>
+    <div className="flex flex-1 justify-center items-center">
       <Form title="Cadastrar" onSubmit={handleSignUp}>
         <Input
           name="name"
@@ -92,7 +92,7 @@ const SignUp = () => {
           {!loading && "Cadastrar"}
         </Button>
       </Form>
-    </>
+    </div>
   )
 }
 

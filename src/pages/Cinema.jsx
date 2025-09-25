@@ -7,6 +7,7 @@ import Breadcrumbs from "../components/Cinema/Breadcrumbs"
 import VideoItem from "../components/Cinema/VideoItem"
 import FolderItem from "../components/Cinema/FolderItem"
 import VideoPlayerModal from "../components/Cinema/VideoPlayerModal"
+import Paper from "../components/Paper"
 
 const Cinema = () => {
   const [rootHandle, setRootHandle] = useState(null)
@@ -93,7 +94,7 @@ const Cinema = () => {
   }
 
   return (
-    <>
+    <Paper className="my-2 w-full h-full">
       {!rootHandle ? (
         <InitialScreen onSelectFolder={handleSelectFolder} isLoading={isLoading} />
       ) : (
@@ -121,7 +122,7 @@ const Cinema = () => {
         </>
       )}
       <VideoPlayerModal video={selectedVideo} onClose={() => setSelectedVideo(null)} />
-    </>
+    </Paper>
   )
 }
 

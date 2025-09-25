@@ -45,10 +45,10 @@ const Recents = () => {
   }, [])
 
   return (
-    <>
+    <div className="flex flex-1 flex-col gap-2 mt-2 overflow-y-auto">
       {loading && <Button size="icon" $rounded loading={loading} disabled />}
       {!loading && videos.length > 0 && <VideoFeed videos={videos} />}
-    </>
+    </div>
   )
 }
 

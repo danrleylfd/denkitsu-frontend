@@ -7,6 +7,7 @@ import { useNotification } from "../contexts/NotificationContext"
 import { editUserAccount, deleteUserAccount, unlinkGithubAccount } from "../services/account"
 
 import SideMenu from "../components/SideMenu"
+import Paper from "../components/Paper"
 import Avatar from "../components/Avatar"
 import Input from "../components/Input"
 import Button from "../components/Button"
@@ -114,24 +115,24 @@ const OwnProfile = () => {
   if (!user) return <div className="p-2"><Button variant="secondary" $rounded loading={true} disabled /></div>
 
   return (
-    <>
-      <div className="flex flex-col w-full max-w-md my-40 mx-auto p-6 gap-4 bg-lightBg-primary dark:bg-darkBg-primary border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-lg opacity-90 dark:opacity-95">
-        <div className="flex items-center gap-4">
+    <div className="flex flex-1 justify-center items-center">
+      <Paper className="flex flex-col w-full max-w-md mx-auto gap-2 p-6">
+        <div className="flex items-center gap-2">
           <Avatar src={avatarUrl || user.avatarUrl} alt={name || user.name} size={20} isPro={user.plan === "plus"} />
           {isEditing ? (
-            <form className="flex-1 flex flex-col gap-2" onSubmit={handleSaveChanges}>
+            <form className="flex flex-1 flex-col gap-2" onSubmit={handleSaveChanges}>
               <Input id="name" placeholder="Nome" value={name} onChange={(e) => setName(e.target.value)} disabled={loading} />
               <Input id="avatarUrl" placeholder="URL do Avatar" value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} disabled={loading} />
             </form>
           ) : (
-            <div className="flex-1 flex flex-col gap-1">
+            <div className="flex flex-1 flex-col gap-2">
               <h2 className="text-xl font-bold text-lightFg-primary dark:text-darkFg-primary truncate">{user.name}</h2>
               <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary truncate">{user.email || "E-mail não fornecido"}</p>
               <small className="text-xs text-lightFg-tertiary dark:text-darkFg-tertiary">Membro desde {new Date(user.createdAt).toLocaleDateString()}</small>
             </div>
           )}
         </div>
-        <div className="flex w-full justify-between items-center border-t border-zinc-200 dark:border-zinc-700 pt-4 mt-2">
+        <div className="flex justify-between items-center pt-6">
           {isEditing
             ? (<>
               <div className="flex gap-2">
@@ -160,8 +161,8 @@ const OwnProfile = () => {
             </>)
           }
         </div>
-      </div>
-    </>
+      </Paper>
+    </div>
   )
 }
 
