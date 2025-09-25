@@ -36,11 +36,11 @@ const Redirect = () => {
   }, [])
 
   return (
-    <SideMenu fixed ContentView={ContentView} className="bg-cover bg-brand-purple">
+    <div className="flex flex-1 mt-2 justify-center items-center">
       <h3 className="text-lightFg-primary dark:text-darkFg-primary">
         Redirecionando para {label || "Início"}...
       </h3>
-    </SideMenu>
+    </div>
   )
 }
 
