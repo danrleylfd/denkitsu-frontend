@@ -28,7 +28,7 @@ const AIBar = ({ imageCount, onSendMessage, improvePrompt, toggleSettingsDoor, t
   const suggestions = ["#browser ", "#duckduckgo ", "#http ", "#cripto ", "#nasa ", "#arquivosnasa ", "#asteroides ", "#terra ", "#marte ", "#climaespaço ", "#climamarte ", "#notícias ", "#clima ", "wikipedia ", "#cinema ", "#jogos ", "#albion ", "#genshin ", "#pokédex "]
 
   return (
-    <Paper className="relative flex items-center gap-2 p-2 mb-2 mx-auto w-full max-w-[98%] xs:max-w-[97%] sm:max-w-[98%] md:max-w-[98.5%] lg:max-w-[99%] xl:max-w-[99.5]">
+    <Paper className="relative flex gap-2 mx-auto mb-2 p-2 items-center">
       <div className="w-full flex flex-col gap-2 md:hidden">
         <div className="flex items-center justify-between flex-wrap gap-2">
           <Button variant="secondary" size="icon" $rounded title="Configurações" onClick={toggleSettingsDoor} disabled={loadingMessages || isImproving}><Settings size={16} /></Button>

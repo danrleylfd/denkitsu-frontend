@@ -54,7 +54,7 @@ const AITools = ({ toolsDoor }) => {
   const Separator = () => <div className="h-6 w-px bg-bLight dark:bg-bDark mx-1" />
 
   return (
-    <Paper className="max-w-[99%] flex flex-wrap items-center justify-center gap-2 px-4 py-2 mx-auto">
+    <Paper className="flex flex-wrap gap-2 mx-auto px-4 py-2 justify-center items-center">
       {internalTools.map(({ name, title, Icon, isDisabled }) => (
         <ToolButton key={name} toolKey={name} title={title} onToggle={handleToolToggle} isActive={activeTools.has(name)} disabled={isDisabled}>
           <DynamicIcon name={Icon} size={16} />
