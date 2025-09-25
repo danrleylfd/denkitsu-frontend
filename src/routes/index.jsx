@@ -50,16 +50,16 @@ const AppRoutes = () => {
     "/cinema": "flex-1 mx-2 mb-2 p-4 rounded-lg shadow-lg overflow-y-auto bg-lightBg-primary dark:bg-darkBg-primary opacity-80 dark:opacity-90",
     "/codebase": "px-2 pb-2",
     "/editor": "flex-1 grid place-items-center",
-    "/kanban": "p-2",
-    "/news": "flex flex-col gap-2 p-2 items-center mx-auto min-h-dvh w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[75%] lg:max-w-[67%]",
-    "/auth": "flex flex-1 flex-col gap-2 p-2 justify-center items-center",
-    "/profile": "flex flex-1 gap-2 p-2 justify-center items-center",
-    "/subscription": "flex flex-1 gap-2 p-2 justify-center items-center",
-    "/redirect": "flex flex-col justify-center gap-2 p-2 items-center mx-auto h-dvh w-full",
-    "/shortcut": "flex flex-1 flex-col gap-2 p-2 justify-center items-center",
+    "/kanban": "px-2 pb-2",
+    "/news": "flex flex-col gap-2 px-2 pb-2 items-center mx-auto min-h-dvh w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[75%] lg:max-w-[67%]",
+    "/auth": "flex flex-1 flex-col gap-2 px-2 pb-2 justify-center items-center",
+    "/profile": "flex flex-1 gap-2 px-2 pb-2 justify-center items-center",
+    "/subscription": "flex flex-1 gap-2 px-2 pb-2 justify-center items-center",
+    "/redirect": "flex flex-col justify-center gap-2 px-2 pb-2 items-center mx-auto h-dvh w-full",
+    "/shortcut": "flex flex-1 flex-col gap-2 px-2 pb-2 justify-center items-center",
     "/store": "flex flex-col flex-1",
-    "/translator": "flex flex-1 gap-2 p-2 justify-center items-center",
-    "/video": "flex flex-1 flex-col gap-2 p-2 items-center mx-auto w-full md:max-w-[75%] lg:max-w-[100%]"
+    "/translator": "flex flex-1 gap-2 px-2 pb-2 justify-center items-center",
+    "/video": "flex flex-1 flex-col gap-2 px-2 pb-2 items-center mx-auto w-full md:max-w-[75%] lg:max-w-[100%]"
   }
 
   const getRouteElement = (Component, layoutKey) => (
