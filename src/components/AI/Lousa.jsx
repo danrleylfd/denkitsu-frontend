@@ -10,8 +10,8 @@ const Lousa = ({ content, toggleLousa }) => {
     <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/67 backdrop-blur-sm">
       <Paper className="relative flex flex-1 flex-col gap-2 p-2 rounded-lg shadow-lg w-full h-full max-w-[95%] max-h-[95%] border border-solid border-brand-purple">
         <div className="flex justify-between items-center">
-          <h3 className="text-lightFg-primary dark:text-darkFg-primary">Configurações</h3>
-          <Button variant="danger" size="icon" $rounded onClick={toggleSettingsDoor}>
+          <h3 className="text-lightFg-primary dark:text-darkFg-primary">Lousa</h3>
+          <Button variant="danger" size="icon" $rounded onClick={toggleLousa}>
             <X size={16} />
           </Button>
         </div>
