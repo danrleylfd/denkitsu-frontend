@@ -1,19 +1,20 @@
 import { memo } from "react"
 import { X } from "lucide-react"
 
+import Paper from "../Paper"
 import Button from "../Button"
 
 const Lousa = ({ content, toggleLousa }) => {
   if (!content) return null
   return (
     <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/67 backdrop-blur-sm">
-      <div className="relative flex w-[90%] h-[95%] flex-col rounded-lg bg-white shadow-2xl dark:bg-darkBg-primary">
+      <Paper className="relative flex flex-1 flex-col gap-2 p-2 rounded-lg shadow-lg w-full h-full max-w-[95%] max-h-[95%] border border-solid border-brand-purple">
         <div className="flex items-center justify-between rounded-t-lg bg-lightBg-secondary p-2 dark:bg-darkBg-secondary">
           <h3 className="font-bold text-lightFg-primary dark:text-darkFg-primary">Lousa</h3>
           <Button variant="danger" size="icon" $rounded onClick={() => toggleLousa(null)}><X size={16} /></Button>
         </div>
         <iframe srcDoc={content} title="Lousa" sandbox="allow-scripts allow-same-origin" className="w-full h-full flex-1 rounded-b-lg border-none outline-none m-0 p-0 box-border" />
-      </div>
+      </Paper>
     </div>
   )
 }

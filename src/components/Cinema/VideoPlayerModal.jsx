@@ -1,5 +1,7 @@
 import { memo } from "react"
 import { X } from "lucide-react"
+
+import Paper from "../Paper"
 import Button from "../Button"
 import VideoPlayer from "../Video/Player"
 
@@ -10,9 +12,7 @@ const VideoPlayerModal = memo(({ video, onClose }) => {
     <div
       className="fixed inset-0 z-50 flex justify-center items-center bg-black/75 backdrop-blur-sm"
       onClick={onClose}>
-      <div
-        className="flex flex-col gap-2 bg-lightBg-primary dark:bg-darkBg-primary rounded-lg shadow-lg w-full max-w-3xl"
-        onClick={(e) => e.stopPropagation()}>
+      <Paper className="relative flex flex-1 flex-col gap-2 p-2 rounded-lg shadow-lg w-full h-full max-w-[95%] max-h-[95%] border border-solid border-brand-purple">
         <div className="flex items-center justify-between border-b border-bLight dark:border-bDark pt-1 px-2">
           <h5 className="font-bold text-lightFg-primary dark:text-darkFg-primary truncate" title={video.name}>
             {video.name}
@@ -22,7 +22,7 @@ const VideoPlayerModal = memo(({ video, onClose }) => {
           </Button>
         </div>
         <VideoPlayer src={video.url} poster={video.thumbnail} />
-      </div>
+      </Paper>
     </div>
   )
 })

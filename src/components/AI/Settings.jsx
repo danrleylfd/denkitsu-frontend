@@ -26,10 +26,8 @@ const AISettings = ({ settingsDoor, toggleSettingsDoor }) => {
   if (!settingsDoor) return null
   return (
     <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/67 backdrop-blur-sm">
-      <Paper
-        className="relative w-full max-w-[95%] h-full max-h-[95%] flex flex-col px-0 py-2 gap-2 rounded-lg bg-lightBg-primary p-2 shadow-2xl dark:bg-darkBg-primary border border-solid border-brand-purple"
-        onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center justify-between px-2">
+      <Paper className="relative flex flex-1 flex-col gap-2 p-2 rounded-lg shadow-lg w-full h-full max-w-[95%] max-h-[95%] border border-solid border-brand-purple">
+        <div className="flex justify-between items-center">
           <h3 className="text-lightFg-primary dark:text-darkFg-primary">Configurações</h3>
           <Button variant="danger" size="icon" $rounded onClick={toggleSettingsDoor}>
             <X size={16} />

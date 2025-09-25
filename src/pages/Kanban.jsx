@@ -8,11 +8,7 @@ const Kanban = () => {
   return (
     <div className="flex flex-1 flex-col gap-2 my-2 overflow-y-auto">
       <KanbanBoard />
-      {associatedTask && (
-        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/67 backdrop-blur-sm animate-fade-in">
-          <Pomodoro onClose={stopFocusSession} />
-        </div>
-      )}
+      {associatedTask && <Pomodoro onClose={stopFocusSession} />}
     </div>
   )
 }

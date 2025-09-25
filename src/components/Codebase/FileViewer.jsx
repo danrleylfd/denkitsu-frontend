@@ -18,7 +18,7 @@ const FileViewer = memo(({ file, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/67 backdrop-blur-sm" onClick={onClose}>
-      <Paper className="flex flex-col h-full max-h-[95%]" onClick={e => e.stopPropagation()}>
+      <Paper className="relative flex flex-1 flex-col gap-2 p-2 rounded-lg shadow-lg w-full h-full max-w-[95%] max-h-[95%] border border-solid border-brand-purple">
         <div className="flex items-center justify-between p-2 pl-4 border-b border-bLight dark:border-bDark flex-shrink-0">
           <h3 className="font-mono font-bold text-lightFg-primary dark:text-darkFg-primary">{file.path}</h3>
           <Button variant="danger" size="icon" $rounded onClick={onClose}><X size={16} /></Button>

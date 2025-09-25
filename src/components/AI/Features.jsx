@@ -82,7 +82,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
     switch (activeTab) {
       case "agents":
         return (
-          <div className="flex flex-col gap-2">
+          <>
             <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary">
               Dê à IA um papel específico. Cada agente é otimizado para um tipo de tarefa, alterando o estilo e o formato da resposta.
             </p>
@@ -91,11 +91,11 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
                 {description}
               </FeatureListItem>
             ))}
-          </div>
+          </>
         )
       case "tools":
         return (
-          <div className="flex flex-col gap-2">
+          <>
             <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary">Conecte a IA a fontes de dados externas para obter respostas mais ricas e atualizadas. Requer chave de API e um modelo compatível.</p>
             <FeatureListItem title="Fábrica de Ferramentas" icon="Factory">
               Crie suas próprias ferramentas para se conectar a qualquer API. Automatize tarefas e ensine novas habilidades ao Denkitsu através de uma interface simples. Acesse pelo ícone de <Factory size={16} className="inline-block mx-1" /> na barra de chat.
@@ -105,11 +105,11 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
                 {description}
               </FeatureListItem>
             ))}
-          </div>
+          </>
         )
       case "factory":
         return (
-          <div className="flex flex-col gap-4 text-sm text-lightFg-secondary dark:text-darkFg-secondary">
+          <>
             <h4 className="text-lg font-bold text-lightFg-primary dark:text-darkFg-primary">Tutorial: Criando seu Primeiro Agente</h4>
             <p>Agentes permitem que você personalize a personalidade e comportamento da IA. Diferente das ferramentas, eles não conectam APIs externas, mas definem como a IA deve pensar e responder.</p>
             <div>
@@ -229,7 +229,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
               <p className="mt-1 text-amber-dark dark:text-amber-light">Se a API externa retornar uma resposta muito grande (milhares de linhas de dados), ela pode ultrapassar o limite de contexto do modelo de IA, causando um erro.</p>
               <p className="mt-2 font-bold text-amber-dark dark:text-amber-light">É exatamente para isso que o Mapeamento de Resposta foi criado! Use-o para extrair apenas os campos essenciais do payload da API. Ao "enxugar" a resposta, você garante que apenas os dados úteis sejam enviados para a IA, evitando estouro de tokens e tornando a ferramenta mais eficiente.</p>
             </div>
-          </div>
+          </>
         )
       case "media":
         return (
@@ -290,7 +290,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
         )
       case "tips":
         return (
-          <div className="flex flex-col gap-2">
+          <>
             <p className="text-sm text-lightFg-secondary dark:text-darkFg-secondary">
               Descubra como aproveitar ao máximo os recursos do Denkitsu.
             </p>
@@ -302,7 +302,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
                 </li>
               ))}
             </ul>
-          </div>
+          </>
         )
       case "changelog":
         return (
@@ -360,8 +360,8 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/67 backdrop-blur-sm">
-      <Paper className="relative h-full max-h-[95%] flex flex-col gap-2 px-2 py-2 border border-solid border-brand-purple" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center justify-between border-b border-bLight dark:border-bDark">
+      <Paper className="relative flex flex-1 flex-col gap-2 p-2 rounded-lg shadow-lg w-full h-full max-w-[95%] max-h-[95%] border border-solid border-brand-purple">
+        <div className="flex justify-between items-center">
           <h3 className="text-lightFg-primary dark:text-darkFg-primary">Apresentamos Denkitsu!</h3>
           <Button variant="danger" size="icon" $rounded onClick={toggleFeaturesDoor}>
             <X size={16} />
