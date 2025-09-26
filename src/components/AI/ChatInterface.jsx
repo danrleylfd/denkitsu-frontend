@@ -6,6 +6,7 @@ import { useNotification } from "../../contexts/NotificationContext"
 import AIHistory from "./History"
 import ImagePreview from "./ImagePreview"
 import AIAudio from "./Audio"
+import AIPage from "./Page"
 import AIMedia from "./Media"
 import AIAgents from "./Agents"
 import AITools from "./Tools"
@@ -16,7 +17,9 @@ import AISettings from "./Settings"
 import AIFactoryManager from "../Factory/Manager"
 import Lousa from "./Lousa"
 
-const ChatInterface = () => {
+import { isExtension } from "../../utils/storage"
+
+const ChatInterface = ({ onAnalyzePage }) => {
   const { imageUrls, setImageUrls, handleRegenerateResponse, onSendMessage, improvePrompt } = useAI()
   const { notifyWarning, notifyError } = useNotification()
 
@@ -49,10 +52,11 @@ const ChatInterface = () => {
   return (
     <>
       <AIHistory toggleLousa={toggleLousa} onRegenerate={handleRegenerateResponse} />
-      <div className="flex flex-col gap-2 mx-auto w-full">
+      <div className={`flex flex-col gap-2 mx-auto ${isExtension ? "w-full max-w-[95%]" : "w-full"}`}>
         <ImagePreview />
         <AIAudio />
-        <AIMedia mediaDoor={mediaDoor} onAddImage={onAddImage} onAnalyzePage={() => {}} />
+        {isExtension && <AIPage />}
+        <AIMedia mediaDoor={mediaDoor} onAddImage={onAddImage} onAnalyzePage={(isExtension ? onAnalyzePage : () => {})} />
         <AIAgents agentsDoor={agentsDoor} />
         <AITools toolsDoor={toolsDoor} />
         {/* {openDoor === null && <AITip toggleFeaturesDoor={() => setFeaturesDoor(prev => !prev)} />} */}

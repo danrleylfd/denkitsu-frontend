@@ -5,7 +5,7 @@ import { useAuth } from "./contexts/AuthContext"
 import { useAI } from "./contexts/AIContext"
 import { useNotification } from "./contexts/NotificationContext"
 
-import ChatInterface from "./components/Extension/ChatInterface"
+import ChatInterface from "./components/AI/ChatInterface"
 import Button from "./components/Button"
 import Paper from "./components/Paper"
 
