@@ -49,7 +49,7 @@ const ExtensionChatInterface = ({ onAnalyzePage }) => {
   return (
     <>
       <AIHistory toggleLousa={toggleLousa} onRegenerate={handleRegenerateResponse} />
-      <div className="flex flex-col gap-2 mx-auto w-full">
+      <div className="flex flex-col gap-2 mx-auto w-full max-w-[95%]">
         <ImagePreview />
         {audioFile && <AIAudio audioFile={audioFile} onCancel={() => setAudioFile(null)} onSend={handleSendAudioMessage} />}
         <AIPage />

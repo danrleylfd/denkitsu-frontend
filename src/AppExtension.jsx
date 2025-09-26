@@ -97,7 +97,7 @@ const SidePanelChat = () => {
 
   return (
     <>
-      {!hasUserMessages && !pageContext && <WelcomeScreen />}
+      {!hasUserMessages && <WelcomeScreen />}
       <ExtensionChatInterface onAnalyzePage={handleAnalyzePage} />
     </>
   )
