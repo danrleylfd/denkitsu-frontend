@@ -55,10 +55,13 @@ const Gallery = () => {
             `}
             style={{ backgroundImage: `url(${item.url})` }}
             onClick={() => handlePanelClick(index)}>
-            {/* Overlay de Gradiente: Substitui o pseudo-elemento ::after */}
+            {/* Overlay de Gradiente
+              CORREÇÃO: A opacidade do painel inativo agora é 80%, permitindo
+              que a imagem de fundo fique parcialmente visível.
+            */}
             <div
               className={`absolute inset-0 w-full h-full transition-opacity duration-400 ease-in-out ${
-                isActive ? "opacity-0" : "opacity-100"
+                isActive ? "opacity-0" : "opacity-80"
               }`}
               style={{ background: item.gradient }}
             />
