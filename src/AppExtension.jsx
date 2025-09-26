@@ -5,7 +5,7 @@ import { useAuth } from "./contexts/AuthContext"
 import { useAI } from "./contexts/AIContext"
 import { useNotification } from "./contexts/NotificationContext"
 
-import ExtensionChatInterface from "./components/AI/ExtensionChatInterface"
+import ChatInterface from "./components/Extension/ChatInterface"
 import Button from "./components/Button"
 import Paper from "./components/Paper"
 
@@ -98,7 +98,7 @@ const SidePanelChat = () => {
   return (
     <>
       {!hasUserMessages && <WelcomeScreen />}
-      <ExtensionChatInterface onAnalyzePage={handleAnalyzePage} />
+      <ChatInterface onAnalyzePage={handleAnalyzePage} />
     </>
   )
 }

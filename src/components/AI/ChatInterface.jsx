@@ -5,16 +5,16 @@ import { useNotification } from "../../contexts/NotificationContext"
 
 import AIHistory from "./History"
 import ImagePreview from "./ImagePreview"
-import AIAgents from "./Agents"
-import AITools from "./Tools"
 import AIAudio from "./Audio"
 import AIMedia from "./Media"
+import AIAgents from "./Agents"
+import AITools from "./Tools"
 import AITip from "./Tip"
+import AIBar from "./Bar"
 import AIFeatures from "./Features"
 import AISettings from "./Settings"
 import AIFactoryManager from "../Factory/Manager"
 import Lousa from "./Lousa"
-import AIBar from "./Bar"
 
 const ChatInterface = () => {
   const { imageUrls, setImageUrls, handleRegenerateResponse, onSendMessage, improvePrompt } = useAI()
@@ -60,15 +60,15 @@ const ChatInterface = () => {
           onSendMessage={onSendMessage}
           improvePrompt={improvePrompt}
           imageCount={imageUrls.length}
+          mediaDoor={mediaDoor}
           agentsDoor={agentsDoor}
           toolsDoor={toolsDoor}
-          mediaDoor={mediaDoor}
+          toggleMediaDoor={() => handleDoorToggle("media")}
           toggleAgentsDoor={() => handleDoorToggle("agents")}
           toggleToolsDoor={() => handleDoorToggle("tools")}
-          toggleMediaDoor={() => handleDoorToggle("media")}
+          toggleFeaturesDoor={() => setFeaturesDoor((prev) => !prev)}
           toggleSettingsDoor={() => setSettingsDoor((prev) => !prev)}
           toggleFactoryManagerDoor={() => setFactoryManagerDoor((prev) => !prev)}
-          toggleFeaturesDoor={() => setFeaturesDoor((prev) => !prev)}
         />
       </div>
       <AIFeatures featuresDoor={featuresDoor} toggleFeaturesDoor={() => setFeaturesDoor((prev) => !prev)} />

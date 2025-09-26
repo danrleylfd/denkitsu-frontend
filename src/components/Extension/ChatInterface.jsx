@@ -3,21 +3,22 @@ import { useState, useCallback } from "react"
 import { useAI } from "../../contexts/AIContext"
 import { useNotification } from "../../contexts/NotificationContext"
 
-import AIHistory from "./History"
-import ImagePreview from "./ImagePreview"
-import AIAgents from "./Agents"
-import AITools from "./Tools"
-import AIAudio from "./Audio"
-import AIMedia from "./Media"
-import AIFeatures from "./Features"
-import AISettings from "./Settings"
+import AIHistory from "../AI/History"
+import ImagePreview from "../AI/ImagePreview"
+import AIAudio from "../AI/Audio"
+import AIPage from "../AI/Page"
+import AIMedia from "../AI/Media"
+import AIAgents from "../AI/Agents"
+import AITools from "../AI/Tools"
+import AITip from "../AI/Tip"
+import AIBar from "./Bar"
+import AIFeatures from "../AI/Features"
+import AISettings from "../AI/Settings"
 import AIFactoryManager from "../Factory/Manager"
-import Lousa from "./Lousa"
-import ExtensionAIBar from "./ExtensionBar"
-import AIPage from "./Page"
+import Lousa from "../AI/Lousa"
 
 const ExtensionChatInterface = ({ onAnalyzePage }) => {
-  const { imageUrls, setImageUrls, handleRegenerateResponse, audioFile, setAudioFile, handleSendAudioMessage, onSendMessage, improvePrompt } = useAI()
+  const { imageUrls, setImageUrls, handleRegenerateResponse, onSendMessage, improvePrompt } = useAI()
   const { notifyWarning, notifyError } = useNotification()
 
   const [lousaContent, setLousaContent] = useState(null)
@@ -51,25 +52,26 @@ const ExtensionChatInterface = ({ onAnalyzePage }) => {
       <AIHistory toggleLousa={toggleLousa} onRegenerate={handleRegenerateResponse} />
       <div className="flex flex-col gap-2 mx-auto w-full max-w-[95%]">
         <ImagePreview />
-        {audioFile && <AIAudio audioFile={audioFile} onCancel={() => setAudioFile(null)} onSend={handleSendAudioMessage} />}
+        <AIAudio />
         <AIPage />
         <AIMedia mediaDoor={mediaDoor} onAddImage={onAddImage} />
         <AIAgents agentsDoor={agentsDoor} />
         <AITools toolsDoor={toolsDoor} />
-        <ExtensionAIBar
+        {/* {openDoor === null && <AITip toggleFeaturesDoor={() => setFeaturesDoor(prev => !prev)} />} */}
+        <AIBar
           onSendMessage={onSendMessage}
           improvePrompt={improvePrompt}
-          onAnalyzePage={onAnalyzePage}
           imageCount={imageUrls.length}
+          onAnalyzePage={onAnalyzePage}
+          mediaDoor={mediaDoor}
           agentsDoor={agentsDoor}
           toolsDoor={toolsDoor}
-          mediaDoor={mediaDoor}
+          toggleMediaDoor={() => handleDoorToggle("media")}
           toggleAgentsDoor={() => handleDoorToggle("agents")}
           toggleToolsDoor={() => handleDoorToggle("tools")}
-          toggleMediaDoor={() => handleDoorToggle("media")}
+          toggleFeaturesDoor={() => setFeaturesDoor((prev) => !prev)}
           toggleSettingsDoor={() => setSettingsDoor((prev) => !prev)}
           toggleFactoryManagerDoor={() => setFactoryManagerDoor((prev) => !prev)}
-          toggleFeaturesDoor={() => setFeaturesDoor((prev) => !prev)}
         />
       </div>
       <AIFeatures featuresDoor={featuresDoor} toggleFeaturesDoor={() => setFeaturesDoor((prev) => !prev)} />

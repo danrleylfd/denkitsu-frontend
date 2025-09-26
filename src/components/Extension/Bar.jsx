@@ -4,9 +4,9 @@ import { useAI } from "../../contexts/AIContext"
 import Paper from "../Paper"
 import TextArea from "../TextArea"
 import Button from "../Button"
-import ProviderSelector from "./ProviderSelector"
+import ProviderSelector from "../AI/ProviderSelector"
 
-const ExtensionAIBar = ({
+const AIBar = ({
   imageCount,
   onSendMessage,
   improvePrompt,
@@ -83,4 +83,4 @@ const ExtensionAIBar = ({
   )
 }
 
-export default ExtensionAIBar
+export default AIBar
