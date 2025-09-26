@@ -106,7 +106,7 @@ const useMessage = (props) => {
 
     let finalPromptText = promptText
     if (pageContext) {
-      finalPromptText = `Use o seguinte contexto da página "${pageContext.title}" (${pageContext.url}) para responder à minha pergunta.\n\n[CONTEXTO DA PÁGINA]\n${pageContext.content}\n\n[MINHA PERGUNTA]\n${promptText}`
+      finalPromptText = `Página [${pageContext.title}](${pageContext.url})\n\nConteúdo [${pageContext.content}]\n\n${promptText}`
     }
 
     const content = []
