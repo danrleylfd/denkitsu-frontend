@@ -55,7 +55,7 @@ const ChatInterface = () => {
         <AIMedia mediaDoor={mediaDoor} onAddImage={onAddImage} />
         <AIAgents agentsDoor={agentsDoor} />
         <AITools toolsDoor={toolsDoor} />
-        {openDoor === null && <AITip toggleFeaturesDoor={() => setFeaturesDoor(prev => !prev)} />}
+        {/* {openDoor === null && <AITip toggleFeaturesDoor={() => setFeaturesDoor(prev => !prev)} />} */}
         <AIBar
           onSendMessage={onSendMessage}
           improvePrompt={improvePrompt}
