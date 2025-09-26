@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from "react"
 import { X, Play, Pause, Send } from "lucide-react"
 
+import { useAI } from "../../contexts/AIContext"
+
 import Paper from "../Paper"
 import Button from "../Button"
 
@@ -11,7 +13,9 @@ const formatTime = (time) => {
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
 }
 
-const AIAudio = ({ audioFile, onSend, onCancel }) => {
+const AIAudio = () => {
+  const { audioFile, setAudioFile, handleSendAudioMessage } = useAI()
+  if (!audioFile) return null
   const audioRef = useRef(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [duration, setDuration] = useState(0)
@@ -50,7 +54,7 @@ const AIAudio = ({ audioFile, onSend, onCancel }) => {
   }
 
   return (
-    <Paper className="flex items-center justify-between gap-2 px-4 py-2 mb-1 mx-auto">
+    <Paper className="flex flex-wrap gap-2 mx-auto p-2 justify-between items-center">
       <audio
         ref={audioRef}
         src={(audioSrc && audioSrc.length > 0) ? audioSrc : null}
@@ -73,17 +77,17 @@ const AIAudio = ({ audioFile, onSend, onCancel }) => {
               onChange={handleSeek}
               className="w-full h-1 accent-primary-base"
             />
-            <span className="text-xs font-mono text-lightFg-secondary dark:text-darkFg-secondary">
+            <span className="min-w-24 max-w-28 text-lightFg-secondary dark:text-darkFg-secondary">
               {formatTime(currentTime)} / {formatTime(duration)}
             </span>
           </div>
         </div>
       </div>
-      <div className="flex items-center gap-1">
-        <Button variant="danger" size="icon" $rounded title="Cancelar Áudio" onClick={onCancel}>
+      <div className="flex items-center gap-2">
+        <Button variant="danger" size="icon" $rounded title="Cancelar Áudio" onClick={() => setAudioFile(null)}>
           <X size={16} />
         </Button>
-        <Button variant="primary" size="icon" $rounded title="Enviar Áudio" onClick={onSend}>
+        <Button variant="primary" size="icon" $rounded title="Enviar Áudio" onClick={handleSendAudioMessage}>
           <Send size={16} />
         </Button>
       </div>

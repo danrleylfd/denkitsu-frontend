@@ -48,8 +48,8 @@ const WelcomeScreen = () => {
 }
 
 const SidePanelChat = () => {
-  const { setUserPrompt, messages } = useAI()
-  const { notifyInfo, notifyError } = useNotification()
+  const { setUserPrompt, messages, pageContext, setPageContext } = useAI()
+  const { notifyInfo, notifyError, notifySuccess } = useNotification()
 
   const processOmniboxMessage = useCallback(async () => {
     try {
@@ -85,20 +85,21 @@ const SidePanelChat = () => {
     notifyInfo("Analisando o conteúdo da página...")
     chrome.runtime.sendMessage({ type: "GET_PAGE_CONTENT" }, (response) => {
       if (response && !response.error) {
-        const prompt = `Analise, resuma ou responda perguntas sobre o seguinte conteúdo da página "${response.title}" (${response.url}):\n\n"${response.content}"`
-        setUserPrompt(prompt)
+        const contextData = { title: response.title, url: response.url, content: response.content }
+        setPageContext(contextData)
+        notifySuccess("Contexto da página adicionado!")
       } else {
         notifyError("Não foi possível extrair o conteúdo desta página.")
         console.error("Side Panel: Erro ao extrair conteúdo:", response?.error)
       }
     })
-  }, [setUserPrompt, notifyInfo, notifyError])
+  }, [setPageContext, notifyInfo, notifyError, notifySuccess])
 
   const hasUserMessages = messages.some((msg) => msg.role === "user")
 
   return (
     <>
-      {!hasUserMessages && <WelcomeScreen />}
+      {!hasUserMessages && !pageContext && <WelcomeScreen />}
       <ExtensionChatInterface onAnalyzePage={handleAnalyzePage} />
     </>
   )

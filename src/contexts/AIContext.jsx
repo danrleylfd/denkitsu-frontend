@@ -26,6 +26,7 @@ const AIProvider = ({ children }) => {
   const [speaking, setSpeaking] = useState(false)
   const [listening, setListening] = useState(false)
   const [audioFile, setAudioFile] = useState(null)
+  const [pageContext, setPageContext] = useState(null)
   const [isInitialized, setIsInitialized] = useState(false)
 
   useEffect(() => {
@@ -59,8 +60,8 @@ const AIProvider = ({ children }) => {
     loadingMessages, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt, handleSendAudioMessage
   } = useMessage({
     aiProvider, aiKey, model, stream, activeTools, userPrompt, imageUrls, audioFile, messages,
-    freeModels, payModels, groqModels, selectedAgent, customProviderUrl,
-    setUserPrompt, setImageUrls, setAudioFile, setMessages, setSelectedAgent
+    freeModels, payModels, groqModels, selectedAgent, customProviderUrl, pageContext,
+    setUserPrompt, setImageUrls, setAudioFile, setMessages, setSelectedAgent, setPageContext
   })
 
   useEffect(() => {
@@ -119,11 +120,12 @@ const AIProvider = ({ children }) => {
     customPrompt, setCustomPrompt,
     userPrompt, setUserPrompt,
     messages, setMessages, clearHistory,
+    pageContext, setPageContext,
     loadingMessages, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt, handleSendAudioMessage,
     recording, fileInputRef, handleStartRecording, handleStopRecording, handleUploadClick, handleFileChange,
   }), [
     autoScroll, toggleAutoScroll, stream, toggleStream, speaking, speakResponse, listening, toggleListening,
-    imageUrls, audioFile, customPrompt, userPrompt, messages, clearHistory,
+    imageUrls, audioFile, customPrompt, userPrompt, messages, clearHistory, pageContext,
     loadingMessages, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt, handleSendAudioMessage,
     recording, fileInputRef, handleStartRecording, handleStopRecording, handleUploadClick, handleFileChange
   ])

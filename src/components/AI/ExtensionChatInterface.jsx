@@ -14,6 +14,7 @@ import AISettings from "./Settings"
 import AIFactoryManager from "../Factory/Manager"
 import Lousa from "./Lousa"
 import ExtensionAIBar from "./ExtensionBar"
+import AIPage from "./Page"
 
 const ExtensionChatInterface = ({ onAnalyzePage }) => {
   const { imageUrls, setImageUrls, handleRegenerateResponse, audioFile, setAudioFile, handleSendAudioMessage, onSendMessage, improvePrompt } = useAI()
@@ -51,6 +52,7 @@ const ExtensionChatInterface = ({ onAnalyzePage }) => {
       <div className="flex flex-col gap-2 mx-auto max-w-[95%]">
         <ImagePreview />
         {audioFile && <AIAudio audioFile={audioFile} onCancel={() => setAudioFile(null)} onSend={handleSendAudioMessage} />}
+        <AIPage />
         <AIMedia mediaDoor={mediaDoor} onAddImage={onAddImage} />
         <AIAgents agentsDoor={agentsDoor} />
         <AITools toolsDoor={toolsDoor} />

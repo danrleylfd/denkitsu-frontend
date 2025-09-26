@@ -1,6 +1,6 @@
 import { forwardRef } from "react"
 
-const Spinner = ({isIcon}) => (<div className={`h-4 w-4 animate-spin-fast rounded-full border-2 border-solid border-transparent border-t-current ${!isIcon ? "mr-2" : "mr-0"}`} />)
+const Spinner = ({ isIcon }) => (<div className={`h-4 w-4 animate-spin-fast rounded-full border-2 border-solid border-transparent border-t-current ${!isIcon ? "mr-2" : "mr-0"}`} />)
 
 const Button = forwardRef(({
   type = "button",
@@ -11,11 +11,12 @@ const Button = forwardRef(({
   $border = "secondary",
   loading = false,
   disabled = false,
+  chip = false,
   className,
   children,
   ...props
 }, ref) => {
-  const baseClasses = "relative flex select-none items-center justify-center font-bold uppercase transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-50 w-fit self-center"
+  const baseClasses = "relative flex select-none items-center justify-center font-bold uppercase transition-colors duration-300 w-fit self-center"
   const variantClasses = {
     primary: "border border-solid bg-primary-base hover:bg-primary-light active:bg-primary-dark text-white transform transition-transform hover:scale-105 active:scale-95",
     mic: "border border-solid bg-red-base hover:bg-red-light active:bg-red-dark text-white transform transition-transform hover:scale-105 active:scale-95",
@@ -44,6 +45,10 @@ const Button = forwardRef(({
     if ($border === "outline") borderClasses.push("border-primary-base")
     return borderClasses.join(" ")
   }
+
+  const disabledClasses = (disabled && !chip) ? "cursor-not-allowed opacity-50" : ""
+  const chipClasses = chip ? "pointer-events-none" : ""
+
   return (
     <button
       ref={ref}
@@ -54,6 +59,8 @@ const Button = forwardRef(({
         ${variantClasses[variant]}
         ${loading ? sizeClasses.icon : sizeClasses[size]}
         ${getBorderClasses()}
+        ${disabledClasses}
+        ${chipClasses}
         ${loading ? "pointer-events-none opacity-70" : ""}
         ${className}
       `}

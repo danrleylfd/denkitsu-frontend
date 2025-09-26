@@ -1,4 +1,4 @@
-// Arquivo: Frontend/src/hooks/message.jsx
+// Frontend/src/hooks/message.jsx
 
 import { useState, useCallback } from "react"
 
@@ -11,8 +11,8 @@ import { transcribeAudio } from "../services/audio"
 const useMessage = (props) => {
   const {
     aiProvider, aiKey, model, stream, activeTools, userPrompt, imageUrls, audioFile, messages,
-    freeModels, payModels, groqModels, selectedAgent, customProviderUrl,
-    setUserPrompt, setImageUrls, setAudioFile, setMessages, setSelectedAgent
+    freeModels, payModels, groqModels, selectedAgent, customProviderUrl, pageContext,
+    setUserPrompt, setImageUrls, setAudioFile, setMessages, setSelectedAgent, setPageContext
   } = props
 
   const { signed, user, loadUser } = useAuth()
@@ -99,15 +99,18 @@ const useMessage = (props) => {
     setMessages, setSelectedAgent, notifyError, signed, loadUser
   ])
 
-
-  // ... resto do hook (onSendMessage, handleSendAudioMessage, etc.) sem alterações significativas ...
   const onSendMessage = useCallback(async () => {
     if (loadingMessages || isImproving) return
     const promptText = userPrompt.trim()
-    if (!promptText && imageUrls.length === 0) return
+    if (!promptText && imageUrls.length === 0 && !pageContext) return
+
+    let finalPromptText = promptText
+    if (pageContext) {
+      finalPromptText = `Use o seguinte contexto da página "${pageContext.title}" (${pageContext.url}) para responder à minha pergunta.\n\n[CONTEXTO DA PÁGINA]\n${pageContext.content}\n\n[MINHA PERGUNTA]\n${promptText}`
+    }
 
     const content = []
-    if (promptText) content.push({ type: "text", content: promptText })
+    if (finalPromptText) content.push({ type: "text", content: finalPromptText })
     if (imageUrls.length > 0) content.push(...imageUrls.map(url => ({ type: "image_url", image_url: { url } })))
 
     const newMessage = { role: "user", content, timestamp: new Date().toISOString() }
@@ -117,9 +120,10 @@ const useMessage = (props) => {
     setUserPrompt("")
     setImageUrls([])
     setAudioFile(null)
+    if (pageContext) setPageContext(null)
 
     await executeSendMessage(history, selectedAgent)
-  }, [loadingMessages, isImproving, userPrompt, imageUrls, messages, selectedAgent, executeSendMessage, setMessages, setUserPrompt, setImageUrls, setAudioFile])
+  }, [loadingMessages, isImproving, userPrompt, imageUrls, messages, selectedAgent, executeSendMessage, pageContext, setPageContext, setMessages, setUserPrompt, setImageUrls, setAudioFile])
 
   const handleSendAudioMessage = useCallback(async () => {
     if (!audioFile) return
@@ -130,7 +134,14 @@ const useMessage = (props) => {
     setAudioFile(null)
     try {
       const transcription = await transcribeAudio(audioFile)
-      const transcriptionUserMessage = { role: "user", content: `[Áudio: ${audioFile.name || "Gravação"}]\nTranscrição de Áudio:\n${transcription}`, timestamp: userMessagePlaceholder.timestamp }
+
+      let finalTranscription = `[Áudio: ${audioFile.name || "Gravação"}]\nTranscrição de Áudio:\n${transcription}`
+      if (pageContext) {
+        finalTranscription = `Use o seguinte contexto da página "${pageContext.title}" (${pageContext.url}) para responder à minha pergunta sobre o áudio transcrito.\n\n[CONTEXTO DA PÁGINA]\n${pageContext.content}\n\n[TRANSCRIÇÃO DE ÁUDIO]\n${transcription}`
+        setPageContext(null)
+      }
+
+      const transcriptionUserMessage = { role: "user", content: finalTranscription, timestamp: userMessagePlaceholder.timestamp }
       const historyWithTranscription = [...messages, transcriptionUserMessage]
       setMessages(historyWithTranscription)
       await executeSendMessage(historyWithTranscription, selectedAgent)
@@ -140,7 +151,7 @@ const useMessage = (props) => {
       setMessages(prev => prev.filter(m => m.timestamp !== userMessagePlaceholder.timestamp))
       setLoadingMessages(false)
     }
-  }, [audioFile, messages, executeSendMessage, setAudioFile, setMessages, selectedAgent, notifyError])
+  }, [audioFile, messages, executeSendMessage, pageContext, setPageContext, setAudioFile, setMessages, selectedAgent, notifyError])
 
   const handleRegenerateResponse = useCallback(async () => {
     if (loadingMessages || isImproving) return
@@ -179,7 +190,6 @@ const useMessage = (props) => {
       setIsImproving(false)
     }
   }, [userPrompt, isImproving, loadingMessages, aiKey, aiProvider, model, freeModels, payModels, groqModels, setUserPrompt, notifyInfo, notifySuccess, notifyError])
-
 
   return { loadingMessages, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt, handleSendAudioMessage }
 }

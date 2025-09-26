@@ -17,7 +17,7 @@ import Lousa from "./Lousa"
 import AIBar from "./Bar"
 
 const ChatInterface = () => {
-  const { imageUrls, setImageUrls, handleRegenerateResponse, audioFile, setAudioFile, handleSendAudioMessage, onSendMessage, improvePrompt } = useAI()
+  const { imageUrls, setImageUrls, handleRegenerateResponse, onSendMessage, improvePrompt } = useAI()
   const { notifyWarning, notifyError } = useNotification()
 
   const [lousaContent, setLousaContent] = useState(null)
@@ -49,26 +49,28 @@ const ChatInterface = () => {
   return (
     <>
       <AIHistory toggleLousa={toggleLousa} onRegenerate={handleRegenerateResponse} />
-      <ImagePreview />
-      {audioFile && <AIAudio audioFile={audioFile} onCancel={() => setAudioFile(null)} onSend={handleSendAudioMessage} />}
-      <AIMedia mediaDoor={mediaDoor} onAddImage={onAddImage} />
-      <AIAgents agentsDoor={agentsDoor} />
-      <AITools toolsDoor={toolsDoor} />
-      <AIBar
-        onSendMessage={onSendMessage}
-        improvePrompt={improvePrompt}
-        imageCount={imageUrls.length}
-        agentsDoor={agentsDoor}
-        toolsDoor={toolsDoor}
-        mediaDoor={mediaDoor}
-        toggleAgentsDoor={() => handleDoorToggle("agents")}
-        toggleToolsDoor={() => handleDoorToggle("tools")}
-        toggleMediaDoor={() => handleDoorToggle("media")}
-        toggleSettingsDoor={() => setSettingsDoor((prev) => !prev)}
-        toggleFactoryManagerDoor={() => setFactoryManagerDoor((prev) => !prev)}
-        toggleFeaturesDoor={() => setFeaturesDoor((prev) => !prev)}
-      />
-      {/* {openDoor === null && <AITip toggleFeaturesDoor={() => setFeaturesDoor(prev => !prev)} />} */}
+      <div className="flex flex-col gap-2 mx-auto w-full max-w-[95%]">
+        <ImagePreview />
+        <AIAudio />
+        <AIMedia mediaDoor={mediaDoor} onAddImage={onAddImage} />
+        <AIAgents agentsDoor={agentsDoor} />
+        <AITools toolsDoor={toolsDoor} />
+        {openDoor === null && <AITip toggleFeaturesDoor={() => setFeaturesDoor(prev => !prev)} />}
+        <AIBar
+          onSendMessage={onSendMessage}
+          improvePrompt={improvePrompt}
+          imageCount={imageUrls.length}
+          agentsDoor={agentsDoor}
+          toolsDoor={toolsDoor}
+          mediaDoor={mediaDoor}
+          toggleAgentsDoor={() => handleDoorToggle("agents")}
+          toggleToolsDoor={() => handleDoorToggle("tools")}
+          toggleMediaDoor={() => handleDoorToggle("media")}
+          toggleSettingsDoor={() => setSettingsDoor((prev) => !prev)}
+          toggleFactoryManagerDoor={() => setFactoryManagerDoor((prev) => !prev)}
+          toggleFeaturesDoor={() => setFeaturesDoor((prev) => !prev)}
+        />
+      </div>
       <AIFeatures featuresDoor={featuresDoor} toggleFeaturesDoor={() => setFeaturesDoor((prev) => !prev)} />
       <AISettings settingsDoor={settingsDoor} toggleSettingsDoor={() => setSettingsDoor((prev) => !prev)} />
       <AIFactoryManager factoryManagerDoor={factoryManagerDoor} toggleFactoryManagerDoor={() => setFactoryManagerDoor((prev) => !prev)} />

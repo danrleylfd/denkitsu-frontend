@@ -42,10 +42,10 @@ const AITip = ({ toggleFeaturesDoor }) => {
   }, [advanceToNextTip])
   if (!tip) return null
   return (
-    <Paper className="h-8 flex items-center justify-between px-1 py-2 mb-1 mx-auto overflow-hidden" onClick={advanceToNextTip}>
-      <Button variant="secondary" size="icon" $rounded title="Recursos" onClick={(e) => { e.stopPropagation(); toggleFeaturesDoor() }}>
+    <Paper className="flex flex-wrap gap-2 mx-auto p-1 justify-center items-center" onClick={advanceToNextTip}>
+      {/* <Button variant="secondary" size="icon" $rounded title="Recursos" onClick={(e) => { e.stopPropagation(); toggleFeaturesDoor() }}>
         <Info size={16} />
-      </Button>
+      </Button> */}
       <div className="flex-grow overflow-hidden">
         <Marquee speed={50} direction="left" pauseOnHover={true} gradient={false}>
           <p className="text-xs text-lightFg-primary dark:text-darkFg-primary">{tip}</p>
