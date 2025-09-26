@@ -42,7 +42,9 @@ const Gallery = () => {
   }
 
   return (
-    <div className="flex w-[90vw] min-w-[600px] max-w-[900px] h-[400px] gap-[10px] rounded-[20px] overflow-hidden">
+    // O container pai agora não precisa mais de border-radius ou overflow,
+    // pois cada painel gerenciará sua própria forma.
+    <div className="flex w-[90vw] min-w-[600px] max-w-[900px] h-[400px] gap-[10px]">
       {galleryData.map((item, index) => {
         const isActive = index === activeIndex
         return (
@@ -50,8 +52,8 @@ const Gallery = () => {
             key={item.title}
             className={`
               relative bg-cover bg-center cursor-pointer overflow-hidden
-              transition-[flex] duration-600 ease-[cubic-bezier(0.61,-0.19,0.7,-0.11)]
-              ${isActive ? "flex-[5]" : "flex-[0.5] hover:flex-[0.75]"}
+              transition-[flex,border-radius] duration-700 ease-[cubic-bezier(0.61,-0.19,0.7,-0.11)]
+              ${isActive ? "flex-[5] rounded-[20px]" : "flex-[0.5] hover:flex-[0.75] rounded-full"}
             `}
             style={{ backgroundImage: `url(${item.url})` }}
             onClick={() => handlePanelClick(index)}>
@@ -63,14 +65,13 @@ const Gallery = () => {
             />
 
             {/* Container para o conteúdo (Ícone + Título) */}
-            {/* CORREÇÃO: Este container agora muda de posição (centro para canto) */}
             <div
               className={`
                 absolute z-10 flex items-center text-white
                 transition-all duration-500 ease-out
-                ${isActive ? "bottom-5 left-5 gap-3" : "inset-0 justify-center"}
+                ${isActive ? "bottom-5 left-5 gap-3" : "bottom-5 inset-x-0 justify-center"}
               `}>
-              {/* Ícone sempre visível */}
+              {/* Ícone com posicionamento corrigido */}
               <div
                 className="
                   relative flex items-center justify-center
@@ -80,7 +81,6 @@ const Gallery = () => {
                   after:content-[''] after:absolute after:w-[14px] after:h-[2px] after:bg-white
                 "
               />
-              {/* CORREÇÃO: Título agora tem sua própria animação de largura e opacidade */}
               <h3
                 className={`
                   font-sans whitespace-nowrap drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]
