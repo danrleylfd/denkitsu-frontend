@@ -55,10 +55,6 @@ const Gallery = () => {
             `}
             style={{ backgroundImage: `url(${item.url})` }}
             onClick={() => handlePanelClick(index)}>
-            {/* Overlay de Gradiente
-              CORREÇÃO: A opacidade do painel inativo agora é 80%, permitindo
-              que a imagem de fundo fique parcialmente visível.
-            */}
             <div
               className={`absolute inset-0 w-full h-full transition-opacity duration-400 ease-in-out ${
                 isActive ? "opacity-0" : "opacity-80"
@@ -66,14 +62,15 @@ const Gallery = () => {
               style={{ background: item.gradient }}
             />
 
-            {/* Conteúdo do Painel */}
+            {/* Container para o conteúdo (Ícone + Título) */}
+            {/* CORREÇÃO: Este container agora muda de posição (centro para canto) */}
             <div
               className={`
-                absolute bottom-5 left-5 z-10 flex items-center gap-3 text-white
-                transition-all ease-out duration-400 delay-400
-                ${isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}
+                absolute z-10 flex items-center text-white
+                transition-all duration-500 ease-out
+                ${isActive ? "bottom-5 left-5 gap-3" : "inset-0 justify-center"}
               `}>
-              {/* Ícone '+' desenhado com Tailwind */}
+              {/* Ícone sempre visível */}
               <div
                 className="
                   relative flex items-center justify-center
@@ -83,7 +80,15 @@ const Gallery = () => {
                   after:content-[''] after:absolute after:w-[14px] after:h-[2px] after:bg-white
                 "
               />
-              <h3 className="font-sans whitespace-nowrap drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]">{item.title}</h3>
+              {/* CORREÇÃO: Título agora tem sua própria animação de largura e opacidade */}
+              <h3
+                className={`
+                  font-sans whitespace-nowrap drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]
+                  overflow-hidden transition-all duration-300 ease-out
+                  ${isActive ? "w-auto opacity-100 ml-0 delay-200" : "w-0 opacity-0 -ml-3"}
+                `}>
+                {item.title}
+              </h3>
             </div>
           </div>
         )
