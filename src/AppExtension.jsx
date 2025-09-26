@@ -49,7 +49,7 @@ const WelcomeScreen = () => {
 
 const SidePanelChat = () => {
   const { setUserPrompt, messages, pageContext, setPageContext } = useAI()
-  const { notifyInfo, notifyError, notifySuccess } = useNotification()
+  const { notifyError } = useNotification()
 
   const processOmniboxMessage = useCallback(async () => {
     try {
@@ -62,7 +62,7 @@ const SidePanelChat = () => {
     } catch (e) {
       console.error("Erro ao processar mensagem da omnibox:", e)
     }
-  }, [setUserPrompt])
+  }, [])
 
   useEffect(() => {
     processOmniboxMessage()
