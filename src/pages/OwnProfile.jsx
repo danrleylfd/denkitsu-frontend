@@ -6,17 +6,10 @@ import { useAuth } from "../contexts/AuthContext"
 import { useNotification } from "../contexts/NotificationContext"
 import { editUserAccount, deleteUserAccount, unlinkGithubAccount } from "../services/account"
 
-import SideMenu from "../components/SideMenu"
 import Paper from "../components/Paper"
 import Avatar from "../components/Avatar"
 import Input from "../components/Input"
 import Button from "../components/Button"
-
-const ContentView = ({ children }) => (
-  <main className="flex justify-center items-center p-2 gap-2 w-full min-h-dvh">
-    {children}
-  </main>
-)
 
 const OwnProfile = () => {
   const { user, signOut, loadUser, updateUser } = useAuth()

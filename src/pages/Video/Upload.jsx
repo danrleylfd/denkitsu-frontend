@@ -10,17 +10,10 @@ import { createVideo } from "../../services/video"
 
 import { resizeImage } from "../../utils/image"
 
-import SideMenu from "../../components/SideMenu"
 import Form from "../../components/Form"
 import Input from "../../components/Input"
 import Button from "../../components/Button"
 import ProviderSelector from "../../components/AI/ProviderSelector"
-
-const ContentView = ({ children }) => (
-  <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-dvh">
-    {children}
-  </main>
-)
 
 const Upload = () => {
   const { aiProvider, aiKey, model, freeModels, payModels, groqModels } = useModels()

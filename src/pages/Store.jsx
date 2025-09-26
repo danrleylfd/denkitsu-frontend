@@ -10,16 +10,9 @@ import { useNotification } from "../contexts/NotificationContext"
 import { getPublishedAgents, acquireAgent, unacquireAgent } from "../services/agent"
 import { getPublishedTools, acquireTool, unacquireTool } from "../services/tool"
 
-import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
 import StoreItemCard from "../components/Store/ItemCard"
 import StoreBar from "../components/Store/Bar"
-
-const ContentView = ({ children }) => (
-  <main className="flex flex-col flex-1 h-dvh">
-    {children}
-  </main>
-)
 
 const Store = () => {
   const { user } = useAuth()

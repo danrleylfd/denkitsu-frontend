@@ -5,17 +5,8 @@ import { useNotification } from "../../contexts/NotificationContext"
 
 import { getVideosByUser } from "../../services/video"
 
-import SideMenu from "../../components/SideMenu"
 import VideoFeed from "../../components/Video/Feed"
 import Button from "../../components/Button"
-
-const ContentView = ({ children, ...props }) => (
-  <main
-    {...props}
-    className="flex flex-col items-center p-2 gap-2 mx-auto w-full xs:max-w-[100%] sm:max-w-[90%] ml-[3.5rem] md:max-w-[75%] lg:max-w-[100%] min-h-dvh">
-    {children}
-  </main>
-)
 
 const UserVideos = () => {
   const { user } = useAuth()

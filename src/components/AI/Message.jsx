@@ -53,7 +53,7 @@ const AIMessage = ({ msg, user, toggleLousa, loadingMessage, onRegenerate, isLas
         <div className="w-8 h-8 rounded-full bg-lightBg-tertiary dark:bg-darkBg-tertiary flex items-center justify-center">
           <Avatar src={(isUser && user) ? user?.avatarUrl : "/denkitsu.png"} alt={isUser ? user?.name : "Denkitsu"} size={8} isPro={isUser && user?.plan ===  "plus"} />
         </div>
-      <div className="max-w-[90%] sm:max-w-[67%] md:max-w-[75%] lg:max-w-[90%] break-words rounded-md px-4 py-2 shadow-lg text-lightFg-secondary dark:text-darkFg-secondary bg-lightBg-secondary dark:bg-darkBg-secondary opacity-75 dark:opacity-90">
+      <div className="max-w-[90%] sm:max-w-[67%] md:max-w-[75%] lg:max-w-[90%] break-words rounded-md px-4 py-2 shadow-lg text-lightFg-secondary dark:text-darkFg-secondary bg-lightBg-secondary dark:bg-darkBg-secondary opacity-80 dark:opacity-90">
         {msg.routingInfo && (
           <div className="my-2 p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md">
             <div className="flex items-center gap-2 text-sm text-lightFg-secondary dark:text-darkFg-secondary">

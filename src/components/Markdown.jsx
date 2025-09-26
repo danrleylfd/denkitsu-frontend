@@ -29,7 +29,7 @@ const Markdown = ({ loading, content, think }) => {
   const toggleCollapse = () => setCollapsed((prev) => !prev)
 
   const containerClass = think
-    ? "italic break-words p-2 rounded-md text-lightFg-secondary dark:text-darkFg-secondary bg-lightBg-tertiary dark:bg-darkBg-tertiary opacity-75 dark:opacity-90"
+    ? "italic break-words p-2 rounded-md text-lightFg-secondary dark:text-darkFg-secondary bg-lightBg-tertiary dark:bg-darkBg-tertiary opacity-80 dark:opacity-90"
     : ""
 
   return (

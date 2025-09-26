@@ -11,20 +11,11 @@ import {
   getVideoCommentCount, getVideoShares, getLikeStatus
 } from "../../services/video"
 
-import SideMenu from "../../components/SideMenu"
 import VideoPlayer from "../../components/Video/Player"
 import Button from "../../components/Button"
 import CommentForm from "../../components/CommentForm"
 import CommentItem from "../../components/CommentItem"
 import PurpleLink from "../../components/Embeds/PurpleLink"
-
-const ContentView = ({ children, ...props }) => (
-  <main
-    {...props}
-    className="flex flex-col items-center p-2 gap-2 mx-auto w-full xs:max-w-[100%] sm:max-w-[90%] ml-[3.5rem] md:max-w-[75%] lg:max-w-[100%]">
-    {children}
-  </main>
-)
 
 const VideoDetail = () => {
   const { videoId } = useParams()

@@ -6,17 +6,9 @@ import { useNotification } from "../contexts/NotificationContext"
 
 import { getLinkersByUser, createLinker, deleteLinker, updateLinker } from "../services/linker"
 
-import SideMenu from "../components/SideMenu"
 import Input from "../components/Input"
 import Button from "../components/Button"
 import PurpleLink from "../components/Embeds/PurpleLink"
-
-const ContentView = ({ children }) => (
-  <main
-    className="flex flex-col items-center p-2 gap-2 mx-auto min-h-dvh w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[75%] lg:max-w-[67%] ml-[3.5rem] md:ml-auto">
-    {children}
-  </main>
-)
 
 const Shortcut = () => {
   const { signed } = useAuth()
@@ -117,7 +109,7 @@ const Shortcut = () => {
   return (
     <div className="flex flex-1 flex-col gap-2 mt-2 overflow-y-auto">
       <div
-        className="bg-lightBg-secondary dark:bg-darkBg-secondary p-4 rounded-md w-full shadow-lg opacity-75 dark:opacity-90">
+        className="bg-lightBg-secondary dark:bg-darkBg-secondary p-4 rounded-md w-full shadow-lg opacity-80 dark:opacity-90">
         <form onSubmit={handleCreateLink} className="flex flex-row items-center gap-2">
           <Input placeholder="Apelido" value={newLabel} onChange={(e) => setNewLabel(e.target.value.trim())} disabled={formLoading} />
           <Input placeholder="Link Original" value={newLink} onChange={(e) => setNewLink(e.target.value.trim())} disabled={formLoading} />
@@ -132,7 +124,7 @@ const Shortcut = () => {
           {linkers.map((linker) => (
             <div
               key={linker._id}
-              className="flex justify-between items-center p-4 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary shadow-lg w-full opacity-75 dark:opacity-90">
+              className="flex justify-between items-center p-4 rounded-md bg-lightBg-secondary dark:bg-darkBg-secondary shadow-lg w-full opacity-80 dark:opacity-90">
               {editingLinker?._id === linker._id ? (
                 <form onSubmit={handleUpdateLink} className="flex flex-row items-center gap-2 w-full">
                   <Input value={editLabel} onChange={(e) => setEditLabel(e.target.value.trim())} disabled={editLoading} />

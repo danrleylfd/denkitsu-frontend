@@ -8,20 +8,12 @@ import { useNotification } from "../contexts/NotificationContext"
 import { getNewsByCursor } from "../services/news"
 import { generateNews } from "../services/aiChat"
 
-import SideMenu from "../components/SideMenu"
 import Markdown from "../components/Markdown"
 import Paper from "../components/Paper"
-import Gallery from "../components/Gallery"
+import Gallery from "../components/GalleryHorizontal"
 import Input from "../components/Input"
 import Button from "../components/Button"
 import ProviderSelector from "../components/AI/ProviderSelector"
-
-const ContentView = ({ children }) => (
-  <main
-    className="flex flex-col items-center p-2 gap-2 mx-auto min-h-dvh w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[75%] lg:max-w-[67%] ml-[3.5rem] md:ml-auto">
-    {children}
-  </main>
-)
 
 const News = () => {
   const { speakResponse } = useAI()

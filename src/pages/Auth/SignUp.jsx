@@ -5,16 +5,9 @@ import { Eye, EyeClosed } from "lucide-react"
 import { useAuth } from "../../contexts/AuthContext"
 import { useNotification } from "../../contexts/NotificationContext"
 
-import SideMenu from "../../components/SideMenu"
 import Form from "../../components/Form"
 import Input from "../../components/Input"
 import Button from "../../components/Button"
-
-const ContentView = ({ children }) => (
-  <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-dvh">
-    {children}
-  </main>
-)
 
 const SignUp = () => {
   const { signUp } = useAuth()

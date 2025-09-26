@@ -5,16 +5,9 @@ import { Github } from "lucide-react"
 import { useNotification } from "../contexts/NotificationContext"
 import { getUserAccount } from "../services/account"
 
-import SideMenu from "../components/SideMenu"
 import Paper from "../components/Paper"
 import Avatar from "../components/Avatar"
 import Button from "../components/Button"
-
-const ContentView = ({ children }) => (
-  <main className="flex justify-center items-center p-2 gap-2 w-full min-h-dvh">
-    {children}
-  </main>
-)
 
 const Profile = () => {
   const { userID } = useParams()

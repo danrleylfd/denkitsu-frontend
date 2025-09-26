@@ -66,7 +66,7 @@ const useMenuStore = () => {
 }
 
 const MainContent = ({ children }) => (
-  <main className="flex flex-col items-center p-2 gap-2 mx-auto min-h-dvh w-full xs:max-w-[100%] sm:max-w-[90%] md:max-w-[75%] lg:max-w-[67%] ml-[3.5rem] md:ml-auto">
+  <main className="flex flex-1 flex-col gap-2 mr-2 w-full h-screen">
     {children}
   </main>
 )
@@ -182,7 +182,7 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
   return (
     <div className={`flex gap-2 bg-cover bg-brand-purple ${className || ""}`} style={{ backgroundImage: `url("${background}")` }}>
       <aside
-        className={`max-h-screen ml-2 my-2 rounded-lg shadow-lg opacity-80 dark:opacity-90 transition-all duration-300 ease-in-out z-40 border-r ${isOpen ? "w-60" : "w-14"
+        className={`max-h-[98dvh] ml-2 my-auto rounded-lg shadow-lg opacity-80 dark:opacity-90 transition-all duration-300 ease-in-out z-40 border-r ${isOpen ? "w-60" : "w-14"
           } bg-lightBg-primary dark:bg-darkBg-primary border-bLight dark:border-bDark h-dvh ${fixed && "fixed"}`}
       >
         <nav className="flex flex-col gap-1 h-full px-1">

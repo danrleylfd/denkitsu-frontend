@@ -3,11 +3,8 @@ import { Languages, Copy, Loader, ArrowRightLeft, ArrowUpDown } from "lucide-rea
 
 import { useNotification } from "../contexts/NotificationContext"
 
-import SideMenu from "../components/SideMenu"
 import Button from "../components/Button"
 import Paper from "../components/Paper"
-
-const ContentView = ({ children }) => <main className="flex flex-1 flex-col justify-center items-center p-2 gap-2 w-full h-dvh">{children}</main>
 
 const supportedLanguages = [
   { code: "af", name: "Africâner" },

@@ -12,7 +12,7 @@ const KanbanColumn = ({ id }) => {
   const { setNodeRef } = useDroppable({ id })
   const columnTasks = tasks[id] || []
   return (
-    <div className="bg-lightBg-primary dark:bg-darkBg-primary p-2 rounded-xl shadow-lg flex flex-col gap-2 min-h-full max-h-max opacity-75 dark:opacity-90">
+    <div className="bg-lightBg-primary dark:bg-darkBg-primary p-2 rounded-xl shadow-lg flex flex-col gap-2 min-h-full max-h-max opacity-80 dark:opacity-90">
       <h3 className="px-1 text-lightFg-primary dark:text-darkFg-primary">{COLUMN_TITLES[id]}</h3>
       <div ref={setNodeRef} className="flex flex-col gap-2">
         <SortableContext items={columnTasks.map((t) => t.id)} strategy={verticalListSortingStrategy}>
