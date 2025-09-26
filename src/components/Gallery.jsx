@@ -7,7 +7,7 @@ import React, { useState } from "react"
 const galleryData = [
   {
     title: "Dia Asoleado",
-    url: "https://images.unsplash.com/photo-1590182431693-551b54a7d023?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    url: "https://images.unsplash.com/photo-1693298484405-d2603ec2abe3?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     gradient: "linear-gradient(to top, #fddb92 0%, #d1fdff 100%)"
   },
   {
@@ -22,12 +22,12 @@ const galleryData = [
   },
   {
     title: "Lluvia",
-    url: "https://images.unsplash.com/photo-1515694346937-94d85e41e622?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2146&q=80",
+    url: "https://images.unsplash.com/uploads/14116603688211a68546c/30f8f30b?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     gradient: "linear-gradient(to top, #6b778d 0%, #b8c6db 100%)"
   },
   {
     title: "Viento",
-    url: "https://images.unsplash.com/photo-1505672538424-93121a124458?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    url: "https://images.unsplash.com/photo-1671095368506-6ea49f300daa?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     gradient: "linear-gradient(to top, #a3bded 0%, #6991c7 100%)"
   }
 ]
