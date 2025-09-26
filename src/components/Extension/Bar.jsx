@@ -52,8 +52,8 @@ const AIBar = ({
           <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgentsDoor}><Speech size={16} /></Button>
           <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor}><Wrench size={16} /></Button>
           <Button variant="secondary" size="icon" $rounded title="Fábrica de Agentes e Ferramentas" onClick={toggleFactoryManagerDoor} disabled={loadingMessages || isImproving}><Factory size={16} /></Button>
-          <Button variant="secondary" size="icon" $rounded title="Abrir Loja" onClick={() => chrome.tabs.create({ url: "https://denkitsu.vercel.app/store" })}><Store size={16} /></Button>
           <Button variant="secondary" size="icon" $rounded title="Analisar Página" onClick={onAnalyzePage} disabled={loadingMessages || isImproving}><ScanText size={16} /></Button>
+          <Button variant="secondary" size="icon" $rounded title="Abrir Loja" onClick={() => chrome.tabs.create({ url: "https://denkitsu.vercel.app/store" })}><Store size={16} /></Button>
           <Button variant="outline" size="icon" $rounded title="Aperfeiçoar Prompt" onClick={improvePrompt} loading={isImproving} disabled={loadingMessages || isImproving || !userPrompt.trim()}>{!isImproving && <Sparkle size={16} />}</Button>
         </div>
         <div className="flex items-center gap-2 w-full">
