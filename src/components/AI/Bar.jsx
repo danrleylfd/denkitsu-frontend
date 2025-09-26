@@ -1,4 +1,4 @@
-import { Settings, Speech, Sparkle, MessageCirclePlus, Send, Paperclip, Wrench, Factory, Info } from "lucide-react"
+import { Settings, Speech, Sparkle, MessageCirclePlus, Send, Paperclip, Wrench, Factory, Info, Store } from "lucide-react"
 import { useAuth } from "../../contexts/AuthContext"
 import { useAI } from "../../contexts/AIContext"
 import AIBarSignOut from "./BarSignOut"
@@ -6,6 +6,7 @@ import Paper from "../Paper"
 import TextArea from "../TextArea"
 import Button from "../Button"
 import ProviderSelector from "./ProviderSelector"
+import { isExtension } from "../../utils/storage"
 
 const AIBar = ({ imageCount, onSendMessage, improvePrompt, toggleSettingsDoor, toggleFactoryManagerDoor, agentsDoor, toggleAgentsDoor, toolsDoor, toggleToolsDoor, mediaDoor, toggleMediaDoor, toggleFeaturesDoor }) => {
   const { signed } = useAuth()
@@ -25,6 +26,15 @@ const AIBar = ({ imageCount, onSendMessage, improvePrompt, toggleSettingsDoor, t
     }
   }
 
+  const openStore = () => {
+    const url = "https://denkitsu.vercel.app/store"
+    if (isExtension) {
+      chrome.tabs.create({ url })
+    } else {
+      window.open(url, "_blank")
+    }
+  }
+
   const suggestions = ["#browser ", "#duckduckgo ", "#http ", "#cripto ", "#nasa ", "#arquivosnasa ", "#asteroides ", "#terra ", "#marte ", "#climaespaço ", "#climamarte ", "#notícias ", "#clima ", "wikipedia ", "#cinema ", "#jogos ", "#albion ", "#genshin ", "#pokédex "]
 
   return (
@@ -38,6 +48,9 @@ const AIBar = ({ imageCount, onSendMessage, improvePrompt, toggleSettingsDoor, t
           <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgentsDoor}><Speech size={16} /></Button>
           <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor}><Wrench size={16} /></Button>
           <Button variant="secondary" size="icon" $rounded title="Fábrica de Agentes e Ferramentas" onClick={toggleFactoryManagerDoor} disabled={loadingMessages || isImproving}><Factory size={16} /></Button>
+          {isExtension && (
+            <Button variant="secondary" size="icon" $rounded title="Abrir Loja" onClick={openStore}><Store size={16} /></Button>
+          )}
           <Button variant="outline" size="icon" $rounded title="Aperfeiçoar Prompt" onClick={improvePrompt} loading={isImproving} disabled={loadingMessages || isImproving || !userPrompt.trim()}>{!isImproving && <Sparkle size={16} />}</Button>
         </div>
         <div className="flex items-center gap-2 w-full">
@@ -54,6 +67,9 @@ const AIBar = ({ imageCount, onSendMessage, improvePrompt, toggleSettingsDoor, t
         <Button variant={agentsDoor ? "outline" : "secondary"} size="icon" $rounded title="Agentes" onClick={toggleAgentsDoor}><Speech size={16} /></Button>
         <Button variant={toolsDoor ? "outline" : "secondary"} size="icon" title="Ferramentas" $rounded onClick={toggleToolsDoor}><Wrench size={16} /></Button>
         <Button variant="secondary" size="icon" $rounded title="Fábrica de Agentes e Ferramentas" onClick={toggleFactoryManagerDoor} disabled={loadingMessages || isImproving}><Factory size={16} /></Button>
+        {isExtension && (
+          <Button variant="secondary" size="icon" $rounded title="Abrir Loja" onClick={openStore}><Store size={16} /></Button>
+        )}
         <TextArea suggestions={suggestions} id="prompt-input-desktop" value={userPrompt} onChange={(e) => setUserPrompt(e.target.value)} onKeyDown={handleKeyDown} textAreaClassName="flex-1 resize-none h-8 w-full p-2 rounded-md font-mono text-sm" rows={1} disabled={loadingMessages || isImproving} placeholder={!loadingMessages || !isImproving ? "Escreva seu prompt" : "Pensando..."}/>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="icon" $rounded title="Aperfeiçoar Prompt" onClick={improvePrompt} loading={isImproving} disabled={loadingMessages || isImproving || !userPrompt.trim()}>{!isImproving && <Sparkle size={16} />}</Button>

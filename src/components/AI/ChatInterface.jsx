@@ -52,7 +52,7 @@ const ChatInterface = () => {
       <div className="flex flex-col gap-2 mx-auto w-full">
         <ImagePreview />
         <AIAudio />
-        <AIMedia mediaDoor={mediaDoor} onAddImage={onAddImage} />
+        <AIMedia mediaDoor={mediaDoor} onAddImage={onAddImage} onAnalyzePage={() => {}} />
         <AIAgents agentsDoor={agentsDoor} />
         <AITools toolsDoor={toolsDoor} />
         {/* {openDoor === null && <AITip toggleFeaturesDoor={() => setFeaturesDoor(prev => !prev)} />} */}

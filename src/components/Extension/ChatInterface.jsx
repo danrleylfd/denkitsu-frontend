@@ -11,13 +11,13 @@ import AIMedia from "../AI/Media"
 import AIAgents from "../AI/Agents"
 import AITools from "../AI/Tools"
 import AITip from "../AI/Tip"
-import AIBar from "./Bar"
+import AIBar from "../AI/Bar"
 import AIFeatures from "../AI/Features"
 import AISettings from "../AI/Settings"
 import AIFactoryManager from "../Factory/Manager"
 import Lousa from "../AI/Lousa"
 
-const ExtensionChatInterface = ({ onAnalyzePage }) => {
+const ChatInterface = ({ onAnalyzePage }) => {
   const { imageUrls, setImageUrls, handleRegenerateResponse, onSendMessage, improvePrompt } = useAI()
   const { notifyWarning, notifyError } = useNotification()
 
@@ -54,7 +54,7 @@ const ExtensionChatInterface = ({ onAnalyzePage }) => {
         <ImagePreview />
         <AIAudio />
         <AIPage />
-        <AIMedia mediaDoor={mediaDoor} onAddImage={onAddImage} />
+        <AIMedia mediaDoor={mediaDoor} onAddImage={onAddImage} onAnalyzePage={onAnalyzePage} />
         <AIAgents agentsDoor={agentsDoor} />
         <AITools toolsDoor={toolsDoor} />
         {/* {openDoor === null && <AITip toggleFeaturesDoor={() => setFeaturesDoor(prev => !prev)} />} */}
@@ -62,7 +62,6 @@ const ExtensionChatInterface = ({ onAnalyzePage }) => {
           onSendMessage={onSendMessage}
           improvePrompt={improvePrompt}
           imageCount={imageUrls.length}
-          onAnalyzePage={onAnalyzePage}
           mediaDoor={mediaDoor}
           agentsDoor={agentsDoor}
           toolsDoor={toolsDoor}
@@ -82,4 +81,4 @@ const ExtensionChatInterface = ({ onAnalyzePage }) => {
   )
 }
 
-export default ExtensionChatInterface
+export default ChatInterface

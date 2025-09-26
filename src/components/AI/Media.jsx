@@ -1,10 +1,11 @@
-import { ImagePlus, AudioWaveform, Mic, AudioLines, FileAudio, Mouse } from "lucide-react"
+import { ImagePlus, AudioWaveform, Mic, AudioLines, FileAudio, Mouse, ScanText } from "lucide-react"
 import { useAI } from "../../contexts/AIContext"
 import { useModels } from "../../contexts/ModelContext"
 import Paper from "../Paper"
 import Button from "../Button"
+import { isExtension } from "../../utils/storage"
 
-const AIMedia = ({ mediaDoor, onAddImage }) => {
+const AIMedia = ({ mediaDoor, onAddImage, onAnalyzePage }) => {
   if (!mediaDoor) return null
   const {
     stream,
@@ -45,6 +46,9 @@ const AIMedia = ({ mediaDoor, onAddImage }) => {
       <Button variant="secondary" size="icon" $rounded title="Upload de Áudio" onClick={handleUploadClick} disabled={loadingMessages || isImproving || listening || recording}>
         <FileAudio size={16} />
       </Button>
+      {isExtension && (
+        <Button variant="secondary" size="icon" $rounded title="Analisar Página" onClick={onAnalyzePage} disabled={loadingMessages || isImproving}><ScanText size={16} /></Button>
+      )}
     </Paper>
   )
 }
