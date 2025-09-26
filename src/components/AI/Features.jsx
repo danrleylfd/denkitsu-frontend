@@ -72,7 +72,7 @@ const AIFeatures = ({ featuresDoor, toggleFeaturesDoor }) => {
       }
     }
     fetchDefinitions()
-  }, [featuresDoor, notifyError])
+  }, [featuresDoor])
 
   if (!featuresDoor) return null
 

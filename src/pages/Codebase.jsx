@@ -79,7 +79,7 @@ const Codebase = () => {
     } finally {
       setIsProcessing(false)
     }
-  }, [githubRepo, user, handleFileProcessing, notifyError, notifyWarning])
+  }, [githubRepo, user, handleFileProcessing])
 
   const handleDrop = useCallback(async (items) => {
     setIsProcessing(true)
@@ -118,7 +118,7 @@ const Codebase = () => {
     } finally {
       setIsProcessing(false)
     }
-  }, [handleFileProcessing, notifyError])
+  }, [handleFileProcessing])
 
   const handleSelectFolder = useCallback(async () => {
     if (!window.showDirectoryPicker) {
@@ -156,7 +156,7 @@ const Codebase = () => {
     } finally {
       setIsProcessing(false)
     }
-  }, [handleFileProcessing, notifyError])
+  }, [handleFileProcessing])
 
   const handleGenerateCodebase = useCallback(async () => {
     if (selectedFiles.size === 0) {
@@ -218,7 +218,7 @@ const Codebase = () => {
     } finally {
       setIsProcessing(false)
     }
-  }, [allFiles, selectedFiles, projectName, projectSource, notifyError])
+  }, [allFiles, selectedFiles, projectName, projectSource])
 
   const handleReset = () => {
     setStep("input")
@@ -272,7 +272,7 @@ const Codebase = () => {
     } else {
       notifyInfo(`A pasta "${item.name}" foi adicionada via Drag-and-Drop e não pode ser recarregada. Por favor, arraste-a novamente.`)
     }
-  }, [handleFetchFromGithubProxy, handleFileProcessing, notifyError, notifyInfo])
+  }, [handleFetchFromGithubProxy, handleFileProcessing])
 
   const handleRemoveRecent = useCallback(async (item) => {
     try {
@@ -284,7 +284,7 @@ const Codebase = () => {
       console.error("Erro ao remover item recente:", error)
       notifyError("Não foi possível remover o item do banco de dados.")
     }
-  }, [notifyInfo, notifyError])
+  }, [])
 
   const handleClearRecents = useCallback(async () => {
     if (window.confirm("Tem certeza que deseja limpar todo o histórico de projetos recentes?")) {
@@ -301,7 +301,7 @@ const Codebase = () => {
         notifyError("Não foi possível limpar completamente o histórico do banco de dados.")
       }
     }
-  }, [notifyInfo, notifyError])
+  }, [])
 
   const handleDownloadResult = () => {
     const blob = new Blob([result], { type: "text/plain" })

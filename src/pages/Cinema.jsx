@@ -50,7 +50,7 @@ const Cinema = () => {
     } finally {
       setIsLoading(false)
     }
-  }, [rootHandle, currentPath, notifyError])
+  }, [rootHandle, currentPath])
 
   useEffect(() => {
     loadDirectoryContent()
