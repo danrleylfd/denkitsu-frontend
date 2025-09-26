@@ -53,7 +53,7 @@ const useAudio = (props) => {
       setAudioFile(file)
     }
     event.target.value = ""
-  }, [notifyError, setAudioFile])
+  }, [setAudioFile])
 
   useEffect(() => {
     if (!("webkitSpeechRecognition" in window)) {

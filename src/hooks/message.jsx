@@ -1,5 +1,3 @@
-// Frontend/src/hooks/message.jsx
-
 import { useState, useCallback } from "react"
 
 import { useAuth } from "../contexts/AuthContext"
@@ -20,7 +18,6 @@ const useMessage = (props) => {
   const [loadingMessages, setLoadingMessages] = useState(false)
   const [isImproving, setIsImproving] = useState(false)
 
-  // MODIFICADO: Simplificado para a nova arquitetura
   const executeSendMessage = useCallback(async (historyToProcess, agentForCall) => {
     setLoadingMessages(true)
 
@@ -96,7 +93,7 @@ const useMessage = (props) => {
     }
   }, [
     aiKey, aiProvider, model, freeModels, payModels, groqModels, activeTools, stream, customProviderUrl,
-    setMessages, setSelectedAgent, notifyError, signed, loadUser
+    setMessages, setSelectedAgent, signed, loadUser
   ])
 
   const onSendMessage = useCallback(async () => {
@@ -151,7 +148,7 @@ const useMessage = (props) => {
       setMessages(prev => prev.filter(m => m.timestamp !== userMessagePlaceholder.timestamp))
       setLoadingMessages(false)
     }
-  }, [audioFile, messages, executeSendMessage, pageContext, setPageContext, setAudioFile, setMessages, selectedAgent, notifyError])
+  }, [audioFile, messages, executeSendMessage, pageContext, setPageContext, setAudioFile, setMessages, selectedAgent])
 
   const handleRegenerateResponse = useCallback(async () => {
     if (loadingMessages || isImproving) return
@@ -163,7 +160,7 @@ const useMessage = (props) => {
     const historyWithoutLastResponse = messages.slice(0, -1)
     setMessages(historyWithoutLastResponse)
     await executeSendMessage(historyWithoutLastResponse, selectedAgent)
-  }, [loadingMessages, isImproving, messages, executeSendMessage, setMessages, selectedAgent, notifyWarning])
+  }, [loadingMessages, isImproving, messages, executeSendMessage, setMessages, selectedAgent])
 
   const improvePrompt = useCallback(async () => {
     if (!userPrompt.trim() || isImproving || loadingMessages) return
@@ -189,7 +186,7 @@ const useMessage = (props) => {
     } finally {
       setIsImproving(false)
     }
-  }, [userPrompt, isImproving, loadingMessages, aiKey, aiProvider, model, freeModels, payModels, groqModels, setUserPrompt, notifyInfo, notifySuccess, notifyError])
+  }, [userPrompt, isImproving, loadingMessages, aiKey, aiProvider, model, freeModels, payModels, groqModels, setUserPrompt])
 
   return { loadingMessages, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt, handleSendAudioMessage }
 }
