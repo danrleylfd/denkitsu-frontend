@@ -180,9 +180,9 @@ const SideMenu = ({ children, className, fixed, ContentView = MainContent }) => 
   const activeLinkClass = "bg-primary-base/20 text-primary-base"
 
   return (
-    <div className={`flex gap-2 bg-cover bg-brand-purple flex ${className || ""}`} style={{ backgroundImage: `url("${background}")` }}>
+    <div className={`flex gap-2 bg-cover bg-brand-purple ${className || ""}`} style={{ backgroundImage: `url("${background}")` }}>
       <aside
-        className={`max-h-[98dvh] ml-2 my-auto rounded-lg shadow-lg opacity-80 dark:opacity-90 transition-all duration-300 ease-in-out z-40 border-r ${isOpen ? "w-60" : "w-14"
+        className={`max-h-[98vh] ml-2 my-auto rounded-lg shadow-lg opacity-80 dark:opacity-90 transition-all duration-300 ease-in-out z-40 border-r ${isOpen ? "w-60" : "w-14"
           } bg-lightBg-primary dark:bg-darkBg-primary border-bLight dark:border-bDark h-dvh ${fixed && "fixed"}`}
       >
         <nav className="flex flex-col gap-1 h-full px-1">

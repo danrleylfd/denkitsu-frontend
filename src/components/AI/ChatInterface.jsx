@@ -49,7 +49,7 @@ const ChatInterface = () => {
   return (
     <>
       <AIHistory toggleLousa={toggleLousa} onRegenerate={handleRegenerateResponse} />
-      <div className="flex flex-col gap-2 mx-auto w-full max-w-[95%]">
+      <div className="flex flex-col gap-2 mx-auto w-full">
         <ImagePreview />
         <AIAudio />
         <AIMedia mediaDoor={mediaDoor} onAddImage={onAddImage} />
