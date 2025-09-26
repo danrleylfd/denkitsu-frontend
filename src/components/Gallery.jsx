@@ -50,8 +50,12 @@ const Gallery = () => {
             key={item.title}
             className={`
               relative bg-cover bg-center cursor-pointer overflow-hidden
-              transition-[flex,border-radius] duration-700 ease-[cubic-bezier(0.61,-0.19,0.7,-0.11)]
-              ${isActive ? "flex-[5] rounded-[20px]" : "flex-[0.5] rounded-full"}
+              transition-[flex,border-radius] duration-700 ease-out
+
+              /* EFEITO HOVER RESTAURADO:
+                 A classe 'hover:flex-[0.75]' foi adicionada de volta ao estado inativo.
+              */
+              ${isActive ? "flex-[5] rounded-[20px]" : "flex-[0.5] hover:flex-[0.75] rounded-full"}
             `}
             style={{ backgroundImage: `url(${item.url})` }}
             onClick={() => handlePanelClick(index)}>
@@ -80,8 +84,8 @@ const Gallery = () => {
               <h3
                 className={`
                   font-sans whitespace-nowrap drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]
-                  overflow-hidden transition-all duration-300 ease-out
-                  ${isActive ? "w-auto opacity-100 ml-0 delay-200" : "w-0 opacity-0 -ml-3"}
+                  overflow-hidden transition-all duration-500 ease-out
+                  ${isActive ? "max-w-xs opacity-100 ml-0" : "max-w-0 opacity-0"}
                 `}>
                 {item.title}
               </h3>
