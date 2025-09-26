@@ -42,7 +42,7 @@ const Gallery = () => {
   }
 
   return (
-    <div className="flex w-[90vw] min-w-[600px] max-w-[900px] h-[400px] gap-[10px]">
+    <div className="flex w-[90vw] min-w-[600px] max-w-full h-[300px] gap-[10px]">
       {galleryData.map((item, index) => {
         const isActive = index === activeIndex
         return (

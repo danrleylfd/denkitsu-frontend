@@ -11,6 +11,7 @@ import { generateNews } from "../services/aiChat"
 import SideMenu from "../components/SideMenu"
 import Markdown from "../components/Markdown"
 import Paper from "../components/Paper"
+import Gallery from "../components/Gallery"
 import Input from "../components/Input"
 import Button from "../components/Button"
 import ProviderSelector from "../components/AI/ProviderSelector"
@@ -106,6 +107,9 @@ const News = () => {
           </Button>
           <ProviderSelector />
         </Input>
+      </Paper>
+      <Paper variant="secondary" className="mx-auto p-4 w-full max-w-[95%] xs:max-w-[97%] sm:max-w-[98%] md:max-w-[75%] lg:max-w-[67%]">
+        <Gallery />
       </Paper>
 
       {news.map((article, index) => {

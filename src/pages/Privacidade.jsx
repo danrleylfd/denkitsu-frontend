@@ -1,6 +1,5 @@
 import SideMenu from "../components/SideMenu"
 import Paper from "../components/Paper"
-import Gallery from "../components/Gallery"
 import Markdown from "../components/Markdown"
 
 const ContentView = ({ children }) => (
@@ -60,7 +59,6 @@ Denkitsu pode atualizar esta Política de Privacidade periodicamente. Quaisquer 
   return (
     <div className="flex flex-1 flex-col gap-2 mt-2 overflow-y-auto">
       <Paper variant="secondary" className="mx-auto mb-2 p-4 w-full max-w-[95%] xs:max-w-[97%] sm:max-w-[98%] md:max-w-[75%] lg:max-w-[67%]">
-        <Gallery />
         <Markdown content={privacyPolicyContent} />
       </Paper>
     </div>
