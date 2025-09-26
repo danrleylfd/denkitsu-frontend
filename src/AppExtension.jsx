@@ -82,18 +82,16 @@ const SidePanelChat = () => {
   }, [processOmniboxMessage])
 
   const handleAnalyzePage = useCallback(() => {
-    notifyInfo("Analisando o conteúdo da página...")
     chrome.runtime.sendMessage({ type: "GET_PAGE_CONTENT" }, (response) => {
       if (response && !response.error) {
         const contextData = { title: response.title, url: response.url, content: response.content }
         setPageContext(contextData)
-        notifySuccess("Contexto da página adicionado!")
       } else {
         notifyError("Não foi possível extrair o conteúdo desta página.")
         console.error("Side Panel: Erro ao extrair conteúdo:", response?.error)
       }
     })
-  }, [setPageContext, notifyInfo, notifyError, notifySuccess])
+  }, [])
 
   const hasUserMessages = messages.some((msg) => msg.role === "user")
 
