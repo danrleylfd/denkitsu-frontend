@@ -42,8 +42,6 @@ const Gallery = () => {
   }
 
   return (
-    // O container pai agora não precisa mais de border-radius ou overflow,
-    // pois cada painel gerenciará sua própria forma.
     <div className="flex w-[90vw] min-w-[600px] max-w-[900px] h-[400px] gap-[10px]">
       {galleryData.map((item, index) => {
         const isActive = index === activeIndex
@@ -53,7 +51,7 @@ const Gallery = () => {
             className={`
               relative bg-cover bg-center cursor-pointer overflow-hidden
               transition-[flex,border-radius] duration-700 ease-[cubic-bezier(0.61,-0.19,0.7,-0.11)]
-              ${isActive ? "flex-[5] rounded-[20px]" : "flex-[0.5] hover:flex-[0.75] rounded-full"}
+              ${isActive ? "flex-[5] rounded-[20px]" : "flex-[0.5] rounded-full"}
             `}
             style={{ backgroundImage: `url(${item.url})` }}
             onClick={() => handlePanelClick(index)}>
@@ -64,14 +62,12 @@ const Gallery = () => {
               style={{ background: item.gradient }}
             />
 
-            {/* Container para o conteúdo (Ícone + Título) */}
             <div
               className={`
                 absolute z-10 flex items-center text-white
                 transition-all duration-500 ease-out
                 ${isActive ? "bottom-5 left-5 gap-3" : "bottom-5 inset-x-0 justify-center"}
               `}>
-              {/* Ícone com posicionamento corrigido */}
               <div
                 className="
                   relative flex items-center justify-center
