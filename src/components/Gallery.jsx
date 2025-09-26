@@ -12,7 +12,7 @@ const galleryData = [
   },
   {
     title: "Nieve",
-    url: "https://images.unsplash.com/photo-1457399023499-523175405523?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+    url: "https://images.unsplash.com/photo-1418985991508-e47386d96a71?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     gradient: "linear-gradient(to top, #a1c4fd 0%, #c2e9fb 100%)"
   },
   {
