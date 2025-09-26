@@ -70,7 +70,7 @@ const Gallery = () => {
               className={`
                 absolute z-10 flex items-center text-white
                 transition-all duration-500 ease-out
-                ${isActive ? "bottom-5 left-5 gap-3" : "bottom-5 inset-x-0 justify-center"}
+                ${isActive ? "bottom-5 left-5 gap-3" : "bottom-3 inset-x-0 justify-center"}
               `}>
               <div
                 className="
