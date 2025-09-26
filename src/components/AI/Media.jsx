@@ -1,8 +1,11 @@
 import { ImagePlus, AudioWaveform, Mic, AudioLines, FileAudio, Mouse, ScanText } from "lucide-react"
+
 import { useAI } from "../../contexts/AIContext"
 import { useModels } from "../../contexts/ModelContext"
+
 import Paper from "../Paper"
 import Button from "../Button"
+
 import { isExtension } from "../../utils/storage"
 
 const AIMedia = ({ mediaDoor, onAddImage, onAnalyzePage }) => {
