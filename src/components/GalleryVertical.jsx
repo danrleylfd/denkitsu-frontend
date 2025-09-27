@@ -1,6 +1,5 @@
-import React, { useState } from "react"
+import { useState } from "react"
 
-// --- Dados de Mockup (Inalterado) ---
 const galleryData = [
   {
     title: "Dia Asoleado",
@@ -29,8 +28,6 @@ const galleryData = [
   }
 ]
 
-// --- Componente Principal (Versão Vertical) ---
-
 const Gallery = () => {
   const [activeIndex, setActiveIndex] = useState(0)
 
@@ -39,7 +36,6 @@ const Gallery = () => {
   }
 
   return (
-    // MUDANÇA: 'flex-col' para orientação vertical e ajuste de dimensões (mais alto, menos largo)
     <div className="flex flex-col gap-2 w-full max-w-sm h-80">
       {galleryData.map((item, index) => {
         const isActive = index === activeIndex
@@ -54,20 +50,13 @@ const Gallery = () => {
             style={{ backgroundImage: `url(${item.url})` }}
             onClick={() => handlePanelClick(index)}>
             <div
-              className={`absolute inset-0 w-full h-full transition-opacity duration-400 ease-in-out ${
-                isActive ? "opacity-0" : "opacity-80"
-              }`}
-              style={{ background: item.gradient }}
-            />
-
-            <div
               className={`
                 absolute z-10 flex items-center text-white
                 transition-all duration-500 ease-out
                 ${
                   isActive
                     ? "bottom-5 left-5 gap-3"
-                    : "inset-0 justify-center" // MUDANÇA: Posição do ícone minimizado para centro absoluto
+                    : "inset-0 justify-center"
                 }
               `}>
               <div

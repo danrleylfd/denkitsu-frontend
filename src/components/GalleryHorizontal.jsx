@@ -1,9 +1,5 @@
-import React, { useState } from "react"
-// Para uma melhor legibilidade e gerenciamento de classes condicionais,
-// uma biblioteca como `clsx` ou `tailwind-merge` seria recomendada em um projeto real.
-// Para este exemplo, usaremos template literals.
+import { useState } from "react"
 
-// --- Dados de Mockup (Inalterado) ---
 const galleryData = [
   {
     title: "Dia Asoleado",
@@ -32,8 +28,6 @@ const galleryData = [
   }
 ]
 
-// --- Componente Principal ---
-
 const Gallery = () => {
   const [activeIndex, setActiveIndex] = useState(0)
 
@@ -51,21 +45,10 @@ const Gallery = () => {
             className={`
               relative bg-cover bg-center cursor-pointer overflow-hidden
               transition-[flex,border-radius] duration-700 ease-out
-
-              /* EFEITO HOVER RESTAURADO:
-                 A classe 'hover:flex-[0.75]' foi adicionada de volta ao estado inativo.
-              */
               ${isActive ? "flex-[5] rounded-[20px]" : "flex-[0.5] hover:flex-[0.75] rounded-full"}
             `}
             style={{ backgroundImage: `url(${item.url})` }}
             onClick={() => handlePanelClick(index)}>
-            <div
-              className={`absolute inset-0 w-full h-full transition-opacity duration-400 ease-in-out ${
-                isActive ? "opacity-0" : "opacity-80"
-              }`}
-              style={{ background: item.gradient }}
-            />
-
             <div
               className={`
                 absolute z-10 flex items-center text-white
