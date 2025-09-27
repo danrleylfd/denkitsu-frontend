@@ -8,7 +8,8 @@ import Button from "./Button"
 mermaid.initialize({
   startOnLoad: false,
   theme: "default",
-  securityLevel: "loose"
+  securityLevel: "loose",
+  suppressErrors: true
 })
 
 const Controls = () => {
@@ -42,7 +43,7 @@ const Mermaid = ({ chart }) => {
       } catch (error) {
         console.error("Mermaid render error:", error)
         if (isMounted && containerRef.current) {
-          containerRef.current.innerHTML = `<pre class="text-red-base p-2">Erro de sintaxe no diagrama:\n${error.message}</pre>`
+          containerRef.current.innerHTML = `<pre style="white-space: pre-wrap; word-wrap: break-word; text-align: left;" class="text-red-base p-2">Erro de sintaxe no diagrama:\n${error.message}</pre>`
         }
       }
     }
@@ -53,7 +54,7 @@ const Mermaid = ({ chart }) => {
   }, [chart, uniqueId])
 
   return (
-    <div className="relative w-full h-full border border-bLight dark:border-bDark rounded-md overflow-hidden bg-white dark:bg-white">
+    <div className="relative w-full h-full max-h-96 border border-bLight dark:border-bDark rounded-md overflow-hidden bg-white dark:bg-white">
       <TransformWrapper
         initialScale={1}
         minScale={0.5}
@@ -68,7 +69,7 @@ const Mermaid = ({ chart }) => {
           wrapperStyle={{ width: "100%", height: "100%" }}
           contentStyle={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}
         >
-          <div ref={containerRef} className="mermaid-container" />
+          <div ref={containerRef} className="mermaid-container w-full h-full p-2" />
         </TransformComponent>
       </TransformWrapper>
     </div>
