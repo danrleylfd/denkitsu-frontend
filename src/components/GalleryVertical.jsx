@@ -40,7 +40,7 @@ const Gallery = () => {
 
   return (
     // MUDANÇA: 'flex-col' para orientação vertical e ajuste de dimensões (mais alto, menos largo)
-    <div className="flex flex-col w-full max-w-sm h-[600px] gap-[10px]">
+    <div className="flex flex-col gap-2 w-full max-w-sm h-80">
       {galleryData.map((item, index) => {
         const isActive = index === activeIndex
         return (
