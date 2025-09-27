@@ -26,8 +26,9 @@ const AIModelSelect = ({ loading, className }) => {
             className="relative flex items-center px-6 py-2 rounded-md text-sm text-lightFg-primary dark:text-darkFg-primary cursor-pointer select-none hover:bg-primary-base/10 outline-none data-[highlighted]:bg-primary-base/20">
             <Select.ItemText>
               {m.aiProvider === "openrouter" ? m.id.split("/").pop() : m.id}
-              {m.supports_tools && " 🛠️"}
               {m.supports_images && " 🖼️"}
+              {m.supports_tools && " 🛠️"}
+              {m.supports_web_search && " 🌐"}
             </Select.ItemText>
             <Select.ItemIndicator className="absolute left-0 w-6 inline-flex items-center justify-center">
               <Check size={16} />
