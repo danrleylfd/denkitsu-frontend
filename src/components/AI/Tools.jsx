@@ -22,8 +22,8 @@ const AITools = ({ toolsDoor }) => {
     const selectedModel = allModels.find(m => m.id === model)
     const processTool = (tool) => {
       let isDisabled = loadingMessages || isImproving || loadingModels
-      const isCompoundModel = model?.startsWith("compound-")
-      const isGptOssModel = model?.startsWith("openai/gpt-oss-")
+      const isCompoundModel = model?.startsWith("groq/compound")
+      const isGptOssModel = model?.startsWith("openai/gpt-oss")
       switch (tool.name) {
         case "web":
           if (aiProvider === "groq") isDisabled = isDisabled || !isCompoundModel
