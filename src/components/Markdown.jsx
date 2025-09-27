@@ -111,7 +111,7 @@ const Markdown = ({ loading, content, think, page }) => {
       </img>
     ),
     pre: ({ node, children, ...props }) => (
-      <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary break-words text-pretty text-xs p-2 rounded-md" {...props}>
+      <pre className="bg-lightBg-tertiary dark:bg-darkBg-tertiary break-words text-pretty text-xs rounded-md" {...props}>
         {children}
       </pre>
     ),
@@ -119,7 +119,7 @@ const Markdown = ({ loading, content, think, page }) => {
       const match = /language-(\w+)/.exec(className || "")
       if (match && match[1] === "mermaid") {
         return (
-          <div className="flex justify-center bg-white rounded-md p-2 my-2">
+          <div className="flex justify-center bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md">
             <Mermaid chart={String(children).trim()} />
           </div>
         )
