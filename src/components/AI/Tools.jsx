@@ -27,13 +27,14 @@ const AITools = ({ toolsDoor }) => {
       switch (tool.name) {
         case "web":
           if (aiProvider === "groq") isDisabled = isDisabled || !isCompoundModel
+          else if (aiProvider === "openrouter") isDisabled = isDisabled || aiKey.length === 0 || !selectedModel?.supports_tools
           else isDisabled = isDisabled || aiKey.length === 0 || !selectedModel?.supports_tools
           break
         case "browser_search":
-          isDisabled = isDisabled || aiKey.length === 0 || !isGptOssModel
+          isDisabled = isDisabled || aiProvider !== "groq" || aiKey.length === 0 || !isGptOssModel
           break
         case "code_interpreter":
-          isDisabled = isDisabled || aiKey.length === 0 || (!isCompoundModel && !isGptOssModel)
+          isDisabled = isDisabled || aiProvider !== "groq" || aiKey.length === 0 || (!isCompoundModel && !isGptOssModel)
           break
         default:
           isDisabled = isDisabled || aiKey.length === 0 || !selectedModel?.supports_tools
