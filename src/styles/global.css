@@ -135,3 +135,7 @@ small, caption, sup, sub {
   font-weight: 400;
   line-height: 1.43;
 }
+
+[id*="d«r"] {
+  display: none !important;
+}
