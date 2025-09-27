@@ -113,7 +113,7 @@ const AIReactions = ({ message, toggleLousa, onRegenerate, isLastMessage }) => {
   const hasContextualAction = !!htmlBlockForPreview || !!kanbanableJsonString || !!allCodeToCopy
 
   return (
-    <div className="flex items-center gap-2 mt-2">
+    <div className="flex items-center gap-2">
       {isLastMessage && (
         <Button variant="secondary" size="icon" $rounded onClick={onRegenerate} title="Regenerar resposta">
           <RefreshCw size={16} />
