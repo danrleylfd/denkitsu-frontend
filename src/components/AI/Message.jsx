@@ -14,6 +14,8 @@ const AIMessage = ({ msg, user, toggleLousa, loadingMessage, onRegenerate, isLas
   const isUser = msg.role === "user"
 
   const renderContent = () => {
+    if (!msg.content || (Array.isArray(msg.content) && msg.content.length === 0)) return null
+
     const contentPart = (() => {
       if (typeof msg.content === "string") return <Markdown key={msg.content} content={msg.content} />
       if (Array.isArray(msg.content)) return msg.content.map((part, index) => {
@@ -35,6 +37,12 @@ const AIMessage = ({ msg, user, toggleLousa, loadingMessage, onRegenerate, isLas
     <Markdown loading={loadingMessage} content={msg.reasoning} think />
   )
 
+  const PageContextBlock = isUser && msg.pageContext && (
+    <div className="mb-2">
+      <Markdown content={msg.pageContext} page />
+    </div>
+  )
+
   const ToolCallBlock = isAssistant && msg.toolCalls?.length > 0 && (
     <div className={`my-2 p-2 bg-lightBg-tertiary dark:bg-darkBg-tertiary rounded-md ${!hasContentStarted ? "animate-pulse" : ""}`}>
       <div className="flex flex-col gap-1">
@@ -51,7 +59,7 @@ const AIMessage = ({ msg, user, toggleLousa, loadingMessage, onRegenerate, isLas
   return (
     <div className={`flex items-end gap-2 px-2 ${isUser ? "flex-row-reverse" : "flex-row"}`}>
         <div className="w-8 h-8 rounded-full bg-lightBg-tertiary dark:bg-darkBg-tertiary flex items-center justify-center">
-          <Avatar src={(isUser && user) ? user?.avatarUrl : "/denkitsu.png"} alt={isUser ? user?.name : "Denkitsu"} size={8} isPro={isUser && user?.plan ===  "plus"} />
+          <Avatar src={(isUser && user) ? user?.avatarUrl : "/denkitsu.png"} alt={isUser ? user?.name : "Denkitsu"} size={8} isPro={isUser && user?.plan === "plus"} />
         </div>
       <div className="max-w-[90%] sm:max-w-[67%] md:max-w-[75%] lg:max-w-[90%] break-words rounded-md px-4 py-2 shadow-lg text-lightFg-secondary dark:text-darkFg-secondary bg-lightBg-secondary dark:bg-darkBg-secondary opacity-80 dark:opacity-90">
         {msg.routingInfo && (
@@ -66,6 +74,7 @@ const AIMessage = ({ msg, user, toggleLousa, loadingMessage, onRegenerate, isLas
           ? (<>{ReasoningBlock}{ToolCallBlock}</>)
           : (<>{ToolCallBlock}{ReasoningBlock}</>)
         }
+        {PageContextBlock}
         {loadingMessage && !hasContentStarted && msg.toolCalls?.length === 0 ? <Button variant="outline" size="icon" $rounded loading={true} disabled /> : renderContent()}
         {msg.timestamp && (
           <small className="ml-auto text-xs text-lightFg-secondary dark:text-darkFg-secondary whitespace-nowrap">

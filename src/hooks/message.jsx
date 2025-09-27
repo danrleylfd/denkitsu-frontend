@@ -42,13 +42,12 @@ const useMessage = (props) => {
 
               const updatedMsg = { ...msg }
 
-              // Processa diferentes tipos de eventos do backend
               if (event.type === "AGENT_SWITCH") {
                 updatedMsg.routingInfo = { routedTo: event.agent }
-                setSelectedAgent(event.agent) // Atualiza o agente no frontend
+                setSelectedAgent(event.agent)
               } else if (event.type === "TOOL_EXECUTION_START") {
                 updatedMsg.toolCalls = (event.tool_calls || []).map(call => ({ name: call.function.name, arguments: "pending" }))
-              } else if (event.choices) { // Evento de delta padrão
+              } else if (event.choices) {
                 const delta = event.choices[0]?.delta
                 if (delta?.reasoning) updatedMsg.reasoning += delta.reasoning
                 if (delta?.content) updatedMsg.content += delta.content
@@ -68,7 +67,7 @@ const useMessage = (props) => {
             })
           )
         }
-      } else { // Lógica para não-streaming
+      } else {
         const { data } = await sendMessage(aiKey, aiProvider, model, [...freeModels, ...payModels, ...groqModels], apiMessages, agentForCall, activeTools, customProviderUrl)
         const res = data?.choices?.[0]?.message
         const assistantMessage = {
@@ -86,14 +85,14 @@ const useMessage = (props) => {
       }
     } catch (err) {
       notifyError(err.response?.data?.error?.message || err.message || "Falha na comunicação com o servidor de IA.")
-      setMessages(prev => prev.slice(0, -1)) // Remove o placeholder ou a mensagem de usuário que falhou
+      setMessages(prev => prev.slice(0, -1))
     } finally {
       setLoadingMessages(false)
       if (signed && agentForCall === "Suporte") loadUser()
     }
   }, [
     aiKey, aiProvider, model, freeModels, payModels, groqModels, activeTools, stream, customProviderUrl,
-    setMessages, setSelectedAgent, signed, loadUser
+    setMessages, setSelectedAgent, signed, loadUser, notifyError
   ])
 
   const onSendMessage = useCallback(async () => {
@@ -101,25 +100,36 @@ const useMessage = (props) => {
     const promptText = userPrompt.trim()
     if (!promptText && imageUrls.length === 0 && !pageContext) return
 
-    let finalPromptText = promptText
-    if (pageContext) {
-      finalPromptText = `Página [${pageContext.title}](${pageContext.url})\n\nConteúdo [${pageContext.content}]\n\n${promptText}`
+    const userMessageContent = []
+    if (promptText) userMessageContent.push({ type: "text", content: promptText })
+    if (imageUrls.length > 0) userMessageContent.push(...imageUrls.map(url => ({ type: "image_url", image_url: { url } })))
+
+    const uiMessage = {
+      role: "user",
+      content: userMessageContent.length > 0 ? userMessageContent : "",
+      timestamp: new Date().toISOString(),
+      pageContext: pageContext ? `Página: [${pageContext.title}](${pageContext.url})\n\n---\n\n${pageContext.content}` : null
     }
 
-    const content = []
-    if (finalPromptText) content.push({ type: "text", content: finalPromptText })
-    if (imageUrls.length > 0) content.push(...imageUrls.map(url => ({ type: "image_url", image_url: { url } })))
+    const historyForUi = [...messages, uiMessage]
+    setMessages(historyForUi)
 
-    const newMessage = { role: "user", content, timestamp: new Date().toISOString() }
-    const history = [...messages, newMessage]
+    const apiMessageContent = []
+    if (pageContext) {
+      const pageText = `Use o seguinte contexto da página web para responder à minha pergunta.\n\nPágina: [${pageContext.title}](${pageContext.url})\n\n[CONTEÚDO DA PÁGINA]\n${pageContext.content}\n\n[MINHA PERGUNTA]`
+      apiMessageContent.push({ type: "text", content: pageText })
+    }
+    apiMessageContent.push(...userMessageContent)
 
-    setMessages(history)
+    const apiMessage = { role: "user", content: apiMessageContent }
+    const historyForApi = [...messages.filter(m => !m.isPageContext), apiMessage]
+
     setUserPrompt("")
     setImageUrls([])
     setAudioFile(null)
     if (pageContext) setPageContext(null)
 
-    await executeSendMessage(history, selectedAgent)
+    await executeSendMessage(historyForApi, selectedAgent)
   }, [loadingMessages, isImproving, userPrompt, imageUrls, messages, selectedAgent, executeSendMessage, pageContext, setPageContext, setMessages, setUserPrompt, setImageUrls, setAudioFile])
 
   const handleSendAudioMessage = useCallback(async () => {
@@ -148,7 +158,7 @@ const useMessage = (props) => {
       setMessages(prev => prev.filter(m => m.timestamp !== userMessagePlaceholder.timestamp))
       setLoadingMessages(false)
     }
-  }, [audioFile, messages, executeSendMessage, pageContext, setPageContext, setAudioFile, setMessages, selectedAgent])
+  }, [audioFile, messages, executeSendMessage, pageContext, setPageContext, setAudioFile, setMessages, selectedAgent, notifyError])
 
   const handleRegenerateResponse = useCallback(async () => {
     if (loadingMessages || isImproving) return
@@ -160,7 +170,7 @@ const useMessage = (props) => {
     const historyWithoutLastResponse = messages.slice(0, -1)
     setMessages(historyWithoutLastResponse)
     await executeSendMessage(historyWithoutLastResponse, selectedAgent)
-  }, [loadingMessages, isImproving, messages, executeSendMessage, setMessages, selectedAgent])
+  }, [loadingMessages, isImproving, messages, executeSendMessage, setMessages, selectedAgent, notifyWarning])
 
   const improvePrompt = useCallback(async () => {
     if (!userPrompt.trim() || isImproving || loadingMessages) return
@@ -186,7 +196,7 @@ const useMessage = (props) => {
     } finally {
       setIsImproving(false)
     }
-  }, [userPrompt, isImproving, loadingMessages, aiKey, aiProvider, model, freeModels, payModels, groqModels, setUserPrompt])
+  }, [userPrompt, isImproving, loadingMessages, aiKey, aiProvider, model, freeModels, payModels, groqModels, setUserPrompt, notifyInfo, notifySuccess, notifyError])
 
   return { loadingMessages, isImproving, onSendMessage, handleRegenerateResponse, improvePrompt, handleSendAudioMessage }
 }
